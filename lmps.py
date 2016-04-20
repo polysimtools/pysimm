@@ -305,11 +305,11 @@ def call_lammps(simulation, np, nanohub):
             print('%s: starting molecular dynamics using LAMMPS'
                   % strftime('%H:%M:%S'))
         if np:
-            p = Popen(['mpirun', '-np', str(np),
+            p = Popen(['mpiexec', '-np', str(np),
                        LAMMPS_EXEC, '-e', 'both', '-l', 'none'],
                       stdin=PIPE, stdout=PIPE, stderr=PIPE)
         else:
-            p = Popen(['mpirun', LAMMPS_EXEC, '-e', 'both', '-l', 'none'],
+            p = Popen(['mpiexec', LAMMPS_EXEC, '-e', 'both', '-l', 'none'],
                       stdin=PIPE, stdout=PIPE, stderr=PIPE)
         simulation.write_input()
         p.stdin.write(simulation.input)
@@ -426,7 +426,7 @@ def call_lammps_remote(simulation, np=1, walltime=1440, host=None, user=None, si
     child.close()
 
     verbose_print('running simulation synchronously')
-    conn.sendline('mpirun {} -i temp.in'.format(lmp_exec))
+    conn.sendline('mpiexec {} -i temp.in'.format(lmp_exec))
     conn.prompt(timeout=int(walltime*60))
     verbose_print('simulation complete')
     new_path = os.path.join(work_dir, simulation.write)
@@ -523,11 +523,11 @@ def run(s, template=None, **kwargs):
         cmd = shlex.split(cmd)
         exit_status, stdo, stde = RapptureExec(cmd)
     if pbs:
-        call('mpirun %s -e both -l log' % LAMMPS_EXEC, shell=True,
+        call('mpiexec %s -e both -l log' % LAMMPS_EXEC, shell=True,
              stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
     else:
         if np:
-            p = Popen(['mpirun', '-np', str(np),
+            p = Popen(['mpiexec', '-np', str(np),
                        LAMMPS_EXEC, '-e', 'both', '-l', log],
                       stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
         else:
@@ -675,11 +675,11 @@ def md(s, template=None, **kwargs):
         cmd = shlex.split(cmd)
         exit_status, stdo, stde = RapptureExec(cmd)
     elif pbs:
-        call('mpirun %s -e both -l log' % LAMMPS_EXEC, shell=True,
+        call('mpiexec %s -e both -l log' % LAMMPS_EXEC, shell=True,
              stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
     else:
         if np:
-            p = Popen(['mpirun', '-np', str(np),
+            p = Popen(['mpiexec', '-np', str(np),
                        LAMMPS_EXEC, '-e', 'both', '-l', 'none'],
                       stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
         elif kokkos:
@@ -846,11 +846,11 @@ def minimize(s, template=None, **kwargs):
         cmd = shlex.split(cmd)
         exit_status, stdo, stde = RapptureExec(cmd)
     if pbs:
-        call('mpirun %s -e both -l log' % LAMMPS_EXEC, shell=True,
+        call('mpiexec %s -e both -l log' % LAMMPS_EXEC, shell=True,
                  stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
     else:
         if np:
-            p = Popen(['mpirun', '-np', str(np),
+            p = Popen(['mpiexec', '-np', str(np),
                        LAMMPS_EXEC, '-e', 'both', '-l', 'none'],
                       stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
         else:
@@ -1024,11 +1024,11 @@ def relax(s, template=None, **kwargs):
         cmd = shlex.split(cmd)
         exit_status, stdo, stde = RapptureExec(cmd)
     if pbs:
-        call('mpirun %s -e both -l log' % LAMMPS_EXEC, shell=True,
+        call('mpiexec %s -e both -l log' % LAMMPS_EXEC, shell=True,
              stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
     else:
         if np:
-            p = Popen(['mpirun', '-np', str(np),
+            p = Popen(['mpiexec', '-np', str(np),
                        LAMMPS_EXEC, '-e', 'both', '-l', 'none'],
                       stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
         else:
