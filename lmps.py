@@ -359,7 +359,7 @@ def call_lammps(simulation, np, nanohub):
             return True
         except OSError:
             if simulation.name:
-                raise PysimmError('%s: %s simulation using LAMMPS UNsuccessful' % simulation.name)
+                raise PysimmError('%s simulation using LAMMPS UNsuccessful' % simulation.name)
             else:
                 raise PysimmError('molecular dynamics using LAMMPS UNsuccessful')
 
