@@ -510,7 +510,7 @@ def run(s, template=None, **kwargs):
         print('%s: starting %s simulation using LAMMPS'
               % (strftime('%H:%M:%S'), name))
     else:
-        print('%s: starting molecular dynamics using LAMMPS'
+        print('%s: starting energy minimization using LAMMPS'
               % strftime('%H:%M:%S'))
 
     if nanohub:
