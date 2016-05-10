@@ -3,7 +3,7 @@
 ##############################
 #
 #
-#  forcefield.pcff Module
+#  convert_dreiding script
 #
 #
 ##############################
