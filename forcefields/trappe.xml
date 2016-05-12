@@ -9,4 +9,8 @@
       <Type desc="O with one connected atom" sigma="3.05" epsilon="0.156989" elem="O" mass="16" tag="trappe_o" name="trappe_o"/>
       <Type desc="ester and ether sp3 O" sigma="2.80" epsilon="0.109296" elem="O" mass="16" tag="trappe_os" name="trappe_os"/>
   </ParticleTypes>
+  <BondTypes></BondTypes>
+  <AngleTypes></AngleTypes>
+  <DihedralTypes></DihedralTypes>
+  <ImproperTypes></ImproperTypes>
 </Forcefield>
