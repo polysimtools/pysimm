@@ -1105,6 +1105,7 @@ class System(object):
                 for p_b in p_.bonded_to:
                     if p_b is not p0:
                         self.add_dihedral(p_b, p_, p0, p, f)
+        return p
 
     def add_particle(self, p):
         self.particles.add(p)
