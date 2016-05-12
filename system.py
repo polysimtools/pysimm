@@ -1201,8 +1201,10 @@ class System(object):
             self.bonds.add(new_b)
             if a.bonded_to is None or b.bonded_to is None:
                 self.add_particle_bonding()
-            a.bonded_to.add(b)
-            b.bonded_to.add(a)
+            if a.bonded_to and b not in a.bonded_to:
+                a.bonded_to.add(b)
+            if b.bonded_to and a not in b.bonded_to:
+                b.bonded_to.add(a)
         else:
             error_print('error: system does not contain bond type named %s,%s '
                         'or could not find type in forcefield supplied'
