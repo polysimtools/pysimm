@@ -321,6 +321,17 @@ class Tip3p(Forcefield):
                         b.b.charge += float(btype.q1)
 
 
+class Trappe(Forcefield):
+    def __init__(self, db_file=None):
+        if not db_file and db_file is not False:
+            db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                   'forcefields', 'trappe.xml')
+        Forcefield.__init__(self, db_file)
+        self.ff_name = 'trappe'
+        self.pair_style = 'lj'
+        self.ff_class = '1'
+
+
 class Gaff(Forcefield):
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
