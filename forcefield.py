@@ -612,6 +612,16 @@ class Gaff(Forcefield):
             gasteiger.set_charges(s)
 
 
+class Cgenff(Forcefield):
+    def __init__(self, db_file=None):
+        if not db_file and db_file is not False:
+            db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                   'forcefields', 'cgenff.xml')
+        Forcefield.__init__(self, db_file)
+        self.ff_name = 'cgenff'
+        self.ff_class = '1'
+
+
 class Dreiding(Forcefield):
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
