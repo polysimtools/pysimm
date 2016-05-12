@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<Forcefield class="ua" name="trappe">
+  <ParticleTypes>
+      <Type desc="aliphatic carbon with 3 H" sigma="3.75" epsilon="0.194746" elem="C" mass="15" tag="ch3"/>
+      <Type desc="aliphatic carbon with 2 H" sigma="3.95" epsilon="0.091411" elem="C" mass="14" tag="ch2"/>
+      <Type desc="aliphatic carbon with 1 H" sigma="3.95" epsilon="0.091411" elem="C" mass="13" tag="ch1"/>
+      <Type desc="aliphatic carbon with 0 H" sigma="4.68" epsilon="0.019872" elem="C" mass="12" tag="ch0"/>
+      <Type desc="O with one connected atom" sigma="3.05" epsilon="0.156989" elem="O" mass="16" tag="o"/>
+      <Type desc="ester and ether sp3 O" sigma="2.80" epsilon="0.109296" elem="O" mass="16" tag="os"/>
+  </ParticleTypes>
+</Forcefield>
