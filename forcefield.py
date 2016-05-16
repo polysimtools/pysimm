@@ -888,6 +888,9 @@ class Pcff(Forcefield):
                 p.nbonds += 1
         for p in s.particles:
             if p.elem == 'H':
+                print p.bond_orders
+                print p.bond_elements
+                print p.nbonds
                 if ('C' in p.bond_elements or 'Si' in p.bond_elements or
                         'H' in p.bond_elements):
                     p.type_name = 'h'
