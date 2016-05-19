@@ -259,6 +259,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
     capped = kwargs.get('capped')
     unwrap = kwargs.get('unwrap')
     traj = kwargs.get('traj') if kwargs.get('traj') is not None else True
+    offset = 2.5
 
     m.add_particle_bonding()
 
@@ -292,9 +293,9 @@ def random_walk(m, nmon, s_=None, **kwargs):
         backbone_vector = np.array(find_last_backbone_vector(s, m))
 
         for p, p_ in izip(s.particles[-1*m.particles.count:], m.particles):
-                p_.x = p.x + 5*backbone_vector[0]
-                p_.y = p.y + 5*backbone_vector[1]
-                p_.z = p.z + 5*backbone_vector[2]
+                p_.x = p.x + backbone_vector[0] + pow(3, 1/3.)*offset
+                p_.y = p.y + backbone_vector[1] + pow(3, 1/3.)*offset
+                p_.z = p.z + backbone_vector[2] + pow(3, 1/3.)*offset
 
         n = m.copy()
 
