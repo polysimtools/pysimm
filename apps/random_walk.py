@@ -66,7 +66,7 @@ def add_bonds(s, p1, p2, f):
         for pb2 in p2.bonded_to:
             s.add_dihedral(pb1, p1, p2, pb2, f)
 
-    print('{} {}'.format(p1.tag, 02.tag))
+    print('{} {}'.format(p1.tag, p2.tag))
 
     p1.bonded_to.add(p2)
     p2.bonded_to.add(p1)
