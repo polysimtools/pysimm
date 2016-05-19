@@ -35,6 +35,7 @@
 from __future__ import print_function
 from collections import Sequence
 import itertools
+from pprint import pprint
 
 from pysimm import debug_print
 
@@ -91,6 +92,7 @@ class ItemContainer(Sequence):
             self._dict[self.count].tag = self.count
         else:
             debug_print('cannot add at index %s' % (self.count+1))
+            pprint(vars(_item))
             return None
         return _item
 
