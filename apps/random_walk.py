@@ -68,6 +68,9 @@ def add_bonds(s, p1, p2, f):
 
     print('{} {}'.format(p1.tag, p2.tag))
 
+    print([p.tag for p in p1.bonded_to])
+    print([p.tag for p in p2.bonded_to])
+
     p1.bonded_to.add(p2)
     p2.bonded_to.add(p1)
 
