@@ -293,9 +293,9 @@ def random_walk(m, nmon, s_=None, **kwargs):
         backbone_vector = np.array(find_last_backbone_vector(s, m))
 
         for p, p_ in izip(s.particles[-1*m.particles.count:], m.particles):
-                p_.x = p.x + backbone_vector[0] + pow(3, 1/3.)*offset
-                p_.y = p.y + backbone_vector[1] + pow(3, 1/3.)*offset
-                p_.z = p.z + backbone_vector[2] + pow(3, 1/3.)*offset
+                p_.x = p.x + backbone_vector[0] + pow(3/2, 1/2.)*offset
+                p_.y = p.y + backbone_vector[1] + pow(3/2, 1/2.)*offset
+                p_.z = p.z + backbone_vector[2] + pow(3/2, 1/2.)*offset
 
         n = m.copy()
 
