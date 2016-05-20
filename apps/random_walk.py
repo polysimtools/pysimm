@@ -259,7 +259,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
     capped = kwargs.get('capped')
     unwrap = kwargs.get('unwrap')
     traj = kwargs.get('traj') if kwargs.get('traj') is not None else True
-    offset = 2.5
+    limit = kwargs.get('limit') if kwargs.get('limit') is not None else 0.1
 
     m.add_particle_bonding()
 
@@ -293,9 +293,9 @@ def random_walk(m, nmon, s_=None, **kwargs):
         backbone_vector = np.array(find_last_backbone_vector(s, m))
 
         for p, p_ in izip(s.particles[-1*m.particles.count:], m.particles):
-                p_.x = p.x + backbone_vector[0] + pow(3/2, 1/2.)*offset
-                p_.y = p.y + backbone_vector[1] + pow(3/2, 1/2.)*offset
-                p_.z = p.z + backbone_vector[2] + pow(3/2, 1/2.)*offset
+                p_.x = p.x + 2*backbone_vector[0]
+                p_.y = p.y + 2*backbone_vector[1]
+                p_.z = p.z + 2*backbone_vector[2]
 
         n = m.copy()
 
@@ -345,7 +345,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
         s.write_lammps('tmp.lmps')
 
         sim = lmps.Simulation(s, name='relax_%03d' % (insertion+2), log='relax.log', **settings)
-        sim.add_md(ensemble='nve', limit=0.1, temp=300, **settings)
+        sim.add_md(ensemble='nve', limit=limit, temp=300, **settings)
         sim.add_min(**settings)
         sim.run(np=settings.get('np'))
 
