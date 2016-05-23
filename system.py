@@ -2299,8 +2299,6 @@ class System(object):
         self.set_cog()
 
     def set_neighbors(self, cutoff=12.0):
-        self.wrap()
-
         ncells = [int(ceil(self.dim.dx/cutoff)), int(ceil(self.dim.dy/cutoff)), int(ceil(self.dim.dz/cutoff))]
         cell_dx = self.dim.dx/ncells[0]
         cell_dy = self.dim.dy/ncells[1]
