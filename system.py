@@ -151,7 +151,10 @@ class Particle(Item):
         Returns:
             distance calculated by pysimm.calc.distance. This does not consider pbc
         """
-        return calc.distance(self, other)
+        if isinstance(other, Particle):
+            return calc.distance(self, other)
+        else:
+            return None
 
     def __rsub__(self, other):
         self.__sub__(other)
@@ -199,8 +202,11 @@ class Bond(Item):
         Returns:
             Distance between Particle a and Particle b (not considering pbc)
         """
-        self.dist = calc.distance(self.a, self.b)
-        return self.dist
+        if isinstance(self.a, Particle) and isinstance(self.b, Particle):
+            self.dist = calc.distance(self.a, self.b)
+            return self.dist
+        else:
+            return None
 
 
 class BondType(Item):
