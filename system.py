@@ -2574,6 +2574,7 @@ def join(system1, system2, remove_overlaps=True, max_buffer=6):
     s1 = system1.copy()
     s2 = system2.copy()
     new_system = replicate([s1, s2], [1, 1], density=None, rand=False, print_insertions=False)
+    new_system = s1.dim.copy()
     if not remove_overlaps:
         return new_system
     new_system.add_particle_bonding()
