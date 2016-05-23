@@ -121,7 +121,7 @@ def rotate_vector(x, y, z, theta_x=None, theta_y=None, theta_z=None):
 
 
 def distance(p1, p2):
-    if isinstance(p1, Particle) and isinstance(p2, Particle):
+    if isinstance(p1, pysimm.system.Particle) and isinstance(p2, pysimm.system.Particle):
         return np.linalg.norm([p1.x - p2.x, p1.y - p2.y, p1.z - p2.z])
     else:
         return None
