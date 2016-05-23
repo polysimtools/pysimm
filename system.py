@@ -56,8 +56,9 @@ from pysimm.utils import PysimmError, Item, ItemContainer
 class Particle(Item):
     """pysimm.system.Particle
 
-    Particle object can contain any arbitrary data. Keyword arguments are assigned
-    as attributes. Attributes usually used are given below.
+    Objects inheriting from pysimm.utils.Item can contain arbitrary data.
+    Keyword arguments are assigned as attributes.
+    Attributes usually used are given below.
 
     Attributes:
         x: x coordinate
@@ -158,8 +159,9 @@ class Particle(Item):
 class ParticleType(Item):
     """pysimm.system.ParticleType
 
-    ParticleType object can contain any arbitrary data. Keyword arguments are assigned
-    as attributes. Attributes usually used are given below.
+    Objects inheriting from pysimm.utils.Item can contain arbitrary data.
+    Keyword arguments are assigned as attributes.
+    Attributes usually used are given below.
 
     Attributes:
         sigma: LJ sigma value (Angstrom)
@@ -174,13 +176,14 @@ class ParticleType(Item):
 class Bond(Item):
     """pysimm.system.Bond
 
-    Bond object can contain any arbitrary data. Keyword arguments are assigned
-    as attributes. Attributes usually used are given below.
+    Objects inheriting from pysimm.utils.Item can contain arbitrary data.
+    Keyword arguments are assigned as attributes.
+    Attributes usually used are given below.
 
     Attributes:
         a: pysimm.system.Particle object involved in bond
         b: pysimm.system.Particle object involved in bond
-        type: z coordinate
+        type: BondType object reference
     """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
@@ -207,8 +210,9 @@ class Bond(Item):
 class BondType(Item):
     """pysimm.system.BondType
 
-    BondType object can contain any arbitrary data. Keyword arguments are assigned
-    as attributes. Attributes usually used are given below.
+    Objects inheriting from pysimm.utils.Item can contain arbitrary data.
+    Keyword arguments are assigned as attributes.
+    Attributes usually used are given below.
 
     Attributes:
         k: harmonic bond force constant (kcal/mol/A^2)
@@ -222,15 +226,48 @@ class BondType(Item):
 
 
 class Angle(Item):
+    """pysimm.system.Angle
+
+    Objects inheriting from pysimm.utils.Item can contain arbitrary data.
+    Keyword arguments are assigned as attributes.
+    Attributes usually used are given below.
+
+    Attributes:
+        a: pysimm.system.Particle object involved in angle
+        b: pysimm.system.Particle object involved in angle (middle particle)
+        c: pysimm.system.Particle object involved in angle
+        type: AngleType object reference
+    """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
 
     def angle(self, radians=False):
+        """pysimm.system.Angle.angle
+
+        Calculate angle.
+
+        Args:
+            radians: True to return value in radians (default: False)
+
+        Returns:
+            Angle between Particle a, b, and c
+        """
         self.theta = calc.angle(self.a, self.b, self.c, radians)
         return self.theta
 
 
 class AngleType(Item):
+    """pysimm.system.AngleType
+
+    Objects inheriting from pysimm.utils.Item can contain arbitrary data.
+    Keyword arguments are assigned as attributes.
+    Attributes usually used are given below.
+
+    Attributes:
+        k: harmonic angle bend force constant (kcal/mol/radian^2)
+        theta0: angle equilibrium value (degrees)
+        name: force field angle type name
+    """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
         if self.name:
@@ -238,11 +275,36 @@ class AngleType(Item):
 
 
 class Dihedral(Item):
+    """pysimm.system.Dihedral
+
+    Objects inheriting from pysimm.utils.Item can contain arbitrary data.
+    Keyword arguments are assigned as attributes.
+    Attributes usually used are given below.
+
+    Attributes:
+        a: pysimm.system.Particle object involved in dihedral
+        b: pysimm.system.Particle object involved in dihedral (middle particle)
+        c: pysimm.system.Particle object involved in dihedral (middle particle)
+        d: pysimm.system.Particle object involved in dihedral
+        type: DihedralType object reference
+    """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
 
 
 class DihedralType(Item):
+    """pysimm.system.DihedralType
+
+    Objects inheriting from pysimm.utils.Item can contain arbitrary data.
+    Keyword arguments are assigned as attributes.
+    Attributes usually used are given below.
+
+    Attributes:
+        k: dihedral energy barrier (kcal/mol)
+        d: minimum (+1 or -1)
+        n: multiplicity (integer >= 0)
+        name: force field dihedral type name
+    """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
         if self.name:
@@ -250,11 +312,35 @@ class DihedralType(Item):
 
 
 class Improper(Item):
+    """pysimm.system.Improper
+
+    Objects inheriting from pysimm.utils.Item can contain arbitrary data.
+    Keyword arguments are assigned as attributes.
+    Attributes usually used are given below.
+
+    Attributes:
+        a: pysimm.system.Particle object involved in improper (middle particle)
+        b: pysimm.system.Particle object involved in improper
+        c: pysimm.system.Particle object involved in improper
+        d: pysimm.system.Particle object involved in improper
+        type: ImproperType object reference
+    """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
 
 
 class ImproperType(Item):
+    """pysimm.system.ImproperType
+
+    Objects inheriting from pysimm.utils.Item can contain arbitrary data.
+    Keyword arguments are assigned as attributes.
+    Attributes usually used are given below.
+
+    Attributes:
+        k: improper energy barrier (kcal/mol)
+        x0: equilibrium value (degrees)
+        name: force field improper type name
+    """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
         if self.name:
@@ -262,6 +348,23 @@ class ImproperType(Item):
 
 
 class Dimension(Item):
+    """pysimm.system.Dimension
+
+    Objects inheriting from pysimm.utils.Item can contain arbitrary data.
+    Keyword arguments are assigned as attributes.
+    Attributes usually used are given below.
+
+    Attributes:
+        xlo: minimum value in x dimension
+        xhi: maximum value in x dimension
+        ylo: minimum value in y dimension
+        yhi: maximum value in y dimension
+        zlo: minimum value in z dimension
+        zhi: maximum value in z dimension
+        dx: distance in x dimension
+        dy: distance in y dimension
+        dz: distance in z dimension
+    """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
         if (self.center and
@@ -297,6 +400,26 @@ class Dimension(Item):
 
 
 class System(object):
+    """pysimm.system.System
+
+    Object representation of molecular system.
+    Contains information required for molecular simulation.
+
+    Attributes:
+        dim: Dimension object reference
+        particles: pysimm.utils.ItemContainer for Particle organization
+        particle_types: pysimm.utils.ItemContainer for ParticleType organization
+        bonds: pysimm.utils.ItemContainer for Bond organization
+        bond_types: pysimm.utils.ItemContainer for BondType organization
+        angles: pysimm.utils.ItemContainer for Angle organization
+        angle_types: pysimm.utils.ItemContainer for AngleType organization
+        dihedrals: pysimm.utils.ItemContainer for Dihedral organization
+        dihedral_types: pysimm.utils.ItemContainer for DihedralType organization
+        impropers: pysimm.utils.ItemContainer for Improper organization
+        improper_types: pysimm.utils.ItemContainer for ImproperType organization
+        molecules: pysimm.utils.ItemContainer for Molecule organization
+
+    """
     def __init__(self, **kwargs):
 
         self.objectified = False
@@ -334,6 +457,18 @@ class System(object):
 
     def copy(self, rotate_x=None, rotate_y=None, rotate_z=None,
              dx=0, dy=0, dz=0):
+        """pysimm.system.System.copy
+
+        Create duplicate System object. Default behavior does not modify particle positions.
+
+        Args:
+            rotate_x: rotate duplicate system around x axis by this value (radians)
+            rotate_y: rotate duplicate system around y axis by this value (radians)
+            rotate_z: rotate duplicate system around z axis by this value (radians)
+            dx: translate duplicate system in x dimension by this value (Angstrom)
+            dy: translate duplicate system in y dimension by this value (Angstrom)
+            dz: translate duplicate system in z dimension by this value (Angstrom)
+        """
         new = System()
 
         new.ff_class = self.ff_class
@@ -416,7 +551,18 @@ class System(object):
         return new
 
     def add(self, other, **kwargs):
+        """pysimm.system.System.add
 
+        Add other System to this System. Optionally remove duplicate types (default behavior).
+
+        Args:
+            other: pysimm.system.System object to add to this System
+            unique_types (optional): Remove duplicate types and reassign references to existing types (True)
+            change_dim (optional): Update pysimm.system.Dimension object so that Particle objects do not exist
+                                   outside of Dimension extremes (True)
+            update_properties (optional): Update system-wide mass, volume, density, center of gravity, and velocity
+                                          properties (True)
+        """
         unique_types = kwargs.get('unique_types') if (kwargs.get('unique_types')
                                                       is not None) else True
         change_dim = kwargs.get('change_dim') if (kwargs.get('change_dim')
@@ -541,9 +687,31 @@ class System(object):
             self.set_velocity()
 
     def distance(self, p1, p2):
+        """pysimm.system.System.distance
+
+        Calculate distance between two particles considering pbc.
+
+        Args:
+            p1: pysimm.system.Particle object
+            p2: pysimm.system.Particle object
+
+        Returns:
+            distance between particles considering pbc
+        """
         return calc.pbc_distance(self, p1, p2)
 
     def wrap(self):
+        """pysimm.system.System.wrap
+
+        Wrap Particle images into box defined by Dimension object.
+        Ensure particles are contained within simulation box.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.dim.check()
         for p in self.particles:
             while p.x > self.dim.xhi:
@@ -560,6 +728,16 @@ class System(object):
                 p.z += self.dim.dz
 
     def unwrap(self):
+        """pysimm.system.System.unwrap()
+
+        Unwraps Particle images such that no bonds cross box edges.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.dim.check()
         self.add_particle_bonding()
         self.add_particle_bonding()
@@ -606,6 +784,16 @@ class System(object):
         return True
 
     def quality(self, tolerance=0.1):
+        """pysimm.system.System.quality
+
+        Attemps to assess quality of System based on bond lengths in unwrapped system.
+
+        Args:
+            tolerance: fractional value of equilibrium bond length that is acceptable
+
+        Returns:
+            number of bonds in system outside tolerance
+        """
         self.unwrap()
         bad_bonds = 0
         for b in self.bonds:
@@ -615,6 +803,16 @@ class System(object):
         self.wrap()
 
     def shift_to_origin(self):
+        """pysimm.system.System.shift_to_origin
+
+        Shifts simulation box to begin at origin. i.e. xlo=ylo=zlo=0
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         for p in self.particles:
             p.x -= self.dim.xlo
             p.y -= self.dim.ylo
@@ -627,11 +825,31 @@ class System(object):
         self.dim.zlo -= self.dim.zlo
 
     def set_charge(self):
+        """pysimm.system.System.set_charge
+
+        Sets total charge of all Particle objects in System.particles
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.charge = 0
         for p in self.particles:
             self.charge += p.charge
 
     def zero_charge(self):
+        """pysimm.system.System.zero_charge
+
+        Enforces total System charge to be 0.0 by subtracting excess charge from last particle
+
+        Args:
+            None:
+
+        Returns:
+            None
+        """
         charge = 0.
         for p in self.particles:
             charge += p.charge
@@ -654,6 +872,16 @@ class System(object):
             raise PysimmError('molecules missing')
 
     def update_particle_types_from_forcefield(self, f):
+        """pysimm.system.System.update_types_from_forcefield
+
+        Updates ParticleType data from Forcefield object f based on ParticleType.name
+
+        Args:
+            f: pysimm.forcefield.Forcefield object reference
+
+        Returns:
+            None
+        """
         for pt in self.particle_types:
             name_ = pt.name.split('@')[-1]
             linker = False
@@ -669,7 +897,18 @@ class System(object):
                 self.particle_types.add(new)
 
     def make_linker_types(self):
+        """pysimm.system.System.make_linker_types
 
+        Identifies linker particles and creates duplicate ParticleType objects with new names.
+        Identification is performed by Particle.linker attribute.
+        New ParticleType name is prepended with [H or T]L@ to designate head or tail linker
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         for p in self.particles:
             if p.linker == 'head':
                 head_linker = self.particle_types.get('HL@%s' % p.type.name)
@@ -697,7 +936,16 @@ class System(object):
                     self.particle_types.add(p.type)
 
     def remove_linker_types(self):
+        """pysimm.system.System.remove_linker_types
 
+        Reassigns Particle.type references to original ParticleType objects without linker prepend
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         for p in self.particles:
             if p.type.name.find('@') >= 0:
                 pt = self.particle_types.get(p.type.name.split('@')[-1])
@@ -708,6 +956,17 @@ class System(object):
                           % p.type.name)
 
     def read_lammpstrj(self, trj, frame=1):
+        """pysimm.system.System.read_lammpstrj
+
+        Updates particle positions and box size from LAMMPS trajectory file at given frame
+
+        Args:
+            trj: LAMMPS trajectory file
+            frame: sequential frame number (not LAMMPS timestep) default=1
+
+        Returns:
+            None
+        """
         t_frame = 0
         nparticles = 0
         updated = 0
@@ -749,6 +1008,18 @@ class System(object):
         verbose_print('updated particle positions for %s of %s particles from trajectory' % (updated, nparticles))
 
     def read_xyz(self, xyz, frame=1, quiet=False):
+        """pysimm.system.System.read_xyz
+
+        Updates particle positions and box size from xyz file at given frame
+
+        Args:
+            xyz: xyz trajectory file
+            frame: sequential frame number default=1
+            quiet: True to print status default=False
+
+        Returns:
+            None
+        """
         if not quiet:
             verbose_print('reading particle positions from %s' % xyz)
             warning_print('particles are assumed to be in order in xyz file')
@@ -779,7 +1050,17 @@ class System(object):
                 line = f.readline()
 
     def update_types(self, ptypes, btypes, atypes, dtypes, itypes):
+        """pysimm.system.System.update_types
 
+        Updates type objects from a given list of types.
+
+        Args:
+            ptypes: list of ParticleType objects from which to update
+            btypes: list of BondType objects from which to update
+            atypes: list of AngleType objects from which to update
+            dtypes: list of DihedralType objects from which to update
+            itypes: list of ImproperType objects from which to update
+        """
         if ptypes is not None:
             for p in self.particles:
                 pt = self.particle_types.get(p.type.name, first=True)
@@ -826,6 +1107,16 @@ class System(object):
                 self.improper_types.add(it)
 
     def read_type_names(self, types_file):
+        """pysimm.system.System.read_type_names
+
+        Update ParticleType names from file.
+
+        Args:
+            types_file: type dictionary file name
+
+        Returns:
+            None
+        """
         ptypes = dict()
         btypes = dict()
         atypes = dict()
@@ -881,6 +1172,13 @@ class System(object):
             t.rname = ','.join(reversed(t.name.split(',')))
 
     def remove_spare_bonding(self, update_tags=True):
+        """pysimm.system.System.remove_spare_bonding
+
+        Removes bonds, angles, dihedrals and impropers that reference particles not in System.particles
+
+        Args:
+            update_tags: True to update all tags after removal of bonding items default=True
+        """
         for b in self.bonds:
             if b.a not in self.particles or b.b not in self.particles:
                 self.bonds.remove(b.tag, update=False)
@@ -904,6 +1202,16 @@ class System(object):
             self.update_tags()
 
     def update_tags(self):
+        """pysimm.system.System.update_tags
+
+        Update Item tags in ItemContainer objects to preserve continuous tags
+
+         Args:
+             None
+
+         Returns:
+             None
+        """
         particles = self.particles.get('all')
         self.particles.remove('all')
         for p in particles:
@@ -965,6 +1273,17 @@ class System(object):
             self.improper_types.add(it)
 
     def set_references(self):
+        """pysimm.system.System.set_references
+
+        Set object references when System information read from text file.
+        For example, if bond type value 2 is read from file, set Bond.type to bond_types[2]
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         for p in self.particles:
             if isinstance(p.type, int) and self.particle_types[p.type]:
                 p.type = self.particle_types[p.type]
@@ -1001,6 +1320,17 @@ class System(object):
                             'angle types' % i.type)
 
     def objectify(self):
+        """pysimm.system.System.objectify
+
+        Set references for Bond, Angle, Dihedral, Improper objects.
+        For example, if read from file that bond #1 is between particle 1 and 2 set Bond.a to particles[1], etc.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         if self.objectified:
             return 'already objectified'
         self.set_references()
@@ -1050,6 +1380,16 @@ class System(object):
         self.objectified = True
 
     def add_particle_bonding(self):
+        """pysimm.system.System.add_particle_bonding
+
+        Update Particle objects such that Particle.bonded_to contains other Particle objects invloved in bonding
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         for p in self.particles:
             p.bonded_to = ItemContainer()
             p.bonds = ItemContainer()
@@ -1060,6 +1400,17 @@ class System(object):
             b.b.bonds.add(b)
 
     def set_excluded_particles(self, bonds=True, angles=True, dihedrals=True):
+        """pysimm.system.System.set_excluded_particles
+
+        Updates Particle object such that Particle.excluded_particles contains other Particle objects involved in
+        1-2, 1-3, and/or 1-4 interactions
+
+        Args:
+            bonds: exclude particles involved in 1-2 interactions
+            angles: exclude particles involved in 1-3 interactions
+            dihedrals: exclude particles involved in 1-4 interactions
+
+        """
         for p in self.particles:
             p.excluded_particles = ItemContainer()
 
@@ -1113,6 +1464,16 @@ class System(object):
                     d.d.excluded_particles.add(d.c)
 
     def set_atomic_numbers(self):
+        """pysimm.system.System.set_atomic_numbers
+
+        Updates ParticleType objects with atomic number based on ParticleType.elem
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         for pt in self.particle_types:
             if pt.elem == 'H':
                 pt.atomic_number = 1
@@ -1160,6 +1521,18 @@ class System(object):
                 pt.atomic_number = 53
 
     def add_particle_bonded_to(self, p, p0, f=None):
+        """pysimm.system.System.add_particle_bonded_to
+
+        Add new Particle to System bonded to p0 and automatically update new forcefield types
+
+        Args:
+            p: new Particle object to be added
+            p0: original Particle object in System to which p will be bonded
+            f: pysimm.forcefield.Forcefield object from which new force field types will be retrieved
+
+        Returns:
+            new Particle being added to system for convenient reference
+        """
         if p.x is None or p.y is None or p.z is None:
             phi = random() * 2 * pi
             theta = acos(random() * 2 - 1)
@@ -1187,6 +1560,22 @@ class System(object):
         self.particles.add(p)
 
     def rotate(self, around=None, theta_x=0, theta_y=0, theta_z=0, rot_matrix=None):
+        """pysimm.system.System.rotate
+
+        *** REQUIRES NUMPY ***
+
+        Rotates entire system around given Particle by user defined angles
+
+        Args:
+            around: Particle around which System will be rotated default=None
+            theta_x: angle around which system will be rotated on x axis
+            theta_y: angle around which system will be rotated on y axis
+            theta_z: angle around which system will be rotated on z axis
+            rot_matrix: rotation matrix to use for rotation
+
+        Returns:
+            None
+        """
         theta_x = random() * 2 * pi if theta_x is 'random' else theta_x
         theta_y = random() * 2 * pi if theta_y is 'random' else theta_y
         theta_z = random() * 2 * pi if theta_z is 'random' else theta_z
@@ -1213,6 +1602,21 @@ class System(object):
                 p.z += around[2]
 
     def make_new_bonds(self, p1=None, p2=None, f=None, angles=True, dihedrals=True, impropers=True):
+        """pysimm.system.System.make_new_bonds
+
+        Makes new bond between two particles and updates new force field types
+
+        Args:
+            p1: pysimm.system.Particle object involved in new bond
+            p2: pysimm.system.Particle object involved in new bond
+            f: pysimm.forcefield.Forcefield object from which new force field types will be retrieved
+            angles: True to update new angles default=True
+            dihedrals: True to update new dihedrals default=True
+            impropers: True to update new impropers default=True
+
+        Returns:
+            None
+        """
         self.add_particle_bonding()
         self.add_bond(p1, p2, f)
         if angles or dihedrals or impropers:
@@ -1264,6 +1668,18 @@ class System(object):
                         self.add_improper(p2, perm[0], perm[1], perm[2], f)
 
     def add_bond(self, a=None, b=None, f=None):
+        """pysimm.system.System.add_bond
+
+        Add Bond to system between two particles
+
+        Args:
+            a: pysimm.system.Particle involved in new Bond
+            b: pysimm.system.Particle involved in new Bond
+            f: pysimm.forcefield.Forcefield object from which new force field type will be retrieved
+
+        Returns:
+            None
+        """
         a_name = a.type.eq_bond or a.type.name
         b_name = b.type.eq_bond or b.type.name
         btype = self.bond_types.get('%s,%s' % (a_name, b_name))
@@ -1289,6 +1705,19 @@ class System(object):
             return
 
     def add_angle(self, a=None, b=None, c=None, f=None):
+        """pysimm.system.System.add_angle
+
+        Add Angle to system between three particles
+
+        Args:
+            a: pysimm.system.Particle involved in new Angle
+            b: pysimm.system.Particle involved in new Angle (middle particle)
+            c: pysimm.system.Particle involved in new Angle
+            f: pysimm.forcefield.Forcefield object from which new force field type will be retrieved
+
+        Returns:
+            None
+        """
         a_name = a.type.eq_angle or a.type.name
         b_name = b.type.eq_angle or b.type.name
         c_name = c.type.eq_angle or c.type.name
@@ -1312,6 +1741,20 @@ class System(object):
             return
 
     def add_dihedral(self, a=None, b=None, c=None, d=None, f=None):
+        """pysimm.system.System.add_dihedral
+
+        Add Dihedral to system between four particles
+
+        Args:
+            a: pysimm.system.Particle involved in new Dihedral
+            b: pysimm.system.Particle involved in new Dihedral (middle particle)
+            c: pysimm.system.Particle involved in new Dihedral (middle particle)
+            d: pysimm.system.Particle involved in new Dihedral
+            f: pysimm.forcefield.Forcefield object from which new force field type will be retrieved
+
+        Returns:
+            None
+        """
         a_name = a.type.eq_dihedral or a.type.name
         b_name = b.type.eq_dihedral or b.type.name
         c_name = c.type.eq_dihedral or c.type.name
@@ -1340,6 +1783,20 @@ class System(object):
             return
 
     def add_improper(self, a=None, b=None, c=None, d=None, f=None):
+        """pysimm.system.System.add_improper
+
+        Add Improper to system between four particles
+
+        Args:
+            a: pysimm.system.Particle involved in new Improper (middle particle)
+            b: pysimm.system.Particle involved in new Improper
+            c: pysimm.system.Particle involved in new Improper
+            d: pysimm.system.Particle involved in new Improper
+            f: pysimm.forcefield.Forcefield object from which new force field type will be retrieved
+
+        Returns:
+            None
+        """
         a_name = a.type.eq_improper or a.type.name
         b_name = b.type.eq_improper or b.type.name
         c_name = c.type.eq_improper or c.type.name
@@ -1395,6 +1852,21 @@ class System(object):
 
     def apply_forcefield(self, f, charges='default', set_box=True, box_padding=10,
                          update_ptypes=False, skip_ptypes=False):
+        """pysimm.system.System.apply_forcefield
+
+        Applies force field data to System based on typing rules defined in Forcefield object f
+
+        Args:
+            f: pysimm.forcefield.Forcefield object from which new force field type will be retrieved
+            charges: type of charges ot be applied default='default'
+            set_box: Update simulation box information based on particle positions default=True
+            box_padding: Add padding to simulation box if updating dimensions default=10 (Angstroms)
+            update_ptypes: If True, update particle types based on current ParticleType names default=False
+            skip_ptypes: if True, do not change particle types
+
+        Returns:
+            None
+        """
 
         self.ff_class = f.ff_class
         self.ff_name = f.ff_name
@@ -1419,7 +1891,11 @@ class System(object):
         f.assign_charges(self, charges=charges)
 
     def write_amber(self, prmtop='prmtop', inpcrd='inpcrd', **kwargs):
-        ### NOT FINISHED
+        """pysimm.system.System.write_amber
+
+        *** NOT FINISHED ***
+
+        """
         periodic = kwargs.get('periodic') or 1
 
         self.set_atomic_numbers()
@@ -1659,7 +2135,16 @@ class System(object):
                 out_prmtop.write('%.8e' % self.particle_types[i].epsilon)
 
     def write_lammps(self, out_data, **kwargs):
+        """pysimm.system.System.write_lammps
 
+        Write System data formatted for LAMMPS
+
+        Args:
+            out_data: where to write data, file name or 'string'
+
+        Returns:
+            None or string of data file if out_data='string'
+        """
         empty = kwargs.get('empty')
 
         if out_data == 'string':
@@ -2057,7 +2542,16 @@ class System(object):
             out_file.close()
 
     def write_hoomd(self, outfile='data.xml'):
+        """pysimm.system.System.write_hoomd
 
+        Write System data formatted for hoomd
+
+        Args:
+            outfile: file name to write data
+
+        Returns:
+            None
+        """
         hoomd = Et.Element('hoomd_xml')
         tree = Et.ElementTree(hoomd)
 
@@ -2127,6 +2621,16 @@ class System(object):
         tree.write(outfile)
 
     def write_xyz(self, outfile='data.xyz', **kwargs):
+        """pysimm.system.System.write_xyz
+
+        Write System data in xyz format
+
+        Args:
+            outfile: where to write data, file name or 'string'
+
+        Returns:
+            None or string of data file if out_data='string'
+        """
         elem = kwargs.get('elem') if kwargs.get('elem') is not None else True
         append = kwargs.get('append')
         if outfile == 'string':
@@ -2154,6 +2658,16 @@ class System(object):
             out.close()
 
     def write_mol(self, outfile='data.mol'):
+        """pysimm.system.System.write_mol
+
+        Write System data in mol format
+
+        Args:
+            outfile: where to write data, file name or 'string'
+
+        Returns:
+            None or string of data file if out_data='string'
+        """
         if outfile == 'string':
             out = StringIO()
         else:
@@ -2188,6 +2702,16 @@ class System(object):
             out.close()
 
     def write_pdb(self, outfile='data.pdb'):
+        """pysimm.system.System.write_pdb
+
+        Write System data in pdb format
+
+        Args:
+            outfile: where to write data, file name or 'string'
+
+        Returns:
+            None or string of data file if out_data='string'
+        """
         if outfile == 'string':
             out = StringIO()
         else:
@@ -2217,7 +2741,16 @@ class System(object):
             out.close()
 
     def write_yaml(self, file_):
+        """pysimm.system.System.write_yaml
 
+        Write System data in yaml format
+
+        Args:
+            outfile: file name to write data
+
+        Returns:
+            None
+        """
         n = self.copy()
 
         s = vars(n)
@@ -2241,6 +2774,16 @@ class System(object):
             f.write(json.dumps(s, indent=4, separators=(',', ': ')))
 
     def consolidate_types(self):
+        """pysimm.system.System.consolidate_types
+
+        Removes duplicate types and reassigns references
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         for pt in self.particle_types:
             for dup in self.particle_types:
                 if pt is not dup and pt.name == dup.name:
@@ -2282,6 +2825,16 @@ class System(object):
                     self.improper_types.remove(dup.tag)
 
     def set_cog(self):
+        """pysimm.system.System.set_cog
+
+        Calculate center of gravity of System and assign to System.cog
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.cog = [0, 0, 0]
         for p in self.particles:
             self.cog[0] += p.x
@@ -2291,6 +2844,16 @@ class System(object):
             self.cog = [c / self.particles.count for c in self.cog]
 
     def center_at_origin(self):
+        """pysimm.system.System.center_at_origin
+
+        Moves particles in system such that new center of gravity is 0, 0, 0
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.set_cog()
         for p in self.particles:
             p.x -= self.cog[0]
@@ -2299,6 +2862,11 @@ class System(object):
         self.set_cog()
 
     def set_neighbors(self, cutoff=12.0):
+        """pysimm.system.System.set_neighbors
+
+        *** BUGGY - DO NOT USE ***
+
+        """
         ncells = [int(ceil(self.dim.dx/cutoff)), int(ceil(self.dim.dy/cutoff)), int(ceil(self.dim.dz/cutoff))]
         cell_dx = self.dim.dx/ncells[0]
         cell_dy = self.dim.dy/ncells[1]
@@ -2338,7 +2906,11 @@ class System(object):
         self.neighbors_check = True
 
     def guess_bonds(self, heavy_d=2.0, hydrogen_d=1.5, neighbor_cutoff=2.5):
+        """pysimm.system.System.guess_bonds
 
+        *** USES BUGGY FUNCTION SET_NEIGHBORS - DO NOT USE ***
+
+        """
         self.bonds.remove('all')
         for p in self.particles:
             p.bonds = ItemContainer()
@@ -2369,6 +2941,16 @@ class System(object):
                         p_.bonded_to.add(p)
 
     def guess_hybridization(self, unwrap=True):
+        """pysimm.system.System.guess_hybridization
+
+        Simple guessing of hybridization based on element and number of bonds. Cannot detect aromaticity.
+
+        Args:
+            unwrap: if True, unwrap System first default=True
+
+        Returns:
+            None
+        """
         if unwrap:
             self.unwrap()
         self.add_particle_bonding()
@@ -2403,6 +2985,16 @@ class System(object):
                     error_print('unexpected number of bonds for particle %s' % p.tag)
 
     def guess_bond_order(self):
+        """pysimm.system.System.guess_bond_order
+
+        Simple guessing of bond order based on hybridizations
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         for b in self.bonds:
             if b.a.type.elem == 'H' or b.b.type.elem == 'H':
                 if not b.order:
@@ -2426,6 +3018,16 @@ class System(object):
                     print(b.order, 1)
 
     def set_mass(self):
+        """pysimm.system.System.set_mass
+
+        Set total mass of particles in System
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.mass = 0
         for p in self.particles:
             if p.type.mass is None:
@@ -2435,18 +3037,48 @@ class System(object):
             self.mass += p.type.mass
 
     def set_volume(self):
+        """pysimm.system.System.set_volume
+
+        Set volume of System based on Dimension
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         if self.dim.check():
             self.volume = ((self.dim.xhi - self.dim.xlo) *
                            (self.dim.yhi - self.dim.ylo) *
                            (self.dim.zhi - self.dim.zlo))
 
     def set_density(self):
+        """pysimm.system.System.set_density
+
+        Calculate density of System from mass and volume
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.set_mass()
         self.set_volume()
         if self.mass and self.volume:
             self.density = self.mass / 6.02e23 / self.volume * 1e24
 
     def set_velocity(self):
+        """pysimm.system.System.set_velocity
+
+        Calculate total velocity of particles in System
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.vx = 0.0
         self.vy = 0.0
         self.vz = 0.0
@@ -2462,6 +3094,16 @@ class System(object):
             self.vz += p.vz
 
     def zero_velocity(self):
+        """pysimm.system.System.zero_velocity
+
+        Enforce zero shift velocity in system
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.set_velocity()
         shift_x = shift_y = shift_z = 0.0
         if self.vx != 0:
@@ -2478,6 +3120,17 @@ class System(object):
         self.set_velocity()
 
     def set_box(self, padding=0., center=True):
+        """pysimm.system.System.set_box
+
+        Update System.Dimension with user defined padding
+
+        Args:
+            padding: add padding to all sides of box (Angstrom)
+            center: if True, place center of box at origin default=True
+
+        Returns:
+            None
+        """
         if center:
             self.center_at_origin()
         xmin = ymin = zmin = sys.float_info.max
@@ -2507,6 +3160,17 @@ class System(object):
         self.dim.dz = self.dim.zhi - self.dim.zlo
 
     def set_mm_dist(self, molecules=None):
+        """pysimm.system.System.set_mm_dist
+
+        Calculate molecular mass distribution (mainly for polymer systems).
+        Sets System.mw, System.mn, and System.disperisty
+
+        Args:
+            molecules: ItemContainer of molecules to calculate distributions defaul='all'
+
+        Returns:
+            None
+        """
         if molecules is None or molecules == 'all':
             molecules = self.molecules
         for m in molecules:
@@ -2525,6 +3189,16 @@ class System(object):
         self.pdi = self.mw / self.mn
 
     def set_frac_free_volume(self, v_void=None):
+        """pysimm.system.System.set_frac_free_volume
+
+        Calculates fractional free volume from void volume and bulk density
+
+        Args:
+            v_void: void volume if not defined in System.void_volume default=None
+
+        Returns:
+            None
+        """
         if not v_void and not self.void_volume:
             error_print('Void volume not provided, cannot calculate fractional free volume')
             return
@@ -2538,7 +3212,19 @@ class System(object):
             self.frac_free_volume = 0.0
 
     def visualize(self, vis_exec='vmd', **kwargs):
+        """pysimm.system.System.visualize
 
+        Visualize system in third party software with given executable. Software must accept pdb or xyz as first
+        command line argument.
+
+        Args:
+            vis_exec: executable to launch visualization software default='vmd'
+            unwrap (optional): if True, unwrap System first default=None
+            format (optional): set format default='xyz'
+
+        Returns:
+            None
+        """
         unwrap = kwargs.get('unwrap')
         format = kwargs.get('format') or 'xyz'
 
@@ -2564,11 +3250,20 @@ class System(object):
 
 
 class Molecule(System):
+    """pysimm.system.Molecule
+
+    Very similar to System, but requires less information
+    """
     def __init__(self, **kwargs):
         System.__init__(self, **kwargs)
 
 
 def join(system1, system2, remove_overlaps=True, max_buffer=6):
+    """pysimm.system.join
+
+    *** USES BUGGY FUNCTION SET_NEIGHBORS - DO NOT USE ***
+
+    """
     s1 = system1.copy()
     s2 = system2.copy()
     new_system = replicate([s1, s2], [1, 1], density=None, rand=False, print_insertions=False)
@@ -2594,6 +3289,16 @@ def join(system1, system2, remove_overlaps=True, max_buffer=6):
 
 
 def read_yaml(file_, **kwargs):
+    """pysimm.system.read_yaml
+
+    Interprets yaml file and creates pysimm.system.System object
+
+    Args:
+        file_: yaml file name
+
+    Returns:
+        pysimm.system.System object
+    """
     dict_ = json.loads(file(file_).read())
 
     s = System()
@@ -2749,7 +3454,17 @@ def read_yaml(file_, **kwargs):
 
 
 def read_xyz(file_, **kwargs):
+    """pysimm.system.read_xyz
 
+    Interprets xyz file and creates pysimm.system.System object
+
+    Args:
+        file_: xyz file name
+        quiet(optional): if False, print status
+
+    Returns:
+        pysimm.system.System object
+    """
     quiet = kwargs.get('quiet')
 
     s = System()
@@ -2781,6 +3496,24 @@ def read_xyz(file_, **kwargs):
 
 
 def read_lammps(data_file, **kwargs):
+    """pysimm.system.read_lammps
+
+    Interprets LAMMPS data file and creates pysimm.system.System object
+
+    Args:
+        data_file: LAMMPS data file name
+        quiet(optional): if False, print status
+        pair_style (optional): option to let user override
+        bond_style (optional): option to let user override
+        angle_style (optional): option to let user override
+        dihedral_style (optional): option to let user override
+        improper_style (optional): option to let user override
+        set_types (optional): if True, objectify default=True
+        name (optional): provide name for system
+
+    Returns:
+        pysimm.system.System object
+    """
     pair_style = kwargs.get('pair_style')
     bond_style = kwargs.get('bond_style')
     angle_style = kwargs.get('angle_style')
@@ -3421,10 +4154,21 @@ def read_lammps(data_file, **kwargs):
 
 
 def read_hoomd(data_file, **kwargs):
+    """pysimm.system.read_hoomd
 
+    Interprets hoomd data file and creates pysimm.system.System object
+
+    Args:
+        data_file: hoomd data file name
+        f (optional): Forcefield object to get data from
+        d_unit (optional): allow user to override distance unit used in data file default='nm'
+
+    Returns:
+        pysimm.system.System object
+    """
     f = kwargs.get('forcefield')
     string = kwargs.get('string')
-    d_unit = kwargs.get('string') or 'nm'
+    d_unit = kwargs.get('d_unit') or 'nm'
 
     s = System()
     if string:
@@ -3617,6 +4361,17 @@ def read_hoomd(data_file, **kwargs):
 
 
 def read_pubchem_smiles(smiles, type_with=None):
+    """pysimm.system.read_pubchem_smiles
+
+    Interface with pubchem restful API to create molecular system from SMILES format
+
+    Args:
+        smiles: smiles formatted string of molecule
+        type_with: pysimm.forcefield.Forcefield object to type with default=None
+
+    Returns:
+        pysimm.system.System object
+    """
     req = ('https://pubchem.ncbi.nlm.nih.gov/'
            'rest/pug/compound/smiles/%s/SDF/?record_type=3d' % smiles)
 
@@ -3628,7 +4383,17 @@ def read_pubchem_smiles(smiles, type_with=None):
 
 
 def read_cml(cml_file, **kwargs):
+    """pysimm.system.read_cml
 
+    Interprets cml file and creates pysimm.system.System object
+
+    Args:
+        cml_file: cml file name
+        linkers (optional): if True, use spinMultiplicity to determine linker default=None
+
+    Returns:
+        pysimm.system.System object
+    """
     linkers = kwargs.get('linkers')
 
     if os.path.isfile(cml_file):
@@ -3683,6 +4448,18 @@ def read_cml(cml_file, **kwargs):
 
 
 def read_mol(mol_file, type_with=None, version='V2000'):
+    """pysimm.system.read_mol
+
+    Interprets mol file and creates pysimm.system.System object
+
+    Args:
+        mol_file: mol file name
+        f (optional): Forcefield object to get data from
+        version: version of mol file to expect default='V2000'
+
+    Returns:
+        pysimm.system.System object
+    """
     if os.path.isfile(mol_file):
         debug_print('reading file')
         f = file(mol_file)
@@ -3757,7 +4534,18 @@ def read_mol(mol_file, type_with=None, version='V2000'):
     return s
 
 
-def read_pdb(pdb_file, guess_bonds=True):
+def read_pdb(pdb_file, guess_bonds=False):
+    """pysimm.system.read_pdb
+
+    Interprets pdb file and creates pysimm.system.System object
+
+    Args:
+        pdb_file: pdb file name
+        guess_bonds: if True, guess bonds default=False ** probably buggy ***
+
+    Returns:
+        pysimm.system.System object
+    """
     if os.path.isfile(pdb_file):
         debug_print('reading file')
         f = file(pdb_file)
@@ -3830,6 +4618,17 @@ def compare(s1, s2):
 
 
 def get_types(*arg, **kwargs):
+    """pysimm.system.get_types
+
+    Get unique type names from list of systems
+
+    Args:
+        write (optional): if True, write types dictionary to filename
+
+    Returns:
+        (ptypes, btypes, atypes, dtypes, itypes)
+        *** for use with update_types ***
+    """
     write = kwargs.get('write')
 
     ptypes = ItemContainer()
@@ -3902,6 +4701,19 @@ def cluster(s, cutoff=35):
 
 
 def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True):
+    """pysimm.system.replicate
+
+    Replicates list of System objects into new (or exisintg) System.
+    Can be random insertion.
+
+    Args:
+        ref: reference System(s) (this can be a list)
+        nrep: number of insertions to perform (can be list but must match length of ref)
+        s_: System into which insertions will be performed default=None
+        density: density of new System default=0.3 (set to None to not change box)
+        rand: if True, random insertion is performed
+        print_insertions: if True, update screen with number of insertions
+    """
     if not isinstance(ref, list):
         ref = [ref]
     if not isinstance(nrep, list):
