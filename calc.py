@@ -36,7 +36,7 @@ from itertools import izip
 from math import sin, cos, pi, acos
 import numpy as np
 
-from pysimm import system
+from pysimm.system import Particle
 from pysimm import error_print
 from pysimm import warning_print
 from pysimm import verbose_print
@@ -122,7 +122,7 @@ def rotate_vector(x, y, z, theta_x=None, theta_y=None, theta_z=None):
 
 
 def distance(p1, p2):
-    if isinstance(p1, system.Particle) and isinstance(p2, system.Particle):
+    if isinstance(p1, Particle) and isinstance(p2, Particle):
         return np.linalg.norm([p1.x - p2.x, p1.y - p2.y, p1.z - p2.z])
     else:
         return None
