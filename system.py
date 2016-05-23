@@ -2570,6 +2570,32 @@ class Molecule(System):
         System.__init__(self, **kwargs)
 
 
+def join(system1, system2, remove_overlaps=True, max_buffer=6):
+    s1 = system1.copy()
+    s2 = system2.copy()
+    new_system = replicate([s1, s2], [1, 1], density=None, rand=False, print_insertions=False)
+    if not remove_overlaps:
+        return new_system
+    new_system.add_particle_bonding()
+    new_system.set_neighbors(cutoff=max_buffer)
+    for m in new_system.molecules[s1.molecules.count+1:]:
+        overlap = False
+        for mp in m.particles:
+            for p in mp.neighbors:
+                if calc.pbc_distance(new_system, mp, p) < (mp.type.sigma + p.type.sigma)/2:
+                    overlap = True
+                    break
+            if overlap:
+                break
+        if overlap:
+            new_system.molecules.remove(m.tag, update=False)
+            for mp in m.particles:
+                new_system.particles.remove(mp.tag, update=False)
+    new_system.remove_spare_bonding()
+    return new_system
+
+
+
 def read_yaml(file_, **kwargs):
     dict_ = json.loads(file(file_).read())
 
