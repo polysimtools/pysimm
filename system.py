@@ -2575,8 +2575,6 @@ def join(system1, system2, remove_overlaps=True, max_buffer=6):
     new_system.dim = s1.dim.copy()
     if not remove_overlaps:
         return new_system
-    new_system.add_particle_bonding()
-    new_system.set_neighbors(cutoff=max_buffer)
     for m in new_system.molecules[s1.molecules.count+1:]:
         overlap = False
         for mp in m.particles:
