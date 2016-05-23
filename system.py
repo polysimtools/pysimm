@@ -33,7 +33,6 @@ import os
 import re
 import sys
 import json
-from xml.dom import minidom
 from xml.etree import ElementTree as Et
 from random import random
 from StringIO import StringIO
@@ -3285,7 +3284,6 @@ def join(system1, system2, remove_overlaps=True, max_buffer=6):
                 new_system.particles.remove(mp.tag, update=False)
     new_system.remove_spare_bonding()
     return new_system
-
 
 
 def read_yaml(file_, **kwargs):
