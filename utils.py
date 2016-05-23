@@ -92,8 +92,6 @@ class ItemContainer(Sequence):
             self._dict[self.count].tag = self.count
         else:
             debug_print('cannot add at index %s' % (self.count+1))
-            pprint(vars(self))
-            pprint(vars(_item))
             return None
         return _item
 
