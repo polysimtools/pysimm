@@ -36,11 +36,11 @@ from itertools import izip
 from math import sin, cos, pi, acos
 import numpy as np
 
-from pysimm.system import Particle
 from pysimm import error_print
 from pysimm import warning_print
 from pysimm import verbose_print
 from pysimm import debug_print
+from pysimm.system import Particle
 from pysimm.utils import Item
 from pysimm.utils import ItemContainer
 
