@@ -59,6 +59,18 @@ from pysimm.utils import PysimmError, Item, ItemContainer
 
 
 class Particle(Item):
+    """pysimm.system.Particle
+
+    Particle object can contain any arbitrary data. Keyword arguments are assigned
+    as attributes. Attributes usually used are given below.
+
+    Attributes:
+        x: x coordinate
+        y: y coordinate
+        z: z coordinate
+        charge: partial charge
+        type: ParticleType object reference
+    """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
 
@@ -81,6 +93,17 @@ class Particle(Item):
             return False
 
     def delete_bonding(self, s):
+        """pysimm.system.Particle.delete_bonding
+
+        Iterates through s.bonds, s.angles, s.dihedrals, and s.impropers and removes
+        those which contain this Particle.
+
+        Args:
+            s: pysimm.system.System object from which bonding Item objects will be removed
+
+        Returns:
+            None
+        """
         if self.bonds:
             for b in self.bonds:
                 if b in s.bonds:
@@ -118,6 +141,16 @@ class Particle(Item):
                     s.impropers.remove(i.tag)
 
     def __sub__(self, other):
+        """pysimm.system.Particle.__sub__
+
+        Implements subtraction between Particle objects to calculate distance.
+
+        Args:
+            other: pysimm.system.Particle object
+
+        Returns:
+            distance calculated by pysimm.calc.distance. This does not consider pbc
+        """
         return calc.distance(self, other)
 
     def __rsub__(self, other):
@@ -125,20 +158,62 @@ class Particle(Item):
 
 
 class ParticleType(Item):
+    """pysimm.system.ParticleType
+
+    ParticleType object can contain any arbitrary data. Keyword arguments are assigned
+    as attributes. Attributes usually used are given below.
+
+    Attributes:
+        sigma: LJ sigma value (Angstrom)
+        epsilon: LJ epsilon value (kcal/mol)
+        elem: element abbreviation, i.e. 'H' for Hydrogen, 'Cl' for Chlorine
+        name: force field particle type name
+    """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
 
 
 class Bond(Item):
+    """pysimm.system.Bond
+
+    Bond object can contain any arbitrary data. Keyword arguments are assigned
+    as attributes. Attributes usually used are given below.
+
+    Attributes:
+        a: pysimm.system.Particle object involved in bond
+        b: pysimm.system.Particle object involved in bond
+        type: z coordinate
+    """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
 
     def distance(self):
+        """pysimm.system.Bond.distance
+
+        Calculates distance between Particle a and Particle b in this Bond object.
+        Sets distance to dist attribute of Bond object. Does not consider pbc.
+
+        Args:
+            None
+
+        Returns:
+            Distance between Particle a and Particle b (not considering pbc)
+        """
         self.dist = calc.distance(self.a, self.b)
         return self.dist
 
 
 class BondType(Item):
+    """pysimm.system.BondType
+
+    BondType object can contain any arbitrary data. Keyword arguments are assigned
+    as attributes. Attributes usually used are given below.
+
+    Attributes:
+        k: harmonic bond force constant (kcal/mol/A^2)
+        r0: bond equilibrium distance (Angstrom)
+        name: force field bond type name
+    """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
         if self.name:
