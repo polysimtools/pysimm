@@ -2580,9 +2580,7 @@ def join(system1, system2, remove_overlaps=True, max_buffer=6):
     for m in new_system.molecules[s1.molecules.count+1:]:
         overlap = False
         for mp in m.particles:
-            for p in mp.neighbors:
-                if p.tag > s1.particles.count:
-                    continue
+            for p in new_system.particles[1:s1.particles.count+1]:
                 if calc.pbc_distance(new_system, mp, p) < (mp.type.sigma + p.type.sigma)/2:
                     overlap = True
                     break
