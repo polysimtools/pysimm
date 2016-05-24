@@ -53,6 +53,20 @@ element_names_by_mass = {1: 'H', 4: 'He', 7: 'Li', 9: 'Be', 11: 'B', 12: 'C',
 
 
 class Forcefield(object):
+    """pysimm.forcefield.Forcefield
+
+    Base Forcefield class definition.
+    Initialize with force field xml file.
+
+    Attributes:
+        ff_class: force field class (1 or 2)
+        ff_name: force field name
+        particle_types: pysimm.utils.ItemContainer for particle_types
+        bond_types: pysimm.utils.ItemContainer for bond_types
+        angle_types: pysimm.utils.ItemContainer for angle_types
+        dihedral_types: pysimm.utils.ItemContainer for dihedral_types
+        improper_types: pysimm.utils.ItemContainer for improper_types
+    """
     def __init__(self, file_=None):
         self.ff_class = 0
         self.ff_name = ''
@@ -139,6 +153,16 @@ class Forcefield(object):
             self.improper_types.add(it)
 
     def write(self, out):
+        """pysimm.forcefield.Forcefield.write
+
+        Write Forcefield object to xml format.
+
+        Args:
+            out: file name to write
+
+        Returns:
+            None
+        """
 
         ff_elem = Et.Element('Forcefield')
         ff_elem.set('name', self.ff_name)
@@ -180,18 +204,17 @@ class Forcefield(object):
                     indent="  "))
 
 
-class Cg(Forcefield):
-    def __init__(self, db_file=None):
-        if not db_file and db_file is not False:
-            db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   'forcefields', 'cg.xml')
-        Forcefield.__init__(self, db_file)
-        self.ff_name = 'cg'
-        self.pair_style = 'lj'
-        self.ff_class = '1'
-
-
 class Tip3p(Forcefield):
+    """pysimm.forcefield.Tip3p
+
+    Forcefield object with typing rules for Tip3p model.
+    By default reads data file in forcefields subdirectory.
+
+    Attributes:
+        ff_name: tip3p
+        pair_style: lj
+        ff_class: 1
+    """
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -202,6 +225,18 @@ class Tip3p(Forcefield):
         self.ff_class = '1'
 
     def assign_ptypes(self, s):
+        """pysimm.forcefield.Tip3p.assign_ptypes
+
+        Tip3p specific particle typing rules.
+        Requires System object Particle objects have Particle.bonds defined.
+        *** use System.add_particle_bonding() to ensure this ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         s.pair_style = self.pair_style
         for p in s.particles:
@@ -237,6 +272,18 @@ class Tip3p(Forcefield):
                 p.type = pt[0]
 
     def assign_btypes(self, s):
+        """pysimm.forcefield.Tip3p.assign_btypes
+
+        Tip3p specific bond typing rules.
+        Requires System object Particle objects have Particle.type and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for b in s.bonds:
             bt = self.bond_types.get('%s,%s' % (b.a.type.name, b.b.type.name))
@@ -258,6 +305,19 @@ class Tip3p(Forcefield):
                 b.type = bt[0]
 
     def assign_atypes(self, s):
+        """pysimm.forcefield.Tip3p.assign_atypes
+
+        Tip3p specific angle typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for p in s.particles:
             p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
@@ -294,12 +354,46 @@ class Tip3p(Forcefield):
                 a.type = at[0]
 
     def assign_dtypes(self, s):
+        """pysimm.forcefield.Tip3p.assign_dtypes
+
+        Tip3p specific dihedral typing rules.
+        There are none.
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         pass
 
     def assign_itypes(self, s):
+        """pysimm.forcefield.Tip3p.assign_itypes
+
+        Tip3p specific improper typing rules.
+        There are none.
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         pass
 
     def assign_charges(self, s, charges='default'):
+        """pysimm.forcefield.Tip3p.assign_charges
+
+        Tip3p specific charge assignment.
+        There are none.
+
+        Args:
+            s: pysimm.system.System
+            charges: default
+
+        Returns:
+            None
+        """
         if charges == 'gasteiger':
             print('adding gasteiger charges')
             gasteiger.set_charges(s)
@@ -322,6 +416,18 @@ class Tip3p(Forcefield):
 
 
 class Trappe(Forcefield):
+    """pysimm.forcefield.Trappe
+
+    Forcefield object with conversion rules for Trappe model.
+    By default reads data file in forcefields subdirectory.
+
+    *** IN PROGRESS - CONVERSION RULES NOT DEFINED ***
+
+    Attributes:
+        ff_name: trappe
+        pair_style: lj
+        ff_class: 1
+    """
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -333,6 +439,16 @@ class Trappe(Forcefield):
 
 
 class Gaff(Forcefield):
+    """pysimm.forcefield.Gaff
+
+    Forcefield object with typing rules for Gaff model.
+    By default reads data file in forcefields subdirectory.
+
+    Attributes:
+        ff_name: gaff
+        pair_style: lj
+        ff_class: 1
+    """
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -343,6 +459,20 @@ class Gaff(Forcefield):
         self.ff_class = '1'
 
     def assign_ptypes(self, s):
+        """pysimm.forcefield.Gaff.assign_ptypes
+
+        Gaff specific particle typing rules.
+        Requires System object Particle objects have Particle.bonds defined.
+        *** use System.add_particle_bonding() to ensure this ***
+
+        *** Not entirely inclusive - some atom types not used ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         s.pair_style = self.pair_style
         for p in s.particles:
@@ -504,6 +634,19 @@ class Gaff(Forcefield):
                 p.type = pt[0]
 
     def assign_btypes(self, s):
+        """pysimm.forcefield.Gaff.assign_btypes
+
+        Gaff specific bond typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for b in s.bonds:
             bt = self.bond_types.get('%s,%s' % (b.a.type.name, b.b.type.name))
@@ -525,6 +668,19 @@ class Gaff(Forcefield):
                 b.type = bt[0]
 
     def assign_atypes(self, s):
+        """pysimm.forcefield.Gaff.assign_atypes
+
+        Gaff specific boanglend typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for p in s.particles:
             p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
@@ -561,6 +717,19 @@ class Gaff(Forcefield):
                 a.type = at[0]
 
     def assign_dtypes(self, s):
+        """pysimm.forcefield.Gaff.assign_dtypes
+
+        Gaff specific dihedral typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for b in s.bonds:
             for p1 in b.a.bonded_to:
@@ -615,15 +784,46 @@ class Gaff(Forcefield):
                 d.type = dt[0]
 
     def assign_itypes(self, s):
+        """pysimm.forcefield.Gaff.assign_itypes
+
+        Gaff specific improper typing rules.
+        There are none.
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         pass
 
-    def assign_charges(self, s, charges='default'):
-        if charges == 'default':
+    def assign_charges(self, s, charges='gasteiger'):
+        """pysimm.forcefield.Gaff.assign_charges
+
+        Charge assignment. Gasteiger is default for now.
+
+        Args:
+            s: pysimm.system.System
+            charges: gasteiger
+
+        Returns:
+            None
+        """
+        if charges == 'gasteiger':
             print('adding gasteiger charges')
             gasteiger.set_charges(s)
 
 
 class Cgenff(Forcefield):
+    """pysimm.forcefield.Cgenff
+
+    (Currently) empty Forcefield object for Cgenff model.
+    By default reads data file in forcefields subdirectory.
+
+    Attributes:
+        ff_name: cgenff
+        ff_class: 1
+    """
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -634,6 +834,16 @@ class Cgenff(Forcefield):
 
 
 class Dreiding(Forcefield):
+    """pysimm.forcefield.Dreiding
+
+    Forcefield object with typing rules for Dreiding model.
+    By default reads data file in forcefields subdirectory.
+
+    Attributes:
+        ff_name: dreiding
+        pair_style: buck
+        ff_class: 1
+    """
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -644,6 +854,18 @@ class Dreiding(Forcefield):
         self.ff_class = '1'
 
     def assign_ptypes(self, s):
+        """pysimm.forcefield.Dreiding.assign_ptypes
+
+        Dreiding specific particle typing rules.
+        Requires System object Particle objects have Particle.bonds defined.
+        *** use System.add_particle_bonding() to ensure this ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         s.pair_style = self.pair_style
         all_types = set()
         for p in s.particles:
@@ -722,6 +944,19 @@ class Dreiding(Forcefield):
                 p.type = pt[0]
 
     def assign_btypes(self, s):
+        """pysimm.forcefield.Dreiding.assign_btypes
+
+        Dreiding specific bond typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for b in s.bonds:
             bt = self.bond_types.get('%s,%s' % (b.a.type.name, b.b.type.name))
@@ -743,6 +978,19 @@ class Dreiding(Forcefield):
                 b.type = bt[0]
 
     def assign_atypes(self, s):
+        """pysimm.forcefield.Dreiding.assign_atypes
+
+        Dreiding specific angle typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for p in s.particles:
             p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
@@ -779,6 +1027,19 @@ class Dreiding(Forcefield):
                 a.type = at[0]
 
     def assign_dtypes(self, s):
+        """pysimm.forcefield.Dreiding.assign_dtypes
+
+        Dreiding specific dihedral typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for b in s.bonds:
             for p1 in b.a.bonded_to:
@@ -833,6 +1094,19 @@ class Dreiding(Forcefield):
                 d.type = dt[0]
 
     def assign_itypes(self, s):
+        """pysimm.forcefield.Dreiding.assign_itypes
+
+        Dreiding specific improper typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for p in s.particles:
             if len(p.bonded_to) == 3:
@@ -859,13 +1133,35 @@ class Dreiding(Forcefield):
             if it:
                 i.type = it[0]
 
-    def assign_charges(self, s, charges='default'):
-        if charges == 'default':
+    def assign_charges(self, s, charges='gasteiger'):
+        """pysimm.forcefield.Dreiding.assign_charges
+
+        Charge assignment. Gasteiger is default for now.
+
+        Args:
+            s: pysimm.system.System
+            charges: gasteiger
+
+        Returns:
+            None
+        """
+        if charges == 'gasteiger':
             print('adding gasteiger charges')
             gasteiger.set_charges(s)
 
 
 class Pcff(Forcefield):
+    """pysimm.forcefield.Pcff
+
+    Forcefield object with typing rules for Pcff model.
+    By default reads data file in forcefields subdirectory.
+
+    Attributes:
+        ff_name: pcff
+        pair_style: class2
+        ff_class: 2
+        nb_mixing: sixth
+    """
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
@@ -877,6 +1173,18 @@ class Pcff(Forcefield):
         self.nb_mixing = 'sixth'
 
     def assign_ptypes(self, s):
+        """pysimm.forcefield.Pcff.assign_ptypes
+
+        Pcff specific particle typing rules.
+        Requires System object Particle objects have Particle.bonds defined.
+        *** use System.add_particle_bonding() to ensure this ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         s.pair_style = self.pair_style
         for p in s.particles:
@@ -982,6 +1290,19 @@ class Pcff(Forcefield):
                 p.type = pt[0]
 
     def assign_btypes(self, s):
+        """pysimm.forcefield.Pcff.assign_btypes
+
+        Pcff specific bond typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for b in s.bonds:
             bt = self.bond_types.get('%s,%s' % (b.a.type.name, b.b.type.name))
@@ -1003,6 +1324,19 @@ class Pcff(Forcefield):
                 b.type = bt[0]
 
     def assign_atypes(self, s):
+        """pysimm.forcefield.Pcff.assign_atypes
+
+        Pcff specific angle typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for p in s.particles:
             p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
@@ -1056,6 +1390,19 @@ class Pcff(Forcefield):
                 a.type = at[0]
 
     def assign_dtypes(self, s):
+        """pysimm.forcefield.Pcff.assign_dtypes
+
+        Pcff specific dihedral typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for b in s.bonds:
             for p1 in b.a.bonded_to:
@@ -1123,6 +1470,19 @@ class Pcff(Forcefield):
                 d.type = dt[0]
 
     def assign_itypes(self, s):
+        """pysimm.forcefield.Pcff.assign_itypes
+
+        Pcff specific improper typing rules.
+        Requires System object Particle objects have Particle.bonds, Particle.type
+        and Particle.type.name defined.
+        *** use after assign_ptypes ***
+
+        Args:
+            s: pysimm.system.System
+
+        Returns:
+            None
+        """
         all_types = set()
         for p in s.particles:
             for perm in permutations(p.bonded_to, 3):
@@ -1156,6 +1516,17 @@ class Pcff(Forcefield):
                 i.type = it[0]
 
     def assign_charges(self, s, charges='default'):
+        """pysimm.forcefield.Pcff.assign_charges
+
+        Default Pcff charge assignment. Gasteiger is also an option.
+
+        Args:
+            s: pysimm.system.System
+            charges: default
+
+        Returns:
+            None
+        """
         if charges == 'gasteiger':
             print('adding gasteiger charges')
             gasteiger.set_charges(s)
