@@ -2656,6 +2656,48 @@ class System(object):
         else:
             out.close()
 
+    def write_chemdoodle_json(self, outfile, **kwargs):
+        """pysimm.system.System.write_chemdoodle_json
+
+        Write System data in chemdoodle json format
+
+        Args:
+            outfile: where to write data, file name or 'string'
+
+        Returns:
+            None or string of data file if out_data='string'
+        """
+
+        j = {}
+        atoms = []
+        bonds = []
+
+        for p in self.particles:
+            if p.type and p.type.elem:
+                atoms.append({"x": p.x, "y": p.y, "z": p.z, "l": p.type.elem})
+            elif p.elem:
+                atoms.append({"x": p.x, "y": p.y, "z": p.z, "l": p.elem})
+            else:
+                atoms.append({"x": p.x, "y": p.y, "z": p.z})
+
+        for b in self.bonds:
+            if b.order:
+                bonds.append({"b": b.a.tag, "e": b.b.tag, "o": b.order})
+            else:
+                bonds.append({"b": b.a.tag, "e": b.b.tag})
+
+        j["m"] = [atoms, bonds]
+
+        if outfile == 'string':
+            out = StringIO()
+        else:
+            out = open(outfile, 'w+')
+
+        out.write(json.dumps(j))
+        out.close()
+
+
+
     def write_mol(self, outfile='data.mol'):
         """pysimm.system.System.write_mol
 
