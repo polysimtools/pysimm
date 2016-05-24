@@ -2681,9 +2681,9 @@ class System(object):
 
         for b in self.bonds:
             if b.order:
-                bonds.append({"b": b.a.tag, "e": b.b.tag, "o": b.order})
+                bonds.append({"b": b.a.tag-1, "e": b.b.tag-1, "o": b.order})
             else:
-                bonds.append({"b": b.a.tag, "e": b.b.tag})
+                bonds.append({"b": b.a.tag-1, "e": b.b.tag-1})
 
         j = {"a": atoms, "b": bonds}
 
