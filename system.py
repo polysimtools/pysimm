@@ -2668,7 +2668,6 @@ class System(object):
             None or string of data file if out_data='string'
         """
 
-        j = {}
         atoms = []
         bonds = []
 
@@ -2686,7 +2685,7 @@ class System(object):
             else:
                 bonds.append({"b": b.a.tag, "e": b.b.tag})
 
-        j["m"] = ["a": atoms, "b": bonds]
+        j = {"a": atoms, "b": bonds}
 
         if outfile == 'string':
             out = StringIO()
