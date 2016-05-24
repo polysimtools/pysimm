@@ -2676,11 +2676,15 @@ class System(object):
         out.write('written using pySIMM system module\n\n')
         out.write('%s\t%s\n' % (self.particles.count, self.bonds.count))
         for p in self.particles:
-            if p.type.elem:
+            if p.type and p.type.elem:
                 out.write('%10.4f%10.4f%10.4f %s 0 %10.4f\n'
                           % (p.x, p.y, p.z, '{0: >3}'.format(p.type.elem),
                              p.charge))
-            else:
+            elif p.elem:
+                out.write('%10.4f%10.4f%10.4f %s 0 %10.4f\n'
+                          % (p.x, p.y, p.z, '{0: >3}'.format(p.elem),
+                             p.charge))
+            elif p.type:
                 out.write('%10.4f%10.4f%10.4f %s 0 %10.4f\n'
                           % (p.x, p.y, p.z, '{0: >3}'.format(p.type.tag),
                              p.charge))
