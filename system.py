@@ -2686,7 +2686,7 @@ class System(object):
             else:
                 bonds.append({"b": b.a.tag, "e": b.b.tag})
 
-        j["m"] = [atoms, bonds]
+        j["m"] = ["a": atoms, "b": bonds]
 
         if outfile == 'string':
             out = StringIO()
