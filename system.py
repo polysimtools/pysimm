@@ -4577,6 +4577,8 @@ def read_pdb(pdb_file, guess_bonds=False):
     if guess_bonds:
         s.guess_bonds()
 
+    return s
+
 
 def compare(s1, s2):
     print('Particle Types:\n')
