@@ -2701,8 +2701,6 @@ class System(object):
         else:
             out.close()
 
-
-
     def write_mol(self, outfile='data.mol'):
         """pysimm.system.System.write_mol
 
