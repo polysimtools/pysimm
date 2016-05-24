@@ -2694,7 +2694,13 @@ class System(object):
             out = open(outfile, 'w+')
 
         out.write(json.dumps(j))
-        out.close()
+
+        if outfile == 'string':
+            s = out.getvalue()
+            out.close()
+            return s
+        else:
+            out.close()
 
 
 
