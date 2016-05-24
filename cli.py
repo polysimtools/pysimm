@@ -74,6 +74,9 @@ if __name__ == '__main__':
     parser.add_argument('--lmps2xyz', dest='lmps2xyz',
                         nargs=2, help='convert lammps data file to xyz file')
 
+    parser.add_argument('--lmps2cdjson', dest='lmps2cdjson',
+                        nargs=2, help='convert lammps data file to chemdoodle json file')
+
     parser.add_argument('--vmd', action='store_true',
                         help="visualize using mvd")
 
@@ -127,6 +130,9 @@ if __name__ == '__main__':
                   'this may take a while if your system is large')
             s.unwrap()
         s.write_xyz(args.lmps2xyz[1])
+    elif args.lmps2cdjson:
+        s = system.read_lammps(args.lmps2cdjson[0])
+        s.write_chemdoodle_json(args.lmps2cdjson[1])
 
     if args.unwrap:
         try:
