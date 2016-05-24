@@ -2,10 +2,6 @@
 # pysimm.forcefield module
 # ******************************************************************************
 #
-# Forcefield class definition
-# Pcff(Forcefield) class definition
-# Dreiding(Forcefield) class deinition
-#
 # ******************************************************************************
 # License
 # ******************************************************************************

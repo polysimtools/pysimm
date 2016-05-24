@@ -2,8 +2,6 @@
 # pysimm.lmps module
 # ******************************************************************************
 #
-# api to lammps simulation code
-#
 # ******************************************************************************
 # License
 # ******************************************************************************
@@ -76,6 +74,26 @@ class PysimmError(Exception):
 
 
 class MolecularDynamics(object):
+    """pysimm.lmps.MolecularDynamics
+
+    Template object to contain LAMMPS MD settings
+
+    Attributes:
+        timestep: timestep value to use during MD
+        ensemble: 'nvt' or 'npt' or 'nve'
+        limit: numerical value to use with nve when limiting particle displacement
+        temp: temperature for use with 'nvt' and 'npt' or new_v
+        pressure: pressure for use with 'npt'
+        new_v: True to have LAMMPS generate new velocities
+        seed: seed value for RNG (random by default)
+        scale_v: True to scale velocities to given temperature default=False
+        length: length of MD simulation in number of timesteps
+        thermo: frequency to print thermodynamic data default=1000
+        thermo_style: LAMMPS formatted input for thermo_style
+        dump: frequency to dump trajectory
+        dump_name: prefix of trajectory dump file
+        dump_append: True to append to previous dump file is it exists
+    """
     def __init__(self, **kwargs):
 
         self.timestep = kwargs.get('timestep') or 1
@@ -107,6 +125,16 @@ class MolecularDynamics(object):
         self.input = ''
 
     def write(self, sim):
+        """pysimm.lmps.MolecularDynamics.write
+
+        Create LAMMPS input for a molecular dynamics simulation.
+
+        Args:
+            sim: pysimm.lmps.Simulation object reference
+
+        Returns:
+            input string
+        """
         self.input = ''
         if self.thermo:
             self.input += 'thermo %s\n' % int(self.thermo)
@@ -152,6 +180,22 @@ class MolecularDynamics(object):
 
 
 class Minimization(object):
+    """pysimm.lmps.Minimization
+
+    Template object to contain LAMMPS energy minimization settings.
+
+    Attributes:
+        min_style: LAMMPS minimization style default='sd'
+        etol: energy tolerance default=1e-3
+        ftol: force tolerance default=1e-3
+        maxiter: maximum iterations default=10000
+        max eval: maximum force evaluations default=100000
+        thermo: frequency to print thermodynamic data default=1000
+        thermo_style: LAMMPS formatted input for thermo_style
+        dump: frequency to dump trajectory
+        dump_name: prefix of trajectory dump file
+        dump_append: True to append to previous dump file is it exists
+    """
     def __init__(self, **kwargs):
 
         self.min_style = kwargs.get('min_style') or 'sd'
@@ -168,6 +212,16 @@ class Minimization(object):
         self.input = ''
 
     def write(self, sim):
+        """pysimm.lmps.Minimization.write
+
+        Create LAMMPS input for an energy minimization simulation.
+
+        Args:
+            sim: pysimm.lmps.Simulation object reference
+
+        Returns:
+            input string
+        """
         self.input = ''
         if self.thermo:
             self.input += 'thermo %s\n' % int(self.thermo)
@@ -197,14 +251,48 @@ class Minimization(object):
 
 
 class CustomInput(object):
+    """pysimm.lmps.CustomInput
+
+    Template object to contain custom LAMMPS input.
+
+    Attributes:
+        custom_input: custom input string
+    """
     def __init__(self, custom_input):
         self.input = '{}\n'.format(custom_input)
 
     def write(self, sim):
+        """pysimm.lmps.CustomInput.write
+
+        Create LAMMPS input for a custom simulation.
+
+        Args:
+            sim: pysimm.lmps.Simulation object reference
+
+        Returns:
+            input string
+        """
         return self.input
 
 
 class Simulation(object):
+    """pysimm.lmps.Simulation
+
+    Organizational object for LAMMPS simulation. Should contain combination of
+    pysimm.lmps.MolecularDynamics, pysimm.lmps.Minimization, and/or pysimm.lmps.CustomInput object.
+
+    Attributes:
+        atom_style: LAMMPS atom_style default=full
+        kspace_style: LAMMPS kspace style default='pppm 1e-4'
+        units: LAMMPS set of units to use default=real
+        special_bonds: LAMMPS special bonds input
+        nonbond_mixing: type of mixing rule for nonbonded interactions default=arithmetic
+        cutoff: cutoff for nonbonded interactions default=12
+        print_to_screen: True to have LAMMPS output printed to stdout
+        name: name id for simulations
+        log: prefix for LAMMPS log file
+        write: file name to write final LAMMPS data file default=None
+    """
     def __init__(self, s, **kwargs):
 
         self.system = s
@@ -227,6 +315,15 @@ class Simulation(object):
         self.sim = kwargs.get('sim') if kwargs.get('sim') is not None else []
 
     def add_md(self, template=None, **kwargs):
+        """pysimm.lmps.Simulation.add_md
+
+        Add pysimm.lmps.MolecularDyanmics template to simulation
+
+        Args:
+            template: pysimm.lmps.MolecularDynamics object reference
+            **kwargs: if template is None these are passed to
+            pysimm.lmps.MolecularDynamics constructor to create new template
+        """
         if template is None:
             self.sim.append(MolecularDynamics(**kwargs))
         elif isinstance(template, MolecularDynamics):
@@ -235,6 +332,15 @@ class Simulation(object):
             error_print('you must add an object of type MolecularDynamics to Simulation')
 
     def add_min(self, template=None, **kwargs):
+        """pysimm.lmps.Simulation.add_min
+
+        Add pysimm.lmps.Minimization template to simulation
+
+        Args:
+            template: pysimm.lmps.Minimization object reference
+            **kwargs: if template is None these are passed to
+            pysimm.lmps.Minimization constructor to create new template
+        """
         if template is None:
             self.sim.append(Minimization(**kwargs))
         elif isinstance(template, Minimization):
@@ -243,10 +349,26 @@ class Simulation(object):
             error_print('you must add an object of type Minimization to Simulation')
 
     def add_custom(self, custom=''):
+        """pysimm.lmps.Simulation.add_custom
+
+        Add custom input string to simulation
+
+        Args:
+            custom: custom LAMMPS input string to add to Simulation
+        """
         self.sim.append(CustomInput(custom))
 
     def write_input(self):
+        """pysimm.lmps.Simulation.write_input
 
+        Creates LAMMPS input string including initialization and input from templates/custom input
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.input = ''
 
         self.input += write_init(self.system, atom_style=self.atom_style, kspace_style=self.kspace_style,
@@ -272,6 +394,15 @@ class Simulation(object):
         self.input += 'quit\n'
 
     def run(self, np=None, nanohub=None, rewrite=True):
+        """pysimm.lmps.Simulation.run
+
+        Begin LAMMPS simulation.
+
+        Args:
+            np: number of threads to use (serial by default) default=None
+            nanohub: dictionary containing nanohub resource information default=None
+            rewrite: True to rewrite input before running default=True
+        """
         if self.custom:
             rewrite = False
             self.input += '\nwrite_data pysimm_md.lmps\n'
@@ -287,7 +418,18 @@ def enqueue_output(out, queue):
 
 
 def call_lammps(simulation, np, nanohub):
+    """pysimm.lmps.call_lammps
 
+    Wrapper to call LAMMPS using executable name defined in pysimm.lmps module.
+
+    Args:
+        simulation: pysimm.lmps.Simulation object reference
+        np: number of threads to use
+        nanohub: dictionary containing nanohub resource information default=None
+
+    Returns:
+        None
+    """
     if nanohub:
         if simulation.name:
             print('%s: sending %s simulation to computer cluster at nanoHUB' % (strftime('%H:%M:%S'), simulation.name))
@@ -467,105 +609,48 @@ def call_lammps_remote(simulation, np=1, walltime=1440, host=None, user=None, si
 
 
 def quick_md(s, np=None, nanohub=None, **kwargs):
+    """pysimm.lmps.quick_md
+
+    Convenience function to call an individual MD simulation. kwargs are passed to MD constructor
+
+    Args:
+        s: system to perform simulation on
+        np: number of threads to use
+        nanohub: dictionary containing nanohub resource information default=None
+
+    Returns:
+        None
+    """
     sim = Simulation(s, **kwargs)
     sim.add_md(**kwargs)
     sim.run(np, nanohub)
 
 
 def quick_min(s, np=None, nanohub=None, **kwargs):
+    """pysimm.lmps.quick_min
+
+    Convenience function to call an individual energy minimization simulation. kwargs are passed to min constructor
+
+    Args:
+        s: system to perform simulation on
+        np: number of threads to use
+        nanohub: dictionary containing nanohub resource information default=None
+
+    Returns:
+        None
+    """
     sim = Simulation(s, **kwargs)
     sim.add_min(**kwargs)
     sim.run(np, nanohub)
 
 
-def run(s, template=None, **kwargs):
-    global LAMMPS_EXEC
-
-    if template:
-        template.update(kwargs)
-        kwargs = template
-
-    name = kwargs.get('name') or False
-    log = kwargs.get('log') or 'log.lammps'
-    print_to_screen = kwargs.get('print_to_screen') if kwargs.get(
-        'print_to_screen') is not None else False
-    write = kwargs.get('write')
-    pbs = kwargs.get('pbs')
-
-    nanohub = kwargs.get('nanohub') or {}
-
-    np = kwargs.get('np')
-
-    lammps_in = kwargs.get('lammps_in')
-
-    if not os.path.isfile(lammps_in):
-        with open('temp.in', 'w') as f:
-            f.write(lammps_in)
-    else:
-        shutil.copy(lammps_in, 'temp.in')
-
-    s.write_lammps('temp.lmps')
-
-    if name:
-        print('%s: starting %s simulation using LAMMPS'
-              % (strftime('%H:%M:%S'), name))
-    else:
-        print('%s: starting energy minimization using LAMMPS'
-              % strftime('%H:%M:%S'))
-
-    if nanohub:
-        if name:
-            print('%s: sending %s simulation to computer cluster' % (strftime('%H:%M:%S'), name))
-        sys.stdout.flush()
-        cmd = ('submit -n %s -w %s -i temp.lmps -i temp.in '
-               'lammps-09Dec14-parallel -e both -l none -i temp.in'
-               % (nanohub.get('cores'), nanohub.get('walltime')))
-        cmd = shlex.split(cmd)
-        exit_status, stdo, stde = RapptureExec(cmd)
-    if pbs:
-        call('mpiexec %s -e both -l log' % LAMMPS_EXEC, shell=True,
-             stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
-    else:
-        if np:
-            p = Popen(['mpiexec', '-np', str(np),
-                       LAMMPS_EXEC, '-e', 'both', '-l', log],
-                      stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
-        else:
-            p = Popen([LAMMPS_EXEC, '-e', 'both', '-l', log],
-                      stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
-
-        while True:
-            out = p.stdout.read(1)
-            if out == '' and p.poll() is not None:
-                break
-            if out != '' and print_to_screen:
-                sys.stdout.write(out)
-                sys.stdout.flush()
-
-    if write:
-        n = read_lammps(write, quiet=True)
-    else:
-        n = read_lammps('temp.lmps', quiet=True)
-    for p in n.particles:
-        p_ = s.particles[p.tag]
-        p_.x = p.x
-        p_.y = p.y
-        p_.z = p.z
-        p_.vx = p.vx
-        p_.vy = p.vy
-        p_.vz = p.vz
-    s.dim = n.dim
-    os.remove('temp.in')
-
-    if name:
-        print('%s: %s simulation using LAMMPS successful'
-              % (strftime('%H:%M:%S'), name))
-    else:
-        print('%s: simulation using LAMMPS successful'
-              % strftime('%H:%M:%S'))
-
-
 def md(s, template=None, **kwargs):
+    """pysimm.lmps.md
+
+    Convenience function for performing LAMMPS MD
+
+    *** WILL BE DEPRECATED - USE QUICK_MD INSTEAD ***
+    """
     global LAMMPS_EXEC
 
     if template:
@@ -756,6 +841,12 @@ def md(s, template=None, **kwargs):
 
 
 def minimize(s, template=None, **kwargs):
+    """pysimm.lmps.minimize
+
+    Convenience function for performing LAMMPS energy minimization
+
+    *** WILL BE DEPRECATED - USE QUICK_MIN INSTEAD ***
+    """
     global LAMMPS_EXEC
 
     if template:
@@ -919,6 +1010,12 @@ def minimize(s, template=None, **kwargs):
 
 
 def relax(s, template=None, **kwargs):
+    """pysimm.lmps.md
+
+    Convenience function for performing LAMMPS MD
+
+    *** WILL BE DEPRECATED - USE QUICK_MD INSTEAD ***
+    """
     global LAMMPS_EXEC
 
     if template:
@@ -1096,7 +1193,20 @@ def relax(s, template=None, **kwargs):
 
 
 def write_init(l, **kwargs):
+    """pysimm.lmps.write_init
 
+    Create initialization LAMMPS input based on pysimm.system.System data
+
+    Args:
+        l: pysimm.system.System object reference
+        kwargs:
+            atom_style: LAMMPS atom_style default=full
+            kspace_style: LAMMPS kspace style default='pppm 1e-4'
+            units: LAMMPS set of units to use default=real
+            special_bonds: LAMMPS special bonds input
+            nonbond_mixing: type of mixing rule for nonbonded interactions default=arithmetic
+            nb_cut: cutoff for nonbonded interactions default=12
+    """
     atom_style = kwargs.get('atom_style') or 'full'
     kspace_style = kwargs.get('kspace_style') or 'pppm 1e-4'
     units = kwargs.get('units') or 'real'
@@ -1232,59 +1342,3 @@ def write_init(l, **kwargs):
                     output += 'pair_coeff %s %s %s %s %s\n' % (pt1.tag, pt2.tag, a, rho, c)
 
     return output
-
-
-def rdf(s, p_i='all', p_j='all', nb_cut=15.0, bin_width=0.1, log='log.lammps',
-        special_bonds=None, print_to_screen=True):
-    command = write_init(s, nb_cut, special_bonds=special_bonds)
-    if p_i == 'all' and p_j == 'all':
-        command += 'compute pysimm all rdf %d\n' % (nb_cut / bin_width)
-    elif p_i == 'all':
-        for pt in s.particle_types:
-            if pt.name == p_j:
-                command += ('compute pysimm all rdf %d * %d\n'
-                            % (nb_cut / bin_width, pt.tag))
-                break
-    elif p_j == 'all':
-        for pt in s.particle_types:
-            if pt.name == p_i:
-                command += ('compute pysimm all rdf %d * %d\n'
-                            % (nb_cut / bin_width, pt.tag))
-                break
-    else:
-        i = j = 0
-        for pt in s.particle_types:
-            if pt.name == p_i:
-                i = pt.tag
-            if pt.name == p_j:
-                j = pt.tag
-        command += ('compute pysimm all rdf %d %d %d\n'
-                    % (nb_cut / bin_width, i, j))
-    command += 'fix 1 all ave/time 1 1 1 c_pysimm file rdf.out mode vector\n'
-    command += 'run 0'
-
-    with open('temp.in', 'w') as f:
-        f.write(command)
-
-    if log:
-        p = Popen([LAMMPS_EXEC, '-e', 'both', '-l', log],
-                  stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
-    else:
-        p = Popen([LAMMPS_EXEC, '-e', 'both', '-l', 'None'],
-                  stdin=open('temp.in'), stdout=PIPE, stderr=PIPE)
-
-    while True:
-        out = p.stdout.read(1)
-        if out == '' and p.poll() is not None:
-            break
-        if out != '' and print_to_screen:
-            sys.stdout.write(out)
-            sys.stdout.flush()
-
-    os.remove('temp.in')
-
-    print 'rdf complete'
-
-
-if __name__ == '__main__':
-    pass
