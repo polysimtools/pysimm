@@ -56,8 +56,9 @@ def initialize(s, polym_settings):
 
     print('finding linker atoms in system and adding artifical charges...')
 
+    s.add_particle_bonding()
+
     for p in s.particles:
-        p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
         if p.type.name == settings.polym.lo1:
             p.linker = True
             head_linkers.add(p)
