@@ -240,8 +240,8 @@ def add_bonds(s, p1, p2):
             if m1 is not m2:
                 large_m.dihedrals.add(s.dihedrals[-1])
 
-    p1.bonded_to.append(p2)
-    p2.bonded_to.append(p1)
+    p1.bonded_to.add(p2)
+    p2.bonded_to.add(p1)
 
     if s.ff_class == '2':
         for perm in permutations(p1.bonded_to, 3):
