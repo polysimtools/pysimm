@@ -1535,7 +1535,7 @@ class System(object):
         if p.x is None or p.y is None or p.z is None:
             phi = random() * 2 * pi
             theta = acos(random() * 2 - 1)
-            r = 3
+            r = 1.5
             p.x = p0.x + r * cos(theta) * sin(phi)
             p.y = p0.y + r * sin(theta) * sin(phi)
             p.z = p0.z + r * cos(phi)
