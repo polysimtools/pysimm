@@ -1519,7 +1519,7 @@ class System(object):
             elif pt.elem == 'I':
                 pt.atomic_number = 53
 
-    def add_particle_bonded_to(self, p, p0, f=None):
+    def add_particle_bonded_to(self, p, p0, f=None, sep=1.5):
         """pysimm.system.System.add_particle_bonded_to
 
         Add new Particle to System bonded to p0 and automatically update new forcefield types
@@ -1535,10 +1535,9 @@ class System(object):
         if p.x is None or p.y is None or p.z is None:
             phi = random() * 2 * pi
             theta = acos(random() * 2 - 1)
-            r = 1.5
-            p.x = p0.x + r * cos(theta) * sin(phi)
-            p.y = p0.y + r * sin(theta) * sin(phi)
-            p.z = p0.z + r * cos(phi)
+            p.x = p0.x + sep * cos(theta) * sin(phi)
+            p.y = p0.y + sep * sin(theta) * sin(phi)
+            p.z = p0.z + sep * cos(phi)
         if p.charge is None:
             p.charge = 0
         if p.molecule is None:
