@@ -1544,8 +1544,7 @@ class System(object):
             p.molecule = p0.molecule
         self.add_particle(p)
         self.add_bond(p0, p, f)
-        if not p0.bonded_to:
-            self.add_particle_bonding()
+        self.add_particle_bonding()
         for p_ in p0.bonded_to:
             if p_ is not p:
                 self.add_angle(p_, p0, p, f)
