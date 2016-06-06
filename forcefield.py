@@ -1271,6 +1271,8 @@ class Pcff(Forcefield):
                 else:
                     print 'dont think I can type this one'
                     return p
+            elif p.elem == 'Cl':
+                p.type_name = 'Cl'
             else:
                 print 'dont think I can type this one'
                 return p
