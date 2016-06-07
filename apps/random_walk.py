@@ -343,8 +343,6 @@ def random_walk(m, nmon, s_=None, **kwargs):
         else:
             print('cannot find head and tail')
 
-        s.write_lammps('tmp.lmps')
-
         if sim is None:
             sim = lmps.Simulation(s, name='relax_%03d' % (insertion+2), log='relax.log', **settings)
             sim.add_md(ensemble='nve', limit=limit, **settings)
