@@ -313,7 +313,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
             for p in s.particles[-1*n.particles.count:]:
                 if p.linker == 'head':
                     head = p
-        s.write_xyz('last_bond.xyz')
+
         s.add(n, change_dim=False)
         s.write_xyz('last_bond.xyz', append=True)
 
