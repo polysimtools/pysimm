@@ -313,8 +313,9 @@ def random_walk(m, nmon, s_=None, **kwargs):
             for p in s.particles[-1*n.particles.count:]:
                 if p.linker == 'head':
                     head = p
-
+        s.write_xyz('last_bond.xyz')
         s.add(n, change_dim=False)
+        s.write_xyz('last_bond.xyz', append=True)
 
         s.add_particle_bonding()
 
@@ -348,6 +349,8 @@ def random_walk(m, nmon, s_=None, **kwargs):
         sim.add_md(ensemble='nve', limit=limit, **settings)
         sim.add_min(**settings)
         sim.run(np=settings.get('np'))
+
+        s.write_xyz('last_bond.xyz', append=True)
 
         if unwrap:
             if not s.unwrap():
