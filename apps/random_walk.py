@@ -260,6 +260,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
     unwrap = kwargs.get('unwrap')
     traj = kwargs.get('traj') if kwargs.get('traj') is not None else True
     limit = kwargs.get('limit') if kwargs.get('limit') is not None else 0.1
+    sim = kwargs.get('sim')
 
     m.add_particle_bonding()
 
@@ -315,7 +316,6 @@ def random_walk(m, nmon, s_=None, **kwargs):
                     head = p
 
         s.add(n, change_dim=False)
-        s.write_xyz('last_bond.xyz', append=True)
 
         s.add_particle_bonding()
 
@@ -345,12 +345,12 @@ def random_walk(m, nmon, s_=None, **kwargs):
 
         s.write_lammps('tmp.lmps')
 
-        sim = lmps.Simulation(s, name='relax_%03d' % (insertion+2), log='relax.log', **settings)
-        sim.add_md(ensemble='nve', limit=limit, **settings)
-        sim.add_min(**settings)
-        sim.run(np=settings.get('np'))
-
-        s.write_xyz('last_bond.xyz', append=True)
+        if sim is None:
+            sim = lmps.Simulation(s, name='relax_%03d' % (insertion+2), log='relax.log', **settings)
+            sim.add_md(ensemble='nve', limit=limit, **settings)
+            sim.add_min(**settings)
+        if isinstance(sim, lmps.Simulation):
+            sim.run(np=settings.get('np'))
 
         if unwrap:
             if not s.unwrap():
