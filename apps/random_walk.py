@@ -349,9 +349,8 @@ def random_walk(m, nmon, s_=None, **kwargs):
             sim = lmps.Simulation(s, name='relax_%03d' % (insertion+2), log='relax.log', **settings)
             sim.add_md(ensemble='nve', limit=limit, **settings)
             sim.add_min(**settings)
-        elif isinstance(sim, lmps.Simulation):
-            sim.system = s
         if isinstance(sim, lmps.Simulation):
+            sim.system = s
             sim.run(np=settings.get('np'))
 
         if unwrap:
