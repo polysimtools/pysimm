@@ -4177,10 +4177,10 @@ def read_lammps(data_file, **kwargs):
 
     for pt in s.particle_types:
         if pt.name and pt.name.find('@') >= 0:
-            if pt.name.split('@')[-1][0].upper() in ['H', 'C', 'N', 'O']:
+            if pt.name.split('@')[-1][0].upper() in ['H', 'C', 'N', 'O', 'F']:
                 pt.elem = pt.name.split('@')[-1][0].upper()
         elif pt.name:
-            if pt.name[0].upper() in ['H', 'C', 'N', 'O']:
+            if pt.name[0].upper() in ['H', 'C', 'N', 'O', 'F']:
                 pt.elem = pt.name[0].upper()
 
     for p in s.particles:
@@ -4542,8 +4542,6 @@ def read_mol(mol_file, type_with=None, version='V2000'):
             elif p.charge == 5:
                 p.linker = True
                 p.charge = 0
-
-        s.add_particle_bonding()
 
         for n in range(nbonds):
             line = f.next()
