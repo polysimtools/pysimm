@@ -4543,6 +4543,8 @@ def read_mol(mol_file, type_with=None, version='V2000'):
                 p.linker = True
                 p.charge = 0
 
+        s.add_particle_bonding()
+
         for n in range(nbonds):
             line = f.next()
             a, b, order = map(int, line.split()[:3])
