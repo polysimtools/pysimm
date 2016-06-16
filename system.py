@@ -36,7 +36,7 @@ import json
 from xml.etree import ElementTree as Et
 from random import random
 from StringIO import StringIO
-from urllib2 import urlopen, HTTPError
+from urllib2 import urlopen, HTTPError, URLError
 from itertools import permutations
 from subprocess import call
 from math import sin, cos, sqrt, pi, acos, floor, ceil
@@ -4420,13 +4420,16 @@ def read_pubchem_smiles(smiles, type_with=None):
     Returns:
         pysimm.system.System object
     """
+
+    print('making request to pubchem RESTful API...')
+
     req = ('https://pubchem.ncbi.nlm.nih.gov/'
            'rest/pug/compound/smiles/%s/SDF/?record_type=3d' % smiles)
 
     try:
         resp = urlopen(req)
         return read_mol(resp.read(), type_with=type_with)
-    except HTTPError:
+    except HTTPError, URLError:
         print('Could not retrieve pubchem entry for smiles %s' % smiles)
 
 
