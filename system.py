@@ -2672,11 +2672,11 @@ class System(object):
 
         for p in self.particles:
             if p.type and p.type.elem:
-                atoms.append({"x": p.x, "y": p.y, "z": p.z, "l": p.type.elem})
+                atoms.append({"x": p.x, "y": p.y, "z": p.z, "l": p.type.elem, "i": p.type.name, "c": p.charge})
             elif p.elem:
-                atoms.append({"x": p.x, "y": p.y, "z": p.z, "l": p.elem})
+                atoms.append({"x": p.x, "y": p.y, "z": p.z, "l": p.elem, "i": p.type.name, "c": p.charge})
             else:
-                atoms.append({"x": p.x, "y": p.y, "z": p.z})
+                atoms.append({"x": p.x, "y": p.y, "z": p.z, "i": p.type.name, "c": p.charge})
 
         for b in self.bonds:
             if b.order:
