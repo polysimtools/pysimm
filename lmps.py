@@ -30,8 +30,6 @@
 import shlex
 import shutil
 from subprocess import call, Popen, PIPE
-import pxssh
-import pexpect
 from Queue import Queue, Empty
 from threading  import Thread
 import os
@@ -519,93 +517,6 @@ def call_lammps(simulation, np, nanohub):
                 raise PysimmError('%s simulation using LAMMPS UNsuccessful' % simulation.name)
             else:
                 raise PysimmError('molecular dynamics using LAMMPS UNsuccessful')
-
-
-def call_lammps_remote(simulation, np=1, walltime=1440, host=None, user=None, sim_dir='~', sim_name=None, cleanup=False,
-                       lmp_exec='lmp_mpi'):
-    conn = pxssh.pxssh()
-    if conn.login(host, user):
-        verbose_print('successfully logged into {}'.format(host))
-    else:
-        error_print('connection to {} failed'.format(host))
-        return
-    conn.sendline('qsub -I -V -l nodes=1:ppn={} -l walltime={}'.format(np, walltime))
-    conn.set_unique_prompt()
-    verbose_print('requesting {} cores for {} minutes in an interactive session'.format(np, walltime))
-    conn.prompt()
-    verbose_print('successfully allocated resources from scheduler')
-
-    verbose_print('setting up simulation')
-    if not sim_name:
-        tmp_dir = str(randint(10000, 99999))
-    else:
-        tmp_dir = sim_name
-    conn.sendline('cd {}'.format(sim_dir))
-    conn.prompt()
-
-    conn.sendline('if [ -d {} ]; then echo true;fi'.format(tmp_dir))
-    conn.prompt()
-    while len(conn.before.split('true')) == 3:
-        tmp_dir = str(randint(10000, 99999))
-        conn.sendline('if [ -d {} ]; then echo true;fi'.format(tmp_dir))
-        conn.prompt()
-
-    work_dir = os.path.join(sim_dir, tmp_dir)
-
-    conn.sendline('mkdir {} && cd {}'.format(tmp_dir, tmp_dir))
-    conn.prompt()
-
-    if not simulation.write:
-        simulation.write = 'new.lmps'
-
-    simulation.write_input()
-    with file('temp.in', 'w') as f:
-        f.write(simulation.input)
-    simulation.system.write_lammps('temp.lmps')
-
-    child = pexpect.spawn('scp temp.in temp.lmps {}@{}:{}'.format(user, host, work_dir))
-    child.wait()
-    child.close()
-
-    verbose_print('running simulation synchronously')
-    conn.sendline('mpiexec {} -i temp.in'.format(lmp_exec))
-    conn.prompt(timeout=int(walltime*60))
-    verbose_print('simulation complete')
-    new_path = os.path.join(work_dir, simulation.write)
-    child = pexpect.spawn('scp {}@{}:{} .'.format(user, host, new_path))
-    child.wait()
-    child.close()
-
-    n = read_lammps(simulation.write, quiet=True)
-    for p in n.particles:
-        p_ = simulation.system.particles[p.tag]
-        p_.x = p.x
-        p_.y = p.y
-        p_.z = p.z
-        p_.vx = p.vx
-        p_.vy = p.vy
-        p_.vz = p.vz
-    simulation.system.dim = n.dim
-
-    if simulation.write == 'new.lmps':
-        os.remove(simulation.write)
-
-    os.remove('temp.in')
-    os.remove('temp.lmps')
-
-    if cleanup:
-        verbose_print('cleaning up files on remote machine')
-        conn.sendline('cd {}'.format(sim_dir))
-        conn.prompt()
-        conn.sendline('rm -rf {}'.format(tmp_dir))
-        conn.prompt()
-
-    verbose_print('exiting')
-    conn.sendline('exit')
-    conn.set_unique_prompt()
-    conn.prompt()
-    conn.logout()
-    verbose_print('success')
 
 
 def quick_md(s, np=None, nanohub=None, **kwargs):
