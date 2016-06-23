@@ -31,7 +31,7 @@ import shlex
 import shutil
 from subprocess import call, Popen, PIPE
 from Queue import Queue, Empty
-from threading  import Thread
+from threading import Thread
 import os
 import sys
 from random import randint
@@ -42,6 +42,7 @@ from pysimm import error_print
 from pysimm import warning_print
 from pysimm import verbose_print
 from pysimm import debug_print
+from pysimm import PysimmError
 from pysimm.utils import PysimmError, Item, ItemContainer
 
 try:
@@ -64,11 +65,6 @@ else:
             print 'using %s LAMMPS machine' % LAMMPS_EXEC
     except OSError:
         print 'LAMMPS is not configured properly for one reason or another'
-
-
-class PysimmError(Exception):
-    def __init__(self, *args, **kwargs):
-        Exception.__init__(self, *args, **kwargs)
 
 
 class MolecularDynamics(object):

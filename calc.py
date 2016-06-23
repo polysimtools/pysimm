@@ -34,17 +34,23 @@
 from random import random
 from itertools import izip
 from math import sin, cos, pi, acos
-import numpy as np
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 from pysimm import error_print
 from pysimm import warning_print
 from pysimm import verbose_print
 from pysimm import debug_print
+from pysimm import PysimmError
 from pysimm.utils import Item
 from pysimm.utils import ItemContainer
 
 
 def hyperbola(x, a, b, c, d, e):
+    if not np:
+        raise PysimmError('pysimm.calc.hyperbola function requires numpy')
     #   hyperbola(x) with parameters
     #   a/b = asymptotic slope
     #    c  = curvature at vertex
@@ -54,6 +60,8 @@ def hyperbola(x, a, b, c, d, e):
 
 
 def rot_hyperbola(x, a, b, c, d, e, th):
+    if not np:
+        raise PysimmError('pysimm.calc.rot_hyperbola function requires numpy')
     pars = a, b, c, 0, 0  # do the shifting after rotation
     xd = x - d
     hsin = hyperbola(xd, *pars)*np.sin(th)
@@ -79,6 +87,8 @@ def intersection(line1, line2):
 
 
 def find_rotation(a, b):
+    if not np:
+        raise PysimmError('pysimm.calc.find_rotation function requires numpy')
     a = np.array(a)
     b = np.array(b)
 
@@ -97,6 +107,8 @@ def find_rotation(a, b):
 
 
 def rotate_vector(x, y, z, theta_x=None, theta_y=None, theta_z=None):
+    if not np:
+        raise PysimmError('pysimm.calc.rotate_vector function requires numpy')
     xt = random() * 2 * pi if theta_x is None else theta_x
     yt = random() * 2 * pi if theta_y is None else theta_y
     zt = random() * 2 * pi if theta_z is None else theta_z
@@ -121,6 +133,8 @@ def rotate_vector(x, y, z, theta_x=None, theta_y=None, theta_z=None):
 
 
 def distance(p1, p2):
+    if not np:
+        raise PysimmError('pysimm.calc.distance function requires numpy')
     return np.linalg.norm([p1.x - p2.x, p1.y - p2.y, p1.z - p2.z])
 
 
@@ -135,6 +149,8 @@ def angle(p1, p2, p3, radians=False):
 
 
 def chiral_angle(a, b, c, d):
+    if not np:
+        raise PysimmError('pysimm.calc.chiral_angle function requires numpy')
     ht = np.array([a.x-b.x, a.y-b.y, a.z-b.z])
     ht /= np.linalg.norm(ht)
 
@@ -212,7 +228,8 @@ def auto_tacticity(s, return_angles=True, unwrap=True, rewrap=True):
 
 def tacticity(s, a_tag=None, b_tag=None, c_tag=None, d_tag=None, offset=None, return_angles=True, unwrap=True,
               rewrap=True, skip_first=False):
-
+    if not np:
+        raise PysimmError('pysimm.calc.tacticity function requires numpy')
     if a_tag is None or b_tag is None or c_tag is None or d_tag is None:
         error_print('particle tags for chiral center are required')
         error_print('a: chiral center, b-d: 3 side groups')
@@ -269,6 +286,8 @@ def frac_free_volume(v_sp, v_void):
 
 
 def pbc_distance(s, p1, p2):
+    if not np:
+        raise PysimmError('pysimm.calc.pbc_distance function requires numpy')
     frac_x1 = p1.x / s.dim.dx
     frac_y1 = p1.y / s.dim.dy
     frac_z1 = p1.z / s.dim.dz

@@ -41,13 +41,17 @@ from itertools import permutations
 from subprocess import call
 from math import sin, cos, sqrt, pi, acos, floor, ceil
 
-import numpy as np
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 from pysimm import calc
 from pysimm import error_print
 from pysimm import warning_print
 from pysimm import verbose_print
 from pysimm import debug_print
+from pysimm import PysimmError
 from pysimm.calc import rotate_vector
 from pysimm.utils import PysimmError, Item, ItemContainer
 
@@ -1574,6 +1578,8 @@ class System(object):
         Returns:
             None
         """
+        if not np:
+            raise PysimmError('pysimm.system.System.rotate function requires numpy')
         theta_x = random() * 2 * pi if theta_x is 'random' else theta_x
         theta_y = random() * 2 * pi if theta_y is 'random' else theta_y
         theta_z = random() * 2 * pi if theta_z is 'random' else theta_z

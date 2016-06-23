@@ -46,6 +46,10 @@ warning_print = lambda *a, **k: print('(warning) PySIMM:', *a) if warning else l
 verbose_print = lambda *a, **k: print('PySIMM:', *a) if verbose else lambda *a, **k: None
 debug_print = lambda *a, **k: print('(debug) PySIMM:', *a) if debug else lambda *a, **k: None
 
+class PysimmError(Exception):
+    def __init__(self, *args, **kwargs):
+        Exception.__init__(self, *args, **kwargs)
+
 if not os.environ.get('LAMMPS_EXEC'):
     os.environ['LAMMPS_EXEC'] = find_executable('lmp_serial') or find_executable('lmp_mpi')
 
