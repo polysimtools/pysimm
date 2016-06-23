@@ -49,16 +49,3 @@ debug_print = lambda *a, **k: print('(debug) PySIMM:', *a) if debug else lambda 
 class PysimmError(Exception):
     def __init__(self, *args, **kwargs):
         Exception.__init__(self, *args, **kwargs)
-
-if not os.environ.get('LAMMPS_EXEC'):
-    os.environ['LAMMPS_EXEC'] = find_executable('lmp_serial') or find_executable('lmp_mpi')
-
-if not os.environ.get('LAMMPS_EXEC'):
-    if os.path.isfile(os.path.join(os.environ.get('HOME'), 'bin', 'lmp_mpi')):
-        os.environ['LAMMPS_EXEC'] = os.path.join(os.environ.get('HOME'), 'bin', 'lmp_mpi')
-    elif os.path.isfile('/usr/bin/lmp_mpi'):
-        os.environ['LAMMPS_EXEC'] = '/usr/bin/lmp_mpi'
-    else:
-        os.environ['LAMMPS_EXEC'] = ('/apps/share64/debian7/lammps/'
-                                     'lammps-06Apr15/bin/'
-                                     'lmp_serial')
