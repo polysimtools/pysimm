@@ -506,8 +506,7 @@ class System(object):
             new_p = p.copy()
             if p.type:
                 new_p.type = new.particle_types[p.type.tag]
-            if p.molecule:
-                new_p.molecule = new.molecules[p.molecule.tag]
+            new_p.molecule = new.molecules[p.molecule.tag]
             if rotate_x or rotate_y or rotate_z:
                 new_p.x, new_p.y, new_p.z = rotate_vector(new_p.x, new_p.y, new_p.z,
                                                    rotate_x, rotate_y, rotate_z)
@@ -523,37 +522,41 @@ class System(object):
             new_p.impropers = ItemContainer()
 
         for b in self.bonds:
-            new_b = Bond(type=new.bond_types[b.type.tag],
-                         a=new.particles[b.a.tag],
+            new_b = Bond(a=new.particles[b.a.tag],
                          b=new.particles[b.b.tag])
+            if b.type:
+                new_b.type=new.bond_types[b.type.tag]
             new.bonds.add(new_b)
             new_b.a.molecule.bonds.add(new_b)
             new_b.a.bonds.add(new_b)
             new_b.b.bonds.add(new_b)
 
         for a in self.angles:
-            new_a = Angle(type=new.angle_types[a.type.tag],
-                          a=new.particles[a.a.tag],
+            new_a = Angle(a=new.particles[a.a.tag],
                           b=new.particles[a.b.tag],
                           c=new.particles[a.c.tag])
+            if a.type:
+                new_a.type=new.angle_types[a.type.tag]
             new.angles.add(new_a)
             new_a.a.molecule.angles.add(new_a)
 
         for d in self.dihedrals:
-            new_d = Dihedral(type=new.dihedral_types[d.type.tag],
-                             a=new.particles[d.a.tag],
+            new_d = Dihedral(a=new.particles[d.a.tag],
                              b=new.particles[d.b.tag],
                              c=new.particles[d.c.tag],
                              d=new.particles[d.d.tag])
+            if d.type:
+                new_d.type=new.dihedral_types[d.type.tag]
             new.dihedrals.add(new_d)
             new_d.a.molecule.dihedrals.add(new_d)
 
         for i in self.impropers:
-            new_i = Improper(type=new.improper_types[i.type.tag],
-                             a=new.particles[i.a.tag],
+            new_i = Improper(a=new.particles[i.a.tag],
                              b=new.particles[i.b.tag],
                              c=new.particles[i.c.tag],
                              d=new.particles[i.d.tag])
+            if i.type:
+                new_i.type=new.improper_types[i.type.tag]
             new.impropers.add(new_i)
             new_i.a.molecule.impropers.add(new_i)
 
@@ -4565,7 +4568,7 @@ def read_mol(mol_file, type_with=None, version='V2000'):
         for n in range(nbonds):
             line = f.next()
             a, b, order = map(int, line.split()[:3])
-            s.bonds.add(Bond(a=a, b=b, order=order))
+            new_bond = s.bonds.add(Bond(a=a, b=b, order=order))
 
     elif version == 'V3000':
         f.next()
