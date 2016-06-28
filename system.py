@@ -3373,7 +3373,11 @@ def read_yaml(file_, **kwargs):
     Returns:
         pysimm.system.System object
     """
-    dict_ = json.loads(file(file_).read())
+
+    if os.path.isfile(file_):
+        dict_ = json.loads(file(file_).read())
+    else:
+        dict_ = json.loads(file_)
 
     s = System()
 
