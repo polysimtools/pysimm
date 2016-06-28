@@ -504,8 +504,10 @@ class System(object):
 
         for p in self.particles:
             new_p = p.copy()
-            new_p.type = new.particle_types[p.type.tag]
-            new_p.molecule = new.molecules[p.molecule.tag]
+            if p.type:
+                new_p.type = new.particle_types[p.type.tag]
+            if p.molecule:
+                new_p.molecule = new.molecules[p.molecule.tag]
             if rotate_x or rotate_y or rotate_z:
                 new_p.x, new_p.y, new_p.z = rotate_vector(new_p.x, new_p.y, new_p.z,
                                                    rotate_x, rotate_y, rotate_z)
