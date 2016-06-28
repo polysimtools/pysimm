@@ -2831,6 +2831,8 @@ class System(object):
                                     s[k][k_][t][key] = [x.tag for x in value]
                                 elif isinstance(value, Item) or isinstance(value, System) and value.tag:
                                     s[k][k_][t][key] = value.tag
+                                else:
+                                    s[k][k_][t][key] = value
             elif isinstance(v, Item):
                 s[k] = vars(v)
 
