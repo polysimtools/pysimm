@@ -522,8 +522,9 @@ class System(object):
             new_p.impropers = ItemContainer()
 
         for b in self.bonds:
-            new_b = Bond(a=new.particles[b.a.tag],
-                         b=new.particles[b.b.tag])
+            new_b = b.copy()
+            new_b.a=new.particles[b.a.tag]
+            new_b.b=new.particles[b.b.tag]
             if b.type:
                 new_b.type=new.bond_types[b.type.tag]
             new.bonds.add(new_b)
@@ -2831,7 +2832,7 @@ class System(object):
                                     s[k][k_][t][key] = [x.tag for x in value]
                                 elif isinstance(value, Item) or isinstance(value, System) and value.tag:
                                     s[k][k_][t][key] = value.tag
-                                elif key == 'x':
+                                elif key == 'order':
                                     print('found particle xcoord')
             elif isinstance(v, Item):
                 s[k] = vars(v)
