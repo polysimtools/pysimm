@@ -38,9 +38,13 @@ from random import random
 from StringIO import StringIO
 from urllib2 import urlopen, HTTPError, URLError
 from itertools import permutations
-from subprocess import call
 from math import sin, cos, sqrt, pi, acos, floor, ceil
 
+
+try:
+    from subprocess import call
+except ImportError:
+    call = None
 try:
     import numpy as np
 except ImportError:
@@ -3280,6 +3284,10 @@ class System(object):
         Returns:
             None
         """
+
+        if not call:
+            raise PysimmError('pysimm.system.System.visualize function requires subprocess.call')
+
         unwrap = kwargs.get('unwrap')
         format = kwargs.get('format') or 'xyz'
 
