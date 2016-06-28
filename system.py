@@ -2834,6 +2834,13 @@ class System(object):
             elif isinstance(v, Item):
                 s[k] = vars(v)
 
+        if file_ == 'string':
+            f = StringIO()
+            f.write(json.dumps(s, indent=4, separators=(',', ': ')))
+            yaml_ = f.getvalue()
+            f.close()
+            return yaml_
+
         with file(file_, 'w') as f:
             f.write(json.dumps(s, indent=4, separators=(',', ': ')))
 
