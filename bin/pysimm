@@ -3,4 +3,4 @@
 spath=`readlink -f $0`
 sdir=`dirname $spath`
 
-python2.7 -i $sdir/../cli.py $@
+python2.7 -i $sdir/../pysimm/cli.py $@
