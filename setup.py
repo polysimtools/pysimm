@@ -7,6 +7,6 @@ setup(name='pysimm',
     author='Michael Fortunato',
     author_email='mefortunato@pysimm.org',
     license='MIT',
-    packages=['pysimm'],
+    packages=['pysimm', 'pysimm.apps'],
     scripts=['bin/pysimm'],
     zip_safe=False)
