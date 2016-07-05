@@ -4213,6 +4213,8 @@ def read_lammps(data_file, **kwargs):
             if pt.name.split('@')[-1][0].upper() in ['H', 'C', 'N', 'O', 'F']:
                 pt.elem = pt.name.split('@')[-1][0].upper()
         elif pt.name:
+            if pt.name[1:3] == 'Na':
+                pt.elem = 'Na'
             if pt.name[0].upper() in ['H', 'C', 'N', 'O', 'F']:
                 pt.elem = pt.name[0].upper()
 
