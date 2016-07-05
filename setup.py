@@ -8,4 +8,5 @@ setup(name='pysimm',
     author_email='mefortunato@pysimm.org',
     license='MIT',
     packages=['pysimm'],
+    scripts=['bin/pysimm'],
     zip_safe=False)
