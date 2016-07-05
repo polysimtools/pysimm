@@ -1,7 +1,7 @@
 #!/bin/bash
 
-spath = `python2.7 -c 'import pysimm; print pysimm.__file__'`
-sdir = `dirname $spath`
+spath=`python2.7 -c 'import pysimm; print pysimm.__file__'`
+sdir=`dirname $spath`
 
 #spath=`readlink -f $0`
 #sdir=`dirname $spath`
