@@ -4210,14 +4210,14 @@ def read_lammps(data_file, **kwargs):
 
     for pt in s.particle_types:
         if pt.name and pt.name.find('@') >= 0:
-            if pt.name.split('@')[-1][0].upper() in ['H', 'C', 'N', 'O', 'F']:
+            if pt.name.split('@')[-1][0].upper() in ['H', 'C', 'N', 'O', 'F', 'S']:
                 pt.elem = pt.name.split('@')[-1][0].upper()
         if pt.name and pt.name[0] == 'L' and pt.name[1] != 'i':
             pt.elem = pt.name[1].upper()
         elif pt.name:
             if pt.name[1:3] == 'Na':
                 pt.elem = 'Na'
-            if pt.name[0].upper() in ['H', 'C', 'N', 'O', 'F']:
+            if pt.name[0].upper() in ['H', 'C', 'N', 'O', 'F', 'S']:
                 pt.elem = pt.name[0].upper()
 
     for p in s.particles:
