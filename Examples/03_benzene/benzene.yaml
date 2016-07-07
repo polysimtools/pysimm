@@ -1,0 +1,1068 @@
+{
+    "dim": {
+        "xlo": -12.157716666666667,
+        "yhi": 12.480783333333333,
+        "center": null,
+        "zlo": -10.000108333333333,
+        "dz": 20.0002,
+        "dx": 24.3154,
+        "dy": 24.9617,
+        "zhi": 10.000091666666666,
+        "ylo": -12.480916666666667,
+        "xhi": 12.157683333333333
+    },
+    "molecules": {
+        "count": 1,
+        "_dict": {
+            "1": {
+                "dim": null,
+                "molecules": [],
+                "angle_types": [],
+                "name": "pySIMM System Object",
+                "bonds": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12
+                ],
+                "tag": 1,
+                "objectified": false,
+                "molecule_types": [],
+                "dihedrals": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    14,
+                    15,
+                    16,
+                    17,
+                    18,
+                    19,
+                    20,
+                    21,
+                    22,
+                    23,
+                    24
+                ],
+                "improper_types": [],
+                "ff_name": null,
+                "impropers": [],
+                "bond_types": [],
+                "mass": 0,
+                "dim_check": false,
+                "cog": [
+                    0,
+                    0,
+                    0
+                ],
+                "angles": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12,
+                    13,
+                    14,
+                    15,
+                    16,
+                    17,
+                    18
+                ],
+                "ff_class": null,
+                "particle_types": [],
+                "particles": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10,
+                    11,
+                    12
+                ],
+                "dihedral_types": []
+            }
+        }
+    },
+    "angle_types": {
+        "count": 2,
+        "_dict": {
+            "1": {
+                "theta0": 119.97,
+                "tag": 1,
+                "k": 67.18,
+                "rname": "ca,ca,ca",
+                "name": "ca,ca,ca"
+            },
+            "2": {
+                "theta0": 120.01,
+                "tag": 2,
+                "k": 48.46,
+                "rname": "ha,ca,ca",
+                "name": "ca,ca,ha"
+            }
+        }
+    },
+    "name": "pySIMM System Object",
+    "bonds": {
+        "count": 12,
+        "_dict": {
+            "1": {
+                "a": 1,
+                "b": 2,
+                "type": 1,
+                "tag": 1
+            },
+            "2": {
+                "a": 1,
+                "b": 3,
+                "type": 1,
+                "tag": 2
+            },
+            "3": {
+                "a": 1,
+                "b": 7,
+                "type": 2,
+                "tag": 3
+            },
+            "4": {
+                "a": 2,
+                "b": 4,
+                "type": 1,
+                "tag": 4
+            },
+            "5": {
+                "a": 2,
+                "b": 8,
+                "type": 2,
+                "tag": 5
+            },
+            "6": {
+                "a": 3,
+                "b": 5,
+                "type": 1,
+                "tag": 6
+            },
+            "7": {
+                "a": 3,
+                "b": 9,
+                "type": 2,
+                "tag": 7
+            },
+            "8": {
+                "a": 4,
+                "b": 6,
+                "type": 1,
+                "tag": 8
+            },
+            "9": {
+                "a": 4,
+                "b": 10,
+                "type": 2,
+                "tag": 9
+            },
+            "10": {
+                "a": 5,
+                "b": 6,
+                "type": 1,
+                "tag": 10
+            },
+            "11": {
+                "a": 5,
+                "b": 11,
+                "type": 2,
+                "tag": 11
+            },
+            "12": {
+                "a": 6,
+                "b": 12,
+                "type": 2,
+                "tag": 12
+            }
+        }
+    },
+    "objectified": false,
+    "molecule_types": {
+        "count": 0,
+        "_dict": {}
+    },
+    "dihedrals": {
+        "count": 24,
+        "_dict": {
+            "1": {
+                "a": 3,
+                "c": 2,
+                "b": 1,
+                "d": 4,
+                "tag": 1,
+                "type": 1
+            },
+            "2": {
+                "a": 3,
+                "c": 2,
+                "b": 1,
+                "d": 8,
+                "tag": 2,
+                "type": 1
+            },
+            "3": {
+                "a": 7,
+                "c": 2,
+                "b": 1,
+                "d": 4,
+                "tag": 3,
+                "type": 1
+            },
+            "4": {
+                "a": 7,
+                "c": 2,
+                "b": 1,
+                "d": 8,
+                "tag": 4,
+                "type": 1
+            },
+            "5": {
+                "a": 2,
+                "c": 3,
+                "b": 1,
+                "d": 5,
+                "tag": 5,
+                "type": 1
+            },
+            "6": {
+                "a": 2,
+                "c": 3,
+                "b": 1,
+                "d": 9,
+                "tag": 6,
+                "type": 1
+            },
+            "7": {
+                "a": 7,
+                "c": 3,
+                "b": 1,
+                "d": 5,
+                "tag": 7,
+                "type": 1
+            },
+            "8": {
+                "a": 7,
+                "c": 3,
+                "b": 1,
+                "d": 9,
+                "tag": 8,
+                "type": 1
+            },
+            "9": {
+                "a": 1,
+                "c": 4,
+                "b": 2,
+                "d": 6,
+                "tag": 9,
+                "type": 1
+            },
+            "10": {
+                "a": 1,
+                "c": 4,
+                "b": 2,
+                "d": 10,
+                "tag": 10,
+                "type": 1
+            },
+            "11": {
+                "a": 8,
+                "c": 4,
+                "b": 2,
+                "d": 6,
+                "tag": 11,
+                "type": 1
+            },
+            "12": {
+                "a": 8,
+                "c": 4,
+                "b": 2,
+                "d": 10,
+                "tag": 12,
+                "type": 1
+            },
+            "13": {
+                "a": 1,
+                "c": 5,
+                "b": 3,
+                "d": 6,
+                "tag": 13,
+                "type": 1
+            },
+            "14": {
+                "a": 1,
+                "c": 5,
+                "b": 3,
+                "d": 11,
+                "tag": 14,
+                "type": 1
+            },
+            "15": {
+                "a": 9,
+                "c": 5,
+                "b": 3,
+                "d": 6,
+                "tag": 15,
+                "type": 1
+            },
+            "16": {
+                "a": 9,
+                "c": 5,
+                "b": 3,
+                "d": 11,
+                "tag": 16,
+                "type": 1
+            },
+            "17": {
+                "a": 10,
+                "c": 6,
+                "b": 4,
+                "d": 5,
+                "tag": 17,
+                "type": 1
+            },
+            "18": {
+                "a": 10,
+                "c": 6,
+                "b": 4,
+                "d": 12,
+                "tag": 18,
+                "type": 1
+            },
+            "19": {
+                "a": 2,
+                "c": 6,
+                "b": 4,
+                "d": 5,
+                "tag": 19,
+                "type": 1
+            },
+            "20": {
+                "a": 2,
+                "c": 6,
+                "b": 4,
+                "d": 12,
+                "tag": 20,
+                "type": 1
+            },
+            "21": {
+                "a": 11,
+                "c": 6,
+                "b": 5,
+                "d": 4,
+                "tag": 21,
+                "type": 1
+            },
+            "22": {
+                "a": 11,
+                "c": 6,
+                "b": 5,
+                "d": 12,
+                "tag": 22,
+                "type": 1
+            },
+            "23": {
+                "a": 3,
+                "c": 6,
+                "b": 5,
+                "d": 4,
+                "tag": 23,
+                "type": 1
+            },
+            "24": {
+                "a": 3,
+                "c": 6,
+                "b": 5,
+                "d": 12,
+                "tag": 24,
+                "type": 1
+            }
+        }
+    },
+    "improper_types": {
+        "count": 0,
+        "_dict": {}
+    },
+    "ff_name": "gaff",
+    "impropers": {
+        "count": 0,
+        "_dict": {}
+    },
+    "bond_types": {
+        "count": 2,
+        "_dict": {
+            "1": {
+                "k": 478.4,
+                "tag": 1,
+                "r0": 1.387,
+                "name": "ca,ca",
+                "rname": "ca,ca"
+            },
+            "2": {
+                "k": 344.3,
+                "tag": 2,
+                "r0": 1.087,
+                "name": "ca,ha",
+                "rname": "ha,ca"
+            }
+        }
+    },
+    "mass": 0,
+    "dim_check": false,
+    "cog": [
+        0,
+        0,
+        0
+    ],
+    "angles": {
+        "count": 18,
+        "_dict": {
+            "1": {
+                "a": 2,
+                "c": 3,
+                "b": 1,
+                "type": 1,
+                "tag": 1
+            },
+            "2": {
+                "a": 2,
+                "c": 7,
+                "b": 1,
+                "type": 2,
+                "tag": 2
+            },
+            "3": {
+                "a": 3,
+                "c": 7,
+                "b": 1,
+                "type": 2,
+                "tag": 3
+            },
+            "4": {
+                "a": 1,
+                "c": 4,
+                "b": 2,
+                "type": 1,
+                "tag": 4
+            },
+            "5": {
+                "a": 1,
+                "c": 8,
+                "b": 2,
+                "type": 2,
+                "tag": 5
+            },
+            "6": {
+                "a": 4,
+                "c": 8,
+                "b": 2,
+                "type": 2,
+                "tag": 6
+            },
+            "7": {
+                "a": 1,
+                "c": 5,
+                "b": 3,
+                "type": 1,
+                "tag": 7
+            },
+            "8": {
+                "a": 1,
+                "c": 9,
+                "b": 3,
+                "type": 2,
+                "tag": 8
+            },
+            "9": {
+                "a": 5,
+                "c": 9,
+                "b": 3,
+                "type": 2,
+                "tag": 9
+            },
+            "10": {
+                "a": 6,
+                "c": 10,
+                "b": 4,
+                "type": 2,
+                "tag": 10
+            },
+            "11": {
+                "a": 6,
+                "c": 2,
+                "b": 4,
+                "type": 1,
+                "tag": 11
+            },
+            "12": {
+                "a": 10,
+                "c": 2,
+                "b": 4,
+                "type": 2,
+                "tag": 12
+            },
+            "13": {
+                "a": 6,
+                "c": 11,
+                "b": 5,
+                "type": 2,
+                "tag": 13
+            },
+            "14": {
+                "a": 6,
+                "c": 3,
+                "b": 5,
+                "type": 1,
+                "tag": 14
+            },
+            "15": {
+                "a": 11,
+                "c": 3,
+                "b": 5,
+                "type": 2,
+                "tag": 15
+            },
+            "16": {
+                "a": 4,
+                "c": 5,
+                "b": 6,
+                "type": 1,
+                "tag": 16
+            },
+            "17": {
+                "a": 4,
+                "c": 12,
+                "b": 6,
+                "type": 2,
+                "tag": 17
+            },
+            "18": {
+                "a": 5,
+                "c": 12,
+                "b": 6,
+                "type": 2,
+                "tag": 18
+            }
+        }
+    },
+    "ff_class": "1",
+    "particle_types": {
+        "count": 2,
+        "_dict": {
+            "1": {
+                "name": "ca",
+                "epsilon": 0.086,
+                "elem": "C",
+                "tag": 1,
+                "mass": 12.01,
+                "sigma": 3.39966950842,
+                "desc": "Sp2 C in pure aromatic systems"
+            },
+            "2": {
+                "name": "ha",
+                "epsilon": 0.015,
+                "elem": "H",
+                "tag": 2,
+                "mass": 1.008,
+                "sigma": 2.59964245953,
+                "desc": "H bonded to aromatic carbon"
+            }
+        }
+    },
+    "particles": {
+        "count": 12,
+        "_dict": {
+            "1": {
+                "tag": 1,
+                "gast_conv": true,
+                "nbonds": 3,
+                "chi": 8.021002303448169,
+                "bond_orders": [
+                    "A",
+                    "A",
+                    1
+                ],
+                "type_name": "ca",
+                "charge": -0.08364400637925115,
+                "impropers": [],
+                "type": 1,
+                "bonds": [
+                    1,
+                    2,
+                    3
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 9.32,
+                "gast_c": 1.51,
+                "gast_a": 8.79,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C",
+                    "C",
+                    "H"
+                ],
+                "elem": "C",
+                "bonded_to": [
+                    2,
+                    3,
+                    7
+                ],
+                "y": -0.6884166666666667,
+                "x": -1.2131166666666668,
+                "z": -8.333333333333334e-06,
+                "qn": 0.0
+            },
+            "2": {
+                "tag": 2,
+                "gast_conv": true,
+                "nbonds": 3,
+                "chi": 8.021002303448169,
+                "bond_orders": [
+                    "A",
+                    "A",
+                    1
+                ],
+                "type_name": "ca",
+                "charge": -0.08364400637925115,
+                "impropers": [],
+                "type": 1,
+                "bonds": [
+                    1,
+                    4,
+                    5
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 9.32,
+                "gast_c": 1.51,
+                "gast_a": 8.79,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C",
+                    "C",
+                    "H"
+                ],
+                "elem": "C",
+                "bonded_to": [
+                    1,
+                    4,
+                    8
+                ],
+                "y": 0.7063833333333334,
+                "x": -1.2028166666666669,
+                "z": 9.166666666666667e-05,
+                "qn": 0.0
+            },
+            "3": {
+                "tag": 3,
+                "gast_conv": true,
+                "nbonds": 3,
+                "chi": 8.021002303448169,
+                "bond_orders": [
+                    "A",
+                    "A",
+                    1
+                ],
+                "type_name": "ca",
+                "charge": -0.08364400637925115,
+                "impropers": [],
+                "type": 1,
+                "bonds": [
+                    2,
+                    6,
+                    7
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 9.32,
+                "gast_c": 1.51,
+                "gast_a": 8.79,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C",
+                    "C",
+                    "H"
+                ],
+                "elem": "C",
+                "bonded_to": [
+                    1,
+                    5,
+                    9
+                ],
+                "y": -1.3948166666666666,
+                "x": -0.010316666666666701,
+                "z": -8.333333333333334e-06,
+                "qn": 0.0
+            },
+            "4": {
+                "tag": 4,
+                "gast_conv": true,
+                "nbonds": 3,
+                "chi": 8.021002303448169,
+                "bond_orders": [
+                    "A",
+                    1,
+                    "A"
+                ],
+                "type_name": "ca",
+                "charge": -0.08364400637925115,
+                "impropers": [],
+                "type": 1,
+                "bonds": [
+                    8,
+                    9,
+                    4
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 9.32,
+                "gast_c": 1.51,
+                "gast_a": 8.79,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C",
+                    "H",
+                    "C"
+                ],
+                "elem": "C",
+                "bonded_to": [
+                    6,
+                    10,
+                    2
+                ],
+                "y": 1.3947833333333335,
+                "x": 0.010383333333333298,
+                "z": -0.00010833333333333334,
+                "qn": 0.0
+            },
+            "5": {
+                "tag": 5,
+                "gast_conv": true,
+                "nbonds": 3,
+                "chi": 8.021002303448169,
+                "bond_orders": [
+                    "A",
+                    1,
+                    "A"
+                ],
+                "type_name": "ca",
+                "charge": -0.08364400637925115,
+                "impropers": [],
+                "type": 1,
+                "bonds": [
+                    10,
+                    11,
+                    6
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 9.32,
+                "gast_c": 1.51,
+                "gast_a": 8.79,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C",
+                    "H",
+                    "C"
+                ],
+                "elem": "C",
+                "bonded_to": [
+                    6,
+                    11,
+                    3
+                ],
+                "y": -0.7063166666666667,
+                "x": 1.2027833333333333,
+                "z": -8.333333333333334e-06,
+                "qn": 0.0
+            },
+            "6": {
+                "tag": 6,
+                "gast_conv": true,
+                "nbonds": 3,
+                "chi": 8.021002303448169,
+                "bond_orders": [
+                    "A",
+                    "A",
+                    1
+                ],
+                "type_name": "ca",
+                "charge": -0.08364400637925115,
+                "impropers": [],
+                "type": 1,
+                "bonds": [
+                    8,
+                    10,
+                    12
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 9.32,
+                "gast_c": 1.51,
+                "gast_a": 8.79,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C",
+                    "C",
+                    "H"
+                ],
+                "elem": "C",
+                "bonded_to": [
+                    4,
+                    5,
+                    12
+                ],
+                "y": 0.6883833333333333,
+                "x": 1.2130833333333333,
+                "z": -8.333333333333334e-06,
+                "qn": 0.0
+            },
+            "7": {
+                "tag": 7,
+                "gast_conv": true,
+                "nbonds": 1,
+                "chi": 7.688020660716751,
+                "bond_orders": [
+                    1
+                ],
+                "type_name": "ha",
+                "charge": 0.08364400637925115,
+                "impropers": [],
+                "type": 2,
+                "bonds": [
+                    3
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 6.24,
+                "gast_c": -0.56,
+                "gast_a": 7.17,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C"
+                ],
+                "elem": "H",
+                "bonded_to": [
+                    1
+                ],
+                "y": -1.2244166666666665,
+                "x": -2.157716666666667,
+                "z": -8.333333333333334e-06,
+                "qn": 0.0
+            },
+            "8": {
+                "tag": 8,
+                "gast_conv": true,
+                "nbonds": 1,
+                "chi": 7.688020660716751,
+                "bond_orders": [
+                    1
+                ],
+                "type_name": "ha",
+                "charge": 0.08364400637925115,
+                "impropers": [],
+                "type": 2,
+                "bonds": [
+                    5
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 6.24,
+                "gast_c": -0.56,
+                "gast_a": 7.17,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C"
+                ],
+                "elem": "H",
+                "bonded_to": [
+                    2
+                ],
+                "y": 1.2563833333333334,
+                "x": -2.1393166666666668,
+                "z": 9.166666666666667e-05,
+                "qn": 0.0
+            },
+            "9": {
+                "tag": 9,
+                "gast_conv": true,
+                "nbonds": 1,
+                "chi": 7.688020660716751,
+                "bond_orders": [
+                    1
+                ],
+                "type_name": "ha",
+                "charge": 0.08364400637925115,
+                "impropers": [],
+                "type": 2,
+                "bonds": [
+                    7
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 6.24,
+                "gast_c": -0.56,
+                "gast_a": 7.17,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C"
+                ],
+                "elem": "H",
+                "bonded_to": [
+                    3
+                ],
+                "y": -2.480916666666667,
+                "x": -0.018416666666666703,
+                "z": -0.00010833333333333334,
+                "qn": 0.0
+            },
+            "10": {
+                "tag": 10,
+                "gast_conv": true,
+                "nbonds": 1,
+                "chi": 7.688020660716751,
+                "bond_orders": [
+                    1
+                ],
+                "type_name": "ha",
+                "charge": 0.08364400637925115,
+                "impropers": [],
+                "type": 2,
+                "bonds": [
+                    9
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 6.24,
+                "gast_c": -0.56,
+                "gast_a": 7.17,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C"
+                ],
+                "elem": "H",
+                "bonded_to": [
+                    4
+                ],
+                "y": 2.480783333333333,
+                "x": 0.018383333333333297,
+                "z": -8.333333333333334e-06,
+                "qn": 0.0
+            },
+            "11": {
+                "tag": 11,
+                "gast_conv": true,
+                "nbonds": 1,
+                "chi": 7.688020660716751,
+                "bond_orders": [
+                    1
+                ],
+                "type_name": "ha",
+                "charge": 0.08364400637925115,
+                "impropers": [],
+                "type": 2,
+                "bonds": [
+                    11
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 6.24,
+                "gast_c": -0.56,
+                "gast_a": 7.17,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C"
+                ],
+                "elem": "H",
+                "bonded_to": [
+                    5
+                ],
+                "y": -1.2563166666666665,
+                "x": 2.1393833333333334,
+                "z": 9.166666666666667e-05,
+                "qn": 0.0
+            },
+            "12": {
+                "tag": 12,
+                "gast_conv": true,
+                "nbonds": 1,
+                "chi": 7.688020660716751,
+                "bond_orders": [
+                    1
+                ],
+                "type_name": "ha",
+                "charge": 0.08364400637925115,
+                "impropers": [],
+                "type": 2,
+                "bonds": [
+                    12
+                ],
+                "molecule": 1,
+                "angles": [],
+                "gast_b": 6.24,
+                "gast_c": -0.56,
+                "gast_a": 7.17,
+                "dihedrals": [],
+                "bond_elements": [
+                    "C"
+                ],
+                "elem": "H",
+                "bonded_to": [
+                    6
+                ],
+                "y": 1.2244833333333334,
+                "x": 2.1576833333333334,
+                "z": -8.333333333333334e-06,
+                "qn": 0.0
+            }
+        }
+    },
+    "pair_style": "lj",
+    "dihedral_types": {
+        "count": 1,
+        "_dict": {
+            "1": {
+                "rname": "X,ca,ca,X",
+                "d": -1,
+                "k": 3.625,
+                "n": 2,
+                "tag": 1,
+                "name": "X,ca,ca,X"
+            }
+        }
+    }
+}

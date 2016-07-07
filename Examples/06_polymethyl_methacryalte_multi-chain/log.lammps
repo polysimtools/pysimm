@@ -1,0 +1,218 @@
+thermo 1000
+timestep 1
+fix 1 all nve
+run 2000
+PPPM initialization ...
+  G vector (1/distance) = 0.121431
+  grid = 3 3 3
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0211216
+  estimated relative force accuracy = 6.36071e-05
+  using double precision FFTs
+  3d grid and FFT values/proc = 343 8
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7 -> bins = 4 4 4
+Memory usage per processor = 12.2773 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+       0            0    5.3892327    24.367045    29.756277     447.9385 
+    1000    240.72956    2.4468859    17.160821    29.653674   -83.285014 
+    2000     178.4489    5.7347551    16.476015    29.657682    7.8060987 
+Loop time of 0.287961 on 8 procs for 2000 steps with 15 atoms
+
+Performance: 600.081 ns/day, 0.040 hours/ns, 6945.382 timesteps/s
+98.0% CPU use with 8 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0.0081594  | 0.0095014  | 0.010349   |   0.7 |  3.30
+Bond    | 0.0060651  | 0.0071916  | 0.009707   |   1.3 |  2.50
+Kspace  | 0.15105    | 0.15404    | 0.15961    |   0.7 | 53.49
+Neigh   | 0.00048041 | 0.00049162 | 0.00049901 |   0.0 |  0.17
+Comm    | 0.060968   | 0.063921   | 0.066365   |   0.7 | 22.20
+Output  | 9.0837e-05 | 9.8228e-05 | 0.00012898 |   0.1 |  0.03
+Modify  | 0.015344   | 0.016427   | 0.017541   |   0.6 |  5.70
+Other   |            | 0.03629    |            |       | 12.60
+
+Nlocal:    1.875 ave 3 max 1 min
+Histogram: 3 0 0 0 0 3 0 0 0 2
+Nghost:    92.125 ave 99 max 85 min
+Histogram: 2 0 0 1 1 0 1 1 1 1
+Neighs:    13.125 ave 37 max 3 min
+Histogram: 2 2 2 0 1 0 0 0 0 1
+
+Total # of neighbors = 105
+Ave neighs/atom = 7
+Ave special neighs/atom = 7.33333
+Neighbor list builds = 5
+Dangerous builds = 0
+unfix 1
+write_data pysimm_md.lmps
+PPPM initialization ...
+  G vector (1/distance) = 0.121431
+  grid = 3 3 3
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0211216
+  estimated relative force accuracy = 6.36071e-05
+  using double precision FFTs
+  3d grid and FFT values/proc = 343 8
+quit
+thermo 1000
+min_style sd
+minimize 0.001 0.001 10000 100000
+WARNING: Resetting reneighboring criteria during minimization (../min.cpp:168)
+PPPM initialization ...
+  G vector (1/distance) = 0.121431
+  grid = 3 3 3
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0211216
+  estimated relative force accuracy = 6.36071e-05
+  using double precision FFTs
+  3d grid and FFT values/proc = 343 8
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7 -> bins = 4 4 4
+Memory usage per processor = 14.5889 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+       0     178.4489    5.7347551    16.476015    29.657682    7.8060987 
+      58     178.4489    3.7152957    4.3859514    15.548159    34.269974 
+Loop time of 0.0248483 on 8 procs for 58 steps with 15 atoms
+
+97.8% CPU use with 8 MPI tasks x no OpenMP threads
+
+Minimization stats:
+  Stopping criterion = energy tolerance
+  Energy initial, next-to-last, final = 
+         22.2107705587      8.10928564949      8.10124713884
+  Force two-norm initial, final = 149.34 5.96883
+  Force max component initial, final = 65.1002 4.39152
+  Final line search alpha, max atom move = 0.0629243 0.276333
+  Iterations, force evaluations = 58 116
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0.00028396 | 0.00043732 | 0.00069284 |   0.6 |  1.76
+Bond    | 0.00021791 | 0.00029698 | 0.00043082 |   0.3 |  1.20
+Kspace  | 0.015117   | 0.015453   | 0.015921   |   0.2 | 62.19
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.0044146  | 0.0046637  | 0.0048645  |   0.2 | 18.77
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 0.003998   |            |       | 16.09
+
+Nlocal:    1.875 ave 3 max 0 min
+Histogram: 1 0 0 2 0 0 2 0 0 3
+Nghost:    92.125 ave 99 max 85 min
+Histogram: 2 0 0 1 1 1 0 1 1 1
+Neighs:    13.125 ave 37 max 0 min
+Histogram: 1 1 3 1 0 0 0 1 0 1
+
+Total # of neighbors = 105
+Ave neighs/atom = 7
+Ave special neighs/atom = 7.33333
+Neighbor list builds = 0
+Dangerous builds = 0
+write_data pysimm_md.lmps
+PPPM initialization ...
+  G vector (1/distance) = 0.121431
+  grid = 3 3 3
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0211216
+  estimated relative force accuracy = 6.36071e-05
+  using double precision FFTs
+  3d grid and FFT values/proc = 343 8
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7 -> bins = 4 4 4
+quit
+thermo 1000
+min_style cg
+minimize 0.001 0.001 10000 100000
+WARNING: Resetting reneighboring criteria during minimization (../min.cpp:168)
+PPPM initialization ...
+  G vector (1/distance) = 0.121431
+  grid = 3 3 3
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0211216
+  estimated relative force accuracy = 6.36071e-05
+  using double precision FFTs
+  3d grid and FFT values/proc = 343 8
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7 -> bins = 4 4 4
+Memory usage per processor = 14.5889 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+       0     178.4489    3.7152957    4.3859514    15.548159    34.269974 
+       1     178.4489    3.7167314    4.3768669     15.54051    37.436465 
+Loop time of 0.000793785 on 8 procs for 1 steps with 15 atoms
+
+97.8% CPU use with 8 MPI tasks x no OpenMP threads
+
+Minimization stats:
+  Stopping criterion = energy tolerance
+  Energy initial, next-to-last, final = 
+         8.10124713886      8.10124713886      8.09359830438
+  Force two-norm initial, final = 5.96883 3.7697
+  Force max component initial, final = 4.39152 1.53798
+  Final line search alpha, max atom move = 0.0227712 0.0350215
+  Iterations, force evaluations = 1 2
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 6.6757e-06 | 1.0431e-05 | 1.5736e-05 |   0.1 |  1.31
+Bond    | 3.8147e-06 | 8.3745e-06 | 1.1683e-05 |   0.1 |  1.06
+Kspace  | 0.00046611 | 0.00048062 | 0.000494   |   0.0 | 60.55
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.0001142  | 0.00013098 | 0.00015593 |   0.1 | 16.50
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 0.0001634  |            |       | 20.58
+
+Nlocal:    1.875 ave 3 max 0 min
+Histogram: 1 0 0 2 0 0 2 0 0 3
+Nghost:    92.125 ave 99 max 85 min
+Histogram: 2 0 0 1 1 1 0 1 1 1
+Neighs:    13.125 ave 36 max 0 min
+Histogram: 1 2 1 2 0 0 0 1 0 1
+
+Total # of neighbors = 105
+Ave neighs/atom = 7
+Ave special neighs/atom = 7.33333
+Neighbor list builds = 0
+Dangerous builds = 0
+write_data pysimm_md.lmps
+PPPM initialization ...
+  G vector (1/distance) = 0.121431
+  grid = 3 3 3
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.0211216
+  estimated relative force accuracy = 6.36071e-05
+  using double precision FFTs
+  3d grid and FFT values/proc = 343 8
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7 -> bins = 4 4 4
+quit

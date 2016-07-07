@@ -1,0 +1,120 @@
+thermo 1000
+min_style sd
+minimize 0.001 0.001 10000 100000
+WARNING: Resetting reneighboring criteria during minimization (../min.cpp:168)
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7 -> bins = 4 4 4
+Memory usage per processor = 8.99049 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+       0            0            0  0.070968872  0.070968872     23.84895 
+      26            0            0 0.0048430963 0.0048430963   0.10756754 
+Loop time of 0.000827074 on 1 procs for 26 steps with 6 atoms
+
+0.0% CPU use with 1 MPI tasks x no OpenMP threads
+
+Minimization stats:
+  Stopping criterion = energy tolerance
+  Energy initial, next-to-last, final = 
+       0.0709688724604   0.00484357155041   0.00484309626262
+  Force two-norm initial, final = 7.25442 0.0987977
+  Force max component initial, final = 4.32216 0.0536799
+  Final line search alpha, max atom move = 0.25 0.01342
+  Iterations, force evaluations = 26 127
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 6.4135e-05 | 6.4135e-05 | 6.4135e-05 |   0.0 |  7.75
+Bond    | 0.00032258 | 0.00032258 | 0.00032258 |   0.0 | 39.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.00023532 | 0.00023532 | 0.00023532 |   0.0 | 28.45
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 0.000205   |            |       | 24.79
+
+Nlocal:    6 ave 6 max 6 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    156 ave 156 max 156 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    3 ave 3 max 3 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 3
+Ave neighs/atom = 0.5
+Ave special neighs/atom = 5
+Neighbor list builds = 0
+Dangerous builds = 0
+write_data pysimm_md.lmps
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7 -> bins = 4 4 4
+quit
+thermo 1000
+min_style cg
+minimize 0.001 0.001 10000 100000
+WARNING: Resetting reneighboring criteria during minimization (../min.cpp:168)
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7 -> bins = 4 4 4
+Memory usage per processor = 8.99049 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+       0            0            0 0.0048430963 0.0048430963   0.10756754 
+       1            0            0 0.0048430798 0.0048430798   0.10763829 
+Loop time of 5.6982e-05 on 1 procs for 1 steps with 6 atoms
+
+0.0% CPU use with 1 MPI tasks x no OpenMP threads
+
+Minimization stats:
+  Stopping criterion = energy tolerance
+  Energy initial, next-to-last, final = 
+      0.00484309626244   0.00484309626244   0.00484307978075
+  Force two-norm initial, final = 0.0987977 0.0985735
+  Force max component initial, final = 0.0536798 0.0535253
+  Final line search alpha, max atom move = 0.25 0.0133813
+  Iterations, force evaluations = 1 4
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 5.722e-06  | 5.722e-06  | 5.722e-06  |   0.0 | 10.04
+Bond    | 1.359e-05  | 1.359e-05  | 1.359e-05  |   0.0 | 23.85
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 9.7752e-06 | 9.7752e-06 | 9.7752e-06 |   0.0 | 17.15
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 2.789e-05  |            |       | 48.95
+
+Nlocal:    6 ave 6 max 6 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    156 ave 156 max 156 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    3 ave 3 max 3 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 3
+Ave neighs/atom = 0.5
+Ave special neighs/atom = 5
+Neighbor list builds = 0
+Dangerous builds = 0
+write_data pysimm_md.lmps
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7 -> bins = 4 4 4
+quit
