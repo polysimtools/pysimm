@@ -8,5 +8,6 @@ setup(name='pysimm',
     author_email='mefortunato@pysimm.org',
     license='MIT',
     packages=['pysimm', 'pysimm.apps'],
+    package_data={'pysimm': ['forcefields/*.xml']},
     scripts=['bin/pysimm'],
     zip_safe=False)
