@@ -1,0 +1,39 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<link rel="stylesheet" href="../install/ChemDoodleWeb.css" type="text/css">
+<script type="text/javascript" src="../install/ChemDoodleWeb-libs.js"></script>
+<script type="text/javascript" src="../install/ChemDoodleWeb.js"></script>
+<!-- Load 2OEY from an optimized JSON format created by ChemDoodle desktop -->
+<script type="text/javascript" src="../data/molecules/2OEY.js"></script>
+<title>3D ChemDoodle Web Component using WebGL : Interactive Cartoon Model of 2OEY with Proximity Atoms Shown</title>
+</head>
+<body>
+<script>
+	// setup component
+	var cartoonTransformer = new ChemDoodle.TransformCanvas3D('cartoonTransformer', 400, 400);
+	// set the ligand atom/bond representation to 'van der Waals Spheres'
+	cartoonTransformer.specs.set3DRepresentation('van der Waals Spheres');
+	// set the background color to black
+	cartoonTransformer.specs.backgroundColor = '#000000';
+	// display shapely colors for the residues
+	cartoonTransformer.specs.nucleics_residueColor = 'shapely';
+	// display the atoms and bonds for the nucleic acid...
+	cartoonTransformer.specs.macro_displayAtoms = true;
+	cartoonTransformer.specs.macro_displayBonds = true;
+	// ... but only show nucleic acid atoms within 5 Angstroms of a ligand atom
+	cartoonTransformer.specs.macro_atomToLigandDistance = 5;
+
+	// data (pdb_2OEY) is already loaded by the script tag in the header, loading file 2OEY.js
+	// this file is a digested and optimized PDB file created by ChemDoodle desktop, it will load much faster than the corresponding PDB file
+	var mol = pdb_2OEY;
+	// set the residue specs to control the atoms and bonds for the nucleic acid
+	mol.residueSpecs = new ChemDoodle.structures.VisualSpecifications();
+	// set representation of nucleic acid atoms and bonds to 'Wireframe'
+	mol.residueSpecs.set3DRepresentation('Wireframe');
+	cartoonTransformer.loadMolecule(mol);
+</script>
+<br>
+<a href="http://web.chemdoodle.com" title="Open Source HTML5 Chemistry - ChemDoodle Web Components"><img src="http://web.chemdoodle.com/resources/images/badges/badge120x60.png" /></a>
+</body>
+</html>

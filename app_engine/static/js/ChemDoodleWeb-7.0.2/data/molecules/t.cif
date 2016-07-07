@@ -1,0 +1,60 @@
+data_Faujasite
+
+_chemical_name_mineral             'Faujasite'
+_chemical_formula_sum              'H10.96 Al1.2 Ca.225 Na.45 O13.48 Si2.8'
+
+_publ_section_title                'Ueber die Kristallstruktur des Faujasites'
+loop_
+_publ_author_name                  
+  'Bergerhoff, G'
+_journal_name_full                 
+;
+Personal communication
+;
+
+_cell_length_a                     24.74
+_cell_length_b                     24.74
+_cell_length_c                     24.74
+_cell_angle_alpha                  90
+_cell_angle_beta                   90
+_cell_angle_gamma                  90
+
+_symmetry_space_group_name_H-M     'F d -3 m'
+_symmetry_Int_Tables_number        227
+_symmetry_cell_setting             cubic
+
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+  Si4+   4.000
+  Al3+   3.000
+  O2-   -2.000
+  Na1+   1.000
+  Ca2+   2.000
+  H1+    1.000
+
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+  Si1   Si4+ 192 i 0.125 0.948 0.035 0.7
+  Al1   Al3+ 192 i 0.125 0.948 0.035 0.3
+  O1    O2-   96 g 0.174 0.174 0.967 1.
+  O2    O2-   96 g 0.175 0.175 0.325 1.
+  O3    O2-   96 g 0.25 0.25 0.137 1.
+  O4    O2-   96 h 0. 0.104 0.896 1.
+  Na1   Na1+  32 e 0.073 0.073 0.073 0.3375
+  Ca1   Ca2+  32 e 0.073 0.073 0.073 0.1688
+  Na2   Na1+  32 e 0.17 0.17 0.17 0.3375
+  Ca2   Ca2+  32 e 0.17 0.17 0.17 0.1688
+  O5    O2-  192 i ? ? ? 1.37
+  H1    H1+  192 i ? ? ? 2.74
+
+
+
+

@@ -1,0 +1,38 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<link rel="stylesheet" href="../install/ChemDoodleWeb.css" type="text/css">
+<script type="text/javascript" src="../install/ChemDoodleWeb-libs.js"></script>
+<script type="text/javascript" src="../install/ChemDoodleWeb.js"></script>
+<title>ChemDoodle Web Component Viewer : ACS Document 1996</title>
+</head>
+<body>
+<script>
+	//initialize component and set visual specifications
+	var viewerCanvas = new ChemDoodle.ViewerCanvas('viewerCanvas', 100, 100);
+	//the width of the bonds should be .6 pixels
+	viewerCanvas.specs.bonds_width_2D = .6;
+	//the spacing between higher order bond lines should be 18% of the length of the bond
+	viewerCanvas.specs.bonds_saturationWidth_2D = .18;
+	//the hashed wedge spacing should be 2.5 pixels
+	viewerCanvas.specs.bonds_hashSpacing_2D = 2.5;
+	//the atom label font size should be 10
+	viewerCanvas.specs.atoms_font_size_2D = 10;
+	//we define a cascade of acceptable font families
+	//if Helvetica is not found, Arial will be used
+	viewerCanvas.specs.atoms_font_families_2D = ["Helvetica", "Arial", "sans-serif"];
+	//display carbons labels if they are terminal
+	viewerCanvas.specs.atoms_displayTerminalCarbonLabels_2D = true;
+	
+	//load data and read into a Molecule
+	var caffeineMolFile = 'Molecule Name\n  CHEMDOOD08070920033D 0   0.00000     0.00000     0\n[Insert Comment Here]\n 14 15  0  0  0  0  0  0  0  0  1 V2000\n   -0.3318    2.0000    0.0000   O 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318    1.0000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -1.1980    0.5000    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    0.5342    0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -1.1980   -0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -2.0640    1.0000    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n    1.4804    0.8047    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    0.5342   -0.5000    0.0000   C 0  0  0  1  0  0  0  0  0  0  0  0\n   -2.0640   -1.0000    0.0000   O 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318   -1.0000    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n    2.0640   -0.0000    0.0000   C 0  0  0  2  0  0  0  0  0  0  0  0\n    1.7910    1.7553    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n    1.4804   -0.8047    0.0000   N 0  0  0  1  0  0  0  0  0  0  0  0\n   -0.3318   -2.0000    0.0000   C 0  0  0  4  0  0  0  0  0  0  0  0\n  1  2  2  0  0  0  0\n  3  2  1  0  0  0  0\n  4  2  1  0  0  0  0\n  3  5  1  0  0  0  0\n  3  6  1  0  0  0  0\n  7  4  1  0  0  0  0\n  4  8  2  0  0  0  0\n  9  5  2  0  0  0  0\n 10  5  1  0  0  0  0\n 10  8  1  0  0  0  0\n  7 11  1  0  0  0  0\n  7 12  1  0  0  0  0\n 13  8  1  0  0  0  0\n 13 11  2  0  0  0  0\n 10 14  1  0  0  0  0\nM  END\n> <DATE>\n07-08-2009\n';
+	var caffeine = ChemDoodle.readMOL(caffeineMolFile);
+	//the bond lengths should be 14.4 pixels in ACS Document 1996
+	caffeine.scaleToAverageBondLength(14.4);
+
+	viewerCanvas.loadMolecule(caffeine);
+</script>
+<br>
+<a href="http://web.chemdoodle.com" title="Open Source HTML5 Chemistry - ChemDoodle Web Components"><img src="http://web.chemdoodle.com/resources/images/badges/badge120x60.png" /></a>
+</body>
+</html>

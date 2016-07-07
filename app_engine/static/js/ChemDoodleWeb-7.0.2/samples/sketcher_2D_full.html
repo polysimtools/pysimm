@@ -1,0 +1,25 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<link rel="stylesheet" href="../install/ChemDoodleWeb.css" type="text/css">
+<link rel="stylesheet" href="../install/uis/jquery-ui-1.10.3.custom.css" type="text/css">
+
+<script type="text/javascript" src="../install/ChemDoodleWeb.js"></script>
+<script type="text/javascript" src="../install/uis/ChemDoodleWeb-uis.js"></script>
+<title>ChemDoodle Web Component Sketcher (Full Sketcher)</title>
+</head>
+<body>
+<script>
+  ChemDoodle.ELEMENT['H'].jmolColor = 'black';
+  ChemDoodle.ELEMENT['S'].jmolColor = '#B9A130';
+  var sketcher = new ChemDoodle.SketcherCanvas('sketcher', 500, 300,{useServices:true});
+  sketcher.specs.atoms_displayTerminalCarbonLabels_2D = true;
+  sketcher.specs.atoms_useJMOLColors = true;
+  sketcher.specs.bonds_clearOverlaps_2D = true;
+  sketcher.specs.shapes_color = '#c10000';
+  sketcher.repaint();
+</script>
+<br>
+<a href="http://web.chemdoodle.com" title="Open Source HTML5 Chemistry - ChemDoodle Web Components"><img src="http://web.chemdoodle.com/resources/images/badges/badge120x60.png" /></a>
+</body>
+</html>

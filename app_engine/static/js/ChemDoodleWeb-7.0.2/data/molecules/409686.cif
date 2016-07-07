@@ -1,0 +1,483 @@
+# SUBMISSION DETAILS
+
+_publ_contact_autor
+;
+     'V. Manri\´quez'
+     Universidad de Chile   
+      Facultad de Ciencias
+      Departamento de Quimica 
+      Casilla 653
+      Santiago Chile
+;
+_publ_contact_author_phone        '056 02 6787252'
+_publ_contact_author_fax          '056 02 2713888'
+_publ_contact_author_email        vmanriqu@uchile.cl
+
+
+_publ_requested_journal           
+'Zeitschrift f\"ur Kristallographie-New Crystal Structures'
+_publ_requested_coeditor_name     ?
+
+_publ_contact_letter
+; Dear Sirs,
+
+ We would like to submit this CIF for publication in
+  "Zeitschrift f\"ur Kristallographie" as a "New Crystal
+  Structure". The next file is Figure of the manuscript.
+;
+#==============================================================================
+#TITLE AND AUTHOR LIST
+
+_publ_section_title
+;
+Crystal structure of potassium bismuth
+hexathiodiphosphate, KBiP~2~S~6~
+;
+
+loop_
+ _publ_author_name
+ _publ_author_address
+     ' Manriquez, Vi\´ctor'
+;    Universidad de Chile   
+     Facultad de Ciencias
+     Departamento de Qui\´mica 
+     Casilla 653
+     Santiago Chile
+;
+     ' Galda\´mez, Antonio'
+;    Universidad de Chile   
+     Facultad de Ciencias
+     Departamento de Qui\´mica 
+     Casilla 653
+     Santiago Chile
+;    
+     ' Leo\´n, D. Ruiz'
+;    Universidad de Chile   
+     Facultad de Ciencias
+     Departamento de Qui\´mica 
+     Casilla 653
+     Santiago Chile
+; 
+     'Garland, M.T.'
+;    Universidad de Chile   
+     Facultad de Ciencias Fi\´sicas y Matema\´ticas
+     Departamento de Fi\´sica 
+     Casilla 487-3
+     Santiago Chile
+;             
+     'Jime\´nez, M.'
+;    Universidad de Chile   
+     Facultad de Ciencias Fi\´sicas y Matema\´ticas
+     Departamento de Fi\´sica 
+     Casilla 487-3
+     Santiago Chile
+;     
+#==============================================================================
+
+# TEXT
+
+_publ_section_abstract
+;
+
+;
+
+_publ_section_comment
+;
+In the course of our work on Chalcophosphate[1,2], were have preparated the 
+quaternary
+bismuth hexathiodiphosphate KBiP~2~S~6~.  The title compound has a complicated 
+layered structure, which contains the ethane-like [P~2~S~6~]^4-^ ligand. The 
+structure 
+can be characterized by layered of condensed S~6~ distorted octahedra 
+alternately centered
+by P~2 pairs and Bi atoms. The staircase layered of [BiP~2~S~6~]^1-^ groups in 
+the a-b plane
+are held together by a single layer of K^+^ ions. The bond lengths in the 
+hexathiodiphosphate
+[P~2~S~6~]^4-^ are d(P-P) = 2.219(3)\%A and d(P-S) range from 1.962(3)\%A to 
+2.058(3)\%A.
+The ethane-like [P~2~S~6~]^4-^ ligand chelates to 4 bi atoms, the bond lengths 
+d(Bi-S) 
+range from 2.706(2)\%A to 3.143(2)\%A. KBiP~2~S~6~ is structurally related to 
+Na~0.16Bi~1.28P~2~S~6~ [3] and KBiP~2~Se~6~ [4]. 
+;
+
+_publ_section_experimental
+;
+All manipulations were carried out under Ar atmosphere. For the synthesis of
+KBiP~2~S~6~ stoichiometric amounts of the corresponding high purity (99.99%)
+elements, supplied by Aldrich, were mixed an sealed in quartz tubes after 
+evacuation. 
+The mixture was them heated at 1123K for two weeks. The reacted matter was 
+slowly cooled
+(0.4 K/min)to room temperature.
+;
+
+_publ_section_references
+;
+[1] Ruiz-León, D; Manriquez, V.; Kasaneva, J.; Avila, R.E.: Insertión of
+trivalent cations in layered MPS~3~ (M=Mn, Cd) materials.
+Mater. Res. Bull. 37(2002) 981-989.
+  
+[2] Galdámez, A.; Manriquez, V.; Kasaneva, J.; Avila, R.E.: synthesis, 
+Characterization and electrical propierties of quaternary selenodiphosphates:
+AMP~2~Se~6~ with A=Cu, Ag and M=Bi,Sb. Mater. Res. Bull. (2003) accepted.
+ 
+[3] McCarthy, T.; Kanatzidis, M.: Synthesis in molten alkali metal polythiophsphate
+fluxes.The new quaternary bismuth an antimony thiophaspates ABiP~2~S~7~(A=K,Rb), 
+A~3~M(PS~4~)~2~(A=K,Rb, Cs; M=Sb,Bi), Cs~3~Bi~2~(PS~4~) and Na~0.16Bi~1.28P~2~S~6~.
+J. Alloys Compounds 236 (1996) 70-85.  
+
+[4] Breshears, J.; Kanatzidis, M.: B-KBiP~2~Se~6~(M=Sb,Bi): Kinetically 
+Accessible Phases Obtained from rapid crystallization of amorphous precursors.
+J. Am. Chem. Soc. 122 (2000) 7839-7840.  
+
+[5] Sheldrick, G. M.: SHELXL-97. Program for crystal structure refinement.
+University of G\"ottingen, Germany 1997.
+
+[6] Dowty, E.: ATOMS (V 3.0).A Complete Programa for displaying Atomic
+structures. By Shape Software, Kingsport, USA 1994.
+;
+
+_publ_section_figure_captions
+;
+
+;
+
+_publ_section_acknowledgements
+;
+This work was supported by FONDECYT through operating grants 
+N\% 1020683, "Beca Apoyo Tesis 2002" and Fundación Andes for the single 
+crystal diffractometer
+;
+
+#==============================================================================
+
+data_KBiP2S6 
+ 
+_audit_creation_method            SHELXL-97 
+_chemical_name_systematic 
+; 
+potassium bismuth hexathiodiphosphate
+; 
+_chemical_name_common             ? 
+_chemical_melting_point           ? 
+_chemical_formula_moiety          ? 
+_chemical_formula_structural   'K Bi P2 S6' 
+_chemical_formula_sum   'Bi1 K1 P2 S6' 
+_chemical_formula_weight          502.38 
+ 
+loop_ 
+ _atom_type_symbol 
+ _atom_type_description 
+ _atom_type_scat_dispersion_real 
+ _atom_type_scat_dispersion_imag 
+ _atom_type_scat_source 
+ 'P'  'P'   0.1023   0.0942 
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4' 
+ 'S'  'S'   0.1246   0.1234 
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4' 
+ 'K'  'K'   0.2009   0.2494 
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4' 
+ 'Bi'  'Bi'  -4.1077  10.2566 
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4' 
+ 
+_symmetry_cell_setting            monoclinic 
+_symmetry_space_group_name_H-M    p1211
+ 
+loop_ 
+ _symmetry_equiv_pos_as_xyz 
+ 'x, y, z' 
+ '-x, y+1/2, -z' 
+ 
+_cell_length_a                    6.6200(6) 
+_cell_length_b                    7.4058(7) 
+_cell_length_c                    9.9002(9) 
+_cell_angle_alpha                 90.00 
+_cell_angle_beta                  92.1080(10) 
+_cell_angle_gamma                 90.00 
+_cell_volume                      485.04(8) 
+_cell_formula_units_Z             2 
+_cell_measurement_temperature     293(2) 
+_cell_measurement_reflns_used     ? 
+_cell_measurement_theta_min       ? 
+_cell_measurement_theta_max       ? 
+ 
+_exptl_crystal_description        prism  
+_exptl_crystal_colour             'red dark' 
+_exptl_crystal_size_max           0.2 
+_exptl_crystal_size_mid           0.075 
+_exptl_crystal_size_min           0.075 
+_exptl_crystal_density_meas       ? 
+_exptl_crystal_density_diffrn     3.440 
+_exptl_crystal_density_method     'not measured' 
+_exptl_crystal_F_000              456 
+_exptl_absorpt_coefficient_mu     20.148 
+_exptl_absorpt_correction_type    ? 
+_exptl_absorpt_correction_T_min   ? 
+_exptl_absorpt_correction_T_max   ? 
+_exptl_absorpt_process_details    ? 
+ 
+ 
+_diffrn_ambient_temperature       293(2) 
+_diffrn_radiation_wavelength      0.71073 
+_diffrn_radiation_type            MoK\a 
+_diffrn_radiation_source          'fine-focus sealed tube' 
+_diffrn_radiation_monochromator   graphite 
+_diffrn_measurement_device_type   'Siemens SMART CCD'  
+_diffrn_measurement_method        'phi/omega' 
+_diffrn_detector_area_resol_mean  ? 
+_diffrn_standards_number          ? 
+_diffrn_standards_interval_count  ? 
+_diffrn_standards_interval_time   ? 
+_diffrn_standards_decay_%         ? 
+_diffrn_reflns_number             3908 
+_diffrn_reflns_av_R_equivalents   0.0342 
+_diffrn_reflns_av_sigmaI/netI     0.0855 
+_diffrn_reflns_limit_h_min        -8 
+_diffrn_reflns_limit_h_max        8 
+_diffrn_reflns_limit_k_min        -9 
+_diffrn_reflns_limit_k_max        9 
+_diffrn_reflns_limit_l_min        -13 
+_diffrn_reflns_limit_l_max        13 
+_diffrn_reflns_theta_min          2.06 
+_diffrn_reflns_theta_max          28.00 
+_reflns_number_total              2071 
+_reflns_number_gt                 1901 
+_reflns_threshold_expression      >2sigma(I) 
+ 
+_computing_data_collection        'Bruker SMART (BRUKER 1996)' 
+_computing_cell_refinement        'Bruker SAINTPLUS V6.02 (BRUKER 1997)' 
+_computing_data_reduction         'Bruker SHELXTL V6.10(BRUKER 2000)' 
+_computing_structure_solution     'SHELXS-97 (Sheldrick, 1997)' 
+_computing_structure_refinement   'SHELXL-97 (Sheldrick, 1997)' 
+_computing_molecular_graphics     'Atoms 3.0 (Dowty E., 1994)' 
+_computing_publication_material   'SHELXL-97 (Sheldrick, 1997)' 
+ 
+_refine_special_details 
+; 
+ Refinement of F^2^ against ALL reflections.  The weighted R-factor wR and 
+ goodness of fit S are based on F^2^, conventional R-factors R are based 
+ on F, with F set to zero for negative F^2^. The threshold expression of 
+ F^2^ > 2sigma(F^2^) is used only for calculating R-factors(gt) etc. and is 
+ not relevant to the choice of reflections for refinement.  R-factors based 
+ on F^2^ are statistically about twice as large as those based on F, and R- 
+ factors based on ALL data will be even larger. 
+; 
+ 
+_refine_ls_structure_factor_coef  Fsqd  
+_refine_ls_matrix_type            full 
+_refine_ls_weighting_scheme       calc  
+_refine_ls_weighting_details 
+ 'calc w=1/[\s^2^(Fo^2^)+(0.0000P)^2^+0.0000P] where P=(Fo^2^+2Fc^2^)/3' 
+_atom_sites_solution_primary      direct 
+_atom_sites_solution_secondary    difmap 
+_atom_sites_solution_hydrogens    geom 
+_refine_ls_hydrogen_treatment     mixed 
+_refine_ls_extinction_method      none 
+_refine_ls_extinction_coef        ? 
+_refine_ls_abs_structure_details 
+ 'Flack H D (1983), Acta Cryst. A39, 876-881' 
+_refine_ls_abs_structure_Flack    0.012(7) 
+_refine_ls_number_reflns          2071 
+_refine_ls_number_parameters      91 
+_refine_ls_number_restraints      1 
+_refine_ls_R_factor_all           0.0290 
+_refine_ls_R_factor_gt            0.0265 
+_refine_ls_wR_factor_ref          0.0595 
+_refine_ls_wR_factor_gt           0.0586 
+_refine_ls_goodness_of_fit_ref    0.676 
+_refine_ls_restrained_S_all       0.675 
+_refine_ls_shift/su_max           0.000 
+_refine_ls_shift/su_mean          0.000 
+ 
+loop_ 
+ _atom_site_label 
+ _atom_site_type_symbol 
+ _atom_site_fract_x 
+ _atom_site_fract_y 
+ _atom_site_fract_z 
+ _atom_site_U_iso_or_equiv 
+ _atom_site_adp_type 
+ _atom_site_occupancy 
+ _atom_site_symmetry_multiplicity 
+ _atom_site_Wyckoff_symbol
+ _atom_site_calc_flag 
+ _atom_site_refinement_flags 
+ _atom_site_disorder_assembly 
+ _atom_site_disorder_group 
+Bi Bi 0.79399(4) 0.77391(6) 0.98012(3) 0.02185(9) Uani 1 2 a d . . . 
+K K 0.7017(3) 1.0236(3) 0.5016(2) 0.0312(5) Uani 1 2 a d . . . 
+P1 P 0.6876(3) 0.3148(2) 0.8258(2) 0.0147(5) Uani 1 2 a d . . . 
+P2 P 0.7956(3) 0.5409(3) 0.7003(2) 0.0142(4) Uani 1 2 a d . . . 
+S1 S 0.6585(3) 0.4287(3) 1.0136(2) 0.0194(4) Uani 1 2 a d . . . 
+S2 S 0.9127(3) 0.1262(3) 0.8259(2) 0.0180(4) Uani 1 2 a d . . . 
+S3 S 0.4251(3) 0.2268(2) 0.7458(2) 0.0193(5) Uani 1 2 a d . . . 
+S4 S 1.0521(3) 0.6229(3) 0.8071(2) 0.0190(4) Uani 1 2 a d . . . 
+S5 S 0.5845(3) 0.7341(2) 0.7305(2) 0.0203(5) Uani 1 2 a d . . . 
+S6 S 0.8230(4) 0.4592(3) 0.5134(2) 0.0240(5) Uani 1 2 a d . . . 
+ 
+loop_ 
+ _atom_site_aniso_label 
+ _atom_site_aniso_U_11 
+ _atom_site_aniso_U_22 
+ _atom_site_aniso_U_33 
+ _atom_site_aniso_U_23 
+ _atom_site_aniso_U_13 
+ _atom_site_aniso_U_12 
+Bi 0.02447(16) 0.01881(14) 0.02227(16) -0.00475(18) 0.00087(11) -0.00115(18) 
+K 0.0315(13) 0.0354(12) 0.0264(12) 0.0003(9) -0.0014(10) -0.0025(9) 
+P1 0.0172(10) 0.0139(12) 0.0130(10) 0.0005(7) -0.0014(8) -0.0003(7) 
+P2 0.0150(10) 0.0139(9) 0.0135(10) 0.0004(8) -0.0017(8) -0.0008(8) 
+S1 0.0260(11) 0.0197(11) 0.0126(10) -0.0015(8) 0.0015(9) -0.0044(9) 
+S2 0.0187(11) 0.0153(9) 0.0199(11) -0.0003(9) -0.0028(9) 0.0016(8) 
+S3 0.0179(10) 0.0203(12) 0.0195(11) -0.0004(8) -0.0033(8) -0.0050(7) 
+S4 0.0145(10) 0.0231(10) 0.0194(11) -0.0024(9) -0.0010(8) -0.0013(8) 
+S5 0.0212(10) 0.0185(13) 0.0210(10) -0.0008(8) -0.0048(8) 0.0043(8) 
+S6 0.0290(13) 0.0306(12) 0.0125(11) -0.0020(9) 0.0017(9) -0.0036(10) 
+ 
+_geom_special_details 
+; 
+ All esds (except the esd in the dihedral angle between two l.s. planes) 
+ are estimated using the full covariance matrix.  The cell esds are taken 
+ into account individually in the estimation of esds in distances, angles 
+ and torsion angles; correlations between esds in cell parameters are only 
+ used when they are defined by crystal symmetry.  An approximate (isotropic) 
+ treatment of cell esds is used for estimating esds involving l.s. planes. 
+; 
+ 
+loop_ 
+ _geom_bond_atom_site_label_1 
+ _geom_bond_atom_site_label_2 
+ _geom_bond_distance 
+ _geom_bond_site_symmetry_2 
+ _geom_bond_publ_flag 
+Bi S4 2.706(2) . ? 
+Bi S1 2.734(2) . ? 
+Bi S5 2.804(2) . ? 
+Bi S2 2.895(2) 2_757 ? 
+Bi S2 3.138(2) 1_565 ? 
+Bi S3 3.143(2) 2_657 ? 
+K S6 3.191(3) 2_756 ? 
+K S5 3.235(3) . ? 
+K S5 3.314(3) 2_656 ? 
+K S6 3.325(3) 1_565 ? 
+K S3 3.374(3) 2_656 ? 
+K S3 3.433(3) 1_565 ? 
+K S6 3.504(3) 2_656 ? 
+K S2 3.536(3) 1_565 ? 
+K S4 3.592(3) 2_756 ? 
+P1 S3 1.992(3) . ? 
+P1 S2 2.042(3) . ? 
+P1 S1 2.057(3) . ? 
+P1 P2 2.219(3) . ? 
+P2 S6 1.962(3) . ? 
+P2 S5 2.030(3) . ? 
+P2 S4 2.058(3) . ? 
+S2 Bi 2.895(2) 2_747 ? 
+S2 K 3.536(3) 1_545 ? 
+S3 K 3.374(3) 2_646 ? 
+S3 K 3.433(3) 1_545 ? 
+S4 K 3.592(3) 2_746 ? 
+S5 K 3.314(3) 2_646 ? 
+S6 K 3.191(3) 2_746 ? 
+S6 K 3.325(3) 1_545 ? 
+S6 K 3.504(3) 2_646 ? 
+ 
+loop_ 
+ _geom_angle_atom_site_label_1 
+ _geom_angle_atom_site_label_2 
+ _geom_angle_atom_site_label_3 
+ _geom_angle 
+ _geom_angle_site_symmetry_1 
+ _geom_angle_site_symmetry_3 
+ _geom_angle_publ_flag 
+S4 Bi S1 84.70(6) . . ? 
+S4 Bi S5 72.66(6) . . ? 
+S1 Bi S5 81.65(6) . . ? 
+S4 Bi S2 80.80(6) . 2_757 ? 
+S1 Bi S2 77.36(6) . 2_757 ? 
+S5 Bi S2 147.43(6) . 2_757 ? 
+S4 Bi S2 81.97(6) . 1_565 ? 
+S1 Bi S2 157.80(6) . 1_565 ? 
+S5 Bi S2 77.48(6) . 1_565 ? 
+S2 Bi S2 117.59(4) 2_757 1_565 ? 
+S4 Bi S3 145.39(6) . 2_657 ? 
+S1 Bi S3 68.14(6) . 2_657 ? 
+S5 Bi S3 121.34(6) . 2_657 ? 
+S2 Bi S3 72.84(6) 2_757 2_657 ? 
+S2 Bi S3 130.11(5) 1_565 2_657 ? 
+S6 K S5 101.29(8) 2_756 . ? 
+S6 K S5 125.28(9) 2_756 2_656 ? 
+S5 K S5 130.69(7) . 2_656 ? 
+S6 K S6 84.80(7) 2_756 1_565 ? 
+S5 K S6 133.02(9) . 1_565 ? 
+S5 K S6 72.49(7) 2_656 1_565 ? 
+S6 K S3 95.06(8) 2_756 2_656 ? 
+S5 K S3 90.99(8) . 2_656 ? 
+S5 K S3 71.48(6) 2_656 2_656 ? 
+S6 K S3 135.29(9) 1_565 2_656 ? 
+S6 K S3 130.58(9) 2_756 1_565 ? 
+S5 K S3 69.47(6) . 1_565 ? 
+S5 K S3 88.63(7) 2_656 1_565 ? 
+S6 K S3 71.61(7) 1_565 1_565 ? 
+S3 K S3 132.21(7) 2_656 1_565 ? 
+S6 K S6 162.79(12) 2_756 2_656 ? 
+S5 K S6 71.13(7) . 2_656 ? 
+S5 K S6 59.61(6) 2_656 2_656 ? 
+S6 K S6 111.80(9) 1_565 2_656 ? 
+S3 K S6 70.17(7) 2_656 2_656 ? 
+S3 K S6 62.35(6) 1_565 2_656 ? 
+S6 K S2 73.57(7) 2_756 1_565 ? 
+S5 K S2 66.63(6) . 1_565 ? 
+S5 K S2 136.48(9) 2_656 1_565 ? 
+S6 K S2 70.91(7) 1_565 1_565 ? 
+S3 K S2 151.46(9) 2_656 1_565 ? 
+S3 K S2 57.96(6) 1_565 1_565 ? 
+S6 K S2 115.19(7) 2_656 1_565 ? 
+S6 K S4 60.79(6) 2_756 2_756 ? 
+S5 K S4 149.29(9) . 2_756 ? 
+S5 K S4 65.13(6) 2_656 2_756 ? 
+S6 K S4 73.42(7) 1_565 2_756 ? 
+S3 K S4 67.93(6) 2_656 2_756 ? 
+S3 K S4 141.25(9) 1_565 2_756 ? 
+S6 K S4 118.17(7) 2_656 2_756 ? 
+S2 K S4 123.50(8) 1_565 2_756 ? 
+S3 P1 S2 113.72(12) . . ? 
+S3 P1 S1 112.60(13) . . ? 
+S2 P1 S1 111.87(13) . . ? 
+S3 P1 P2 108.58(12) . . ? 
+S2 P1 P2 105.42(12) . . ? 
+S1 P1 P2 103.83(11) . . ? 
+S6 P2 S5 116.39(14) . . ? 
+S6 P2 S4 118.17(14) . . ? 
+S5 P2 S4 106.02(12) . . ? 
+S6 P2 P1 109.76(13) . . ? 
+S5 P2 P1 102.22(12) . . ? 
+S4 P2 P1 102.24(12) . . ? 
+P1 S1 Bi 103.42(10) . . ? 
+P1 S2 Bi 102.34(10) . 2_747 ? 
+P1 S2 K 83.26(9) . 1_545 ? 
+Bi S2 K 156.40(8) 2_747 1_545 ? 
+P1 S3 K 105.40(10) . 2_646 ? 
+P1 S3 K 86.76(10) . 1_545 ? 
+P2 S4 Bi 85.34(9) . . ? 
+P2 S4 K 83.94(9) . 2_746 ? 
+Bi S4 K 160.09(9) . 2_746 ? 
+P2 S5 Bi 83.28(9) . . ? 
+P2 S5 K 100.36(10) . . ? 
+Bi S5 K 115.10(8) . . ? 
+P2 S5 K 86.87(10) . 2_646 ? 
+Bi S5 K 155.81(8) . 2_646 ? 
+P2 S6 K 97.08(11) . 2_746 ? 
+P2 S6 K 107.56(12) . 1_545 ? 
+P2 S6 K 82.65(10) . 2_646 ? 
+
+ 
+_diffrn_measured_fraction_theta_max    0.927 
+_diffrn_reflns_theta_full              28.00 
+_diffrn_measured_fraction_theta_full   0.927 
+_refine_diff_density_max    1.209 
+_refine_diff_density_min   -1.435 
+_refine_diff_density_rms    0.201 
+
