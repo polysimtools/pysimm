@@ -1,0 +1,1102 @@
+# CIF-file generated for Sucrose                                 
+
+#==============================================================================
+data_global
+#==============================================================================
+
+# 0. AUDIT DETAILS
+
+_audit_creation_date                 'Apr 26 22:59:50 2005'
+_audit_creation_method               'PLATON <TABLE ACC> option' 
+_audit_update_record                
+; ?
+;
+
+#===============================================================================
+
+# 1. SUBMISSION DETAILS
+
+_publ_contact_author_name           # Name  of author for correspondence
+;   Prof. Dr. A.L. Spek
+;
+_publ_contact_author_address        # Address of author for correspondence
+;   Bijvoet Center for Biomolecular Research
+    Department of Crystal and Structural Chemistry
+    Utrecht University
+    Padualaan 8
+    3584 CH Utrecht
+    The Netherlands
+;
+_publ_contact_author_email           'a.l.spek@chem.uu.nl'
+_publ_contact_author_fax             '+31 30 2533940'
+_publ_contact_author_phone           '+31 30 2532538'
+
+_publ_requested_journal              'Acta Crystallographica C' 
+# Publication choise FI, CI or EI for Inorganic
+#                    FM, CM or EM for Metal-organic
+#                    FO, CO or EO for Organic
+_publ_requested_category             ?
+_publ_requested_coeditor_name        ?
+
+_publ_contact_letter                # Include date of submission
+;
+Date of submission ?
+
+Please consider this CIF submission for publication as a
+Regular Structural Paper in Acta Crystallographica C. 
+;
+
+#===============================================================================
+
+# 2. PROCESSING SUMMARY (JOURNAL OFFICE ONLY)
+
+_journal_date_recd_electronic        ?
+
+_journal_date_to_coeditor            ?
+_journal_date_from_coeditor          ?
+_journal_date_accepted               ?
+
+_journal_date_printers_first         ?
+_journal_date_printers_final         ?
+_journal_date_proofs_out             ?
+_journal_date_proofs_in              ?
+
+_journal_coeditor_name               ?
+_journal_coeditor_code               ?
+_journal_coeditor_notes             
+; ?
+;
+
+_journal_techeditor_code             ?
+_journal_techeditor_notes           
+; ?
+;
+
+_journal_coden_ASTM                  ?
+_journal_name_full                   ?
+_journal_year                        ?
+_journal_volume                      ?
+_journal_issue                       ?
+_journal_page_first                  ?
+_journal_page_last                   ?
+
+
+_journal_suppl_publ_number           ?
+_journal_suppl_publ_pages            ?
+
+
+#===============================================================================
+
+# 3. TITLE AND AUTHOR LIST
+
+_publ_section_title                 
+; ?
+;
+_publ_section_title_footnote        
+; ?
+;
+
+# The loop structure below should contain the names and adresses of all
+# authors, in the required order of publication. Repeat as necessary.
+
+
+loop_
+_publ_author_name                   
+_publ_author_footnote               
+_publ_author_address                
+'?' # author name
+; ?  # author related footnote
+;
+; ?  # Address of this author
+;
+   'Spek, Anthony L.'
+; ? # author related footnote
+;
+;   Bijvoet Center for Biomolecular Research
+    Department of Crystal and Structural Chemistry
+    Utrecht University
+    Padualaan 8
+    3584 CH Utrecht
+    The Netherlands
+;
+
+#===============================================================================
+
+# 4. TEXT
+
+_publ_section_synopsis              
+;
+ ?
+;
+_publ_section_abstract              
+;
+ ?
+;
+
+# Insert blank lines between paragraphs
+
+_publ_section_comment               
+; ?
+;
+_publ_section_exptl_prep            
+;
+ ?
+;
+_publ_section_exptl_refinement      
+;
+ ?
+;
+
+# Insert blank lines between references
+
+_publ_section_references            
+;
+ Allen, F.H. (2002).
+   Acta Cryst. B58, 380-388.
+
+ Altomare, A., Burla, M.C., Camalli, M., Cascarano, G.L., Giacovazzo, C.
+   Guagliardi, A., Moliterni, A.G.G., Polidori, G. & Spagna, R.
+   (1999) J. Appl. Cryst. 32, 115-119.
+
+ Beurskens, P.T., Beurskens, G., de Gelder, R., Garc'ia-Granda, S.,
+ Gould, R.O., Israel, R. & Smits, J.M.M. (1999) The DIRDIF99 Program System,
+   Technical Report of the Crystallography Laboratory,
+   University of Nijmegen, The Netherlands.
+
+ Boer, J.L. de & Duisenberg, A.J.M. (1984). Acta Cryst. A40, C-410.
+
+ Boeyens, J.C.A. (1978). J.Cryst.Mol.Struct. 8, 317-320.
+
+ Cremer, D. & Pople, J.A. (1975). J. Am. Chem. Soc. 97, 1354-1358.
+
+ Duisenberg, A.J.M. (1992). J. Appl. Cryst. 25, 92-96.
+
+ Duisenberg, A.J.M., Kroon-Batenburg, L.M.J. & Schreurs, A.M.M. (2003).
+   J. Appl. Cryst. 36, 220-229.
+
+ Enraf-Nonius (1989). CAD-4 Software. Version 5. Enraf-Nonius, Delft,
+   The Netherlands.
+
+ Flack, H.D. (1983). Acta Cryst. A39, 876-881.
+
+ Hooft, R.W.W. (1998). Collect Software, Nonius B.V., Delft, The Netherlands.
+
+ LePage, Y. (1987). J. Appl. Cryst. 20, 264-269.
+
+ Mackay, A.L. (1984). Acta Cryst. A40, 165-166.
+
+ Meulenaer, J. de & Tompa, H. (1965). Acta Cryst. 19, 1014-1018.
+
+ North, A.C.T., Phillips, D.C. & Mathews, F.S. (1968).
+  Acta Cryst. A24, 351-359.
+
+ Otwinowski, Z. & Minor, W. (1997). Methods in Enzymology, Vol. 276,
+   Macromolecular Crystallography, Part A, edited by C.W. Carter &
+    R.M. Sweet, pp. 307-326. London: Academic Press.
+
+ Sheldrick, G.M. SHELXL93. Program for crystal structure
+   refinement. University of G"ottingen, Germany, 1993.
+
+ Sheldrick, G.M. SHELXL97. Program for crystal structure
+  refinement. University of G"ottingen, Germany, 1997.
+
+ Sheldrick, G.M. SHELXS86. Program for Crystal Structure
+   solution. University of G"ottingen, Germany, 1986.
+
+ Sheldrick, G.M. SHELXS97. Program for Crystal Structure
+   solution. University of G"ottingen, Germany, 1997.
+
+ Sluis, P. van der & Spek, A.L. (1990). Acta Cryst. A46, 194-201.
+
+ Spek, A.L. (1987). Acta Cryst. C43, 1233-1235.
+
+ Spek, A.L. (1988). J. Appl. Cryst. 21, 578-579.
+
+ Spek, A.L. (1994). Am. Crystallogr. Assoc.-Abstracts, 22, 66.
+
+ Spek, A.L. (1997). HELENA, Program for Datareduction, Utrecht
+   University, The Netherlands.
+
+ Spek, A.L. (2003). J. Appl. Cryst. 36, 7-13.
+
+ Wilson, A.J.C. (1992) Ed. International Tables for Crystallography,
+   Volume C, Kluwer Academic Publishers, Dordrecht, The Netherlands.
+;
+_publ_section_acknowledgements      
+;
+This work was supported in part (ALS) by the Council for the Chemical
+Sciences of the Netherlands Organization for Scientific Research (CW-NWO).
+;
+_publ_section_figure_captions       
+; View of the title compound with the atom numbering scheme.
+Displacement ellipsoids for non-H atoms are drawn at the 50% probability level.
+;
+
+#===============================================================================
+
+data_sucrose                         
+
+#===============================================================================
+
+# 5. CHEMICAL DATA
+
+_chemical_name_systematic           
+; ?
+;
+_chemical_name_common                ?
+_chemical_melting_point              ?
+_chemical_formula_moiety            
+'C12 H22 O11'
+# Ex: 'C12 H16 N2 O6, H2 O' and '(Cd 2+)3, (C6 N6 Cr 3-)2, 2(H2 O)' 
+_chemical_formula_structural         ?
+_chemical_formula_sum               
+'C12 H22 O11'
+_chemical_formula_iupac              ?
+_chemical_formula_weight                342.30
+_chemical_compound_source           'see text'
+
+loop_
+_atom_type_symbol                   
+_atom_type_description              
+_atom_type_scat_dispersion_real     
+_atom_type_scat_dispersion_imag     
+_atom_type_scat_source              
+ O   O    0.0492    0.0322
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+ H   H    0.0000    0.0000
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+ C   C    0.0181    0.0091
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+
+#===============================================================================
+
+# 6. CRYSTAL DATA
+
+_symmetry_cell_setting                 Monoclinic
+_symmetry_space_group_name_Hall      'P 2yb'
+_symmetry_space_group_name_H-M       'P 21'
+_symmetry_Int_Tables_number                  4
+
+loop_
+_symmetry_equiv_pos_site_id         
+_symmetry_equiv_pos_as_xyz          
+   1 x,y,z                         
+   2 -x,1/2+y,-z                   
+
+_cell_length_a                          10.8633(5)
+_cell_length_b                           8.7050(4)
+_cell_length_c                           7.7585(4)
+_cell_angle_alpha                               90
+_cell_angle_beta                        102.945(6)
+_cell_angle_gamma                               90
+_cell_volume                             715.04(6)
+_cell_formula_units_Z                    2
+_cell_measurement_temperature            0
+_cell_measurement_reflns_used        ?
+_cell_measurement_theta_min          ?
+_cell_measurement_theta_max          ?
+_cell_special_details               
+;
+Least Squares Treatment of 25 SET4 setting angles.
+;
+
+_exptl_crystal_description          ' ?'
+_exptl_crystal_colour               ' ?'
+
+_exptl_crystal_size_max              ?
+_exptl_crystal_size_mid              ?
+_exptl_crystal_size_min              ?
+_exptl_crystal_size_rad              ?
+_exptl_crystal_density_meas          ?
+_exptl_crystal_density_diffrn            1.590
+_exptl_crystal_density_method       'Not Measured'
+_exptl_crystal_F_000                       364
+_exptl_absorpt_coefficient_mu            1.241
+_exptl_crystal_density_meas_temp     ?
+
+# Permitted for _exptl_absorpt_correction_type :
+# analytical     'analytical from crystal shape'
+#                Example: de Meulenaer&Tompa: ABST
+# cylinder       'cylindrical'
+# gaussian       'Gaussian from crystal shape'
+#                Example: PLATON/ABSG
+# integration    'integration from crystal shape'
+# multi-scan     'symmetry-related measurements'
+#                Example: SADABS, MULABS
+# none           'no absorption corr. applied'
+# numerical      'numerical from crystal shape'
+# psi-scan       'psi-scan corrections'
+#                Example: PLATON/ABSP
+# refdelf        'refined from delta-F'
+#                Example: SHELXA, DIFABS, DELABS
+# sphere         'spherical'
+#                Example: PLATON/ABSS
+_exptl_absorpt_correction_type      ' ?'
+# Example: '(North, Phillips & Mathews, 1968)'
+_exptl_absorpt_process_details       ?
+_exptl_absorpt_correction_T_min      ?
+_exptl_absorpt_correction_T_max      ?
+
+#===============================================================================
+
+# 7. EXPERIMENTAL DATA
+
+_exptl_special_details              
+; ?
+;
+_diffrn_ambient_temperature          ?
+_diffrn_radiation_wavelength           1.54180
+_diffrn_radiation_probe              'x-ray'
+_diffrn_radiation_type               'CuK\a'
+_diffrn_radiation_source             'Rotating Anode' 
+_diffrn_radiation_monochromator      'graphite' 
+
+_diffrn_measurement_device_type      ?
+_diffrn_measurement_method           ?
+_diffrn_detector_area_resol_mean          18.4
+
+_diffrn_standards_number             ?
+_diffrn_standards_interval_count     ?
+_diffrn_standards_interval_time      ?
+_diffrn_standards_decay_%            ?
+
+loop_
+_diffrn_standard_refln_index_h      
+_diffrn_standard_refln_index_k      
+_diffrn_standard_refln_index_l      
+ ? ? ?
+
+# number of measured reflections (redundant set)
+_diffrn_reflns_number                ?
+_diffrn_reflns_av_R_equivalents      ?
+_diffrn_reflns_av_sigmaI/netI        ?
+_diffrn_reflns_limit_h_min           ?
+_diffrn_reflns_limit_h_max           ?
+_diffrn_reflns_limit_k_min           ?
+_diffrn_reflns_limit_k_max           ?
+_diffrn_reflns_limit_l_min           ?
+_diffrn_reflns_limit_l_max           ?
+_diffrn_reflns_theta_min             ?
+_diffrn_reflns_theta_max             ?
+_diffrn_reflns_theta_full            ?
+_diffrn_measured_fraction_theta_max  ?
+_diffrn_measured_fraction_theta_full ?
+_diffrn_reflns_reduction_process    
+; ?
+;
+
+# number of unique reflections
+_reflns_number_total                 ?
+# number of observed reflections (> n sig(I))
+_reflns_number_gt                    ?
+_reflns_threshold_expression          ?
+
+_computing_data_collection          
+'Locally modified CAD4 Software (Enraf-Nonius, 1989)'
+_computing_cell_refinement          'SET4 (de Boer & Duisenberg, 1984)'
+_computing_data_reduction           'HELENA (Spek, 1997)'
+_computing_structure_solution        ?
+_computing_structure_refinement      ?
+_computing_molecular_graphics        ?
+_computing_publication_material      'PLATON (Spek, 2003)' 
+
+#===============================================================================
+
+# 8. REFINEMENT DATA
+
+_refine_special_details              ?
+_refine_ls_structure_factor_coef      ?
+_refine_ls_matrix_type                ?
+_refine_ls_weighting_scheme          ' ?'
+
+_refine_ls_weighting_details        
+ ?                                                                              
+_atom_sites_solution_primary        ' ?'
+_atom_sites_solution_secondary      ' ?'
+_atom_sites_solution_hydrogens      ' ?'
+
+
+# Permitted for _refine_ls_hydrogen_treatment :
+# refall  - refined all H parameters
+# refxyz  - refined H coordinates only
+# refU    - refined H U only
+# noref   - no refinement of H parameters
+# constr  - H parameters constrained
+# mixed   - some constrained, some independent
+# undef   - H-atom parameters not defined
+_refine_ls_hydrogen_treatment       ' ?'
+
+_refine_ls_extinction_method         ' ?'
+_refine_ls_extinction_coef            ?                   
+_refine_ls_extinction_expression    
+ ?                                                                              
+_refine_ls_abs_structure_details    
+ 'Flack H.D. (1983), Acta Cryst. A39, 876-881' 
+_refine_ls_abs_structure_Flack       ?
+
+# Permitted for _chemical_absolute_configuration:
+# Absolute configuration details
+# rm   = Det. by chiral ref. mol. with known abs.conf
+# ad   = Det. by anomalous dispersion
+# rmad = Det. by 'rm' and 'ad' 
+# syn  = Det. with reference to synthesis
+# unk  = Unknown/Arbitrary
+_chemical_absolute_configuration     ?
+
+_refine_ls_number_reflns             ?
+_refine_ls_number_parameters         ?
+_refine_ls_number_restraints                 0
+_refine_ls_number_constraints        ?
+_refine_ls_R_factor_all              ?
+_refine_ls_R_factor_gt               ?
+_refine_ls_wR_factor_ref             ?
+_refine_ls_wR_factor_gt              ?
+_refine_ls_goodness_of_fit_ref       ?
+_refine_ls_restrained_S_all          ?
+_refine_ls_shift/su_max              ?
+_refine_ls_shift/su_mean             ?
+_refine_diff_density_max             ?
+_refine_diff_density_min             ?
+_refine_diff_density_rms             ?
+
+#===============================================================================
+
+# 9. ATOMIC COORDINATES AND DISPLACEMENT PARAMETERS
+
+loop_
+_atom_site_label                    
+_atom_site_type_symbol              
+_atom_site_thermal_displace_type    
+_atom_site_fract_x                  
+_atom_site_fract_y                  
+_atom_site_fract_z                  
+_atom_site_occupancy                
+_atom_site_U_iso_or_equiv           
+_atom_site_calc_flag                
+_atom_site_refinement_flags         
+O1 O Uani -0.17143(9) -0.15370(15) 0.60835(13) 1.000 0.0155(2) . .              
+O2 O Uani -0.22954(12) -0.06450(19) 0.25234(16) 1.000 0.0248(3) . .             
+O3 O Uani -0.30801(13) 0.24770(19) 0.2972(2) 1.000 0.0335(4) . .                
+O4 O Uani -0.34880(18) 0.3141(2) 0.6437(2) 1.000 0.0397(5) . .                  
+O5 O Uani -0.37719(10) -0.10122(16) 0.63136(15) 1.000 0.0190(3) . .             
+O6 O Uani -0.58144(13) 0.0453(2) 0.7138(2) 1.000 0.0310(4) . .                  
+O11 O Uani -0.03017(12) -0.2645(2) 0.37881(16) 1.000 0.0261(3) . .              
+O21 O Uani -0.21205(10) -0.40555(16) 0.68428(13) 1.000 0.0190(3) . .            
+O31 O Uani 0.07367(11) -0.18224(17) 0.79548(16) 1.000 0.0223(3) . .             
+O41 O Uani 0.02123(12) -0.40266(19) 1.08904(14) 1.000 0.0260(3) . .             
+O61 O Uani -0.32644(13) -0.2620(2) 0.95965(17) 1.000 0.0299(4) . .              
+C1 C Uani -0.29961(8) -0.14208 0.51513(12) 1.000 0.0156(2) . .                  
+C2 C Uani -0.31253(9) -0.02526(15) 0.36400(12) 1.000 0.0185(2) . .              
+C3 C Uani -0.28545(9) 0.13673(15) 0.43553(13) 1.000 0.0206(2) . .               
+C4 C Uani -0.37404(10) 0.17095(15) 0.55802(14) 1.000 0.0218(2) . .              
+C5 C Uani -0.35925(9) 0.05107(16) 0.70471(13) 1.000 0.0198(2) . .               
+C6 C Uani -0.45754(11) 0.07083(17) 0.81545(14) 1.000 0.0268(3) . .              
+C11 C Uani -0.10301(10) -0.36890(15) 0.45620(12) 1.000 0.0207(2) . .            
+C21 C Uani -0.12446(8) -0.30738(14) 0.63105(10) 1.000 0.0144(2) . .             
+C31 C Uani -0.00718(8) -0.30925(15) 0.78515(11) 1.000 0.0159(2) . .             
+C41 C Uani -0.06478(9) -0.33347(15) 0.94524(11) 1.000 0.0172(2) . .             
+C51 C Uani -0.17635(9) -0.43867(15) 0.87136(12) 1.000 0.0182(2) . .             
+C61 C Uani -0.28927(10) -0.41806(17) 0.95332(14) 1.000 0.0261(3) . .            
+H1 H Uani -0.3347(2) -0.2549(3) 0.4612(3) 1.000 0.0290(5) . .                   
+H2 H Uani -0.4116(2) -0.0307(3) 0.2883(3) 1.000 0.0350(6) . .                   
+H3 H Uani -0.1871(2) 0.1448(3) 0.5103(3) 1.000 0.0372(7) . .                    
+H4 H Uani -0.4717(2) 0.1681(3) 0.4782(3) 1.000 0.0377(7) . .                    
+H5 H Uani -0.2638(2) 0.0613(3) 0.7907(3) 1.000 0.0382(6) . .                    
+H6 H Uani -0.4531(3) 0.1873(4) 0.8656(4) 1.000 0.0538(10) . .                   
+H11 H Uani -0.0520(3) -0.4776(3) 0.4784(4) 1.000 0.0444(8) . .                  
+H12 H Uani -0.1947(2) -0.3909(4) 0.3670(3) 1.000 0.0410(7) . .                  
+H23 H Uani -0.2719(3) -0.1277(4) 0.1534(3) 1.000 0.0416(7) . .                  
+H31 H Uani 0.0495(2) -0.4116(3) 0.7710(3) 1.000 0.0304(6) . .                   
+H33 H Uani -0.2318(3) 0.2660(4) 0.2575(4) 1.000 0.0485(9) . .                   
+H41 H Uani -0.0984(2) -0.2228(3) 0.9845(3) 1.000 0.0317(6) . .                  
+H43 H Uani -0.3407(6) 0.3913(4) 0.5675(6) 1.000 0.088(2) . .                    
+H51 H Uani -0.1465(3) -0.5599(3) 0.8868(3) 1.000 0.0352(6) . .                  
+H61 H Uani -0.4372(3) -0.0074(5) 0.9281(4) 1.000 0.0551(10) . .                 
+H62 H Uani -0.2651(3) -0.4601(4) 1.0887(4) 1.000 0.0496(9) . .                  
+H63 H Uani -0.6015(3) -0.0617(4) 0.7134(5) 1.000 0.0506(9) . .                  
+H101 H Uani -0.0845(3) -0.1753(3) 0.3458(3) 1.000 0.0407(7) . .                 
+H301 H Uani 0.0310(2) -0.0911(3) 0.8239(3) 1.000 0.0370(7) . .                  
+H401 H Uani 0.0167(3) -0.3462(3) 1.1961(3) 1.000 0.0382(7) . .                  
+H601 H Uani -0.3477(3) -0.2220(4) 0.8397(3) 1.000 0.0450(8) . .                 
+H611 H Uani -0.3672(3) -0.4881(4) 0.8805(5) 1.000 0.0548(10) . .                
+
+loop_
+_atom_site_aniso_label              
+_atom_site_aniso_U_11               
+_atom_site_aniso_U_22               
+_atom_site_aniso_U_33               
+_atom_site_aniso_U_23               
+_atom_site_aniso_U_13               
+_atom_site_aniso_U_12               
+O1 0.0155(4) 0.0131(4) 0.0177(4) -0.0006(3) 0.0035(3) 0.0002(3)                 
+O2 0.0277(6) 0.0288(6) 0.0194(5) 0.0013(4) 0.0084(4) 0.0031(5)                  
+O3 0.0328(7) 0.0252(6) 0.0478(8) 0.0172(6) 0.0206(6) 0.0099(5)                  
+O4 0.0592(10) 0.0184(6) 0.0472(8) -0.0090(6) 0.0241(8) -0.0071(6)               
+O5 0.0179(5) 0.0170(5) 0.0242(5) 0.0006(4) 0.0091(4) 0.0000(4)                  
+O6 0.0218(5) 0.0337(7) 0.0413(7) 0.0063(6) 0.0154(5) 0.0055(5)                  
+O11 0.0286(5) 0.0330(6) 0.0200(5) 0.0008(4) 0.0127(4) 0.0035(5)                 
+O21 0.0227(5) 0.0181(5) 0.0156(4) 0.0005(3) 0.0032(3) -0.0058(4)                
+O31 0.0191(5) 0.0231(5) 0.0248(5) -0.0021(4) 0.0051(4) -0.0051(4)               
+O41 0.0285(6) 0.0321(6) 0.0157(4) 0.0020(4) 0.0016(4) 0.0066(5)                 
+O61 0.0314(6) 0.0357(7) 0.0247(6) -0.0012(5) 0.0105(4) 0.0058(6)                
+C1 0.0156(3) 0.0144(3) 0.0169(3) -0.0001(3) 0.0038(3) -0.0003(3)                
+C2 0.0173(3) 0.0191(4) 0.0186(4) 0.0021(3) 0.0030(3) 0.0020(3)                  
+C3 0.0182(4) 0.0168(4) 0.0280(4) 0.0024(3) 0.0080(3) 0.0008(3)                  
+C4 0.0227(4) 0.0155(4) 0.0291(4) -0.0002(4) 0.0099(4) 0.0010(3)                 
+C5 0.0178(4) 0.0202(4) 0.0219(4) -0.0021(3) 0.0054(3) 0.0010(3)                 
+C6 0.0298(5) 0.0288(5) 0.0249(4) 0.0000(4) 0.0125(4) 0.0062(4)                  
+C11 0.0263(5) 0.0215(4) 0.0150(3) -0.0035(3) 0.0062(3) 0.0033(4)                
+C21 0.0174(3) 0.0139(3) 0.0123(3) -0.0011(3) 0.0041(2) 0.0002(3)                
+C31 0.0164(3) 0.0165(3) 0.0151(3) -0.0006(3) 0.0043(3) 0.0015(3)                
+C41 0.0201(3) 0.0182(4) 0.0134(3) 0.0000(3) 0.0043(3) 0.0018(3)                 
+C51 0.0223(4) 0.0169(4) 0.0164(3) 0.0020(3) 0.0062(3) -0.0013(3)                
+C61 0.0274(5) 0.0305(5) 0.0236(4) 0.0016(4) 0.0123(4) -0.0038(4)                
+H1 0.0289(9) 0.0234(8) 0.0335(10) -0.0053(7) 0.0045(7) -0.0035(7)               
+H2 0.0250(9) 0.0432(12) 0.0325(10) 0.0028(9) -0.0026(8) 0.0009(9)               
+H3 0.0234(9) 0.0364(12) 0.0507(13) -0.0015(10) 0.0059(9) -0.0028(8)             
+H4 0.0285(10) 0.0429(13) 0.0424(11) 0.0051(10) 0.0093(8) 0.0085(9)              
+H5 0.0279(9) 0.0436(13) 0.0390(11) -0.0050(10) -0.0011(8) -0.0005(10)           
+H6 0.0625(18) 0.0465(16) 0.0577(17) -0.0217(14) 0.0246(14) 0.0005(14)           
+H11 0.0641(17) 0.0307(12) 0.0413(12) -0.0027(10) 0.0177(12) 0.0161(12)          
+H12 0.0416(11) 0.0513(15) 0.0282(9) -0.0120(10) 0.0041(9) -0.0068(11)           
+H23 0.0480(13) 0.0481(14) 0.0281(10) -0.0062(10) 0.0070(9) 0.0036(12)           
+H31 0.0316(10) 0.0280(10) 0.0323(9) -0.0008(8) 0.0086(8) 0.0084(8)              
+H33 0.0504(15) 0.0402(13) 0.0647(17) 0.0199(13) 0.0337(14) 0.0118(12)           
+H41 0.0361(10) 0.0287(10) 0.0319(10) -0.0077(8) 0.0111(8) 0.0027(8)             
+H43 0.175(5) 0.0267(13) 0.083(3) -0.0050(16) 0.074(3) -0.017(2)                 
+H51 0.0480(12) 0.0234(9) 0.0349(10) 0.0051(8) 0.0110(9) 0.0034(9)               
+H61 0.0581(17) 0.074(2) 0.0368(12) 0.0185(13) 0.0184(12) 0.0206(16)             
+H62 0.0633(16) 0.0557(17) 0.0355(11) 0.0154(12) 0.0235(12) 0.0054(15)           
+H63 0.0505(16) 0.0404(15) 0.0614(18) -0.0083(13) 0.0138(13) -0.0012(13)         
+H101 0.0490(14) 0.0347(12) 0.0431(12) 0.0069(10) 0.0206(11) 0.0064(11)          
+H301 0.0407(12) 0.0260(10) 0.0460(12) -0.0053(9) 0.0133(10) -0.0040(9)          
+H401 0.0482(13) 0.0426(13) 0.0211(9) -0.0016(8) 0.0018(9) 0.0001(11)            
+H601 0.0516(15) 0.0484(15) 0.0357(12) 0.0066(11) 0.0116(11) 0.0098(12)          
+H611 0.0422(14) 0.0592(19) 0.0661(19) -0.0164(15) 0.0189(13) -0.0216(14)        
+
+#===============================================================================
+
+# 10. MOLECULAR GEOMETRY
+
+_geom_special_details               
+;
+ Bond distances, angles etc. have been calculated using the
+ rounded fractional coordinates. All su's are estimated
+ from the variances of the (full) variance-covariance matrix.
+ The cell esds are taken into account in the estimation of
+ distances, angles and torsion angles
+;
+
+loop_
+_geom_bond_atom_site_label_1        
+_geom_bond_atom_site_label_2        
+_geom_bond_distance                 
+_geom_bond_site_symmetry_1          
+_geom_bond_site_symmetry_2          
+_geom_bond_publ_flag                
+ O1      C1       1.4216(13)                     .       .                   yes
+ O1      C21      1.4286(17)                     .       .                   yes
+ O2      C2       1.4247(16)                     .       .                   yes
+ O3      C3         1.424(2)                     .       .                   yes
+ O4      C4         1.410(2)                     .       .                   yes
+ O5      C1       1.4108(14)                     .       .                   yes
+ O5      C5       1.4386(19)                     .       .                   yes
+ O6      C6       1.4168(19)                     .       .                   yes
+ O11     C11      1.4232(19)                     .       .                   yes
+ O21     C21      1.4079(16)                     .       .                   yes
+ O21     C51      1.4450(14)                     .       .                   yes
+ O31     C31      1.4031(18)                     .       .                   yes
+ O41     C41      1.4190(16)                     .       .                   yes
+ O61     C61        1.421(2)                     .       .                   yes
+ O2      H23        0.972(3)                     .       .                   no 
+ O3      H33        0.959(4)                     .       .                   no 
+ O4      H43        0.912(4)                     .       .                   no 
+ O6      H63        0.956(4)                     .       .                   no 
+ O11     H101       0.974(3)                     .       .                   no 
+ O31     H301       0.969(3)                     .       .                   no 
+ O41     H401       0.976(3)                     .       .                   no 
+ O61     H601       0.972(3)                     .       .                   no 
+ C1      C2       1.5346(13)                     .       .                   no 
+ C2      C3       1.5198(18)                     .       .                   no 
+ C3      C4       1.5257(15)                     .       .                   no 
+ C4      C5       1.5258(17)                     .       .                   no 
+ C5      C6       1.5228(15)                     .       .                   no 
+ C11     C21      1.5241(13)                     .       .                   no 
+ C21     C31      1.5396(12)                     .       .                   no 
+ C31     C41      1.5254(13)                     .       .                   no 
+ C41     C51      1.5248(16)                     .       .                   no 
+ C51     C61      1.5135(15)                     .       .                   no 
+ C1      H1         1.102(3)                     .       .                   no 
+ C2      H2         1.106(2)                     .       .                   no 
+ C3      H3         1.098(2)                     .       .                   no 
+ C4      H4         1.102(2)                     .       .                   no 
+ C5      H5         1.104(2)                     .       .                   no 
+ C6      H6         1.083(4)                     .       .                   no 
+ C6      H61        1.091(4)                     .       .                   no 
+ C11     H11        1.091(3)                     .       .                   no 
+ C11     H12        1.095(3)                     .       .                   no 
+ C31     H31        1.102(3)                     .       .                   no 
+ C41     H41        1.097(3)                     .       .                   no 
+ C51     H51        1.103(3)                     .       .                   no 
+ C61     H62        1.087(3)                     .       .                   no 
+ C61     H611       1.092(4)                     .       .                   no 
+
+loop_
+_geom_angle_atom_site_label_1       
+_geom_angle_atom_site_label_2       
+_geom_angle_atom_site_label_3       
+_geom_angle                         
+_geom_angle_site_symmetry_1         
+_geom_angle_site_symmetry_2         
+_geom_angle_site_symmetry_3         
+_geom_angle_publ_flag               
+ C1      O1      C21       114.30(9)             .       .       .           yes
+ C1      O5      C5        115.96(9)             .       .       .           yes
+ C21     O21     C51       111.64(9)             .       .       .           yes
+ C2      O2      H23        111.3(2)             .       .       .           no 
+ C3      O3      H33        109.9(2)             .       .       .           no 
+ C4      O4      H43        112.5(3)             .       .       .           no 
+ C6      O6      H63        110.0(3)             .       .       .           no 
+ C11     O11     H101       105.0(2)             .       .       .           no 
+ C31     O31     H301     109.45(18)             .       .       .           no 
+ C41     O41     H401       107.8(2)             .       .       .           no 
+ C61     O61     H601       108.5(2)             .       .       .           no 
+ O1      C1      O5        110.49(9)             .       .       .           yes
+ O1      C1      C2        110.33(8)             .       .       .           yes
+ O5      C1      C2        110.84(7)             .       .       .           yes
+ O2      C2      C3       110.33(10)             .       .       .           yes
+ O2      C2      C1       110.10(10)             .       .       .           yes
+ C1      C2      C3        111.02(7)             .       .       .           no 
+ C2      C3      C4        108.13(9)             .       .       .           no 
+ O3      C3      C2       111.57(10)             .       .       .           yes
+ O3      C3      C4       108.12(11)             .       .       .           yes
+ O4      C4      C5       106.02(10)             .       .       .           yes
+ C3      C4      C5       110.82(10)             .       .       .           no 
+ O4      C4      C3       112.52(12)             .       .       .           yes
+ O5      C5      C6       106.10(10)             .       .       .           yes
+ C4      C5      C6       111.94(10)             .       .       .           no 
+ O5      C5      C4        110.66(9)             .       .       .           yes
+ O6      C6      C5       111.53(10)             .       .       .           yes
+ O11     C11     C21      111.19(11)             .       .       .           yes
+ O1      C21     O21       111.00(9)             .       .       .           yes
+ O1      C21     C11       109.93(8)             .       .       .           yes
+ O1      C21     C31       108.43(9)             .       .       .           yes
+ O21     C21     C11       107.21(9)             .       .       .           yes
+ O21     C21     C31       105.18(8)             .       .       .           yes
+ C11     C21     C31       115.00(8)             .       .       .           no 
+ O31     C31     C21      115.76(10)             .       .       .           yes
+ O31     C31     C41      115.35(10)             .       .       .           yes
+ C21     C31     C41       102.40(7)             .       .       .           no 
+ O41     C41     C51      111.63(11)             .       .       .           yes
+ C31     C41     C51       102.32(7)             .       .       .           no 
+ O41     C41     C31       112.39(9)             .       .       .           yes
+ O21     C51     C41       105.64(9)             .       .       .           yes
+ C41     C51     C61       114.94(9)             .       .       .           no 
+ O21     C51     C61       109.75(9)             .       .       .           yes
+ O61     C61     C51      113.02(12)             .       .       .           yes
+ O1      C1      H1       110.24(14)             .       .       .           no 
+ O5      C1      H1       105.20(14)             .       .       .           no 
+ C2      C1      H1       109.63(14)             .       .       .           no 
+ O2      C2      H2       109.88(15)             .       .       .           no 
+ C1      C2      H2       106.80(15)             .       .       .           no 
+ C3      C2      H2       108.63(17)             .       .       .           no 
+ O3      C3      H3       109.74(17)             .       .       .           no 
+ C2      C3      H3       109.77(17)             .       .       .           no 
+ C4      C3      H3       109.47(15)             .       .       .           no 
+ O4      C4      H4       110.23(18)             .       .       .           no 
+ C3      C4      H4       107.92(15)             .       .       .           no 
+ C5      C4      H4       109.32(16)             .       .       .           no 
+ O5      C5      H5       109.82(17)             .       .       .           no 
+ C4      C5      H5       108.87(16)             .       .       .           no 
+ C6      C5      H5       109.41(14)             .       .       .           no 
+ O6      C6      H6         107.9(2)             .       .       .           no 
+ O6      C6      H61        110.2(2)             .       .       .           no 
+ C5      C6      H6         109.2(2)             .       .       .           no 
+ C5      C6      H61        109.9(2)             .       .       .           no 
+ H6      C6      H61        108.2(3)             .       .       .           no 
+ O11     C11     H11        108.1(2)             .       .       .           no 
+ O11     C11     H12      110.98(17)             .       .       .           no 
+ C21     C11     H11      109.75(18)             .       .       .           no 
+ C21     C11     H12      108.98(15)             .       .       .           no 
+ H11     C11     H12        107.8(3)             .       .       .           no 
+ O31     C31     H31      106.62(15)             .       .       .           no 
+ C21     C31     H31      108.34(15)             .       .       .           no 
+ C41     C31     H31      108.03(15)             .       .       .           no 
+ O41     C41     H41      110.85(15)             .       .       .           no 
+ C31     C41     H41      109.11(16)             .       .       .           no 
+ C51     C41     H41      110.22(15)             .       .       .           no 
+ O21     C51     H51      107.84(15)             .       .       .           no 
+ C41     C51     H51      110.14(18)             .       .       .           no 
+ C61     C51     H51      108.31(19)             .       .       .           no 
+ O61     C61     H62        107.3(2)             .       .       .           no 
+ O61     C61     H611       111.0(2)             .       .       .           no 
+ C51     C61     H62        108.8(2)             .       .       .           no 
+ C51     C61     H611       108.9(2)             .       .       .           no 
+ H62     C61     H611       107.7(3)             .       .       .           no 
+
+loop_
+_geom_torsion_atom_site_label_1     
+_geom_torsion_atom_site_label_2     
+_geom_torsion_atom_site_label_3     
+_geom_torsion_atom_site_label_4     
+_geom_torsion                       
+_geom_torsion_site_symmetry_1       
+_geom_torsion_site_symmetry_2       
+_geom_torsion_site_symmetry_3       
+_geom_torsion_site_symmetry_4       
+_geom_torsion_publ_flag             
+ C21     O1      C1      O5        107.82(9)     .       .       .       .   no 
+ C21     O1      C1      C2       -129.26(8)     .       .       .       .   no 
+ C1      O1      C21     O21      -44.75(11)     .       .       .       .   no 
+ C1      O1      C21     C11       73.70(11)     .       .       .       .   no 
+ C1      O1      C21     C31      -159.81(8)     .       .       .       .   no 
+ C5      O5      C1      O1        67.72(11)     .       .       .       .   no 
+ C5      O5      C1      C2       -54.91(12)     .       .       .       .   no 
+ C1      O5      C5      C6        176.79(9)     .       .       .       .   no 
+ C1      O5      C5      C4        55.16(12)     .       .       .       .   no 
+ C51     O21     C21     O1      -102.42(11)     .       .       .       .   no 
+ C51     O21     C21     C31       14.66(13)     .       .       .       .   no 
+ C51     O21     C21     C11      137.50(10)     .       .       .       .   no 
+ C21     O21     C51     C41        8.06(14)     .       .       .       .   no 
+ C21     O21     C51     C61      132.52(11)     .       .       .       .   no 
+ O5      C1      C2      O2       177.47(10)     .       .       .       .   no 
+ O1      C1      C2      C3       -67.73(10)     .       .       .       .   no 
+ O5      C1      C2      C3        54.99(11)     .       .       .       .   no 
+ O1      C1      C2      O2        54.75(11)     .       .       .       .   no 
+ O2      C2      C3      O3        62.85(13)     .       .       .       .   no 
+ C1      C2      C3      O3       -174.80(9)     .       .       .       .   no 
+ C1      C2      C3      C4       -56.03(11)     .       .       .       .   no 
+ O2      C2      C3      C4       -178.38(9)     .       .       .       .   no 
+ O3      C3      C4      O4       -64.29(14)     .       .       .       .   no 
+ O3      C3      C4      C5       177.21(10)     .       .       .       .   no 
+ C2      C3      C4      O4       174.77(11)     .       .       .       .   no 
+ C2      C3      C4      C5        56.27(11)     .       .       .       .   no 
+ C3      C4      C5      O5       -54.87(12)     .       .       .       .   no 
+ O4      C4      C5      C6        64.63(14)     .       .       .       .   no 
+ C3      C4      C5      C6      -173.00(10)     .       .       .       .   no 
+ O4      C4      C5      O5      -177.25(12)     .       .       .       .   no 
+ O5      C5      C6      O6       -56.44(15)     .       .       .       .   no 
+ C4      C5      C6      O6        64.38(15)     .       .       .       .   no 
+ O11     C11     C21     O1        50.61(12)     .       .       .       .   no 
+ O11     C11     C21     C31      -72.09(13)     .       .       .       .   no 
+ O11     C11     C21     O21      171.37(10)     .       .       .       .   no 
+ O21     C21     C31     C41      -31.18(12)     .       .       .       .   no 
+ O21     C21     C31     O31     -157.54(10)     .       .       .       .   no 
+ O1      C21     C31     O31      -38.73(12)     .       .       .       .   no 
+ O1      C21     C31     C41       87.62(10)     .       .       .       .   no 
+ C11     C21     C31     C41     -148.88(10)     .       .       .       .   no 
+ C11     C21     C31     O31       84.77(13)     .       .       .       .   no 
+ C21     C31     C41     C51       35.04(12)     .       .       .       .   no 
+ C21     C31     C41     O41      154.91(11)     .       .       .       .   no 
+ O31     C31     C41     O41      -78.47(15)     .       .       .       .   no 
+ O31     C31     C41     C51      161.66(10)     .       .       .       .   no 
+ C31     C41     C51     O21      -27.26(12)     .       .       .       .   no 
+ O41     C41     C51     O21     -147.67(10)     .       .       .       .   no 
+ C31     C41     C51     C61     -148.41(10)     .       .       .       .   no 
+ O41     C41     C51     C61       91.19(12)     .       .       .       .   no 
+ O21     C51     C61     O61      -69.55(13)     .       .       .       .   no 
+ C41     C51     C61     O61       49.32(13)     .       .       .       .   no 
+
+loop_
+_geom_contact_atom_site_label_1     
+_geom_contact_atom_site_label_2     
+_geom_contact_distance              
+_geom_contact_site_symmetry_1       
+_geom_contact_site_symmetry_2       
+_geom_contact_publ_flag             
+ O1      O2       2.8017(16)                     .       .                   no 
+ O1      O11      2.7715(17)                     .       .                   no 
+ O1      O31      2.7436(16)                     .       .                   no 
+ O2      O11        2.781(2)                     .       .                   no 
+ O2      O61        2.855(2)                     .     1_554                 no 
+ O2      C11        3.231(2)                     .       .                   no 
+ O2      O3         2.893(2)                     .       .                   no 
+ O2      O1       2.8017(16)                     .       .                   no 
+ O3      O4         2.879(2)                     .       .                   no 
+ O3      O31      2.8618(19)                     .     2_556                 no 
+ O3      O2         2.893(2)                     .       .                   no 
+ O3      O6         2.849(2)                     .     2_456                 no 
+ O4      C61        3.306(2)                     .     1_565                 no 
+ O4      O3         2.879(2)                     .       .                   no 
+ O4      C51        3.127(2)                     .     1_565                 no 
+ O4      O21        2.838(2)                     .     1_565                 no 
+ O5      O6       2.7559(19)                     .       .                   no 
+ O5      C4       3.4083(17)                     .     2_446                 no 
+ O5      O21      3.1741(19)                     .       .                   no 
+ O5      O61      2.8498(19)                     .       .                   no 
+ O6      C61      3.2202(19)                     .     2_457                 no 
+ O6      O5       2.7559(19)                     .       .                   no 
+ O6      O3         2.849(2)                     .     2_446                 no 
+ O6      C1       3.3469(18)                     .     2_456                 no 
+ O11     C41      3.3542(15)                     .     1_554                 no 
+ O11     O2         2.781(2)                     .       .                   no 
+ O11     O1       2.7715(17)                     .       .                   no 
+ O11     O41      2.7157(18)                     .     1_554                 no 
+ O21     O4         2.838(2)                     .     1_545                 no 
+ O21     O61      2.9765(18)                     .       .                   no 
+ O21     O5       3.1741(19)                     .       .                   no 
+ O31     O41        2.864(2)                     .     2_557                 no 
+ O31     O41      3.1265(19)                     .       .                   no 
+ O31     C11      3.4108(18)                     .     2_556                 no 
+ O31     O3       2.8618(19)                     .     2_546                 no 
+ O31     O1       2.7436(16)                     .       .                   no 
+ O31     C51      3.3361(17)                     .     2_557                 no 
+ O41     O31      3.1265(19)                     .       .                   no 
+ O41     O31        2.864(2)                     .     2_547                 no 
+ O41     O11      2.7157(18)                     .     1_556                 no 
+ O61     O21      2.9765(18)                     .       .                   no 
+ O61     C5         3.339(2)                     .       .                   no 
+ O61     O2         2.855(2)                     .     1_556                 no 
+ O61     C6         3.311(2)                     .       .                   no 
+ O61     O5       2.8498(19)                     .       .                   no 
+ O1      H301       2.506(2)                     .       .                   no 
+ O1      H5         2.673(3)                     .       .                   no 
+ O1      H3         2.702(3)                     .       .                   no 
+ O1      H41        2.911(2)                     .       .                   no 
+ O1      H101       2.437(3)                     .       .                   no 
+ O2      H31        2.406(3)                     .     2_556                 no 
+ O2      H33        2.878(4)                     .       .                   no 
+ O2      H101       1.851(3)                     .       .                   no 
+ O3      H63        1.921(4)                     .     2_456                 no 
+ O3      H43        2.534(5)                     .       .                   no 
+ O4      H63        2.910(4)                     .     2_456                 no 
+ O4      H51        2.781(3)                     .     1_565                 no 
+ O4      H6         2.518(4)                     .       .                   no 
+ O4      H611       2.558(4)                     .     1_565                 no 
+ O5      H4         2.612(3)                     .     2_446                 no 
+ O5      H63        2.675(4)                     .       .                   no 
+ O5      H601       1.894(3)                     .       .                   no 
+ O6      H43        2.539(5)                     .     2_446                 no 
+ O6      H4         2.623(3)                     .       .                   no 
+ O6      H12        2.436(3)                     .     2_456                 no 
+ O6      H1         2.268(3)                     .     2_456                 no 
+ O6      H62        2.505(4)                     .     2_457                 no 
+ O11     H3         2.455(3)                     .     2_546                 no 
+ O11     H11        2.796(3)                     .     2_556                 no 
+ O11     H401       1.760(3)                     .     1_554                 no 
+ O21     H1         2.336(3)                     .       .                   no 
+ O21     H43        2.310(5)                     .     1_545                 no 
+ O21     H601       2.641(3)                     .       .                   no 
+ O31     H33        1.908(4)                     .     2_546                 no 
+ O31     H11        2.742(3)                     .     2_556                 no 
+ O31     H62        2.835(4)                     .     2_557                 no 
+ O31     H51        2.639(3)                     .     2_557                 no 
+ O41     H301       1.908(3)                     .     2_547                 no 
+ O41     H5         2.610(3)                     .     2_547                 no 
+ O61     H23        1.892(3)                     .     1_556                 no 
+ O61     H41        2.465(3)                     .       .                   no 
+ O61     H61        2.508(4)                     .       .                   no 
+ C1      O6       3.3469(18)                     .     2_446                 no 
+ C4      O5       3.4083(17)                     .     2_456                 no 
+ C5      O61        3.339(2)                     .       .                   no 
+ C6      O61        3.311(2)                     .       .                   no 
+ C11     O2         3.231(2)                     .       .                   no 
+ C11     O31      3.4108(18)                     .     2_546                 no 
+ C41     O11      3.3542(15)                     .     1_556                 no 
+ C51     O31      3.3361(17)                     .     2_547                 no 
+ C51     O4         3.127(2)                     .     1_545                 no 
+ C61     O6       3.2202(19)                     .     2_447                 no 
+ C61     O4         3.306(2)                     .     1_545                 no 
+ C1      H101       2.940(3)                     .       .                   no 
+ C1      H4         2.994(2)                     .     2_446                 no 
+ C1      H601       2.773(3)                     .       .                   no 
+ C1      H12        2.810(3)                     .       .                   no 
+ C2      H101       2.832(3)                     .       .                   no 
+ C3      H63        3.017(4)                     .     2_456                 no 
+ C5      H601       2.589(4)                     .       .                   no 
+ C6      H601       2.803(4)                     .       .                   no 
+ C11     H1         2.714(3)                     .       .                   no 
+ C11     H401       2.642(3)                     .     1_554                 no 
+ C31     H33        2.768(3)                     .     2_546                 no 
+ C41     H301       2.842(3)                     .     2_547                 no 
+ C51     H43        3.008(5)                     .     1_545                 no 
+ C51     H301       2.859(3)                     .     2_547                 no 
+ C61     H23        2.950(3)                     .     1_556                 no 
+ H1      O21        2.336(3)                     .       .                   no 
+ H1      C11        2.714(3)                     .       .                   no 
+ H1      H12        2.179(4)                     .       .                   no 
+ H1      O6         2.268(3)                     .     2_446                 no 
+ H1      H4         2.353(3)                     .     2_446                 no 
+ H2      H4         2.454(3)                     .       .                   no 
+ H2      H611       2.493(4)                     .     2_456                 no 
+ H3      O1         2.702(3)                     .       .                   no 
+ H3      O11        2.455(3)                     .     2_556                 no 
+ H3      H401       2.595(3)                     .     2_557                 no 
+ H4      O6         2.623(3)                     .       .                   no 
+ H4      H2         2.454(3)                     .       .                   no 
+ H4      O5         2.612(3)                     .     2_456                 no 
+ H4      C1         2.994(2)                     .     2_456                 no 
+ H4      H1         2.353(3)                     .     2_456                 no 
+ H5      O1         2.673(3)                     .       .                   no 
+ H5      O41        2.610(3)                     .     2_557                 no 
+ H6      O4         2.518(4)                     .       .                   no 
+ H11     H31        2.362(4)                     .       .                   no 
+ H11     O11        2.796(3)                     .     2_546                 no 
+ H11     O31        2.742(3)                     .     2_546                 no 
+ H11     H101       2.473(4)                     .     2_546                 no 
+ H12     C1         2.810(3)                     .       .                   no 
+ H12     H1         2.179(4)                     .       .                   no 
+ H12     H62        2.207(4)                     .     1_554                 no 
+ H12     O6         2.436(3)                     .     2_446                 no 
+ H23     O61        1.892(3)                     .     1_554                 no 
+ H23     C61        2.950(3)                     .     1_554                 no 
+ H23     H61        2.443(4)                     .     1_554                 no 
+ H23     H101       2.277(4)                     .       .                   no 
+ H23     H601       2.525(3)                     .     1_554                 no 
+ H31     H11        2.362(4)                     .       .                   no 
+ H31     O2         2.406(3)                     .     2_546                 no 
+ H31     H33        2.561(4)                     .     2_546                 no 
+ H31     H101       2.528(4)                     .     2_546                 no 
+ H33     O2         2.878(4)                     .       .                   no 
+ H33     O31        1.908(4)                     .     2_556                 no 
+ H33     C31        2.768(3)                     .     2_556                 no 
+ H33     H31        2.561(4)                     .     2_556                 no 
+ H33     H63        2.401(5)                     .     2_456                 no 
+ H41     O1         2.911(2)                     .       .                   no 
+ H41     O61        2.465(3)                     .       .                   no 
+ H41     H301       2.372(3)                     .       .                   no 
+ H43     O3         2.534(5)                     .       .                   no 
+ H43     O21        2.310(5)                     .     1_565                 no 
+ H43     C51        3.008(5)                     .     1_565                 no 
+ H43     O6         2.539(5)                     .     2_456                 no 
+ H43     H63        2.168(6)                     .     2_456                 no 
+ H51     O4         2.781(3)                     .     1_545                 no 
+ H51     O31        2.639(3)                     .     2_547                 no 
+ H51     H301       2.329(3)                     .     2_547                 no 
+ H61     O61        2.508(4)                     .       .                   no 
+ H61     H23        2.443(4)                     .     1_556                 no 
+ H61     H601       2.281(5)                     .       .                   no 
+ H62     H12        2.207(4)                     .     1_556                 no 
+ H62     O6         2.505(4)                     .     2_447                 no 
+ H62     O31        2.835(4)                     .     2_547                 no 
+ H62     H63        2.497(5)                     .     2_447                 no 
+ H63     O5         2.675(4)                     .       .                   no 
+ H63     O3         1.921(4)                     .     2_446                 no 
+ H63     O4         2.910(4)                     .     2_446                 no 
+ H63     C3         3.017(4)                     .     2_446                 no 
+ H63     H33        2.401(5)                     .     2_446                 no 
+ H63     H43        2.168(6)                     .     2_446                 no 
+ H63     H62        2.497(5)                     .     2_457                 no 
+ H101    O1         2.437(3)                     .       .                   no 
+ H101    O2         1.851(3)                     .       .                   no 
+ H101    C1         2.940(3)                     .       .                   no 
+ H101    C2         2.832(3)                     .       .                   no 
+ H101    H23        2.277(4)                     .       .                   no 
+ H101    H401       2.312(4)                     .     1_554                 no 
+ H101    H11        2.473(4)                     .     2_556                 no 
+ H101    H31        2.528(4)                     .     2_556                 no 
+ H301    O1         2.506(2)                     .       .                   no 
+ H301    H41        2.372(3)                     .       .                   no 
+ H301    O41        1.908(3)                     .     2_557                 no 
+ H301    C41        2.842(3)                     .     2_557                 no 
+ H301    C51        2.859(3)                     .     2_557                 no 
+ H301    H51        2.329(3)                     .     2_557                 no 
+ H301    H401       2.191(4)                     .     2_557                 no 
+ H401    O11        1.760(3)                     .     1_556                 no 
+ H401    C11        2.642(3)                     .     1_556                 no 
+ H401    H101       2.312(4)                     .     1_556                 no 
+ H401    H3         2.595(3)                     .     2_547                 no 
+ H401    H301       2.191(4)                     .     2_547                 no 
+ H601    O5         1.894(3)                     .       .                   no 
+ H601    O21        2.641(3)                     .       .                   no 
+ H601    C1         2.773(3)                     .       .                   no 
+ H601    C5         2.589(4)                     .       .                   no 
+ H601    C6         2.803(4)                     .       .                   no 
+ H601    H23        2.525(3)                     .     1_556                 no 
+ H601    H61        2.281(5)                     .       .                   no 
+ H611    O4         2.558(4)                     .     1_545                 no 
+ H611    H2         2.493(4)                     .     2_446                 no 
+
+loop_
+_geom_hbond_atom_site_label_D
+_geom_hbond_atom_site_label_H
+_geom_hbond_atom_site_label_A
+_geom_hbond_distance_DH
+_geom_hbond_distance_HA
+_geom_hbond_distance_DA
+_geom_hbond_angle_DHA
+_geom_hbond_site_symmetry_A
+_geom_hbond_publ_flag
+#
+#D   H   A   D - H  H...A   D...A    D - H...A  symm(A)
+#
+O2      H23     O61       0.972(3)   1.892(3)   2.855(2)   170.3(3)   1_554 yes 
+O3      H33     O31       0.959(4)   1.908(4) 2.8618(19)   172.8(3)   2_556 yes 
+O4      H43     O3        0.912(4)   2.534(5)   2.879(2)   103.0(3)     .   yes 
+O4      H43     O21       0.912(4)   2.310(5)   2.838(2)   116.6(4)   1_565 yes 
+O4      H43     O6        0.912(4)   2.539(5)   3.373(2)   152.1(5)   2_456 yes 
+O6      H63     O3        0.956(4)   1.921(4)   2.849(2)   162.8(3)   2_446 yes 
+O11     H101    O2        0.974(3)   1.851(3)   2.781(2)   158.5(3)     .   yes 
+O31     H301    O41       0.969(3)   1.908(3)   2.864(2)   168.5(2)   2_557 yes 
+O41     H401    O11       0.976(3)   1.760(3) 2.7157(18)   165.5(3)   1_556 yes 
+O61     H601    O5        0.972(3)   1.894(3) 2.8498(19)   167.0(3)     .   yes 
+C1      H1      O6        1.102(3)   2.268(3) 3.3469(18) 165.81(19)   2_446 yes 
+C3      H3      O11       1.098(2)   2.455(3) 3.5153(17)   162.1(2)   2_556 yes 
+C11     H12     O6        1.095(3)   2.436(3) 3.4673(18) 156.49(18)   2_446 yes 
+C31     H31     O2        1.102(3)   2.406(3) 3.4597(18) 159.43(19)   2_546 yes 
+C41     H41     O61       1.097(3)   2.465(3) 2.9363(18) 104.35(16)     .   yes 
+C6      H61     O61       1.091(4)   2.508(4)   3.311(2)   129.5(2)     .   yes 
+C61     H62     O6        1.087(3)   2.505(4) 3.2202(19)   122.3(2)   2_447 yes 
+C61     H611    O4        1.092(4)   2.558(4)   3.306(2)   124.8(2)   1_545 yes 
+
+# Loop Mechanism for Extra Tables(s)
+
+#loop_
+#_publ_manuscript_incl_extra_item
+#'_geom_extra_tableA_col_1'
+#'_geom_extra_tableA_col_2'
+#'_geom_extra_tableA_col_3'
+#'_geom_extra_table_head_A'
+#'_geom_table_footnote_A'
+#'_geom_extra_tableB_col_1'
+#'_geom_extra_tableB_col_2'
+#'_geom_extra_tableB_col_3'
+#'_geom_extra_table_head_B'
+#'_geom_table_footnote_B'
+
+
+#
+#loop_
+#_geom_extra_tableA_col_1
+#_geom_extra_tableA_col_2
+#_geom_extra_tableA_col_3
+# ? ? ?
+
+
+#
+#loop_
+#_geom_extra_tableB_col_1
+#_geom_extra_tableB_col_2
+#_geom_extra_tableB_col_3
+# ? ? ?
+
+
+#
+#_geom_table_footnote_A
+#;
+# ?
+#;
+
+
+#
+#_geom_table_footnote_B
+#;
+# ?
+#;
+
+
+#
+#_geom_table_footnote_A
+#;
+# ?
+#;
+
+
+#
+#_geom_table_footnote_B
+#;
+# ?
+#;
+
+
+#===END

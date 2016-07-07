@@ -1,0 +1,84 @@
+###############################################################################
+# Capponi, J.J.;Chaillout, C.;Hewat, A.W.;Lejay, P.;Marezio, M.;Nguyen,\
+# N.;Raveau, B.;Soubeyroux, J.L.;Tholence, J.L.;Tournier, R. (1987)
+# Europhysics Letters 3, 1301-1307
+# Structure of the 100 K superconductor Ba2 Y Cu3 O7 between (5-300) K \
+#by neutron powder diffraction
+# 
+# CIF by ICSD-for-WWW,  Copyright 2003 FIZ-Karlsruhe & A.W.Hewat (hewat@ill.fr)
+# NOT TO BE PUBLISHED IN ANY FORM. See http://icsd.ill.fr/icsd/conditions.html
+###############################################################################
+
+data_63483-ICSD
+_database_code_ICSD                63483
+_audit_creation_date               1992-08-20
+_chemical_name_systematic
+'Dibarium yttrium dicopper copper(III) oxide'
+_chemical_formula_structural       
+'Ba2 Y Cu3 O7'
+_chemical_formula_sum              
+'Ba2 Cu3 O7 Y1'
+_publ_section_title                
+'Ba2 Cu3 O7 Y1'
+loop_
+_citation_id
+_citation_journal_abbrev
+_citation_year
+_citation_journal_volume
+_citation_page_first
+_citation_page_last
+_citation_journal_id_ASTM
+primary 'Europhysics Letters' 1987 3 1301 1307 EULEEJ
+loop_
+_publ_author_name
+Capponi, J.J.;Chaillout, C.;Hewat, A.W.;Lejay, P.;Marezio, M.;Nguyen,\
+ N.;Raveau, B.;Soubeyroux, J.L.;Tholence, J.L.;Tournier, R.
+_cell_length_a                     3.8128(1)
+_cell_length_b                     3.8806(2)
+_cell_length_c                     11.6303(5)
+_cell_angle_alpha                  90.
+_cell_angle_beta                   90.
+_cell_angle_gamma                  90.
+_cell_volume                       172.08
+_cell_formula_units_Z              1
+_symmetry_space_group_name_H-M     'P m m m'
+_symmetry_Int_Tables_number        47
+_refine_ls_R_factor_all            0.071000
+loop_
+_symmetry_equiv_pos_site_id
+_symmetry_equiv_pos_as_xyz
+   1   'x, -y, z'
+   2   '-x, y, z'
+   3   'x, y, -z'
+   4   '-x, -y, -z'
+   5   '-x, y, -z'
+   6   'x, -y, -z'
+   7   '-x, -y, z'
+   8   'x, y, z'
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Ba2+     2.
+Y3+     3.
+Cu2+33     2.333
+O2-     -2.
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_B_iso_or_equiv
+_atom_site_occupancy
+Ba1 Ba2+ 2 t 0.5 0.5 0.1826(5) 0.14(10) 1.
+Y1 Y3+ 1 h 0.5 0.5 0.5 0.61(11) 1.
+Cu1 Cu2+33 1 a 0 0 0 0.01(11) 1.
+Cu2 Cu2+33 2 q 0 0 0.3542(3) 0.37(3) 1.
+O1 O2- 2 q 0 0 0.1595(4) 0.37(14) 1.
+O2 O2- 2 s 0.5 0 0.3773(4) 0.0(1) 1.
+O3 O2- 2 r 0 0.5 0.3769(5) 0.43(11) 1.
+O4 O2- 1 e 0 0.5 0 0. 1.
+
+#End of data_63483-ICSD
