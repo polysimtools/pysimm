@@ -3548,17 +3548,25 @@ def read_xyz(file_, **kwargs):
     """
     quiet = kwargs.get('quiet')
 
+    if os.path.isfile(file_):
+        debug_print('reading file')
+        f = file(file_)
+    elif isinstance(file_, basestring):
+        debug_print('reading string')
+        f = StringIO(file_)
+
     s = System()
-    with file(file_) as f:
-        nparticles = int(f.next().strip())
-        name = f.next().strip()
-        s.name = name
-        for _ in range(nparticles):
-            elem, x, y, z = f.next().split()
-            x = float(x)
-            y = float(y)
-            z = float(z)
-            s.particles.add(Particle(elem=elem, x=x, y=y, z=z))
+    nparticles = int(f.next().strip())
+    name = f.next().strip()
+    s.name = name
+    for _ in range(nparticles):
+        elem, x, y, z = f.next().split()
+        x = float(x)
+        y = float(y)
+        z = float(z)
+        s.particles.add(Particle(elem=elem, x=x, y=y, z=z))
+
+    f.close()
 
     for p in s.particles:
         pt = s.particle_types.get(p.elem)
