@@ -5,6 +5,7 @@ import inspect
 import urllib
 import jinja2
 import webapp2
+import glob
 
 sys.path.insert(0, 'pysimm')
 
