@@ -4,10 +4,10 @@ s = system.read_pubchem_smiles('CO')
 
 s.apply_forcefield(forcefield.Gaff())
 
+s.write_xyz('methanol.xyz')
 s.write_yaml('methanol.yaml')
 s.write_lammps('methanol.lmps')
+s.write_chemdoodle_json('methanol.json')
 
-lmps.quick_min(s)
-lmps.quick_min(s, min_style='cg')
-
-s.viz()
+# we'll perform energy minimization using the fire algorithm in LAMMPS
+lmps.quick_min(s, min_style='fire')

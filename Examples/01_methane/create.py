@@ -11,10 +11,7 @@ f = forcefield.Gaff()
 
 # get a copy of the c3 particle type object from GAFF
 # get method returns a list, we need the first element
-gaff_c3 = f.particle_types.get('c3')[0].copy()
-
-# now we need to add this particle type to our system
-s.particle_types.add(gaff_c3)
+gaff_c3 = s.particle_types.add(f.particle_types.get('c3')[0].copy())
 
 # we'll first make the carbon atom at the origin
 # we'll include gasteiger charges later
@@ -49,15 +46,11 @@ s.pair_style='lj'
 s.bond_style='harmonic'
 s.angle_style='harmonic'
 
-# we'll do a two step energy minimization using LAMMPS
-# step 1: steepest decent algorithm
-# step 2: conjugent gradient algorithm
-lmps.quick_min(s, min_style='sd')
-lmps.quick_min(s, min_style='cg')
+# we'll perform energy minimization using the fire algorithm in LAMMPS
+lmps.quick_min(s, min_style='fire')
 
-# write a YAML file and a LAMMPS data file
+# write xyz, YAML, LAMMPS data, and chemdoodle json files
+s.write_xyz('methane.xyz')
 s.write_yaml('methane.yaml')
 s.write_lammps('methane.lmps')
-
-# take a look at our new molecule in VMD
-s.viz()
+s.write_chemdoodle_json('methane.json')

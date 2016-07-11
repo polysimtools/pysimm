@@ -10,15 +10,16 @@ s.particles[2].linker='tail'
 
 s.apply_forcefield(f, charges='gasteiger')
 
-lmps.quick_md(s, ensemble='nve')
-lmps.quick_min(s, min_style='sd')
-lmps.quick_min(s, min_style='cg')
+lmps.quick_min(s, min_style='fire')
 
+s.write_xyz('pe_mnomer.xyz')
 s.write_yaml('pe_monomer.yaml')
 s.write_lammps('pe_monomer.lmps')
-
-s.viz()
+s.write_chemdoodle_json('pe_monomer.json')
 
 polymer = random_walk(s, 10, forcefield=f)
 
-polymer.viz()
+polymer.write_xyz('polymer.xyz')
+polymer.write_yaml('polymer.yaml')
+polymer.write_lammps('polymer.lmps')
+polymer.write_chemdoodle_json('polymer.json')

@@ -8,10 +8,10 @@ for b in s.bonds:
 
 s.apply_forcefield(forcefield.Gaff(), charges='gasteiger')
 
+s.write_xyz('benzene.xyz')
 s.write_yaml('benzene.yaml')
 s.write_lammps('benzene.lmps')
+s.write_chemdoodle_json('benzene.json')
 
-lmps.quick_min(s)
-lmps.quick_min(s, min_style='cg')
-
-s.viz()
+# we'll perform energy minimization using the fire algorithm in LAMMPS
+lmps.quick_min(s, min_style='fire')

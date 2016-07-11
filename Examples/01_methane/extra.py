@@ -52,18 +52,14 @@ s.bond_style='harmonic'
 s.angle_style='harmonic'
 s.dihedral_style='harmonic'
 
-# we'll do a two step energy minimization using LAMMPS
-# step 1: steepest decent algorithm
-# step 2: conjugent gradient algorithm
-lmps.quick_min(s, min_style='sd', print_to_screen=True)
-lmps.quick_min(s, min_style='cg', print_to_screen=True)
-
 # let's add gasteiger charges
 gasteiger.set_charges(s)
 
-# write a YAML file and a LAMMPS data file
+# we'll perform energy minimization using the fire algorithm in LAMMPS
+lmps.quick_min(s, min_style='fire')
+
+# write xyz, YAML, LAMMPS data, and chemdoodle json files
+s.write_xyz('ethane.xyz')
 s.write_yaml('ethane.yaml')
 s.write_lammps('ethane.lmps')
-
-# take a look at our new molecule in VMD
-s.viz()
+s.write_chemdoodle_json('ethane.json')
