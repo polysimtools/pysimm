@@ -15,13 +15,13 @@ lmps.quick_min(pmma, min_style='sd')
 lmps.quick_min(pmma, min_style='cg')
 
 pmma.write_yaml('pmma_monomer.yaml')
-pmma.write_lammps('pmma_monomer.lmps')
 
-pmma.viz()
+polymer = random_walk(pmma , nmon=5, forcefield=f, density=0.3/4)
+polymer = random_walk(pmma , nmon=5, s_=polymer, forcefield=f)
+polymer = random_walk(pmma , nmon=5, s_=polymer, forcefield=f)
+polymer = random_walk(pmma , nmon=5, s_=polymer, forcefield=f)
 
-polymer = random_walk(pmma , nmon=10, forcefield=f, density=0.3/4, settings={'np': 2})
-polymer = random_walk(pmma , nmon=10, s_=polymer, forcefield=f, settings={'np': 4})
-polymer = random_walk(pmma , nmon=10, s_=polymer, forcefield=f, settings={'np': 6})
-polymer = random_walk(pmma , nmon=10, s_=polymer, forcefield=f, settings={'np': 8})
-
-polymer.viz()
+polymer.write_xyz('polymer.xyz')
+polymer.write_yaml('polymer.yaml')
+polymer.write_lammps('polymer.lmps')
+polymer.write_chemdoodle_json('polymer.json')

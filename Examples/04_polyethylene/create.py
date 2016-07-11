@@ -12,7 +12,7 @@ s.apply_forcefield(f, charges='gasteiger')
 
 lmps.quick_min(s, min_style='fire')
 
-s.write_xyz('pe_mnomer.xyz')
+s.write_xyz('pe_monomer.xyz')
 s.write_yaml('pe_monomer.yaml')
 s.write_lammps('pe_monomer.lmps')
 s.write_chemdoodle_json('pe_monomer.json')

@@ -15,9 +15,6 @@ lmps.quick_min(pe, min_style='sd')
 lmps.quick_min(pe, min_style='cg')
 
 pe.write_yaml('pe_monomer.yaml')
-pe.write_lammps('pe_monomer.lmps')
-
-pe.viz()
 
 ps = system.read_pubchem_smiles('cc(C1=CC=CC=C1)')
 
@@ -35,10 +32,10 @@ lmps.quick_min(ps, min_style='sd')
 lmps.quick_min(ps, min_style='cg')
 
 ps.write_yaml('ps_monomer.yaml')
-ps.write_lammps('ps_monomer.lmps')
-
-ps.viz()
 
 polymer = copolymer([pe, ps], 10, pattern=[1, 1], forcefield=f, settings={'np': 2})
 
-polymer.viz()
+polymer.write_xyz('polymer.xyz')
+polymer.write_yaml('polymer.yaml')
+polymer.write_lammps('polymer.lmps')
+polymer.write_chemdoodle_json('polymer.json')

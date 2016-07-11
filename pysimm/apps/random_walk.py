@@ -111,6 +111,7 @@ def copolymer(m, nmon, s_=None, **kwargs):
     f = kwargs.get('forcefield')
     capped = kwargs.get('capped')
     unwrap = kwargs.get('unwrap')
+    traj = kwargs.get('traj') if kwargs.get('traj') is not None else True
     pattern = kwargs.get('pattern') or [1 for _ in range(len(m))]
 
     for m_ in m:
@@ -141,9 +142,10 @@ def copolymer(m, nmon, s_=None, **kwargs):
             m_.remove_spare_bonding()
             m_.add_particle_bonding()
 
-    s.write_xyz('step_001.xyz')
-
     s.add_particle_bonding()
+    
+    if traj:
+        s.write_xyz('random_walk.xyz')
 
     temp_nmon = 1
 
@@ -217,16 +219,12 @@ def copolymer(m, nmon, s_=None, **kwargs):
             if unwrap:
                 s.unwrap()
 
-            s.write_xyz('step_%03d.xyz' % temp_nmon)
-
-            lmps.relax(s, dump=100, name='relax_%03d' % temp_nmon, **settings)
+            lmps.relax(s, name='relax_%03d' % temp_nmon, **settings)
 
             lmps.minimize(s, **settings)
 
             if unwrap:
                 s.unwrap()
-
-            s.write_xyz('step_%03d.xyz' % temp_nmon, append=True)
 
             if unwrap:
                 s.wrap()
@@ -239,10 +237,21 @@ def copolymer(m, nmon, s_=None, **kwargs):
 
         if temp_nmon >= nmon:
             break
+        
+        if unwrap:
+            if not s.unwrap():
+                error_print('something went wrong')
+                return s
+    
+        if traj:
+            s.write_xyz('random_walk.xyz', append=True)
+    
+        if unwrap:
+            s.wrap()
 
-    s.write_lammps('copolymer.lmps')
+    s.write_lammps('polymer.lmps')
     s.unwrap()
-    s.write_xyz('copolymer.xyz')
+    s.write_xyz('polymer.xyz')
 
     return s
 
