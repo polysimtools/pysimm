@@ -1,20 +1,22 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html><head><title>Python: module pysimm.apps.poreblazer</title>
+<html><head><title>Python: module pysimm.calc</title>
 <meta charset="utf-8">
 </head><body bgcolor="#f0f0f8">
 
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
 <tr bgcolor="#7799ee">
 <td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="pysimm.html"><font color="#ffffff">pysimm</font></a>.<a href="pysimm.apps.html"><font color="#ffffff">apps</font></a>.poreblazer</strong></big></big></font></td
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="pysimm.html"><font color="#ffffff">pysimm</font></a>.calc</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/nfs/apps/pysimm/apps/poreblazer.py">/nfs/apps/pysimm/apps/poreblazer.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/ubuntu/workspace/pysimm/pysimm/calc.py">/home/ubuntu/workspace/pysimm/pysimm/calc.py</a></font></td></tr></table>
     <p><tt>#&nbsp;******************************************************************************<br>
-#&nbsp;pysimm.appps.poreblazer&nbsp;module<br>
+#&nbsp;pysimm.calc&nbsp;module<br>
 #&nbsp;******************************************************************************<br>
 #<br>
-#&nbsp;api&nbsp;to&nbsp;poreblazer&nbsp;simulation&nbsp;code<br>
+#&nbsp;vector&nbsp;rotation<br>
+#&nbsp;particle&nbsp;separation&nbsp;distance<br>
+#&nbsp;particle&nbsp;separation&nbsp;distance&nbsp;considering&nbsp;PBC<br>
 #<br>
 #&nbsp;******************************************************************************<br>
 #&nbsp;License<br>
@@ -47,24 +49,36 @@
 <font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="shlex.html">shlex</a><br>
-</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
-</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><dl><dt><a name="-pore"><strong>pore</strong></a>(s, **kwargs)</dt></dl>
- <dl><dt><a name="-psd"><strong>psd</strong></a>(s, **kwargs)</dt></dl>
- <dl><dt><a name="-strftime"><strong>strftime</strong></a>(...)</dt><dd><tt><a href="#-strftime">strftime</a>(format[,&nbsp;tuple])&nbsp;-&gt;&nbsp;string<br>
+<td width="100%"><dl><dt><a name="-acos"><strong>acos</strong></a>(...)</dt><dd><tt><a href="#-acos">acos</a>(x)<br>
 &nbsp;<br>
-Convert&nbsp;a&nbsp;time&nbsp;tuple&nbsp;to&nbsp;a&nbsp;string&nbsp;according&nbsp;to&nbsp;a&nbsp;format&nbsp;specification.<br>
-See&nbsp;the&nbsp;library&nbsp;reference&nbsp;manual&nbsp;for&nbsp;formatting&nbsp;codes.&nbsp;When&nbsp;the&nbsp;time&nbsp;tuple<br>
-is&nbsp;not&nbsp;present,&nbsp;current&nbsp;time&nbsp;as&nbsp;returned&nbsp;by&nbsp;localtime()&nbsp;is&nbsp;used.</tt></dd></dl>
- <dl><dt><a name="-surface"><strong>surface</strong></a>(s, **kwargs)</dt></dl>
- <dl><dt><a name="-void"><strong>void</strong></a>(s, **kwargs)</dt></dl>
+Return&nbsp;the&nbsp;arc&nbsp;cosine&nbsp;(measured&nbsp;in&nbsp;radians)&nbsp;of&nbsp;x.</tt></dd></dl>
+ <dl><dt><a name="-angle"><strong>angle</strong></a>(p1, p2, p3, radians<font color="#909090">=False</font>)</dt></dl>
+ <dl><dt><a name="-auto_tacticity"><strong>auto_tacticity</strong></a>(s, return_angles<font color="#909090">=True</font>, unwrap<font color="#909090">=True</font>, rewrap<font color="#909090">=True</font>)</dt></dl>
+ <dl><dt><a name="-chiral_angle"><strong>chiral_angle</strong></a>(a, b, c, d)</dt></dl>
+ <dl><dt><a name="-cos"><strong>cos</strong></a>(...)</dt><dd><tt><a href="#-cos">cos</a>(x)<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;cosine&nbsp;of&nbsp;x&nbsp;(measured&nbsp;in&nbsp;radians).</tt></dd></dl>
+ <dl><dt><a name="-distance"><strong>distance</strong></a>(p1, p2)</dt></dl>
+ <dl><dt><a name="-find_rotation"><strong>find_rotation</strong></a>(a, b)</dt></dl>
+ <dl><dt><a name="-frac_free_volume"><strong>frac_free_volume</strong></a>(v_sp, v_void)</dt></dl>
+ <dl><dt><a name="-hyperbola"><strong>hyperbola</strong></a>(x, a, b, c, d, e)</dt></dl>
+ <dl><dt><a name="-intersection"><strong>intersection</strong></a>(line1, line2)</dt></dl>
+ <dl><dt><a name="-pbc_distance"><strong>pbc_distance</strong></a>(s, p1, p2)</dt></dl>
+ <dl><dt><a name="-random"><strong>random</strong></a>(...)</dt><dd><tt><a href="#-random">random</a>()&nbsp;-&gt;&nbsp;x&nbsp;in&nbsp;the&nbsp;interval&nbsp;[0,&nbsp;1).</tt></dd></dl>
+ <dl><dt><a name="-rot_hyperbola"><strong>rot_hyperbola</strong></a>(x, a, b, c, d, e, th)</dt></dl>
+ <dl><dt><a name="-rotate_vector"><strong>rotate_vector</strong></a>(x, y, z, theta_x<font color="#909090">=None</font>, theta_y<font color="#909090">=None</font>, theta_z<font color="#909090">=None</font>)</dt></dl>
+ <dl><dt><a name="-sin"><strong>sin</strong></a>(...)</dt><dd><tt><a href="#-sin">sin</a>(x)<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;sine&nbsp;of&nbsp;x&nbsp;(measured&nbsp;in&nbsp;radians).</tt></dd></dl>
+ <dl><dt><a name="-tacticity"><strong>tacticity</strong></a>(s, a_tag<font color="#909090">=None</font>, b_tag<font color="#909090">=None</font>, c_tag<font color="#909090">=None</font>, d_tag<font color="#909090">=None</font>, offset<font color="#909090">=None</font>, return_angles<font color="#909090">=True</font>, unwrap<font color="#909090">=True</font>, rewrap<font color="#909090">=True</font>, skip_first<font color="#909090">=False</font>)</dt></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -72,5 +86,5 @@ is&nbsp;not&nbsp;present,&nbsp;current&nbsp;time&nbsp;as&nbsp;returned&nbsp;by&n
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>PIPE</strong> = -1</td></tr></table>
+<td width="100%"><strong>pi</strong> = 3.141592653589793</td></tr></table>
 </body></html>
