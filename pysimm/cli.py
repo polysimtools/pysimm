@@ -104,7 +104,6 @@ if __name__ == '__main__':
     print('Importing modules now...')
 
     from pysimm import system, lmps, forcefield, calc, gasteiger
-    from pysimm.apps import equilibrate, polymatic, polymerize, poreblazer, random_walk, glass_transition
 
     if args.lammps_data:
         s = system.read_lammps(args.lammps_data)
