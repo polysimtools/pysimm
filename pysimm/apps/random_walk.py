@@ -40,7 +40,18 @@ from pysimm import error_print
 
 
 def add_bonds(s, p1, p2, f):
+    """pysimm.apps.random_walk.add_bonds
 
+    Add bonding information from force field f to system s given a new bond is forming between p1 and p2
+
+    Args:
+        s: pysimm.system.System object
+        p1: pysimm.system.Particle object
+        p2: pysimm.system.Particle object
+        f: pysimm.forcefield.Forcefield object
+    Returns:
+        None
+    """
     if p1.molecule.particles.count < p2.molecule.particles.count:
         old_molecule_tag = p1.molecule.tag
         for p_ in p1.molecule.particles:
@@ -92,6 +103,16 @@ def add_bonds(s, p1, p2, f):
 
 
 def find_last_backbone_vector(s, m):
+    """pysimm.apps.random_walk.find_last_backbone_vector
+
+    Finds vector between backbone atoms in terminal monomer. Requires current system s, and reference monomer m.
+
+    Args:
+        s: pysimm.system.System object
+        m:pysimm.system.System object
+    Returns:
+        list of vector components
+    """
     head_pos = [0, 0, 0]
     tail_pos = [0, 0, 0]
     for p in s.particles[-1*m.particles.count:]:
@@ -103,7 +124,24 @@ def find_last_backbone_vector(s, m):
 
 
 def copolymer(m, nmon, s_=None, **kwargs):
+    """pysimm.apps.random_walk.copolymer
 
+    Builds copolymer using random walk methodology using pattern
+
+    Args:
+        m: list of reference monomer systems
+        nmon: total number of monomers to add to chain
+        s_: system in which to build polymer chain (None)
+        settings: dictionary of simulation settings
+        density: density at which to build polymer (0.3)
+        forcefield: pysimm.forcefield.Forcefield object to acquire new force field parameters
+        capped: True/False if monomers are capped
+        unwrap: True to unwrap final system
+        traj: True to build xyz trajectory of polymer growth (True)
+        pattern: list of pattern for monomer repeat units, should match length of m ([1 for _ in range(len(m))])
+    Returns:
+        new copolymer pysimm.system.System
+    """
     m = [x.copy() for x in m]
 
     settings = kwargs.get('settings') if kwargs.get('settings') is not None else {}
@@ -257,7 +295,26 @@ def copolymer(m, nmon, s_=None, **kwargs):
 
 
 def random_walk(m, nmon, s_=None, **kwargs):
+    """pysimm.apps.random_walk.random_walk
 
+    Builds homopolymer using random walk methodology
+
+    Args:
+        m: reference monomer system
+        nmon: total number of monomers to add to chain
+        s_: system in which to build polymer chain (None)
+        extra_bonds: EXPERMINTAL, True if making ladder backbone polymer
+        settings: dictionary of simulation settings
+        density: density at which to build polymer (0.3)
+        forcefield: pysimm.forcefield.Forcefield object to acquire new force field parameters
+        capped: True/False if monomers are capped
+        unwrap: True to unwrap final system
+        traj: True to build xyz trajectory of polymer growth (True)
+        limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)
+        sim: pysimm.lmps.Simulation object for relaxation between polymer growth
+    Returns:
+        new polymer pysimm.system.System
+    """
     m = m.copy()
 
     extra_bonds = kwargs.get('extra_bonds') if kwargs.get('extra_bonds') is not None else False
@@ -375,109 +432,5 @@ def random_walk(m, nmon, s_=None, **kwargs):
     s.write_lammps('polymer.lmps')
     s.unwrap()
     s.write_xyz('polymer.xyz')
-
-    return s
-
-
-def random_walk_multi(m, nmon, nmol=1, **kwargs):
-
-    settings = kwargs.get('settings') if kwargs.get('settings') is not None else {}
-    density = kwargs.get('density') or 0.3
-    f = kwargs.get('forcefield')
-    capped = kwargs.get('capped')
-
-    distribution = kwargs.get('distribution')
-
-    if not distribution:
-        distribution = []
-        for i in range(nmol):
-            distribution.append(int(nmon/nmol))
-        if nmon % nmol != 0:
-            distribution[-1] += nmon % nmol
-
-    m.add_particle_bonding()
-
-    for p in m.particles:
-        if p.type.name.find('@') >= 0 and p.type.name.split('@')[0].find('H'):
-            p.linker = 'head'
-        elif p.type.name.find('@') >= 0 and p.type.name.split('@')[0].find('T'):
-            p.linker = 'tail'
-
-    m.remove_linker_types()
-
-    s = system.System()
-
-    for d in distribution:
-
-        s = system.replicate(m, 1, s_=s, density=density/nmon)
-        print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), 1, nmon))
-
-        if capped:
-            m.particles.remove(1)
-            m.remove_spare_bonding()
-            m.add_particle_bonding()
-
-        s.write_xyz('step_001.xyz')
-
-        s.add_particle_bonding()
-
-        for insertion in range(d - 1):
-
-            head = None
-            tail = None
-
-            backbone_vector = np.array(find_last_backbone_vector(s, m))
-
-            for p, p_ in izip(s.particles[-1*m.particles.count:], m.particles):
-                p_.x = p.x + 2*backbone_vector[0]
-                p_.y = p.y + 2*backbone_vector[1]
-                p_.z = p.z + 2*backbone_vector[2]
-
-            n = m.copy()
-
-            if capped:
-                s.particles.remove(s.particles.count)
-                s.remove_spare_bonding()
-                s.add_particle_bonding()
-
-            for p in s.particles[-1*n.particles.count:]:
-                if p.linker == 'head':
-                    head = p
-
-            s.add(n, change_dim=False)
-
-            s.add_particle_bonding()
-
-            for p in s.particles[-1*n.particles.count:]:
-                if p.linker == 'tail':
-                    tail = p
-
-            for p in s.particles:
-                if not p.bonded_to:
-                    print(p.tag)
-
-            if head and tail:
-                add_bonds(s, head, tail, f)
-                print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
-            else:
-                print('cannot find head and tail')
-
-            s.unwrap()
-
-            s.write_xyz('step_%03d.xyz' % (insertion+2))
-
-            lmps.relax(s, dump=100, name='relax_%03d' % (insertion+2), **settings)
-
-            lmps.minimize(s, **settings)
-
-            s.unwrap()
-
-            s.write_xyz('step_%03d.xyz' % (insertion+2), append=True)
-
-            s.wrap()
-
-    s.write_lammps('final.lmps')
-    s.unwrap()
-    s.write_xyz('final.xyz')
 
     return s
