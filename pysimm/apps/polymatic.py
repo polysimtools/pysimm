@@ -17,6 +17,20 @@ except ImportError:
 
 
 def pack(script, file_in, nrep, boxl, file_out):
+    """pysimm.apps.polymatic.pack
+
+    Calls Polymatic random packing code
+
+    Args:
+        script: name of packing script
+        file_in: list of file names of reference molecules to pack
+        nrep: list of number of monomers for each reference molecule
+        boxl: length of one dimension of simulation box for random packing
+        file_out: name of output file (packed system)
+
+    Returns:
+        output from perl code
+    """
     if not isinstance(file_in, list):
         file_in = [file_in]
     if not isinstance(nrep, list):
@@ -42,6 +56,18 @@ def pack(script, file_in, nrep, boxl, file_out):
 
 
 def polymatic(script, file_in, file_out):
+    """pysimm.apps.polymatic.polymatic
+
+    Calls Polymatic code. polym.in and types.txt are assumed to exist.
+
+    Args:
+        script: name of Polymatic script
+        file_in: initial system file name
+        file_out: final system file name
+
+    Returns:
+        output from perl code
+    """
     cmd = ('perl %s -i %s -s polym.in -t types.txt -o %s'
            % (script, file_in, file_out))
     o, e = Popen(shlex.split(cmd),
@@ -58,6 +84,16 @@ def polymatic(script, file_in, file_out):
 
 
 def run(settings):
+    """pysimm.apps.polymatic.run
+
+    Runs Polymatic algorithm.
+
+    Args:
+        settings: object containing Polymatic settings
+
+    Returns:
+        (True/False, pysimm.system.System)
+    """
     if rappture:
         Rappture.Utils.progress(0, 'Initializing Polymatic...')
     bonds = 0
@@ -185,6 +221,18 @@ def run(settings):
 
 
 def lmps_min(s, name, settings):
+    """pysimm.apps.polymatic.lmps_min
+
+    Runs LAMMPS minimization for the Polymatic algorithm.
+
+    Args:
+        s: pysimm.system.System to minimize
+        name: name of simulation
+        settings: object containing Polymatic settings
+
+    Returns:
+        result from lmps.minimize
+    """
     if settings.polym.min.cluster:
         nanohub = {'cores': int(settings.polym.min.nanohub_cores),
                    'walltime': int(settings.polym.min.nanohub_walltime)}
@@ -219,6 +267,19 @@ def lmps_min(s, name, settings):
 
 
 def lmps_step_md(s, bonds, attempt, settings):
+    """pysimm.apps.polymatic.lmps_step_md
+
+    Runs LAMMPS step md for the Polymatic algorithm.
+
+    Args:
+        s: pysimm.system.System to minimize
+        bonds: number of bond to be made
+        attempt: number of bonding attempt
+        settings: object containing Polymatic settings
+
+    Returns:
+        result from lmps.md
+    """
     if settings.polym.step.cluster:
         nanohub = {'cores': int(settings.polym.step.nanohub_cores),
                    'walltime': int(settings.polym.step.nanohub_walltime)}
@@ -249,6 +310,18 @@ def lmps_step_md(s, bonds, attempt, settings):
 
 
 def lmps_cycle_nvt_md(s, bonds, settings):
+    """pysimm.apps.polymatic.lmps_cycle_nvt_md
+
+    Runs LAMMPS nvt cycle md for the Polymatic algorithm.
+
+    Args:
+        s: pysimm.system.System to minimize
+        bonds: number of bond to be made
+        settings: object containing Polymatic settings
+
+    Returns:
+        result from lmps.md
+    """
     if settings.polym.cycle_nvt.cluster:
         nanohub = {'cores': int(settings.polym.cycle_nvt.nanohub_cores),
                    'walltime': int(settings.polym.cycle_nvt.nanohub_walltime)}
@@ -279,6 +352,18 @@ def lmps_cycle_nvt_md(s, bonds, settings):
 
 
 def lmps_cycle_npt_md(s, bonds, settings):
+    """pysimm.apps.polymatic.lmps_cycle_npt_md
+
+    Runs LAMMPS npt cycle md for the Polymatic algorithm.
+
+    Args:
+        s: pysimm.system.System to minimize
+        bonds: number of bond to be made
+        settings: object containing Polymatic settings
+
+    Returns:
+        result from lmps.md
+    """
     if settings.polym.cycle_npt.cluster:
         nanohub = {'cores': int(settings.polym.cycle_npt.nanohub_cores),
                    'walltime': int(settings.polym.cycle_npt.nanohub_walltime)}
