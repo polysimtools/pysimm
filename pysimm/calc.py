@@ -70,6 +70,16 @@ def rot_hyperbola(x, a, b, c, d, e, th):
 
 
 def intersection(line1, line2):
+    """pysimm.calc.intersection
+
+    Finds intersection between two 2D lines given by two sets of points
+
+    Args:
+        line1: [[x1,y1], [x2,y2]] for line 1
+        line2: [[x1,y1], [x2,y2]] for line 2
+    Returns:
+        x,y intersection point
+    """
     xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
     ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
 
@@ -87,6 +97,16 @@ def intersection(line1, line2):
 
 
 def find_rotation(a, b):
+    """pysimm.calc.find_rotation
+
+    Finds rotation vector required to align a and b
+
+    Args:
+        a: 3D vector [x,y,z]
+        b: 3D vector [x,y,z]
+    Returns:
+        rotation matrix
+    """
     if not np:
         raise PysimmError('pysimm.calc.find_rotation function requires numpy')
     a = np.array(a)
@@ -107,6 +127,20 @@ def find_rotation(a, b):
 
 
 def rotate_vector(x, y, z, theta_x=None, theta_y=None, theta_z=None):
+    """pysimm.calc.rotate_vector
+
+    Rotates vector
+
+    Args:
+        x: x vector component
+        y: y vector component
+        z: z vector component
+        theta_x: angle to rotate vector around x axis
+        theta_y: angle to rotate vector around y axis
+        theta_z: angle to rotate vector around z axis
+    Returns:
+        new vector [x,y,z]
+    """
     if not np:
         raise PysimmError('pysimm.calc.rotate_vector function requires numpy')
     xt = random() * 2 * pi if theta_x is None else theta_x
@@ -133,12 +167,34 @@ def rotate_vector(x, y, z, theta_x=None, theta_y=None, theta_z=None):
 
 
 def distance(p1, p2):
+    """pysimm.calc.distance
+
+    Finds distance between two pysimm.system.Particle objects
+
+    Args:
+        p1: pysimm.system.Particle
+        p2: pysimm.system.Particle
+    Returns:
+        distance between particles
+    """
     if not np:
         raise PysimmError('pysimm.calc.distance function requires numpy')
     return np.linalg.norm([p1.x - p2.x, p1.y - p2.y, p1.z - p2.z])
 
 
 def angle(p1, p2, p3, radians=False):
+    """pysimm.calc.angle
+
+    Finds angle between three pysimm.system.Particle objects
+
+    Args:
+        p1: pysimm.system.Particle
+        p2: pysimm.system.Particle
+        p3: pysimm.system.Particle
+        radians: returns value in radians if True (False)
+    Returns:
+        angle between particles
+    """
     p12 = distance(p1, p2)
     p23 = distance(p2, p3)
     p13 = distance(p1, p3)
@@ -149,6 +205,18 @@ def angle(p1, p2, p3, radians=False):
 
 
 def chiral_angle(a, b, c, d):
+    """pysimm.calc.chiral_angle
+
+    Finds chiral angle between four pysimm.system.Particle objects
+
+    Args:
+        a: pysimm.system.Particle
+        b: pysimm.system.Particle
+        c: pysimm.system.Particle
+        d: pysimm.system.Particle
+    Returns:
+        chiral angle for particles
+    """
     if not np:
         raise PysimmError('pysimm.calc.chiral_angle function requires numpy')
     ht = np.array([a.x-b.x, a.y-b.y, a.z-b.z])
@@ -172,62 +240,27 @@ def chiral_angle(a, b, c, d):
     return acos(cos_theta)/pi*180
 
 
-def auto_tacticity(s, return_angles=True, unwrap=True, rewrap=True):
-
-    # buggy, because chirality has to do with chains.................
-
-    s.add_particle_bonding()
-
-    stereochem_angles = ItemContainer()
-
-    if unwrap:
-        s.unwrap()
-
-    for p in s.particles:
-        if p.chiral is True:
-            bonded_mw = {}
-            for pb in p.bonded_to:
-                bonded_mw[pb] = pb.type.mass
-                for pb_ in pb.bonded_to:
-                    if pb_ is not p:
-                        bonded_mw[pb] += pb_.type.mass
-            print [(p_.tag, bonded_mw[p_]) for p_ in bonded_mw]
-            print [x.tag for x in sorted(bonded_mw, key=bonded_mw.get)]
-            sorted_by_mw = sorted(bonded_mw, key=bonded_mw.get)
-            stereochem_angles.add(Item(tag=p.tag, value=chiral_angle(p,
-                                                                     sorted_by_mw[0],
-                                                                     sorted_by_mw[1],
-                                                                     sorted_by_mw[2])))
-
-    last = None
-    iso_diads = 0
-    syn_diads = 0
-    for a in stereochem_angles:
-        if last is not None:
-            if (a.value < 90 and last.value < 90) or (a.value > 90 and last.value > 90):
-                iso_diads += 1
-            else:
-                syn_diads += 1
-        last = a
-
-    if iso_diads == (len(stereochem_angles) - 1):
-        t = 'isotactic'
-    elif syn_diads == (len(stereochem_angles) - 1):
-        t = 'syndiotactic'
-    else:
-        t = 'atactic'
-
-    if rewrap:
-        s.wrap()
-
-    if return_angles:
-        return t, stereochem_angles
-    else:
-        return t
-
-
 def tacticity(s, a_tag=None, b_tag=None, c_tag=None, d_tag=None, offset=None, return_angles=True, unwrap=True,
               rewrap=True, skip_first=False):
+    """pysimm.calc.tacticity
+
+    Determines tacticity for polymer chain
+
+    Args:
+        s: pysimm.system.System
+        a_tag: tag of first a particle
+        b_tag: tag of first b particle
+        c_tag: tag of first c particle
+        d_tag: tag of first d particle
+        offset: offset of particle tags (monomer repeat atomic count)
+        return_angles: if True return chiral angles of all monomers
+        unwrap: True to perform unwrap before calculation (REQUIRED before calculation, but not required in this
+        function)
+        rewrap: True to rewrap system after calculation
+        skip_first: True to skip first monomer (sometime chirality is poorly defined for thsi monomer)
+    Returns:
+        tacticity or tacticity, [chiral_angles]
+    """
     if not np:
         raise PysimmError('pysimm.calc.tacticity function requires numpy')
     if a_tag is None or b_tag is None or c_tag is None or d_tag is None:
@@ -282,10 +315,31 @@ def tacticity(s, a_tag=None, b_tag=None, c_tag=None, d_tag=None, offset=None, re
 
 
 def frac_free_volume(v_sp, v_void):
+    """pysimm.calc.frac_free_volume
+
+    Determines fractional free volume for a poroous system
+
+    Args:
+        v_sp: specific volume
+        v_void: void volume
+    Returns:
+        fractional free volume
+    """
     return (-0.3 * v_sp + 1.3 * v_void)/v_sp
 
 
 def pbc_distance(s, p1, p2):
+    """pysimm.calc.pbc_distance
+
+    Calculates distance between particles using PBC
+
+    Args:
+        s: pysimm.system.System
+        p1: pysimm.system.Particle
+        p2: pysimm.system.Particle
+    Returns:
+        distance between particles
+    """
     if not np:
         raise PysimmError('pysimm.calc.pbc_distance function requires numpy')
     frac_x1 = p1.x / s.dim.dx
