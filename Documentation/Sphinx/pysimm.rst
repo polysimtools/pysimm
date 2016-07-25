@@ -20,3 +20,11 @@ Submodules
    pysimm.lmps
    pysimm.system
    pysimm.utils
+
+Module contents
+---------------
+
+.. automodule:: pysimm
+    :members:
+    :undoc-members:
+    :show-inheritance:

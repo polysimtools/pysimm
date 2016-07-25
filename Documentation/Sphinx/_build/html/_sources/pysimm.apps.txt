@@ -10,3 +10,11 @@ Submodules
    pysimm.apps.polymatic
    pysimm.apps.poreblazer
    pysimm.apps.random_walk
+
+Module contents
+---------------
+
+.. automodule:: pysimm.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:

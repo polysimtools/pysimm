@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pysimm.apps.random_walk &mdash; pysimm  documentation</title>
+  <title>pysimm.apps.random_walk &mdash; pysimm 0.1 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="pysimm  documentation" href="../../../index.html"/>
+    <link rel="top" title="pysimm 0.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -169,7 +169,18 @@
 
 
 <div class="viewcode-block" id="add_bonds"><a class="viewcode-back" href="../../../pysimm.apps.random_walk.html#pysimm.apps.random_walk.add_bonds">[docs]</a><span class="k">def</span> <span class="nf">add_bonds</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.random_walk.add_bonds</span>
 
+<span class="sd">    Add bonding information from force field f to system s given a new bond is forming between p1 and p2</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: pysimm.system.System object</span>
+<span class="sd">        p1: pysimm.system.Particle object</span>
+<span class="sd">        p2: pysimm.system.Particle object</span>
+<span class="sd">        f: pysimm.forcefield.Forcefield object</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">p1</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">count</span> <span class="o">&lt;</span> <span class="n">p2</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">count</span><span class="p">:</span>
         <span class="n">old_molecule_tag</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">tag</span>
         <span class="k">for</span> <span class="n">p_</span> <span class="ow">in</span> <span class="n">p1</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
@@ -221,6 +232,16 @@
 
 
 <div class="viewcode-block" id="find_last_backbone_vector"><a class="viewcode-back" href="../../../pysimm.apps.random_walk.html#pysimm.apps.random_walk.find_last_backbone_vector">[docs]</a><span class="k">def</span> <span class="nf">find_last_backbone_vector</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.random_walk.find_last_backbone_vector</span>
+
+<span class="sd">    Finds vector between backbone atoms in terminal monomer. Requires current system s, and reference monomer m.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: pysimm.system.System object</span>
+<span class="sd">        m:pysimm.system.System object</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        list of vector components</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">head_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="n">tail_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">count</span><span class="p">:]:</span>
@@ -232,7 +253,24 @@
 
 
 <div class="viewcode-block" id="copolymer"><a class="viewcode-back" href="../../../pysimm.apps.random_walk.html#pysimm.apps.random_walk.copolymer">[docs]</a><span class="k">def</span> <span class="nf">copolymer</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nmon</span><span class="p">,</span> <span class="n">s_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.random_walk.copolymer</span>
 
+<span class="sd">    Builds copolymer using random walk methodology using pattern</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        m: list of reference monomer systems</span>
+<span class="sd">        nmon: total number of monomers to add to chain</span>
+<span class="sd">        s_: system in which to build polymer chain (None)</span>
+<span class="sd">        settings: dictionary of simulation settings</span>
+<span class="sd">        density: density at which to build polymer (0.3)</span>
+<span class="sd">        forcefield: pysimm.forcefield.Forcefield object to acquire new force field parameters</span>
+<span class="sd">        capped: True/False if monomers are capped</span>
+<span class="sd">        unwrap: True to unwrap final system</span>
+<span class="sd">        traj: True to build xyz trajectory of polymer growth (True)</span>
+<span class="sd">        pattern: list of pattern for monomer repeat units, should match length of m ([1 for _ in range(len(m))])</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        new copolymer pysimm.system.System</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">m</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">m</span><span class="p">]</span>
 
     <span class="n">settings</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;settings&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;settings&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}</span>
@@ -386,7 +424,26 @@
 
 
 <div class="viewcode-block" id="random_walk"><a class="viewcode-back" href="../../../pysimm.apps.random_walk.html#pysimm.apps.random_walk.random_walk">[docs]</a><span class="k">def</span> <span class="nf">random_walk</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nmon</span><span class="p">,</span> <span class="n">s_</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.random_walk.random_walk</span>
 
+<span class="sd">    Builds homopolymer using random walk methodology</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        m: reference monomer system</span>
+<span class="sd">        nmon: total number of monomers to add to chain</span>
+<span class="sd">        s_: system in which to build polymer chain (None)</span>
+<span class="sd">        extra_bonds: EXPERMINTAL, True if making ladder backbone polymer</span>
+<span class="sd">        settings: dictionary of simulation settings</span>
+<span class="sd">        density: density at which to build polymer (0.3)</span>
+<span class="sd">        forcefield: pysimm.forcefield.Forcefield object to acquire new force field parameters</span>
+<span class="sd">        capped: True/False if monomers are capped</span>
+<span class="sd">        unwrap: True to unwrap final system</span>
+<span class="sd">        traj: True to build xyz trajectory of polymer growth (True)</span>
+<span class="sd">        limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)</span>
+<span class="sd">        sim: pysimm.lmps.Simulation object for relaxation between polymer growth</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        new polymer pysimm.system.System</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
     <span class="n">extra_bonds</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extra_bonds&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;extra_bonds&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">False</span>
@@ -506,110 +563,6 @@
     <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s1">&#39;polymer.xyz&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">s</span></div>
-
-
-<div class="viewcode-block" id="random_walk_multi"><a class="viewcode-back" href="../../../pysimm.apps.random_walk.html#pysimm.apps.random_walk.random_walk_multi">[docs]</a><span class="k">def</span> <span class="nf">random_walk_multi</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">nmon</span><span class="p">,</span> <span class="n">nmol</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-
-    <span class="n">settings</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;settings&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;settings&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}</span>
-    <span class="n">density</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">0.3</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;forcefield&#39;</span><span class="p">)</span>
-    <span class="n">capped</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;capped&#39;</span><span class="p">)</span>
-
-    <span class="n">distribution</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;distribution&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">distribution</span><span class="p">:</span>
-        <span class="n">distribution</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nmol</span><span class="p">):</span>
-            <span class="n">distribution</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">nmon</span><span class="o">/</span><span class="n">nmol</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">nmon</span> <span class="o">%</span> <span class="n">nmol</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">distribution</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">nmon</span> <span class="o">%</span> <span class="n">nmol</span>
-
-    <span class="n">m</span><span class="o">.</span><span class="n">add_particle_bonding</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">m</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">):</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">linker</span> <span class="o">=</span> <span class="s1">&#39;head&#39;</span>
-        <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">p</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">):</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">linker</span> <span class="o">=</span> <span class="s1">&#39;tail&#39;</span>
-
-    <span class="n">m</span><span class="o">.</span><span class="n">remove_linker_types</span><span class="p">()</span>
-
-    <span class="n">s</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">System</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">distribution</span><span class="p">:</span>
-
-        <span class="n">s</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">replicate</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">s_</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="n">density</span><span class="o">/</span><span class="n">nmon</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1"> monomers added&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nmon</span><span class="p">))</span>
-
-        <span class="k">if</span> <span class="n">capped</span><span class="p">:</span>
-            <span class="n">m</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">m</span><span class="o">.</span><span class="n">remove_spare_bonding</span><span class="p">()</span>
-            <span class="n">m</span><span class="o">.</span><span class="n">add_particle_bonding</span><span class="p">()</span>
-
-        <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s1">&#39;step_001.xyz&#39;</span><span class="p">)</span>
-
-        <span class="n">s</span><span class="o">.</span><span class="n">add_particle_bonding</span><span class="p">()</span>
-
-        <span class="k">for</span> <span class="n">insertion</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-
-            <span class="n">head</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">tail</span> <span class="o">=</span> <span class="kc">None</span>
-
-            <span class="n">backbone_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">find_last_backbone_vector</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="p">))</span>
-
-            <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">p_</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">m</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">count</span><span class="p">:],</span> <span class="n">m</span><span class="o">.</span><span class="n">particles</span><span class="p">):</span>
-                <span class="n">p_</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">backbone_vector</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">p_</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">backbone_vector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">p_</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">backbone_vector</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-
-            <span class="n">n</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-            <span class="k">if</span> <span class="n">capped</span><span class="p">:</span>
-                <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
-                <span class="n">s</span><span class="o">.</span><span class="n">remove_spare_bonding</span><span class="p">()</span>
-                <span class="n">s</span><span class="o">.</span><span class="n">add_particle_bonding</span><span class="p">()</span>
-
-            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">n</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">count</span><span class="p">:]:</span>
-                <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">linker</span> <span class="o">==</span> <span class="s1">&#39;head&#39;</span><span class="p">:</span>
-                    <span class="n">head</span> <span class="o">=</span> <span class="n">p</span>
-
-            <span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">change_dim</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-            <span class="n">s</span><span class="o">.</span><span class="n">add_particle_bonding</span><span class="p">()</span>
-
-            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">n</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">count</span><span class="p">:]:</span>
-                <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">linker</span> <span class="o">==</span> <span class="s1">&#39;tail&#39;</span><span class="p">:</span>
-                    <span class="n">tail</span> <span class="o">=</span> <span class="n">p</span>
-
-            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">tag</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">head</span> <span class="ow">and</span> <span class="n">tail</span><span class="p">:</span>
-                <span class="n">add_bonds</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1"> monomers added&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="n">insertion</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="n">nmon</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;cannot find head and tail&#39;</span><span class="p">)</span>
-
-            <span class="n">s</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()</span>
-
-            <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s1">&#39;step_</span><span class="si">%03d</span><span class="s1">.xyz&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">insertion</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span>
-
-            <span class="n">lmps</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">dump</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;relax_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">insertion</span><span class="o">+</span><span class="mi">2</span><span class="p">),</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
-
-            <span class="n">lmps</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
-
-            <span class="n">s</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()</span>
-
-            <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s1">&#39;step_</span><span class="si">%03d</span><span class="s1">.xyz&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">insertion</span><span class="o">+</span><span class="mi">2</span><span class="p">),</span> <span class="n">append</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-            <span class="n">s</span><span class="o">.</span><span class="n">wrap</span><span class="p">()</span>
-
-    <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;final.lmps&#39;</span><span class="p">)</span>
-    <span class="n">s</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()</span>
-    <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="s1">&#39;final.xyz&#39;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">s</span></div>
 </pre></div>
 
            </div>
@@ -643,7 +596,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'',
+            VERSION:'0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

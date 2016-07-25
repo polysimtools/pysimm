@@ -1,5 +1,5 @@
 .. pysimm documentation master file, created by
-   sphinx-quickstart on Thu Jul 14 17:28:00 2016.
+   sphinx-quickstart on Mon Jul 25 12:48:29 2016.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
@@ -19,4 +19,5 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
+* :ref:`search`
 

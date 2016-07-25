@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pysimm.apps.poreblazer &mdash; pysimm  documentation</title>
+  <title>pysimm.apps.poreblazer &mdash; pysimm 0.1 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="pysimm  documentation" href="../../../index.html"/>
+    <link rel="top" title="pysimm 0.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -171,7 +171,26 @@
 
 
 <div class="viewcode-block" id="psd"><a class="viewcode-back" href="../../../pysimm.apps.poreblazer.html#pysimm.apps.poreblazer.psd">[docs]</a><span class="k">def</span> <span class="nf">psd</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.poreblazer.psd</span>
 
+<span class="sd">    Perform pore size distribution calculation using PoreBlazer v2.0</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        atoms: file name to contain ff parameters (ff.atoms)</span>
+<span class="sd">        data: file name to write xyz file (data.xyz)</span>
+<span class="sd">        angles: angles of simlation box (90.0 90.0 90.0)</span>
+<span class="sd">        insertions: number of insertions for calculation (500)</span>
+<span class="sd">        min_probe: minimum probe size (1.0)</span>
+<span class="sd">        probe_dr: step size to increase probe size (0.2)</span>
+<span class="sd">        max_probe: maximum probe size: 25</span>
+<span class="sd">        psd_save: T/F to save psd points (F)</span>
+<span class="sd">        psd_range: range in which to save psd points (2.5,3.8)</span>
+<span class="sd">        exec_path: path to poreblazer psd executable (psd.exe)</span>
+<span class="sd">        gen_files: if True, only generate input do not execute (None)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;atoms&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;ff.atoms&#39;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&#39;data.xyz&#39;&quot;</span>
     <span class="n">angles</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;angles&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;90.0 90.0 90.0&#39;</span>
@@ -230,7 +249,23 @@
 
 
 <div class="viewcode-block" id="surface"><a class="viewcode-back" href="../../../pysimm.apps.poreblazer.html#pysimm.apps.poreblazer.surface">[docs]</a><span class="k">def</span> <span class="nf">surface</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.poreblazer.surface</span>
 
+<span class="sd">    Perform accessible surface area calculation using PoreBlazer v2.0</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        atoms: file name to contain ff parameters (ff.atoms)</span>
+<span class="sd">        data: file name to write xyz file (data.xyz)</span>
+<span class="sd">        angles: angles of simlation box (90.0 90.0 90.0)</span>
+<span class="sd">        insertions: number of insertions for calculation (1000)</span>
+<span class="sd">        probe: probe size (3.681)</span>
+<span class="sd">        probe_type: type of probe (hs)</span>
+<span class="sd">        vis: True to save visual (F)</span>
+<span class="sd">        exec_path: path to poreblazer surface executable (surface.exe)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;atoms&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;ff.atoms&#39;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&#39;data.xyz&#39;&quot;</span>
     <span class="n">angles</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;angles&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;90.0 90.0 90.0&#39;</span>
@@ -275,7 +310,22 @@
 
 
 <div class="viewcode-block" id="pore"><a class="viewcode-back" href="../../../pysimm.apps.poreblazer.html#pysimm.apps.poreblazer.pore">[docs]</a><span class="k">def</span> <span class="nf">pore</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.poreblazer.pore</span>
 
+<span class="sd">    Perform pore volume calculation using PoreBlazer v2.0</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        atoms: file name to contain ff parameters (ff.atoms)</span>
+<span class="sd">        data: file name to write xyz file (data.xyz)</span>
+<span class="sd">        angles: angles of simlation box (90.0 90.0 90.0)</span>
+<span class="sd">        insertions: number of insertions for calculation (1000)</span>
+<span class="sd">        temp: temperature at which to perform simulation (300)</span>
+<span class="sd">        pore_probe: sigma, epsilon, cutoff parameters for probe (2.58, 10.22, 12.8)</span>
+<span class="sd">        exec_path: path to poreblazer pore executable (pore_he.exe)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">boltzmann_kcal</span> <span class="o">=</span> <span class="mf">0.001987204</span>
 
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;atoms&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;ff.atoms&#39;</span>
@@ -321,7 +371,22 @@
 
 
 <div class="viewcode-block" id="void"><a class="viewcode-back" href="../../../pysimm.apps.poreblazer.html#pysimm.apps.poreblazer.void">[docs]</a><span class="k">def</span> <span class="nf">void</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.poreblazer.void</span>
 
+<span class="sd">    Perform pore volume calculation using PoreBlazer v2.0 assuming a probe size of 0 to calculate void volume</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        atoms: file name to contain ff parameters (ff.atoms)</span>
+<span class="sd">        data: file name to write xyz file (data.xyz)</span>
+<span class="sd">        angles: angles of simlation box (90.0 90.0 90.0)</span>
+<span class="sd">        insertions: number of insertions for calculation (1000)</span>
+<span class="sd">        temp: temperature at which to perform simulation (300)</span>
+<span class="sd">        pore_probe: sigma, epsilon, cutoff parameters for probe (0.00, 10.22, 12.8)</span>
+<span class="sd">        exec_path: path to poreblazer pore executable (pore_he.exe)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">boltzmann_kcal</span> <span class="o">=</span> <span class="mf">0.001987204</span>
 
     <span class="n">atoms</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;atoms&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;ff.atoms&#39;</span>
@@ -399,7 +464,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'',
+            VERSION:'0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

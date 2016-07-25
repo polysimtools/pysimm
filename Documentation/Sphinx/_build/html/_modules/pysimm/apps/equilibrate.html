@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pysimm.apps.equilibrate &mdash; pysimm  documentation</title>
+  <title>pysimm.apps.equilibrate &mdash; pysimm 0.1 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="pysimm  documentation" href="../../../index.html"/>
+    <link rel="top" title="pysimm 0.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -170,6 +170,23 @@
 
 
 <div class="viewcode-block" id="equil"><a class="viewcode-back" href="../../../pysimm.apps.equilibrate.html#pysimm.apps.equilibrate.equil">[docs]</a><span class="k">def</span> <span class="nf">equil</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.equilibrate.equil</span>
+
+<span class="sd">    Runs a 21-step compression/decompression equilibration algorithm</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: pysimm.system.System object</span>
+<span class="sd">        tmax: maximum temperature during equilibration</span>
+<span class="sd">        pmax: maximum pressure during equilibration</span>
+<span class="sd">        tfinal: desired final temperature of final system</span>
+<span class="sd">        pfinal: desired final pressure of final system</span>
+<span class="sd">        np: number of processors to use during equilibration simulations</span>
+<span class="sd">        p_steps: list of pressures to use during equilibration (must match length of length_list)</span>
+<span class="sd">        length_list: list of simulation durations to use during equilibration (must match length of p_steps)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nb_cutoff</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nb_cutoff&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">12.0</span>
     <span class="n">tmax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tmax&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">1000</span>
     <span class="n">pmax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pmax&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">50000</span>
@@ -244,7 +261,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'',
+            VERSION:'0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

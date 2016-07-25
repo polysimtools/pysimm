@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pysimm.apps.polymatic &mdash; pysimm  documentation</title>
+  <title>pysimm.apps.polymatic &mdash; pysimm 0.1 documentation</title>
   
 
   
@@ -30,7 +30,7 @@
   
 
   
-    <link rel="top" title="pysimm  documentation" href="../../../index.html"/>
+    <link rel="top" title="pysimm 0.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -146,6 +146,20 @@
 
 
 <div class="viewcode-block" id="pack"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.pack">[docs]</a><span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">file_in</span><span class="p">,</span> <span class="n">nrep</span><span class="p">,</span> <span class="n">boxl</span><span class="p">,</span> <span class="n">file_out</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.pack</span>
+
+<span class="sd">    Calls Polymatic random packing code</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        script: name of packing script</span>
+<span class="sd">        file_in: list of file names of reference molecules to pack</span>
+<span class="sd">        nrep: list of number of monomers for each reference molecule</span>
+<span class="sd">        boxl: length of one dimension of simulation box for random packing</span>
+<span class="sd">        file_out: name of output file (packed system)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        output from perl code</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_in</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">file_in</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_in</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nrep</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -171,6 +185,18 @@
 
 
 <div class="viewcode-block" id="polymatic"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.polymatic">[docs]</a><span class="k">def</span> <span class="nf">polymatic</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">file_in</span><span class="p">,</span> <span class="n">file_out</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.polymatic</span>
+
+<span class="sd">    Calls Polymatic code. polym.in and types.txt are assumed to exist.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        script: name of Polymatic script</span>
+<span class="sd">        file_in: initial system file name</span>
+<span class="sd">        file_out: final system file name</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        output from perl code</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;perl </span><span class="si">%s</span><span class="s1"> -i </span><span class="si">%s</span><span class="s1"> -s polym.in -t types.txt -o </span><span class="si">%s</span><span class="s1">&#39;</span>
            <span class="o">%</span> <span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">file_in</span><span class="p">,</span> <span class="n">file_out</span><span class="p">))</span>
     <span class="n">o</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">cmd</span><span class="p">),</span>
@@ -187,6 +213,16 @@
 
 
 <div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">settings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.run</span>
+
+<span class="sd">    Runs Polymatic algorithm.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        settings: object containing Polymatic settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (True/False, pysimm.system.System)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">rappture</span><span class="p">:</span>
         <span class="n">Rappture</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Initializing Polymatic...&#39;</span><span class="p">)</span>
     <span class="n">bonds</span> <span class="o">=</span> <span class="mi">0</span>
@@ -314,6 +350,18 @@
 
 
 <div class="viewcode-block" id="lmps_min"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.lmps_min">[docs]</a><span class="k">def</span> <span class="nf">lmps_min</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.lmps_min</span>
+
+<span class="sd">    Runs LAMMPS minimization for the Polymatic algorithm.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: pysimm.system.System to minimize</span>
+<span class="sd">        name: name of simulation</span>
+<span class="sd">        settings: object containing Polymatic settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        result from lmps.minimize</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
         <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">nanohub_cores</span><span class="p">),</span>
                    <span class="s1">&#39;walltime&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">nanohub_walltime</span><span class="p">)}</span>
@@ -348,6 +396,19 @@
 
 
 <div class="viewcode-block" id="lmps_step_md"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.lmps_step_md">[docs]</a><span class="k">def</span> <span class="nf">lmps_step_md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">attempt</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.lmps_step_md</span>
+
+<span class="sd">    Runs LAMMPS step md for the Polymatic algorithm.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: pysimm.system.System to minimize</span>
+<span class="sd">        bonds: number of bond to be made</span>
+<span class="sd">        attempt: number of bonding attempt</span>
+<span class="sd">        settings: object containing Polymatic settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        result from lmps.md</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
         <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">nanohub_cores</span><span class="p">),</span>
                    <span class="s1">&#39;walltime&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">nanohub_walltime</span><span class="p">)}</span>
@@ -378,6 +439,18 @@
 
 
 <div class="viewcode-block" id="lmps_cycle_nvt_md"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.lmps_cycle_nvt_md">[docs]</a><span class="k">def</span> <span class="nf">lmps_cycle_nvt_md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.lmps_cycle_nvt_md</span>
+
+<span class="sd">    Runs LAMMPS nvt cycle md for the Polymatic algorithm.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: pysimm.system.System to minimize</span>
+<span class="sd">        bonds: number of bond to be made</span>
+<span class="sd">        settings: object containing Polymatic settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        result from lmps.md</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
         <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">nanohub_cores</span><span class="p">),</span>
                    <span class="s1">&#39;walltime&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">nanohub_walltime</span><span class="p">)}</span>
@@ -408,6 +481,18 @@
 
 
 <div class="viewcode-block" id="lmps_cycle_npt_md"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.lmps_cycle_npt_md">[docs]</a><span class="k">def</span> <span class="nf">lmps_cycle_npt_md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.lmps_cycle_npt_md</span>
+
+<span class="sd">    Runs LAMMPS npt cycle md for the Polymatic algorithm.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: pysimm.system.System to minimize</span>
+<span class="sd">        bonds: number of bond to be made</span>
+<span class="sd">        settings: object containing Polymatic settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        result from lmps.md</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
         <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">nanohub_cores</span><span class="p">),</span>
                    <span class="s1">&#39;walltime&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">nanohub_walltime</span><span class="p">)}</span>
@@ -469,7 +554,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'',
+            VERSION:'0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
