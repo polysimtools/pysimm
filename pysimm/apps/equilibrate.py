@@ -41,6 +41,23 @@ except ImportError:
 
 
 def equil(s, **kwargs):
+    """pysimm.apps.equilibrate.equil
+
+    Runs a 21-step compression/decompression equilibration algorithm
+
+    Args:
+        s: pysimm.system.System object
+        tmax: maximum temperature during equilibration
+        pmax: maximum pressure during equilibration
+        tfinal: desired final temperature of final system
+        pfinal: desired final pressure of final system
+        np: number of processors to use during equilibration simulations
+        p_steps: list of pressures to use during equilibration (must match length of length_list)
+        length_list: list of simulation durations to use during equilibration (must match length of p_steps)
+
+    Returns:
+        None
+    """
     nb_cutoff = kwargs.get('nb_cutoff') or 12.0
     tmax = kwargs.get('tmax') or 1000
     pmax = kwargs.get('pmax') or 50000
