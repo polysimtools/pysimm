@@ -42,7 +42,26 @@ except ImportError:
 
 
 def psd(s, **kwargs):
+    """pysimm.apps.poreblazer.psd
 
+    Perform pore size distribution calculation using PoreBlazer v2.0
+
+    Args:
+        atoms: file name to contain ff parameters (ff.atoms)
+        data: file name to write xyz file (data.xyz)
+        angles: angles of simlation box (90.0 90.0 90.0)
+        insertions: number of insertions for calculation (500)
+        min_probe: minimum probe size (1.0)
+        probe_dr: step size to increase probe size (0.2)
+        max_probe: maximum probe size: 25
+        psd_save: T/F to save psd points (F)
+        psd_range: range in which to save psd points (2.5,3.8)
+        exec_path: path to poreblazer psd executable (psd.exe)
+        gen_files: if True, only generate input do not execute (None)
+
+    Returns:
+        None
+    """
     atoms = kwargs.get('atoms') or 'ff.atoms'
     data = kwargs.get('data') or "'data.xyz'"
     angles = kwargs.get('angles') or '90.0 90.0 90.0'
@@ -101,7 +120,23 @@ def psd(s, **kwargs):
 
 
 def surface(s, **kwargs):
+    """pysimm.apps.poreblazer.surface
 
+    Perform accessible surface area calculation using PoreBlazer v2.0
+
+    Args:
+        atoms: file name to contain ff parameters (ff.atoms)
+        data: file name to write xyz file (data.xyz)
+        angles: angles of simlation box (90.0 90.0 90.0)
+        insertions: number of insertions for calculation (1000)
+        probe: probe size (3.681)
+        probe_type: type of probe (hs)
+        vis: True to save visual (F)
+        exec_path: path to poreblazer surface executable (surface.exe)
+
+    Returns:
+        None
+    """
     atoms = kwargs.get('atoms') or 'ff.atoms'
     data = kwargs.get('data') or "'data.xyz'"
     angles = kwargs.get('angles') or '90.0 90.0 90.0'
@@ -146,7 +181,22 @@ def surface(s, **kwargs):
 
 
 def pore(s, **kwargs):
+    """pysimm.apps.poreblazer.pore
 
+    Perform pore volume calculation using PoreBlazer v2.0
+
+    Args:
+        atoms: file name to contain ff parameters (ff.atoms)
+        data: file name to write xyz file (data.xyz)
+        angles: angles of simlation box (90.0 90.0 90.0)
+        insertions: number of insertions for calculation (1000)
+        temp: temperature at which to perform simulation (300)
+        pore_probe: sigma, epsilon, cutoff parameters for probe (2.58, 10.22, 12.8)
+        exec_path: path to poreblazer pore executable (pore_he.exe)
+
+    Returns:
+        None
+    """
     boltzmann_kcal = 0.001987204
 
     atoms = kwargs.get('atoms') or 'ff.atoms'
@@ -192,7 +242,22 @@ def pore(s, **kwargs):
 
 
 def void(s, **kwargs):
+    """pysimm.apps.poreblazer.void
 
+    Perform pore volume calculation using PoreBlazer v2.0 assuming a probe size of 0 to calculate void volume
+
+    Args:
+        atoms: file name to contain ff parameters (ff.atoms)
+        data: file name to write xyz file (data.xyz)
+        angles: angles of simlation box (90.0 90.0 90.0)
+        insertions: number of insertions for calculation (1000)
+        temp: temperature at which to perform simulation (300)
+        pore_probe: sigma, epsilon, cutoff parameters for probe (0.00, 10.22, 12.8)
+        exec_path: path to poreblazer pore executable (pore_he.exe)
+
+    Returns:
+        None
+    """
     boltzmann_kcal = 0.001987204
 
     atoms = kwargs.get('atoms') or 'ff.atoms'
