@@ -10,7 +10,7 @@ HOME_DIR = os.environ.get('HOME')
 def install_pysimm(prefix):
     os.chdir(prefix)
     call('git clone https://github.com/polysimtools/pysimm', shell=True)
-    call("echo export PYTHONPATH='$PYTHONPATH':{} >> {}".format(os.path.join(prefix, 'pysimm'),
+    call("echo export PYTHONPATH='$PYTHONPATH':{} >> {}".format(prefix,
                                                                 os.path.join(HOME_DIR, '.bashrc')),
          shell=True)
     call("echo export PATH='$PATH':{} >> {}".format(os.path.join(prefix, 'bin'),
