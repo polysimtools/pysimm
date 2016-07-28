@@ -47,7 +47,7 @@ def parse_args():
     parser.add_argument('--pysimm', dest='pysimm_prefix', default=HOME_DIR)
     parser.add_argument('--lammps', dest='lammps_prefix', default=None)
     parser.add_argument('--lammps-packages', dest='lammps_packages', nargs='*',
-                        default=['molecule', 'class2', 'kspace'])
+                        default=['molecule', 'class2', 'kspace', 'user-misc'])
     return parser.parse_args()
 
 
