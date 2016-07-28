@@ -2290,14 +2290,20 @@ class System(object):
 
         if self.dihedral_types.count > 0:
             out_file.write('Dihedral Coeffs\n\n')
-            for d in self.dihedral_types:
+            for dt in self.dihedral_types:
                 if self.dihedral_style == 'harmonic' or self.ff_class == '1':
                     out_file.write('%4d\t%s\t%2s\t%s\t# %s\n'
-                                   % (d.tag, d.k, d.d, d.n, d.name))
+                                   % (dt.tag, dt.k, dt.d, dt.n, dt.name))
+                elif self.dihedral_style == 'fourier':
+                    dt_str = '{}'.format(dt.m)
+                    for k, d, n in zip(dt.k, dt.d. dt.n):
+                        dt_str += '\t{}\t{}\t{}'.format(k, d, n)
+                    dt_str += '\t# {}\n'.format(dt.name)
+                    out_file.write(dt_str)
                 elif self.dihedral_style == 'class2' or self.ff_class == '2':
                     out_file.write('%4d\t%s\t%s\t%s\t%s\t%s\t%s\t# %s\n'
-                                   % (d.tag, d.k1, d.phi1, d.k2, d.phi2, d.k3,
-                                      d.phi3, d.name))
+                                   % (dt.tag, dt.k1, dt.phi1, dt.k2, dt.phi2, dt.k3,
+                                      dt.phi3, dt.name))
             out_file.write('\n')
 
         if self.dihedral_types.count > 0 and (self.ff_class == '2' or
@@ -2441,12 +2447,16 @@ class System(object):
         if self.improper_types.count > 0:
             out_file.write('Improper Coeffs\n\n')
             for i in self.improper_types:
-                if not i.k:
-                    i.k = 0.0
-                if not i.x0:
-                    i.x0 = 0.0
-                out_file.write('%4d\t%s\t%s\t# %s\n'
-                               % (i.tag, i.k, i.x0, i.name))
+                if self.improper_style = 'harmonic' or self.improper_style =='class2':
+                    if not i.k:
+                        i.k = 0.0
+                    if not i.x0:
+                        i.x0 = 0.0
+                    out_file.write('%4d\t%s\t%s\t# %s\n'
+                                   % (i.tag, i.k, i.x0, i.name))
+                elif self.improper_style = 'cvff':
+                    out_file.write('%4d\t%s\t%s\t%s\t# %s\n'
+                                   % (i.tag, i.k, i.d, i.n, i.name))
             out_file.write('\n')
 
         if self.improper_types.count > 0 and (self.ff_class == '2' or

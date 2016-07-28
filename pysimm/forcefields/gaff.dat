@@ -5856,6 +5856,9 @@ hc-c3-c3-c3   1    0.16          0.0             3.         Junmei et al, 1999
 #hc-c3-c3-cl   1    0.25          0.0             1.         Junmei et al, 1999
 #hc-c3-c3-br   1    0.00          0.0            -3.         Junmei et al, 1999
 #hc-c3-c3-br   1    0.55          0.0             1.         Junmei et al, 1999
+END
+
+IMPROPER_TYPES
 #X -o -c -o          1.1          180.          2.           JCC,7,(1986),230
 #X -X -c -o          10.5         180.          2.           JCC,7,(1986),230
 #X -X -ca-ha         1.1          180.          2.           bsd.on C6H6 nmodes

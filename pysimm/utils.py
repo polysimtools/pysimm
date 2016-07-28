@@ -101,7 +101,7 @@ class ItemContainer(Sequence):
         startswith = kwargs.get('startswith')
         first = kwargs.get('first')
         order = kwargs.get('order')
-        item_wildcard = kwargs.get('item_wildcard') or 'X'
+        item_wildcard = kwargs.get('item_wildcard') if kwargs.has_key('item_wildcard') else 'X'
         query_wildcard = kwargs.get('query_wildcard')
         improper_type = kwargs.get('improper_type')
         if len(args) == 1:
