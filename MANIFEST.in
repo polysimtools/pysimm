@@ -1,2 +1,2 @@
-include data/*.xml
-include data/*.json
+include dat/*.xml
+include dat/*.json
