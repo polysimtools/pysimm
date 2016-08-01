@@ -76,6 +76,9 @@ class Particle(Item):
     """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
+        
+    def coords(self):
+        return (self.x, self.y, self.z)
 
     def check(self, style='full'):
         if style == 'full':
@@ -392,6 +395,12 @@ class Dimension(Item):
             self.dy = self.yhi - self.ylo
         if self.zhi is not None and self.zlo is not None:
             self.dz = self.zhi - self.zlo
+
+    def size(self):
+        self.dx = self.xhi - self.xlo
+        self.dy = self.yhi - self.ylo
+        self.dz = self.zhi - self.zlo
+        return (self.dx, self.dy, self.dz)
 
     def check(self):
         if ((self.xlo is not None and self.xhi is not None and
@@ -725,7 +734,7 @@ class System(object):
         Returns:
             None
         """
-        self.dim.check()
+        self.dim.size()
         for p in self.particles:
             while p.x > self.dim.xhi:
                 p.x -= self.dim.dx
@@ -751,8 +760,7 @@ class System(object):
         Returns:
             None
         """
-        self.dim.check()
-        self.add_particle_bonding()
+        self.dim.size()
         self.add_particle_bonding()
         next_to_unwrap = []
         for p in self.particles:
@@ -967,6 +975,43 @@ class System(object):
                 else:
                     print('cannot find regular type for linker %s'
                           % p.type.name)
+                          
+    def read_lammps_dump(self, fname):
+        """pysimm.system.System.read_lammps_dump
+
+        Updates particle positions and box size from LAMMPS dump file
+
+        Args:
+            fname: LAMMPS dump file
+
+        Returns:
+            None
+        """
+        nparticles = 0
+        with open(fname) as f:
+            line = f.readline()
+            while line:
+                if len(line.split()) > 1 and line.split()[1] == 'NUMBER':
+                    nparticles = int(f.readline())
+                elif len(line.split()) > 1 and line.split()[1] == 'BOX':
+                    self.dim.xlo, self.dim.xhi = map(float, f.readline().split())
+                    self.dim.ylo, self.dim.yhi = map(float, f.readline().split())
+                    self.dim.zlo, self.dim.zhi = map(float, f.readline().split())
+                    self.set_volume()
+                    self.set_density()
+                elif len(line.split()) > 1 and line.split()[1] == 'ATOMS':
+                    for i in range(nparticles):
+                        tag, x, y, z, vx, vy, vz = map(float, f.readline().split())
+                        tag = int(tag)
+                        if self.particles[tag]:
+                            p = self.particles[tag]
+                            p.x = x
+                            p.vx = vx
+                            p.y = y
+                            p.vy = vy
+                            p.z = z
+                            p.vz = vz
+                line = f.readline()
 
     def read_lammpstrj(self, trj, frame=1):
         """pysimm.system.System.read_lammpstrj
@@ -1323,14 +1368,14 @@ class System(object):
                 d.type = self.dihedral_types[d.type]
             elif isinstance(d.type, int) and not self.dihedral_types[d.type]:
                 error_print('error: Cannot find type with tag %s in system '
-                            'angle types' % d.type)
+                            'dihedral types' % d.type)
 
         for i in self.impropers:
             if isinstance(i.type, int) and self.improper_types[i.type]:
                 i.type = self.improper_types[i.type]
             elif isinstance(i.type, int) and not self.improper_types[i.type]:
                 error_print('error: Cannot find type with tag %s in system '
-                            'angle types' % i.type)
+                            'improper types' % i.type)
 
     def objectify(self):
         """pysimm.system.System.objectify
@@ -1911,6 +1956,8 @@ class System(object):
 
         """
         periodic = kwargs.get('periodic') or 1
+        
+        self.dim.size()
 
         self.set_atomic_numbers()
         self.set_excluded_particles()
@@ -2291,15 +2338,15 @@ class System(object):
         if self.dihedral_types.count > 0:
             out_file.write('Dihedral Coeffs\n\n')
             for dt in self.dihedral_types:
-                if self.dihedral_style == 'harmonic' or self.ff_class == '1':
-                    out_file.write('%4d\t%s\t%2s\t%s\t# %s\n'
-                                   % (dt.tag, dt.k, dt.d, dt.n, dt.name))
-                elif self.dihedral_style == 'fourier':
-                    dt_str = '{}'.format(dt.m)
-                    for k, d, n in zip(dt.k, dt.d. dt.n):
+                if self.dihedral_style == 'fourier':
+                    dt_str = '{:4d}\t{}'.format(dt.tag, dt.m)
+                    for k, d, n in zip(dt.k, dt.d, dt.n):
                         dt_str += '\t{}\t{}\t{}'.format(k, d, n)
                     dt_str += '\t# {}\n'.format(dt.name)
                     out_file.write(dt_str)
+                elif self.dihedral_style == 'harmonic' or self.ff_class == '1':
+                    out_file.write('%4d\t%s\t%2s\t%s\t# %s\n'
+                                   % (dt.tag, dt.k, dt.d, dt.n, dt.name))
                 elif self.dihedral_style == 'class2' or self.ff_class == '2':
                     out_file.write('%4d\t%s\t%s\t%s\t%s\t%s\t%s\t# %s\n'
                                    % (dt.tag, dt.k1, dt.phi1, dt.k2, dt.phi2, dt.k3,
@@ -2447,14 +2494,14 @@ class System(object):
         if self.improper_types.count > 0:
             out_file.write('Improper Coeffs\n\n')
             for i in self.improper_types:
-                if self.improper_style = 'harmonic' or self.improper_style =='class2':
+                if self.improper_style == 'harmonic' or self.improper_style =='class2':
                     if not i.k:
                         i.k = 0.0
                     if not i.x0:
                         i.x0 = 0.0
                     out_file.write('%4d\t%s\t%s\t# %s\n'
                                    % (i.tag, i.k, i.x0, i.name))
-                elif self.improper_style = 'cvff':
+                elif self.improper_style == 'cvff':
                     out_file.write('%4d\t%s\t%s\t%s\t# %s\n'
                                    % (i.tag, i.k, i.d, i.n, i.name))
             out_file.write('\n')
@@ -2951,6 +2998,9 @@ class System(object):
         *** BUGGY - DO NOT USE ***
 
         """
+        
+        self.dim.size()
+        
         ncells = [int(ceil(self.dim.dx/cutoff)), int(ceil(self.dim.dy/cutoff)), int(ceil(self.dim.dz/cutoff))]
         cell_dx = self.dim.dx/ncells[0]
         cell_dy = self.dim.dy/ncells[1]
@@ -3239,9 +3289,7 @@ class System(object):
         self.dim.zlo = zmin - padding
         self.dim.zhi = zmax + padding
 
-        self.dim.dx = self.dim.xhi - self.dim.xlo
-        self.dim.dy = self.dim.yhi - self.dim.ylo
-        self.dim.dz = self.dim.zhi - self.dim.zlo
+        self.dim.size()
 
     def set_mm_dist(self, molecules=None):
         """pysimm.system.System.set_mm_dist
@@ -3316,9 +3364,10 @@ class System(object):
         unwrap = kwargs.get('unwrap')
         format = kwargs.get('format') or 'xyz'
 
-        verbose_print(self.dim.dx, self.dim.xlo, self.dim.xhi)
-        verbose_print(self.dim.dy, self.dim.ylo, self.dim.yhi)
-        verbose_print(self.dim.dz, self.dim.zlo, self.dim.zhi)
+        verbose_print(self.dim.size())
+        verbose_print('x dimension: ', self.dim.xlo, self.dim.xhi)
+        verbose_print('y dimension: ', self.dim.ylo, self.dim.yhi)
+        verbose_print('z dimension: ', self.dim.zlo, self.dim.zhi)
 
         if unwrap:
             self.unwrap()
@@ -3922,6 +3971,21 @@ def read_lammps(data_file, **kwargs):
                                                       k=float(line[1]),
                                                       d=int(line[2]),
                                                       n=int(line[3])))
+                elif (dihedral_style and dihedral_style.lower().startswith('fourier')):
+                    data = line[1:]
+                    m = int(data.pop(0))
+                    k=[]
+                    d=[]
+                    n=[]
+                    for i in range(m):
+                        k.append(data.pop(0))
+                        d.append(data.pop(0))
+                        n.append(data.pop(0))
+                    s.dihedral_types.add(DihedralType(tag=tag, name=name,
+                                                      m=m,
+                                                      k=map(float, k),
+                                                      d=map(int, d),
+                                                      n=map(int, n)))
                 elif (dihedral_style and
                         dihedral_style.lower().startswith('class2')):
                     s.dihedral_types.add(DihedralType(tag=tag, name=name,
@@ -3935,7 +3999,7 @@ def read_lammps(data_file, **kwargs):
                     if not quiet and i == 0:
                         warning_print('dihedral_style currently unknown - '
                                       'guessing based on number of parameters '
-                                      '(3=harmonic 6=class2)')
+                                      '(3=harmonic 6=class2 1+3n=fourier)')
                     if len(line) == 4:
                         dihedral_style = 'harmonic'
                         s.dihedral_types.add(DihedralType(tag=tag, name=name,
@@ -3951,6 +4015,22 @@ def read_lammps(data_file, **kwargs):
                                                           phi2=float(line[4]),
                                                           k3=float(line[5]),
                                                           phi3=float(line[6])))
+                    elif len(line) % 3 == 2:
+                        dihedral_style = 'fourier'
+                        data = line[1:]
+                        m = int(data.pop(0))
+                        k=[]
+                        d=[]
+                        n=[]
+                        for i in range(m):
+                            k.append(data.pop(0))
+                            d.append(data.pop(0))
+                            n.append(data.pop(0))
+                        s.dihedral_types.add(DihedralType(tag=tag, name=name,
+                                                          m=m,
+                                                          k=map(float, k),
+                                                          d=map(int, d),
+                                                          n=map(int, n)))
             if not quiet and dihedral_style:
                 verbose_print('read "%s" dihedral parameters '
                               'for %s DihedralTypes'
@@ -4832,6 +4912,10 @@ def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True)
         s_ = System()
     s_.ff_class = ref[0].ff_class
     s_.pair_style = ref[0].pair_style
+    s_.bond_style = ref[0].bond_style
+    s_.angle_style = ref[0].angle_style
+    s_.dihedral_style = ref[0].dihedral_style
+    s_.improper_style = ref[0].improper_style
 
     for r in ref:
         r.set_mass()
@@ -4858,6 +4942,7 @@ def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True)
         s_.dim.zlo = -1. * boxl / 2.
         s_.dim.zhi = boxl / 2.
         s_.dim.dz = s_.dim.zhi - s_.dim.zlo
+        s_.dim.size()
 
     num = 0
     for j, r in enumerate(ref):

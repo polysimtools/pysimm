@@ -109,7 +109,7 @@ class MolecularDynamics(object):
             self.t_start = kwargs.get('t_start')
             self.t_stop = kwargs.get('t_stop')
             if self.t_start is None:
-                self.t_start = 1000.
+                self.t_start = 300.
             if self.t_stop is None:
                 self.t_stop = self.t_start
         else:
@@ -192,7 +192,7 @@ class Minimization(object):
     """
     def __init__(self, **kwargs):
 
-        self.min_style = kwargs.get('min_style') or 'sd'
+        self.min_style = kwargs.get('min_style') or 'fire'
         self.etol = kwargs.get('etol') or 1.0e-3
         self.ftol = kwargs.get('ftol') or 1.0e-3
         self.maxiter = kwargs.get('maxiter') or 10000
@@ -379,11 +379,13 @@ class Simulation(object):
 
         for template in self.sim:
             self.input += template.write(self)
+            
+        self.input += 'write_dump all custom pysimm.dump.tmp id x y z vx vy vz\n'
 
-        if self.write:
+        '''if self.write:
             self.input += 'write_data %s\n' % self.write
         else:
-            self.input += 'write_data pysimm_md.lmps\n'
+            self.input += 'write_data pysimm_md.lmps\n'''
 
         self.input += 'quit\n'
 
@@ -463,11 +465,22 @@ def call_lammps(simulation, np, nanohub):
                 if simulation.print_to_screen:
                     sys.stdout.write(line)
                     sys.stdout.flush()
-
-    if simulation.write:
-        n = read_lammps(simulation.write, quiet=True)
+                    
+    simulation.system.read_lammps_dump('pysimm.dump.tmp')
+    '''if simulation.write:
+        n = read_lammps(simulation.write, quiet=True,
+                        pair_style=simulation.system.pair_style,
+                        bond_style=simulation.system.bond_style,
+                        angle_style=simulation.system.angle_style,
+                        dihedral_style=simulation.system.dihedral_style,
+                        improper_style=simulation.system.improper_style)
     else:
-        n = read_lammps('pysimm_md.lmps', quiet=True)
+        n = read_lammps('pysimm_md.lmps', quiet=True,
+                        pair_style=simulation.system.pair_style,
+                        bond_style=simulation.system.bond_style,
+                        angle_style=simulation.system.angle_style,
+                        dihedral_style=simulation.system.dihedral_style,
+                        improper_style=simulation.system.improper_style)
     for p in n.particles:
         p_ = simulation.system.particles[p.tag]
         p_.x = p.x
@@ -476,14 +489,28 @@ def call_lammps(simulation, np, nanohub):
         p_.vx = p.vx
         p_.vy = p.vy
         p_.vz = p.vz
-    simulation.system.dim = n.dim
+    simulation.system.dim = n.dim'''
 
     try:
         os.remove('temp.lmps')
     except OSError as e:
         print e
+        
+    try:
+        os.remove('pysimm.dump.tmp')
+        if simulation.name:
+            print('%s: %s simulation using LAMMPS successful'
+                  % (strftime('%H:%M:%S'), simulation.name))
+        else:
+            print('%s: molecular dynamics using LAMMPS successful'
+                  % (strftime('%H:%M:%S')))
+    except OSError as e:
+        if simulation.name:
+            raise PysimmError('%s simulation using LAMMPS UNsuccessful' % simulation.name)
+        else:
+            raise PysimmError('molecular dynamics using LAMMPS UNsuccessful')
 
-    if not simulation.write:
+    '''if not simulation.write:
         try:
             os.remove('pysimm_md.lmps')
             if simulation.name:
@@ -512,7 +539,7 @@ def call_lammps(simulation, np, nanohub):
             if simulation.name:
                 raise PysimmError('%s simulation using LAMMPS UNsuccessful' % simulation.name)
             else:
-                raise PysimmError('molecular dynamics using LAMMPS UNsuccessful')
+                raise PysimmError('molecular dynamics using LAMMPS UNsuccessful')'''
 
 
 def quick_md(s, np=None, nanohub=None, **kwargs):
@@ -690,9 +717,19 @@ def md(s, template=None, **kwargs):
                 sys.stdout.flush()
 
     if write:
-        n = read_lammps(write, quiet=True)
+        n = read_lammps(write, quiet=True,
+                        pair_style=s.pair_style,
+                        bond_style=s.bond_style,
+                        angle_style=s.angle_style,
+                        dihedral_style=s.dihedral_style,
+                        improper_style=s.improper_style)
     else:
-        n = read_lammps('pysimm_md.lmps', quiet=True)
+        n = read_lammps('pysimm_md.lmps', quiet=True,
+                        pair_style=s.pair_style,
+                        bond_style=s.bond_style,
+                        angle_style=s.angle_style,
+                        dihedral_style=s.dihedral_style,
+                        improper_style=s.improper_style)
     for p in n.particles:
         p_ = s.particles[p.tag]
         p_.x = p.x
@@ -864,9 +901,19 @@ def minimize(s, template=None, **kwargs):
                 sys.stdout.flush()
 
     if write:
-        n = read_lammps(write, quiet=True)
+        n = read_lammps(write, quiet=True,
+                        pair_style=s.pair_style,
+                        bond_style=s.bond_style,
+                        angle_style=s.angle_style,
+                        dihedral_style=s.dihedral_style,
+                        improper_style=s.improper_style)
     else:
-        n = read_lammps('pysimm_min.lmps', quiet=True)
+        n = read_lammps('pysimm_min.lmps', quiet=True,
+                        pair_style=s.pair_style,
+                        bond_style=s.bond_style,
+                        angle_style=s.angle_style,
+                        dihedral_style=s.dihedral_style,
+                        improper_style=s.improper_style)
     for p in n.particles:
         s.particles[p.tag].x = p.x
         s.particles[p.tag].y = p.y
@@ -1048,9 +1095,19 @@ def relax(s, template=None, **kwargs):
                 sys.stdout.flush()
 
     if write:
-        n = read_lammps(write, quiet=True)
+        n = read_lammps(write, quiet=True,
+                        pair_style=s.pair_style,
+                        bond_style=s.bond_style,
+                        angle_style=s.angle_style,
+                        dihedral_style=s.dihedral_style,
+                        improper_style=s.improper_style)
     else:
-        n = read_lammps('pysimm_relax.lmps', quiet=True)
+        n = read_lammps('pysimm_relax.lmps', quiet=True,
+                        pair_style=s.pair_style,
+                        bond_style=s.bond_style,
+                        angle_style=s.angle_style,
+                        dihedral_style=s.dihedral_style,
+                        improper_style=s.improper_style)
     for p in n.particles:
         s.particles[p.tag].x = p.x
         s.particles[p.tag].y = p.y

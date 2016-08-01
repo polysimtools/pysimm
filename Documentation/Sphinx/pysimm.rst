@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     pysimm.apps
+    pysimm.forcefield
 
 Submodules
 ----------
@@ -15,8 +16,6 @@ Submodules
 
    pysimm.calc
    pysimm.cli
-   pysimm.forcefield
-   pysimm.gasteiger
    pysimm.lmps
    pysimm.system
    pysimm.utils

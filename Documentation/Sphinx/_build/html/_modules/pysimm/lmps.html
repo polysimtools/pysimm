@@ -238,7 +238,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;t_start&#39;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">t_stop</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;t_stop&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span> <span class="o">=</span> <span class="mf">1000.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span> <span class="o">=</span> <span class="mf">300.</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_stop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">t_stop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span>
         <span class="k">else</span><span class="p">:</span>
@@ -321,7 +321,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">min_style</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;min_style&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;sd&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_style</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;min_style&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;fire&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">etol</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;etol&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">1.0e-3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ftol</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ftol&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">1.0e-3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maxiter</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;maxiter&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">10000</span>
@@ -508,11 +508,13 @@
 
         <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="n">template</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;write_dump all custom pysimm.dump.tmp id x y z vx vy vz</span><span class="se">\n</span><span class="s1">&#39;</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;write_data </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">write</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;write_data pysimm_md.lmps</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="sd">&#39;&#39;&#39;if self.write:</span>
+<span class="sd">            self.input += &#39;write_data %s\n&#39; % self.write</span>
+<span class="sd">        else:</span>
+<span class="sd">            self.input += &#39;write_data pysimm_md.lmps\n&#39;&#39;&#39;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;quit</span><span class="se">\n</span><span class="s1">&#39;</span></div>
 
@@ -592,56 +594,81 @@
                 <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">print_to_screen</span><span class="p">:</span>
                     <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
                     <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">write</span><span class="p">:</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">write</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="s1">&#39;pysimm_md.lmps&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
-        <span class="n">p_</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span>
-        <span class="n">p_</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span>
-        <span class="n">p_</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span>
-        <span class="n">p_</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">z</span>
-        <span class="n">p_</span><span class="o">.</span><span class="n">vx</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">vx</span>
-        <span class="n">p_</span><span class="o">.</span><span class="n">vy</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">vy</span>
-        <span class="n">p_</span><span class="o">.</span><span class="n">vz</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">vz</span>
-    <span class="n">simulation</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">dim</span>
+                    
+    <span class="n">simulation</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">read_lammps_dump</span><span class="p">(</span><span class="s1">&#39;pysimm.dump.tmp&#39;</span><span class="p">)</span>
+    <span class="sd">&#39;&#39;&#39;if simulation.write:</span>
+<span class="sd">        n = read_lammps(simulation.write, quiet=True,</span>
+<span class="sd">                        pair_style=simulation.system.pair_style,</span>
+<span class="sd">                        bond_style=simulation.system.bond_style,</span>
+<span class="sd">                        angle_style=simulation.system.angle_style,</span>
+<span class="sd">                        dihedral_style=simulation.system.dihedral_style,</span>
+<span class="sd">                        improper_style=simulation.system.improper_style)</span>
+<span class="sd">    else:</span>
+<span class="sd">        n = read_lammps(&#39;pysimm_md.lmps&#39;, quiet=True,</span>
+<span class="sd">                        pair_style=simulation.system.pair_style,</span>
+<span class="sd">                        bond_style=simulation.system.bond_style,</span>
+<span class="sd">                        angle_style=simulation.system.angle_style,</span>
+<span class="sd">                        dihedral_style=simulation.system.dihedral_style,</span>
+<span class="sd">                        improper_style=simulation.system.improper_style)</span>
+<span class="sd">    for p in n.particles:</span>
+<span class="sd">        p_ = simulation.system.particles[p.tag]</span>
+<span class="sd">        p_.x = p.x</span>
+<span class="sd">        p_.y = p.y</span>
+<span class="sd">        p_.z = p.z</span>
+<span class="sd">        p_.vx = p.vx</span>
+<span class="sd">        p_.vy = p.vy</span>
+<span class="sd">        p_.vz = p.vz</span>
+<span class="sd">    simulation.system.dim = n.dim&#39;&#39;&#39;</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="nb">print</span> <span class="n">e</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">simulation</span><span class="o">.</span><span class="n">write</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;pysimm_md.lmps&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1"> simulation using LAMMPS successful&#39;</span>
-                      <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: molecular dynamics using LAMMPS successful&#39;</span>
-                      <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)))</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> simulation using LAMMPS UNsuccessful&#39;</span> <span class="o">%</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;molecular dynamics using LAMMPS UNsuccessful&#39;</span><span class="p">)</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">write</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1"> simulation using LAMMPS successful&#39;</span>
-                      <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: molecular dynamics using LAMMPS successful&#39;</span>
-                      <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)))</span>
-            <span class="k">return</span> <span class="kc">True</span>
+        
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;pysimm.dump.tmp&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1"> simulation using LAMMPS successful&#39;</span>
+                  <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> simulation using LAMMPS UNsuccessful&#39;</span> <span class="o">%</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;molecular dynamics using LAMMPS UNsuccessful&#39;</span><span class="p">)</span></div>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: molecular dynamics using LAMMPS successful&#39;</span>
+                  <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">)))</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> simulation using LAMMPS UNsuccessful&#39;</span> <span class="o">%</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;molecular dynamics using LAMMPS UNsuccessful&#39;</span><span class="p">)</span>
+
+    <span class="sd">&#39;&#39;&#39;if not simulation.write:</span>
+<span class="sd">        try:</span>
+<span class="sd">            os.remove(&#39;pysimm_md.lmps&#39;)</span>
+<span class="sd">            if simulation.name:</span>
+<span class="sd">                print(&#39;%s: %s simulation using LAMMPS successful&#39;</span>
+<span class="sd">                      % (strftime(&#39;%H:%M:%S&#39;), simulation.name))</span>
+<span class="sd">            else:</span>
+<span class="sd">                print(&#39;%s: molecular dynamics using LAMMPS successful&#39;</span>
+<span class="sd">                      % (strftime(&#39;%H:%M:%S&#39;)))</span>
+<span class="sd">            return True</span>
+<span class="sd">        except OSError:</span>
+<span class="sd">            if simulation.name:</span>
+<span class="sd">                raise PysimmError(&#39;%s simulation using LAMMPS UNsuccessful&#39; % simulation.name)</span>
+<span class="sd">            else:</span>
+<span class="sd">                raise PysimmError(&#39;molecular dynamics using LAMMPS UNsuccessful&#39;)</span>
+
+<span class="sd">    else:</span>
+<span class="sd">        if os.path.isfile(simulation.write):</span>
+<span class="sd">            if simulation.name:</span>
+<span class="sd">                print(&#39;%s: %s simulation using LAMMPS successful&#39;</span>
+<span class="sd">                      % (strftime(&#39;%H:%M:%S&#39;), simulation.name))</span>
+<span class="sd">            else:</span>
+<span class="sd">                print(&#39;%s: molecular dynamics using LAMMPS successful&#39;</span>
+<span class="sd">                      % (strftime(&#39;%H:%M:%S&#39;)))</span>
+<span class="sd">            return True</span>
+<span class="sd">        else:</span>
+<span class="sd">            if simulation.name:</span>
+<span class="sd">                raise PysimmError(&#39;%s simulation using LAMMPS UNsuccessful&#39; % simulation.name)</span>
+<span class="sd">            else:</span>
+<span class="sd">                raise PysimmError(&#39;molecular dynamics using LAMMPS UNsuccessful&#39;)&#39;&#39;&#39;</span></div>
 
 
 <div class="viewcode-block" id="quick_md"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.quick_md">[docs]</a><span class="k">def</span> <span class="nf">quick_md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">np</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -819,9 +846,19 @@
                 <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">write</span><span class="p">:</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="n">write</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="n">write</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">pair_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">pair_style</span><span class="p">,</span>
+                        <span class="n">bond_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">bond_style</span><span class="p">,</span>
+                        <span class="n">angle_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">angle_style</span><span class="p">,</span>
+                        <span class="n">dihedral_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">dihedral_style</span><span class="p">,</span>
+                        <span class="n">improper_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">improper_style</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="s1">&#39;pysimm_md.lmps&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="s1">&#39;pysimm_md.lmps&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">pair_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">pair_style</span><span class="p">,</span>
+                        <span class="n">bond_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">bond_style</span><span class="p">,</span>
+                        <span class="n">angle_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">angle_style</span><span class="p">,</span>
+                        <span class="n">dihedral_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">dihedral_style</span><span class="p">,</span>
+                        <span class="n">improper_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">improper_style</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
         <span class="n">p_</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span>
         <span class="n">p_</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span>
@@ -993,9 +1030,19 @@
                 <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">write</span><span class="p">:</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="n">write</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="n">write</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">pair_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">pair_style</span><span class="p">,</span>
+                        <span class="n">bond_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">bond_style</span><span class="p">,</span>
+                        <span class="n">angle_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">angle_style</span><span class="p">,</span>
+                        <span class="n">dihedral_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">dihedral_style</span><span class="p">,</span>
+                        <span class="n">improper_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">improper_style</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="s1">&#39;pysimm_min.lmps&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="s1">&#39;pysimm_min.lmps&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">pair_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">pair_style</span><span class="p">,</span>
+                        <span class="n">bond_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">bond_style</span><span class="p">,</span>
+                        <span class="n">angle_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">angle_style</span><span class="p">,</span>
+                        <span class="n">dihedral_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">dihedral_style</span><span class="p">,</span>
+                        <span class="n">improper_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">improper_style</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
         <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span>
         <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span>
@@ -1177,9 +1224,19 @@
                 <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">write</span><span class="p">:</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="n">write</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="n">write</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">pair_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">pair_style</span><span class="p">,</span>
+                        <span class="n">bond_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">bond_style</span><span class="p">,</span>
+                        <span class="n">angle_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">angle_style</span><span class="p">,</span>
+                        <span class="n">dihedral_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">dihedral_style</span><span class="p">,</span>
+                        <span class="n">improper_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">improper_style</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="s1">&#39;pysimm_relax.lmps&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">read_lammps</span><span class="p">(</span><span class="s1">&#39;pysimm_relax.lmps&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">pair_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">pair_style</span><span class="p">,</span>
+                        <span class="n">bond_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">bond_style</span><span class="p">,</span>
+                        <span class="n">angle_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">angle_style</span><span class="p">,</span>
+                        <span class="n">dihedral_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">dihedral_style</span><span class="p">,</span>
+                        <span class="n">improper_style</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">improper_style</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">n</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
         <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">x</span>
         <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span>

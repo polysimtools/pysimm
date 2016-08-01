@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pysimm.forcefield module &mdash; pysimm 0.1 documentation</title>
+  <title>pysimm.forcefield package &mdash; pysimm 0.1 documentation</title>
   
 
   
@@ -32,8 +32,8 @@
   
     <link rel="top" title="pysimm 0.1 documentation" href="index.html"/>
         <link rel="up" title="pysimm package" href="pysimm.html"/>
-        <link rel="next" title="pysimm.gasteiger module" href="pysimm.gasteiger.html"/>
-        <link rel="prev" title="pysimm.cli module" href="pysimm.cli.html"/> 
+        <link rel="next" title="pysimm.forcefield.dreiding module" href="pysimm.forcefield.dreiding.html"/>
+        <link rel="prev" title="pysimm.apps.random_walk module" href="pysimm.apps.random_walk.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,17 +84,16 @@
             
                 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="pysimm.html">pysimm package</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="pysimm.html#subpackages">Subpackages</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="pysimm.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="pysimm.calc.html">pysimm.calc module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pysimm.cli.html">pysimm.cli module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">pysimm.forcefield module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pysimm.gasteiger.html">pysimm.gasteiger module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pysimm.lmps.html">pysimm.lmps module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pysimm.system.html">pysimm.system module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pysimm.utils.html">pysimm.utils module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pysimm.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pysimm.apps.html">pysimm.apps package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pysimm.forcefield package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-pysimm.forcefield">Module contents</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pysimm.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pysimm.html#module-contents">Module contents</a></li>
 </ul>
 </li>
@@ -130,7 +129,7 @@
       
           <li><a href="pysimm.html">pysimm package</a> &raquo;</li>
       
-    <li>pysimm.forcefield module</li>
+    <li>pysimm.forcefield package</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -144,686 +143,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-pysimm.forcefield">
-<span id="pysimm-forcefield-module"></span><h1>pysimm.forcefield module<a class="headerlink" href="#module-pysimm.forcefield" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="pysimm.forcefield.Cgenff">
-<em class="property">class </em><code class="descclassname">pysimm.forcefield.</code><code class="descname">Cgenff</code><span class="sig-paren">(</span><em>db_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Cgenff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Cgenff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pysimm.forcefield.Forcefield" title="pysimm.forcefield.Forcefield"><code class="xref py py-class docutils literal"><span class="pre">pysimm.forcefield.Forcefield</span></code></a></p>
-<p>(Currently) empty Forcefield object for Cgenff model.
-By default reads data file in forcefields subdirectory.</p>
-<dl class="attribute">
-<dt id="pysimm.forcefield.Cgenff.ff_name">
-<code class="descname">ff_name</code><a class="headerlink" href="#pysimm.forcefield.Cgenff.ff_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>cgenff</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Cgenff.ff_class">
-<code class="descname">ff_class</code><a class="headerlink" href="#pysimm.forcefield.Cgenff.ff_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>1</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pysimm.forcefield.Dreiding">
-<em class="property">class </em><code class="descclassname">pysimm.forcefield.</code><code class="descname">Dreiding</code><span class="sig-paren">(</span><em>db_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Dreiding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Dreiding" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pysimm.forcefield.Forcefield" title="pysimm.forcefield.Forcefield"><code class="xref py py-class docutils literal"><span class="pre">pysimm.forcefield.Forcefield</span></code></a></p>
-<p>Forcefield object with typing rules for Dreiding model.
-By default reads data file in forcefields subdirectory.</p>
-<dl class="attribute">
-<dt id="pysimm.forcefield.Dreiding.ff_name">
-<code class="descname">ff_name</code><a class="headerlink" href="#pysimm.forcefield.Dreiding.ff_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>dreiding</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Dreiding.pair_style">
-<code class="descname">pair_style</code><a class="headerlink" href="#pysimm.forcefield.Dreiding.pair_style" title="Permalink to this definition">¶</a></dt>
-<dd><p>buck</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Dreiding.ff_class">
-<code class="descname">ff_class</code><a class="headerlink" href="#pysimm.forcefield.Dreiding.ff_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>1</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Dreiding.assign_atypes">
-<code class="descname">assign_atypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Dreiding.assign_atypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Dreiding.assign_atypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dreiding specific angle typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Dreiding.assign_btypes">
-<code class="descname">assign_btypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Dreiding.assign_btypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Dreiding.assign_btypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dreiding specific bond typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Dreiding.assign_charges">
-<code class="descname">assign_charges</code><span class="sig-paren">(</span><em>s</em>, <em>charges='gasteiger'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Dreiding.assign_charges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Dreiding.assign_charges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Charge assignment. Gasteiger is default for now.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>s</strong> &#8211; pysimm.system.System</li>
-<li><strong>charges</strong> &#8211; gasteiger</li>
+  <div class="section" id="pysimm-forcefield-package">
+<h1>pysimm.forcefield package<a class="headerlink" href="#pysimm-forcefield-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pysimm.forcefield.dreiding.html">pysimm.forcefield.dreiding module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pysimm.forcefield.forcefield.html">pysimm.forcefield.forcefield module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pysimm.forcefield.gaff.html">pysimm.forcefield.gaff module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pysimm.forcefield.gaff2.html">pysimm.forcefield.gaff2 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pysimm.forcefield.gasteiger.html">pysimm.forcefield.gasteiger module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pysimm.forcefield.pcff.html">pysimm.forcefield.pcff module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pysimm.forcefield.tip3p.html">pysimm.forcefield.tip3p module</a></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Dreiding.assign_dtypes">
-<code class="descname">assign_dtypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Dreiding.assign_dtypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Dreiding.assign_dtypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dreiding specific dihedral typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Dreiding.assign_itypes">
-<code class="descname">assign_itypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Dreiding.assign_itypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Dreiding.assign_itypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dreiding specific improper typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Dreiding.assign_ptypes">
-<code class="descname">assign_ptypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Dreiding.assign_ptypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Dreiding.assign_ptypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Dreiding specific particle typing rules.
-Requires System object Particle objects have Particle.bonds defined.
-<strong>* use System.add_particle_bonding() to ensure this *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pysimm.forcefield.Forcefield">
-<em class="property">class </em><code class="descclassname">pysimm.forcefield.</code><code class="descname">Forcefield</code><span class="sig-paren">(</span><em>file_=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Forcefield"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Forcefield" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Base Forcefield class definition.
-Initialize with force field xml file.</p>
-<dl class="attribute">
-<dt id="pysimm.forcefield.Forcefield.ff_class">
-<code class="descname">ff_class</code><a class="headerlink" href="#pysimm.forcefield.Forcefield.ff_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>force field class (1 or 2)</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Forcefield.ff_name">
-<code class="descname">ff_name</code><a class="headerlink" href="#pysimm.forcefield.Forcefield.ff_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>force field name</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Forcefield.particle_types">
-<code class="descname">particle_types</code><a class="headerlink" href="#pysimm.forcefield.Forcefield.particle_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>pysimm.utils.ItemContainer for particle_types</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Forcefield.bond_types">
-<code class="descname">bond_types</code><a class="headerlink" href="#pysimm.forcefield.Forcefield.bond_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>pysimm.utils.ItemContainer for bond_types</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Forcefield.angle_types">
-<code class="descname">angle_types</code><a class="headerlink" href="#pysimm.forcefield.Forcefield.angle_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>pysimm.utils.ItemContainer for angle_types</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Forcefield.dihedral_types">
-<code class="descname">dihedral_types</code><a class="headerlink" href="#pysimm.forcefield.Forcefield.dihedral_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>pysimm.utils.ItemContainer for dihedral_types</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Forcefield.improper_types">
-<code class="descname">improper_types</code><a class="headerlink" href="#pysimm.forcefield.Forcefield.improper_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>pysimm.utils.ItemContainer for improper_types</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Forcefield.write">
-<code class="descname">write</code><span class="sig-paren">(</span><em>out</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Forcefield.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Forcefield.write" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write Forcefield object to xml format.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>out</strong> &#8211; file name to write</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pysimm.forcefield.Gaff">
-<em class="property">class </em><code class="descclassname">pysimm.forcefield.</code><code class="descname">Gaff</code><span class="sig-paren">(</span><em>db_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Gaff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Gaff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pysimm.forcefield.Forcefield" title="pysimm.forcefield.Forcefield"><code class="xref py py-class docutils literal"><span class="pre">pysimm.forcefield.Forcefield</span></code></a></p>
-<p>Forcefield object with typing rules for Gaff model.
-By default reads data file in forcefields subdirectory.</p>
-<dl class="attribute">
-<dt id="pysimm.forcefield.Gaff.ff_name">
-<code class="descname">ff_name</code><a class="headerlink" href="#pysimm.forcefield.Gaff.ff_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>gaff</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Gaff.pair_style">
-<code class="descname">pair_style</code><a class="headerlink" href="#pysimm.forcefield.Gaff.pair_style" title="Permalink to this definition">¶</a></dt>
-<dd><p>lj</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Gaff.ff_class">
-<code class="descname">ff_class</code><a class="headerlink" href="#pysimm.forcefield.Gaff.ff_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>1</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Gaff.assign_atypes">
-<code class="descname">assign_atypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Gaff.assign_atypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Gaff.assign_atypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gaff specific boanglend typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Gaff.assign_btypes">
-<code class="descname">assign_btypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Gaff.assign_btypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Gaff.assign_btypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gaff specific bond typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Gaff.assign_charges">
-<code class="descname">assign_charges</code><span class="sig-paren">(</span><em>s</em>, <em>charges='gasteiger'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Gaff.assign_charges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Gaff.assign_charges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Charge assignment. Gasteiger is default for now.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>s</strong> &#8211; pysimm.system.System</li>
-<li><strong>charges</strong> &#8211; gasteiger</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Gaff.assign_dtypes">
-<code class="descname">assign_dtypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Gaff.assign_dtypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Gaff.assign_dtypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gaff specific dihedral typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Gaff.assign_itypes">
-<code class="descname">assign_itypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Gaff.assign_itypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Gaff.assign_itypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gaff specific improper typing rules.
-There are none.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Gaff.assign_ptypes">
-<code class="descname">assign_ptypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Gaff.assign_ptypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Gaff.assign_ptypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gaff specific particle typing rules.
-Requires System object Particle objects have Particle.bonds defined.
-<strong>* use System.add_particle_bonding() to ensure this *</strong></p>
-<p><strong>* Not entirely inclusive - some atom types not used *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pysimm.forcefield.Pcff">
-<em class="property">class </em><code class="descclassname">pysimm.forcefield.</code><code class="descname">Pcff</code><span class="sig-paren">(</span><em>db_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Pcff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Pcff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pysimm.forcefield.Forcefield" title="pysimm.forcefield.Forcefield"><code class="xref py py-class docutils literal"><span class="pre">pysimm.forcefield.Forcefield</span></code></a></p>
-<p>Forcefield object with typing rules for Pcff model.
-By default reads data file in forcefields subdirectory.</p>
-<dl class="attribute">
-<dt id="pysimm.forcefield.Pcff.ff_name">
-<code class="descname">ff_name</code><a class="headerlink" href="#pysimm.forcefield.Pcff.ff_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>pcff</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Pcff.pair_style">
-<code class="descname">pair_style</code><a class="headerlink" href="#pysimm.forcefield.Pcff.pair_style" title="Permalink to this definition">¶</a></dt>
-<dd><p>class2</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Pcff.ff_class">
-<code class="descname">ff_class</code><a class="headerlink" href="#pysimm.forcefield.Pcff.ff_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>2</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Pcff.nb_mixing">
-<code class="descname">nb_mixing</code><a class="headerlink" href="#pysimm.forcefield.Pcff.nb_mixing" title="Permalink to this definition">¶</a></dt>
-<dd><p>sixth</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Pcff.assign_atypes">
-<code class="descname">assign_atypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Pcff.assign_atypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Pcff.assign_atypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pcff specific angle typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Pcff.assign_btypes">
-<code class="descname">assign_btypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Pcff.assign_btypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Pcff.assign_btypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pcff specific bond typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Pcff.assign_charges">
-<code class="descname">assign_charges</code><span class="sig-paren">(</span><em>s</em>, <em>charges='default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Pcff.assign_charges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Pcff.assign_charges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default Pcff charge assignment. Gasteiger is also an option.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>s</strong> &#8211; pysimm.system.System</li>
-<li><strong>charges</strong> &#8211; default</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Pcff.assign_dtypes">
-<code class="descname">assign_dtypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Pcff.assign_dtypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Pcff.assign_dtypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pcff specific dihedral typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Pcff.assign_itypes">
-<code class="descname">assign_itypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Pcff.assign_itypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Pcff.assign_itypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pcff specific improper typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Pcff.assign_ptypes">
-<code class="descname">assign_ptypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Pcff.assign_ptypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Pcff.assign_ptypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pcff specific particle typing rules.
-Requires System object Particle objects have Particle.bonds defined.
-<strong>* use System.add_particle_bonding() to ensure this *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pysimm.forcefield.Tip3p">
-<em class="property">class </em><code class="descclassname">pysimm.forcefield.</code><code class="descname">Tip3p</code><span class="sig-paren">(</span><em>db_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Tip3p"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Tip3p" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pysimm.forcefield.Forcefield" title="pysimm.forcefield.Forcefield"><code class="xref py py-class docutils literal"><span class="pre">pysimm.forcefield.Forcefield</span></code></a></p>
-<p>Forcefield object with typing rules for Tip3p model.
-By default reads data file in forcefields subdirectory.</p>
-<dl class="attribute">
-<dt id="pysimm.forcefield.Tip3p.ff_name">
-<code class="descname">ff_name</code><a class="headerlink" href="#pysimm.forcefield.Tip3p.ff_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>tip3p</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Tip3p.pair_style">
-<code class="descname">pair_style</code><a class="headerlink" href="#pysimm.forcefield.Tip3p.pair_style" title="Permalink to this definition">¶</a></dt>
-<dd><p>lj</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Tip3p.ff_class">
-<code class="descname">ff_class</code><a class="headerlink" href="#pysimm.forcefield.Tip3p.ff_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>1</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Tip3p.assign_atypes">
-<code class="descname">assign_atypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Tip3p.assign_atypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Tip3p.assign_atypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tip3p specific angle typing rules.
-Requires System object Particle objects have Particle.bonds, Particle.type
-and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Tip3p.assign_btypes">
-<code class="descname">assign_btypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Tip3p.assign_btypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Tip3p.assign_btypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tip3p specific bond typing rules.
-Requires System object Particle objects have Particle.type and Particle.type.name defined.
-<strong>* use after assign_ptypes *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Tip3p.assign_charges">
-<code class="descname">assign_charges</code><span class="sig-paren">(</span><em>s</em>, <em>charges='default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Tip3p.assign_charges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Tip3p.assign_charges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tip3p specific charge assignment.
-There are none.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>s</strong> &#8211; pysimm.system.System</li>
-<li><strong>charges</strong> &#8211; default</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Tip3p.assign_dtypes">
-<code class="descname">assign_dtypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Tip3p.assign_dtypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Tip3p.assign_dtypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tip3p specific dihedral typing rules.
-There are none.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Tip3p.assign_itypes">
-<code class="descname">assign_itypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Tip3p.assign_itypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Tip3p.assign_itypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tip3p specific improper typing rules.
-There are none.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="pysimm.forcefield.Tip3p.assign_ptypes">
-<code class="descname">assign_ptypes</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Tip3p.assign_ptypes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Tip3p.assign_ptypes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tip3p specific particle typing rules.
-Requires System object Particle objects have Particle.bonds defined.
-<strong>* use System.add_particle_bonding() to ensure this *</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; pysimm.system.System</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="pysimm.forcefield.Trappe">
-<em class="property">class </em><code class="descclassname">pysimm.forcefield.</code><code class="descname">Trappe</code><span class="sig-paren">(</span><em>db_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/forcefield.html#Trappe"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.forcefield.Trappe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#pysimm.forcefield.Forcefield" title="pysimm.forcefield.Forcefield"><code class="xref py py-class docutils literal"><span class="pre">pysimm.forcefield.Forcefield</span></code></a></p>
-<p>Forcefield object with conversion rules for Trappe model.
-By default reads data file in forcefields subdirectory.</p>
-<p><strong>* IN PROGRESS - CONVERSION RULES NOT DEFINED *</strong></p>
-<dl class="attribute">
-<dt id="pysimm.forcefield.Trappe.ff_name">
-<code class="descname">ff_name</code><a class="headerlink" href="#pysimm.forcefield.Trappe.ff_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>trappe</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Trappe.pair_style">
-<code class="descname">pair_style</code><a class="headerlink" href="#pysimm.forcefield.Trappe.pair_style" title="Permalink to this definition">¶</a></dt>
-<dd><p>lj</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="pysimm.forcefield.Trappe.ff_class">
-<code class="descname">ff_class</code><a class="headerlink" href="#pysimm.forcefield.Trappe.ff_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>1</p>
-</dd></dl>
-
-</dd></dl>
-
+</div>
+</div>
+<div class="section" id="module-pysimm.forcefield">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pysimm.forcefield" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
@@ -833,10 +171,10 @@ By default reads data file in forcefields subdirectory.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="pysimm.gasteiger.html" class="btn btn-neutral float-right" title="pysimm.gasteiger module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pysimm.forcefield.dreiding.html" class="btn btn-neutral float-right" title="pysimm.forcefield.dreiding module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pysimm.cli.html" class="btn btn-neutral" title="pysimm.cli module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pysimm.apps.random_walk.html" class="btn btn-neutral" title="pysimm.apps.random_walk module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
