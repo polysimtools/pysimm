@@ -28,7 +28,10 @@
 # THE SOFTWARE.
 
 import os
+from itertools import permutations, combinations
+
 import gasteiger
+from pysimm.system import Angle, Dihedral, Improper
 from forcefield import Forcefield
 
 
@@ -399,7 +402,31 @@ class Gaff2(Forcefield):
         Returns:
             None
         """
-        pass
+        all_types = set()
+        for p in s.particles:
+            if len(p.bonded_to) == 3:
+                for perm in permutations(p.bonded_to, 3):
+                    p1_name = perm[0].type.eq_improper or perm[0].type.name
+                    p2_name = perm[1].type.eq_improper or perm[1].type.name
+                    p3_name = perm[2].type.eq_improper or perm[2].type.name
+                    it = self.improper_types.get(','.join([p.type.name, p1_name,
+                                                           p2_name, p3_name]), order=True)
+                    if it:
+                        all_types.add(it[0])
+                        s.impropers.add(Improper(type_name=it[0].name,
+                                                 a=p, b=p.bonded_to[0],
+                                                 c=p.bonded_to[1],
+                                                 d=p.bonded_to[2]))
+                        break
+
+        for it in all_types:
+            it = it.copy()
+            s.improper_types.add(it)
+
+        for i in s.impropers:
+            it = s.improper_types.get(i.type_name)
+            if it:
+                i.type = it[0]
 
     def assign_charges(self, s, charges='gasteiger'):
         """pysimm.forcefield.Gaff.assign_charges

@@ -28,7 +28,10 @@
 # THE SOFTWARE.
 
 import os
+from itertools import permutations, combinations
+
 import gasteiger
+from pysimm.system import Angle, Dihedral, Improper
 from forcefield import Forcefield
 
 

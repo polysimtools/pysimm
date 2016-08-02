@@ -7,7 +7,7 @@ from itertools import permutations, combinations
 from pysimm import error_print
 from pysimm import warning_print
 from pysimm import debug_print
-from pysimm import gasteiger
+import gasteiger
 from pysimm.utils import PysimmError, Item, ItemContainer, compare
 from pysimm.system import ParticleType, BondType, AngleType
 from pysimm.system import Angle, Dihedral, Improper
