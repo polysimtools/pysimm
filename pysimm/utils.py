@@ -67,7 +67,7 @@ class ItemContainer(Sequence):
 
     def __getitem__(self, slice_):
         if not isinstance(slice_, slice) and isinstance(slice_, int):
-            if slice_ > 0:
+            if slice_ >= 0:
                 return self._dict.get(slice_)
             else:
                 return self._dict.get(self.count + slice_ + 1)

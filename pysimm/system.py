@@ -76,9 +76,6 @@ class Particle(Item):
     """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
-        
-    def coords(self):
-        return (self.x, self.y, self.z)
 
     def check(self, style='full'):
         if style == 'full':
@@ -395,12 +392,6 @@ class Dimension(Item):
             self.dy = self.yhi - self.ylo
         if self.zhi is not None and self.zlo is not None:
             self.dz = self.zhi - self.zlo
-
-    def size(self):
-        self.dx = self.xhi - self.xlo
-        self.dy = self.yhi - self.ylo
-        self.dz = self.zhi - self.zlo
-        return (self.dx, self.dy, self.dz)
 
     def check(self):
         if ((self.xlo is not None and self.xhi is not None and
@@ -734,7 +725,7 @@ class System(object):
         Returns:
             None
         """
-        self.dim.size()
+        self.dim.check()
         for p in self.particles:
             while p.x > self.dim.xhi:
                 p.x -= self.dim.dx
@@ -760,7 +751,8 @@ class System(object):
         Returns:
             None
         """
-        self.dim.size()
+        self.dim.check()
+        self.add_particle_bonding()
         self.add_particle_bonding()
         next_to_unwrap = []
         for p in self.particles:
@@ -975,43 +967,6 @@ class System(object):
                 else:
                     print('cannot find regular type for linker %s'
                           % p.type.name)
-                          
-    def read_lammps_dump(self, fname):
-        """pysimm.system.System.read_lammps_dump
-
-        Updates particle positions and box size from LAMMPS dump file
-
-        Args:
-            fname: LAMMPS dump file
-
-        Returns:
-            None
-        """
-        nparticles = 0
-        with open(fname) as f:
-            line = f.readline()
-            while line:
-                if len(line.split()) > 1 and line.split()[1] == 'NUMBER':
-                    nparticles = int(f.readline())
-                elif len(line.split()) > 1 and line.split()[1] == 'BOX':
-                    self.dim.xlo, self.dim.xhi = map(float, f.readline().split())
-                    self.dim.ylo, self.dim.yhi = map(float, f.readline().split())
-                    self.dim.zlo, self.dim.zhi = map(float, f.readline().split())
-                    self.set_volume()
-                    self.set_density()
-                elif len(line.split()) > 1 and line.split()[1] == 'ATOMS':
-                    for i in range(nparticles):
-                        tag, x, y, z, vx, vy, vz = map(float, f.readline().split())
-                        tag = int(tag)
-                        if self.particles[tag]:
-                            p = self.particles[tag]
-                            p.x = x
-                            p.vx = vx
-                            p.y = y
-                            p.vy = vy
-                            p.z = z
-                            p.vz = vz
-                line = f.readline()
 
     def read_lammpstrj(self, trj, frame=1):
         """pysimm.system.System.read_lammpstrj
@@ -1368,14 +1323,14 @@ class System(object):
                 d.type = self.dihedral_types[d.type]
             elif isinstance(d.type, int) and not self.dihedral_types[d.type]:
                 error_print('error: Cannot find type with tag %s in system '
-                            'dihedral types' % d.type)
+                            'angle types' % d.type)
 
         for i in self.impropers:
             if isinstance(i.type, int) and self.improper_types[i.type]:
                 i.type = self.improper_types[i.type]
             elif isinstance(i.type, int) and not self.improper_types[i.type]:
                 error_print('error: Cannot find type with tag %s in system '
-                            'improper types' % i.type)
+                            'angle types' % i.type)
 
     def objectify(self):
         """pysimm.system.System.objectify
@@ -1956,8 +1911,6 @@ class System(object):
 
         """
         periodic = kwargs.get('periodic') or 1
-        
-        self.dim.size()
 
         self.set_atomic_numbers()
         self.set_excluded_particles()
@@ -2338,15 +2291,15 @@ class System(object):
         if self.dihedral_types.count > 0:
             out_file.write('Dihedral Coeffs\n\n')
             for dt in self.dihedral_types:
-                if self.dihedral_style == 'fourier':
-                    dt_str = '{:4d}\t{}'.format(dt.tag, dt.m)
-                    for k, d, n in zip(dt.k, dt.d, dt.n):
+                if self.dihedral_style == 'harmonic' or self.ff_class == '1':
+                    out_file.write('%4d\t%s\t%2s\t%s\t# %s\n'
+                                   % (dt.tag, dt.k, dt.d, dt.n, dt.name))
+                elif self.dihedral_style == 'fourier':
+                    dt_str = '{}'.format(dt.m)
+                    for k, d, n in zip(dt.k, dt.d. dt.n):
                         dt_str += '\t{}\t{}\t{}'.format(k, d, n)
                     dt_str += '\t# {}\n'.format(dt.name)
                     out_file.write(dt_str)
-                elif self.dihedral_style == 'harmonic' or self.ff_class == '1':
-                    out_file.write('%4d\t%s\t%2s\t%s\t# %s\n'
-                                   % (dt.tag, dt.k, dt.d, dt.n, dt.name))
                 elif self.dihedral_style == 'class2' or self.ff_class == '2':
                     out_file.write('%4d\t%s\t%s\t%s\t%s\t%s\t%s\t# %s\n'
                                    % (dt.tag, dt.k1, dt.phi1, dt.k2, dt.phi2, dt.k3,
@@ -2998,9 +2951,6 @@ class System(object):
         *** BUGGY - DO NOT USE ***
 
         """
-        
-        self.dim.size()
-        
         ncells = [int(ceil(self.dim.dx/cutoff)), int(ceil(self.dim.dy/cutoff)), int(ceil(self.dim.dz/cutoff))]
         cell_dx = self.dim.dx/ncells[0]
         cell_dy = self.dim.dy/ncells[1]
@@ -3039,7 +2989,7 @@ class System(object):
 
         self.neighbors_check = True
 
-    def guess_bonds(self, heavy_d=2.0, hydrogen_d=1.5, neighbor_cutoff=2.5):
+    def guess_bonds(self, heavy_d=2.0, hydrogen_d=1.5, neighbor_cutoff=2.5, allow_h2=False):
         """pysimm.system.System.guess_bonds
 
         *** USES BUGGY FUNCTION SET_NEIGHBORS - DO NOT USE ***
@@ -3056,6 +3006,8 @@ class System(object):
         for p in self.particles:
             for p_ in p.neighbors:
                 if p_ in p.bonded_to:
+                    continue
+                if not allow_h2 and p.type.elem == 'H' and p_.type.elem == 'H':
                     continue
                 if p.type.elem == 'H' or p_.type.elem == 'H':
                     if calc.pbc_distance(self, p, p_) <= hydrogen_d:
@@ -3289,7 +3241,9 @@ class System(object):
         self.dim.zlo = zmin - padding
         self.dim.zhi = zmax + padding
 
-        self.dim.size()
+        self.dim.dx = self.dim.xhi - self.dim.xlo
+        self.dim.dy = self.dim.yhi - self.dim.ylo
+        self.dim.dz = self.dim.zhi - self.dim.zlo
 
     def set_mm_dist(self, molecules=None):
         """pysimm.system.System.set_mm_dist
@@ -3364,10 +3318,9 @@ class System(object):
         unwrap = kwargs.get('unwrap')
         format = kwargs.get('format') or 'xyz'
 
-        verbose_print(self.dim.size())
-        verbose_print('x dimension: ', self.dim.xlo, self.dim.xhi)
-        verbose_print('y dimension: ', self.dim.ylo, self.dim.yhi)
-        verbose_print('z dimension: ', self.dim.zlo, self.dim.zhi)
+        verbose_print(self.dim.dx, self.dim.xlo, self.dim.xhi)
+        verbose_print(self.dim.dy, self.dim.ylo, self.dim.yhi)
+        verbose_print(self.dim.dz, self.dim.zlo, self.dim.zhi)
 
         if unwrap:
             self.unwrap()
@@ -3651,6 +3604,7 @@ def read_lammps(data_file, **kwargs):
     Args:
         data_file: LAMMPS data file name
         quiet(optional): if False, print status
+        atom_style (optional): option to let user override (understands charge, molecular, full)
         pair_style (optional): option to let user override
         bond_style (optional): option to let user override
         angle_style (optional): option to let user override
@@ -3662,12 +3616,13 @@ def read_lammps(data_file, **kwargs):
     Returns:
         pysimm.system.System object
     """
+    atom_style = kwargs.get('atom_style')
     pair_style = kwargs.get('pair_style')
     bond_style = kwargs.get('bond_style')
     angle_style = kwargs.get('angle_style')
     dihedral_style = kwargs.get('dihedral_style')
     improper_style = kwargs.get('improper_style')
-    set_types = kwargs.get('set_types') or True
+    set_types = kwargs.get('set_types') if kwargs.has_key('set_types') else True
     name = kwargs.get('name')
 
     quiet = kwargs.get('quiet')
@@ -3971,21 +3926,6 @@ def read_lammps(data_file, **kwargs):
                                                       k=float(line[1]),
                                                       d=int(line[2]),
                                                       n=int(line[3])))
-                elif (dihedral_style and dihedral_style.lower().startswith('fourier')):
-                    data = line[1:]
-                    m = int(data.pop(0))
-                    k=[]
-                    d=[]
-                    n=[]
-                    for i in range(m):
-                        k.append(data.pop(0))
-                        d.append(data.pop(0))
-                        n.append(data.pop(0))
-                    s.dihedral_types.add(DihedralType(tag=tag, name=name,
-                                                      m=m,
-                                                      k=map(float, k),
-                                                      d=map(int, d),
-                                                      n=map(int, n)))
                 elif (dihedral_style and
                         dihedral_style.lower().startswith('class2')):
                     s.dihedral_types.add(DihedralType(tag=tag, name=name,
@@ -3999,7 +3939,7 @@ def read_lammps(data_file, **kwargs):
                     if not quiet and i == 0:
                         warning_print('dihedral_style currently unknown - '
                                       'guessing based on number of parameters '
-                                      '(3=harmonic 6=class2 1+3n=fourier)')
+                                      '(3=harmonic 6=class2)')
                     if len(line) == 4:
                         dihedral_style = 'harmonic'
                         s.dihedral_types.add(DihedralType(tag=tag, name=name,
@@ -4015,22 +3955,6 @@ def read_lammps(data_file, **kwargs):
                                                           phi2=float(line[4]),
                                                           k3=float(line[5]),
                                                           phi3=float(line[6])))
-                    elif len(line) % 3 == 2:
-                        dihedral_style = 'fourier'
-                        data = line[1:]
-                        m = int(data.pop(0))
-                        k=[]
-                        d=[]
-                        n=[]
-                        for i in range(m):
-                            k.append(data.pop(0))
-                            d.append(data.pop(0))
-                            n.append(data.pop(0))
-                        s.dihedral_types.add(DihedralType(tag=tag, name=name,
-                                                          m=m,
-                                                          k=map(float, k),
-                                                          d=map(int, d),
-                                                          n=map(int, n)))
             if not quiet and dihedral_style:
                 verbose_print('read "%s" dihedral parameters '
                               'for %s DihedralTypes'
@@ -4169,18 +4093,33 @@ def read_lammps(data_file, **kwargs):
             for i in range(nparticles):
                 line = f.next().strip().split()
                 tag = int(line[0])
-                if s.particles[tag]:
-                    p = s.particles[tag]
-                    d_ = {'molecule': int(line[1]), 'type': int(line[2]),
+                if not atom_style:
+                    if len(line) == 7:
+                        atom_style = 'full'
+                    elif len(line) == 6:
+                        try:
+                            int(line[2])
+                            atom_style = 'molecular'
+                        except:
+                            atom_style = 'charge'
+                    else:
+                        warning_print('cannot determine atom_style')
+                if atom_style == 'full':
+                    d_ = {'tag': tag, 'molecule': int(line[1]), 'type': int(line[2]),
                           'charge': float(line[3]), 'x': float(line[4]),
                           'y': float(line[5]), 'z': float(line[6])}
+                elif atom_style == 'charge':
+                    d_ = {'tag': tag, 'molecule': 0, 'type': int(line[1]),
+                          'charge': float(line[2]), 'x': float(line[3]),
+                          'y': float(line[4]), 'z': float(line[5])}
+                elif atom_style == 'molecular':
+                    d_ = {'tag': tag, 'molecule': int(line[1]), 'type': int(line[2]),
+                          'charge': 0., 'x': float(line[3]), 'y': float(line[4]), 'z': float(line[5])}
+                if s.particles[tag]:
+                    p = s.particles[tag]
                     p.set(**d_)
                 else:
-                    p = Particle(tag=tag, molecule=int(line[1]),
-                                 type=int(line[2]),
-                                 charge=float(line[3]), x=float(line[4]),
-                                 y=float(line[5]), z=float(line[6]),
-                                 vx=0., vy=0., vz=0.)
+                    p = Particle(vx=0., vy=0., vz=0., **d_)
                     s.particles.add(p)
                 if s.dim.check():
                     p.frac_x = p.x / s.dim.dx
@@ -4253,6 +4192,7 @@ def read_lammps(data_file, **kwargs):
                 verbose_print('read %s impropers' % nimpropers)
     f.close()
 
+    s.atom_style = atom_style
     s.pair_style = pair_style
     s.bond_style = bond_style
     s.angle_style = angle_style
@@ -4327,11 +4267,12 @@ def read_lammps(data_file, **kwargs):
             elif p.type.name[0].upper() == 'L':
                 p.linker = True
 
-    s.set_cog()
-    s.set_mass()
-    s.set_volume()
-    s.set_density()
-    s.set_velocity()
+    if s.objectified:
+        s.set_cog()
+        s.set_mass()
+        s.set_volume()
+        s.set_density()
+        s.set_velocity()
 
     return s
 
@@ -4912,10 +4853,6 @@ def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True)
         s_ = System()
     s_.ff_class = ref[0].ff_class
     s_.pair_style = ref[0].pair_style
-    s_.bond_style = ref[0].bond_style
-    s_.angle_style = ref[0].angle_style
-    s_.dihedral_style = ref[0].dihedral_style
-    s_.improper_style = ref[0].improper_style
 
     for r in ref:
         r.set_mass()
@@ -4942,7 +4879,6 @@ def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True)
         s_.dim.zlo = -1. * boxl / 2.
         s_.dim.zhi = boxl / 2.
         s_.dim.dz = s_.dim.zhi - s_.dim.zlo
-        s_.dim.size()
 
     num = 0
     for j, r in enumerate(ref):
