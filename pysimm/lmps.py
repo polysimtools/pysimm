@@ -34,6 +34,7 @@ from Queue import Queue, Empty
 from threading import Thread
 import os
 import sys
+import json
 from random import randint
 from time import strftime
 
@@ -65,6 +66,55 @@ else:
             print 'using %s LAMMPS machine' % LAMMPS_EXEC
     except OSError:
         print 'LAMMPS is not configured properly for one reason or another'
+
+
+class Qeq(object):
+    """pysimm.lmps.MolecularDynamics
+
+    Template object to contain LAMMPS qeq settings
+
+    Attributes:
+        cutoff: distance cutoff for charge equilibration
+        tol: tolerance (precision) for charge equilibration
+        max_iter: maximum iterations
+        qfile: file with qeq parameters (leave undefined for defaults)
+    """
+    def __init__(self, **kwargs):
+        self.cutoff = kwargs.get('cutoff') if kwargs.has_key('cutoff') else 10
+        self.tol = kwargs.get('tol') if kwargs.has_key('tol') else 1.0e-6
+        self.max_iter = kwargs.get('max_iter') if kwargs.has_key('max_iter') else 200
+        self.qfile = kwargs.get('qfile')
+        
+        self.input = ''
+        
+    def write(self, sim):
+        """pysimm.lmps.Qeq.write
+
+        Create LAMMPS input for a charge equilibration calculation
+
+        Args:
+            sim: pysimm.lmps.Simulation object reference
+
+        Returns:
+            input string
+        """
+        if self.qfile is None:
+            param_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                      os.pardir, 'dat', 'qeq', 'hcno.json')
+            qeq_params = json.loads(f.read())
+            with file('pysimm.qeq.tmp', 'w') as f:
+                for pt in sim.system.particle_types:
+                    f.write('{}\t{}\t{}\n'.format(pt.tag, 
+                                                  qeq_params[pt.elem]['chi'],
+                                                  qeq_params[pt.elem]['eta']*2))
+            self.qfile = 'pysimm.qeq.tmp'
+        
+        self.input = ''
+        self.input += 'fix 1 all qeq/point 1 {} {} {} {}\n'.format(self.cutoff, self.tol, self.max_iter, self.qfile)
+        self.input += 'run 0\n'
+        self.input += 'unfix 1\n'
+        
+        return self.input
 
 
 class MolecularDynamics(object):
@@ -380,7 +430,7 @@ class Simulation(object):
         for template in self.sim:
             self.input += template.write(self)
             
-        self.input += 'write_dump all custom pysimm.dump.tmp id x y z vx vy vz\n'
+        self.input += 'write_dump all custom pysimm.dump.tmp id q x y z vx vy vz\n'
 
         '''if self.write:
             self.input += 'write_data %s\n' % self.write
@@ -495,6 +545,9 @@ def call_lammps(simulation, np, nanohub):
         os.remove('temp.lmps')
     except OSError as e:
         print e
+        
+    if os.path.isfile('pysimm.qeq.tmp'):
+        os.remove('pysimm.qeq.tmp')
         
     try:
         os.remove('pysimm.dump.tmp')

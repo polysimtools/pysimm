@@ -76,6 +76,9 @@ class Particle(Item):
     """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
+        
+    def coords(self):
+        return (self.x, self.y, self.z)
 
     def check(self, style='full'):
         if style == 'full':
@@ -404,6 +407,12 @@ class Dimension(Item):
             return True
         else:
             return False
+            
+    def size(self):
+        self.dx = self.xhi - self.xlo
+        self.dy = self.yhi - self.ylo
+        self.dz = self.zhi - self.zlo
+        return (self.dx, self.dy, self.dz)
 
 
 class System(object):
@@ -967,6 +976,44 @@ class System(object):
                 else:
                     print('cannot find regular type for linker %s'
                           % p.type.name)
+                          
+    def read_lammps_dump(self, fname):
+        """pysimm.system.System.read_lammps_dump
+
+        Updates particle positions and box size from LAMMPS dump file
+
+        Args:
+            fname: LAMMPS dump file
+
+        Returns:
+            None
+        """
+        nparticles = 0
+        with open(fname) as f:
+            line = f.readline()
+            while line:
+                if len(line.split()) > 1 and line.split()[1] == 'NUMBER':
+                    nparticles = int(f.readline())
+                elif len(line.split()) > 1 and line.split()[1] == 'BOX':
+                    self.dim.xlo, self.dim.xhi = map(float, f.readline().split())
+                    self.dim.ylo, self.dim.yhi = map(float, f.readline().split())
+                    self.dim.zlo, self.dim.zhi = map(float, f.readline().split())
+                    self.set_volume()
+                    self.set_density()
+                elif len(line.split()) > 1 and line.split()[1] == 'ATOMS':
+                    for i in range(nparticles):
+                        tag, q, x, y, z, vx, vy, vz = map(float, f.readline().split())
+                        tag = int(tag)
+                        if self.particles[tag]:
+                            p = self.particles[tag]
+                            p.q = q
+                            p.x = x
+                            p.vx = vx
+                            p.y = y
+                            p.vy = vy
+                            p.z = z
+                            p.vz = vz
+                line = f.readline()
 
     def read_lammpstrj(self, trj, frame=1):
         """pysimm.system.System.read_lammpstrj
@@ -1323,14 +1370,14 @@ class System(object):
                 d.type = self.dihedral_types[d.type]
             elif isinstance(d.type, int) and not self.dihedral_types[d.type]:
                 error_print('error: Cannot find type with tag %s in system '
-                            'angle types' % d.type)
+                            'dihedral types' % d.type)
 
         for i in self.impropers:
             if isinstance(i.type, int) and self.improper_types[i.type]:
                 i.type = self.improper_types[i.type]
             elif isinstance(i.type, int) and not self.improper_types[i.type]:
                 error_print('error: Cannot find type with tag %s in system '
-                            'angle types' % i.type)
+                            'improper types' % i.type)
 
     def objectify(self):
         """pysimm.system.System.objectify
@@ -2291,15 +2338,15 @@ class System(object):
         if self.dihedral_types.count > 0:
             out_file.write('Dihedral Coeffs\n\n')
             for dt in self.dihedral_types:
-                if self.dihedral_style == 'harmonic' or self.ff_class == '1':
-                    out_file.write('%4d\t%s\t%2s\t%s\t# %s\n'
-                                   % (dt.tag, dt.k, dt.d, dt.n, dt.name))
-                elif self.dihedral_style == 'fourier':
+                if self.dihedral_style == 'fourier':
                     dt_str = '{}'.format(dt.m)
                     for k, d, n in zip(dt.k, dt.d. dt.n):
                         dt_str += '\t{}\t{}\t{}'.format(k, d, n)
                     dt_str += '\t# {}\n'.format(dt.name)
                     out_file.write(dt_str)
+                elif self.dihedral_style == 'harmonic' or self.ff_class == '1':
+                    out_file.write('%4d\t%s\t%2s\t%s\t# %s\n'
+                                   % (dt.tag, dt.k, dt.d, dt.n, dt.name))
                 elif self.dihedral_style == 'class2' or self.ff_class == '2':
                     out_file.write('%4d\t%s\t%s\t%s\t%s\t%s\t%s\t# %s\n'
                                    % (dt.tag, dt.k1, dt.phi1, dt.k2, dt.phi2, dt.k3,
@@ -2988,6 +3035,16 @@ class System(object):
                                 p.neighbors.add(p_)
 
         self.neighbors_check = True
+        
+    def guess_elements_from_mass(self, mass_dict=None):
+        if mass_dict is None:
+            elem_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                     os.pardir, 'dat', 'elements_by_mass.json')
+            with file(elem_file) as f:
+                mass_dict = json.loads(f.read())
+        
+        for pt in self.particle_types:
+            pt.elem = mass_dict['default']['{}'.format(int(round(pt.mass)))]
 
     def guess_bonds(self, heavy_d=2.0, hydrogen_d=1.5, neighbor_cutoff=2.5, allow_h2=False):
         """pysimm.system.System.guess_bonds
@@ -3935,11 +3992,26 @@ def read_lammps(data_file, **kwargs):
                                                       phi2=float(line[4]),
                                                       k3=float(line[5]),
                                                       phi3=float(line[6])))
+                elif (dihedral_style and dihedral_style.lower().startswith('fourier')):
+                    data = line[1:]
+                    m = int(data.pop(0))
+                    k=[]
+                    d=[]
+                    n=[]
+                    for i in range(m):
+                        k.append(data.pop(0))
+                        d.append(data.pop(0))
+                        n.append(data.pop(0))
+                    s.dihedral_types.add(DihedralType(tag=tag, name=name,
+                                                      m=m,
+                                                      k=map(float, k),
+                                                      d=map(int, d),
+                                                      n=map(int, n)))
                 elif not dihedral_style:
                     if not quiet and i == 0:
                         warning_print('dihedral_style currently unknown - '
                                       'guessing based on number of parameters '
-                                      '(3=harmonic 6=class2)')
+                                      '(3=harmonic 6=class2 1+3n=fourier)')
                     if len(line) == 4:
                         dihedral_style = 'harmonic'
                         s.dihedral_types.add(DihedralType(tag=tag, name=name,
@@ -3955,6 +4027,22 @@ def read_lammps(data_file, **kwargs):
                                                           phi2=float(line[4]),
                                                           k3=float(line[5]),
                                                           phi3=float(line[6])))
+                    elif len(line) % 3 == 2:
+                        dihedral_style = 'fourier'
+                        data = line[1:]
+                        m = int(data.pop(0))
+                        k=[]
+                        d=[]
+                        n=[]
+                        for i in range(m):
+                            k.append(data.pop(0))
+                            d.append(data.pop(0))
+                            n.append(data.pop(0))
+                        s.dihedral_types.add(DihedralType(tag=tag, name=name,
+                                                          m=m,
+                                                          k=map(float, k),
+                                                          d=map(int, d),
+                                                          n=map(int, n)))
             if not quiet and dihedral_style:
                 verbose_print('read "%s" dihedral parameters '
                               'for %s DihedralTypes'
@@ -4853,6 +4941,10 @@ def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True)
         s_ = System()
     s_.ff_class = ref[0].ff_class
     s_.pair_style = ref[0].pair_style
+    s_.bond_style = ref[0].bond_style
+    s_.angle_style = ref[0].angle_style
+    s_.dihedral_style = ref[0].dihedral_style
+    s_.improper_style = ref[0].improper_style
 
     for r in ref:
         r.set_mass()
