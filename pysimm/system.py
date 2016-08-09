@@ -1006,7 +1006,7 @@ class System(object):
                         tag = int(tag)
                         if self.particles[tag]:
                             p = self.particles[tag]
-                            p.q = q
+                            p.charge = q
                             p.x = x
                             p.vx = vx
                             p.y = y
@@ -2339,8 +2339,8 @@ class System(object):
             out_file.write('Dihedral Coeffs\n\n')
             for dt in self.dihedral_types:
                 if self.dihedral_style == 'fourier':
-                    dt_str = '{}'.format(dt.m)
-                    for k, d, n in zip(dt.k, dt.d. dt.n):
+                    dt_str = '{:4d}\t{}'.format(dt.tag, dt.m)
+                    for k, d, n in zip(dt.k, dt.d, dt.n):
                         dt_str += '\t{}\t{}\t{}'.format(k, d, n)
                     dt_str += '\t# {}\n'.format(dt.name)
                     out_file.write(dt_str)

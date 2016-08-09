@@ -101,12 +101,16 @@ class Qeq(object):
         if self.qfile is None:
             param_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                       os.pardir, 'dat', 'qeq', 'hcno.json')
-            qeq_params = json.loads(f.read())
+            with file(param_file) as f:
+                qeq_params = json.loads(f.read())
             with file('pysimm.qeq.tmp', 'w') as f:
                 for pt in sim.system.particle_types:
-                    f.write('{}\t{}\t{}\n'.format(pt.tag, 
+                    f.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format(pt.tag, 
                                                   qeq_params[pt.elem]['chi'],
-                                                  qeq_params[pt.elem]['eta']*2))
+                                                  qeq_params[pt.elem]['eta']*2,
+                                                  qeq_params[pt.elem]['gamma'],
+                                                  qeq_params[pt.elem]['zeta'],
+                                                  qeq_params[pt.elem]['qcore']))
             self.qfile = 'pysimm.qeq.tmp'
         
         self.input = ''
@@ -357,6 +361,22 @@ class Simulation(object):
         self.custom = kwargs.get('custom')
 
         self.sim = kwargs.get('sim') if kwargs.get('sim') is not None else []
+        
+    def add_qeq(self, template=None, **kwargs):
+        """pysimm.lmps.Simulation.add_qeq
+
+        Add pysimm.lmps.Qeq template to simulation
+
+        Args:
+            template: pysimm.lmps.Qeq object reference
+            **kwargs: if template is None these are passed to pysimm.lmps.Qeq constructor to create new template
+        """
+        if template is None:
+            self.sim.append(Qeq(**kwargs))
+        elif isinstance(template, Qeq):
+            self.sim.append(template)
+        else:
+            error_print('you must add an object of type Qeq to Simulation')
 
     def add_md(self, template=None, **kwargs):
         """pysimm.lmps.Simulation.add_md
@@ -593,6 +613,24 @@ def call_lammps(simulation, np, nanohub):
                 raise PysimmError('%s simulation using LAMMPS UNsuccessful' % simulation.name)
             else:
                 raise PysimmError('molecular dynamics using LAMMPS UNsuccessful')'''
+
+
+def qeq(s, np=None, nanohub=None, **kwargs):
+    """pysimm.lmps.qeq
+
+    Convenience function to call a qeq calculation. kwargs are passed to Qeq constructor
+
+    Args:
+        s: system to perform simulation on
+        np: number of threads to use
+        nanohub: dictionary containing nanohub resource information default=None
+
+    Returns:
+        None
+    """
+    sim = Simulation(s, **kwargs)
+    sim.add_qeq(**kwargs)
+    sim.run(np, nanohub)
 
 
 def quick_md(s, np=None, nanohub=None, **kwargs):
