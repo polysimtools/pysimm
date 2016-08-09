@@ -403,6 +403,7 @@ class Gaff2(Forcefield):
             None
         """
         all_types = set()
+        s.improper_style = self.improper_style
         for p in s.particles:
             if len(p.bonded_to) == 3:
                 for perm in permutations(p.bonded_to, 3):
