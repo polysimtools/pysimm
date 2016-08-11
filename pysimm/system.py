@@ -490,6 +490,10 @@ class System(object):
         new.ff_class = self.ff_class
         new.ff_name = self.ff_name
         new.pair_style = self.pair_style
+        new.bond_style = self.bond_style
+        new.angle_style = self.angle_style
+        new.dihedral_style = self.dihedral_style
+        new.improper_style = self.improper_style
 
         new.dim = self.dim.copy()
 
