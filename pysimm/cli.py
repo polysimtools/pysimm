@@ -103,7 +103,7 @@ if __name__ == '__main__':
     print('This is no more than a python2.7 interactive shell with certain pySIMM modules imported for your convenience')
     print('Importing modules now...')
 
-    from pysimm import system, lmps, forcefield
+    from pysimm import system, amber, lmps, forcefield
 
     if args.lammps_data:
         s = system.read_lammps(args.lammps_data)

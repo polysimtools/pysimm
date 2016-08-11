@@ -977,6 +977,18 @@ class System(object):
                     print('cannot find regular type for linker %s'
                           % p.type.name)
                           
+    def read_ac_charges(self, fname):
+        with file(fname) as f:
+            f.next()
+            f.next()
+            line = f.next()
+            while line.split()[0] == 'ATOM':
+                tag = int(line.split()[1])
+                charge = float(line.split()[-2])
+                self.particles[tag].charge = charge
+                line = f.next()
+            
+                          
     def read_lammps_dump(self, fname):
         """pysimm.system.System.read_lammps_dump
 
@@ -2825,7 +2837,7 @@ class System(object):
         else:
             out.close()
 
-    def write_pdb(self, outfile='data.pdb'):
+    def write_pdb(self, outfile='data.pdb', type_names=True):
         """pysimm.system.System.write_pdb
 
         Write System data in pdb format
@@ -2846,7 +2858,7 @@ class System(object):
         for p in self.particles:
             out.write('{0: <6}{1: >5} {2: >4} RES {3}     '
                       '{4: >8.3f}{5: >8.3f}{6: >8.3f}{7: >24}{8: >2}\n'
-                      .format('ATOM', p.tag, p.type.name, p.molecule.tag,
+                      .format('ATOM', p.tag, p.type.name if type_names else p.type.elem, p.molecule.tag,
                               p.x, p.y, p.z, '', p.type.elem))
         for p in self.particles:
             if p.bonds:
