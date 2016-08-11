@@ -192,6 +192,7 @@ class Pcff(Forcefield):
             None
         """
         all_types = set()
+        s.bond_style = self.bond_style
         for b in s.bonds:
             bt = self.bond_types.get('%s,%s' % (b.a.type.name, b.b.type.name))
             if bt:
@@ -226,6 +227,7 @@ class Pcff(Forcefield):
             None
         """
         all_types = set()
+        s.angle_style = self.angle_style
         for p in s.particles:
             p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
             for p1 in p.bonded_to:
@@ -292,6 +294,7 @@ class Pcff(Forcefield):
             None
         """
         all_types = set()
+        s.dihedral_style = self.dihedral_style
         for b in s.bonds:
             for p1 in b.a.bonded_to:
                 for p2 in b.b.bonded_to:
@@ -372,6 +375,7 @@ class Pcff(Forcefield):
             None
         """
         all_types = set()
+        s.improper_style = self.improper_style
         for p in s.particles:
             for perm in permutations(p.bonded_to, 3):
                 p1_name = perm[0].type.eq_improper or perm[0].type.name
