@@ -510,7 +510,7 @@ def call_lammps(simulation, np, nanohub):
             print('%s: starting %s simulation using LAMMPS'
                   % (strftime('%H:%M:%S'), simulation.name))
         else:
-            print('%s: starting molecular dynamics using LAMMPS'
+            print('%s: starting simulation using LAMMPS'
                   % strftime('%H:%M:%S'))
         if np:
             p = Popen(['mpiexec', '-np', str(np),

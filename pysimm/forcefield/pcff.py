@@ -56,6 +56,10 @@ class Pcff(Forcefield):
         self.ff_name = 'pcff'
         self.ff_class = '2'
         self.pair_style = 'class2'
+        self.bond_style = 'class2'
+        self.angle_style = 'class2'
+        self.dihedral_style = 'class2'
+        self.improper_style = 'class2'
         self.nb_mixing = 'sixth'
 
     def assign_ptypes(self, s):
