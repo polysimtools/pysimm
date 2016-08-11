@@ -40,6 +40,10 @@ def install_lammps(prefix, *packages):
     call("echo export LAMMPS_EXEC={} >> {}".format(os.path.join(prefix, 'lammps', 'src', 'lmp_mpi'),
                                                    os.path.join(HOME_DIR,'.bashrc')),
          shell=True)
+         
+def install_ambertools(prefix):
+    os.chdir(prefix)
+    call('./configure gnu', shell=True)
 
 
 def parse_args():
@@ -48,6 +52,7 @@ def parse_args():
     parser.add_argument('--lammps', dest='lammps_prefix', default=None)
     parser.add_argument('--lammps-packages', dest='lammps_packages', nargs='*',
                         default=['molecule', 'class2', 'kspace', 'user-misc', 'qeq', 'manybody'])
+    parser.add_argument('--amber-tools', dest='ambertools_prefix', default=None)
     return parser.parse_args()
 
 
@@ -76,4 +81,9 @@ if __name__ == '__main__':
         apt_install('make git g++', 'libopenmpi-dev', 'openmpi-bin')
         mkdir_p(args.lammps_prefix)
         install_lammps(args.lammps_prefix, *args.lammps_packages)
+        
+    if args.ambertools_prefix:
+        apt_install('make', 'csh', 'gfortran', 'libopenmpi-dev', 'openmpi-bin')
+        install_ambertools(args.ambertools_prefix)
+        
     os.chdir(HOME_DIR)
