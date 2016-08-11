@@ -2825,7 +2825,7 @@ class System(object):
         else:
             out.close()
 
-    def write_pdb(self, outfile='data.pdb'):
+    def write_pdb(self, outfile='data.pdb', type_names=True):
         """pysimm.system.System.write_pdb
 
         Write System data in pdb format
@@ -2846,7 +2846,7 @@ class System(object):
         for p in self.particles:
             out.write('{0: <6}{1: >5} {2: >4} RES {3}     '
                       '{4: >8.3f}{5: >8.3f}{6: >8.3f}{7: >24}{8: >2}\n'
-                      .format('ATOM', p.tag, p.type.name, p.molecule.tag,
+                      .format('ATOM', p.tag, p.type.name if type_names else p.type.elem, p.molecule.tag,
                               p.x, p.y, p.z, '', p.type.elem))
         for p in self.particles:
             if p.bonds:
