@@ -92,7 +92,7 @@ if __name__ == '__main__':
         install_lammps(args.lammps_prefix, *args.lammps_packages)
         
     if args.ambertools_dir:
-        apt_install('make', 'csh', 'gfortran', 'libopenmpi-dev', 'openmpi-bin')
+        apt_install('make', 'csh', 'gfortran', 'libopenmpi-dev', 'openmpi-bin', 'xorg-dev', 'xserver-xorg')
         install_ambertools(args.ambertools_dir)
         
     os.chdir(HOME_DIR)
