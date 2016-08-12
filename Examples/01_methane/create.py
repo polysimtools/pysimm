@@ -1,4 +1,4 @@
-from pysimm import system, lmps, forcefield, gasteiger
+from pysimm import system, lmps, forcefield
 
 # create empty system
 s = system.System()
@@ -6,8 +6,8 @@ s = system.System()
 # create new molecule in our system
 m = s.molecules.add(system.Molecule())
 
-# retrieve GAFF parameters
-f = forcefield.Gaff()
+# retrieve GAFF2 parameters
+f = forcefield.Gaff2()
 
 # get a copy of the c3 particle type object from GAFF
 # get method returns a list, we need the first element
@@ -33,7 +33,7 @@ h3 = s.add_particle_bonded_to(system.Particle(type=gaff_hc, charge=0, molecule=m
 h4 = s.add_particle_bonded_to(system.Particle(type=gaff_hc, charge=0, molecule=m), c1, f)
 
 # let's add gasteiger charges
-gasteiger.set_charges(s)
+s.apply_charges(f, charges='gasteiger')
 
 # right now there is no simulation box defined
 # we'll define a box surrounding our methane molecule with a 10 angstrom padding

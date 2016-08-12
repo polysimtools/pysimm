@@ -1,4 +1,4 @@
-from pysimm import system, lmps, forcefield, gasteiger
+from pysimm import system, lmps, forcefield
 
 # use a smiles string to query the pubchem search database and read the mol file returned from the http request
 s = system.read_pubchem_smiles('c1=cc=cc=c1')
@@ -9,9 +9,9 @@ for b in s.bonds:
   if b.a.elem=='C' and b.b.elem=='C':
     b.order='A'
 
-# the resulting system has sufficient information to type with a forcefield, here we will use the GAFF force field
+# the resulting system has sufficient information to type with a forcefield, here we will use the GAFF2 force field
 # we will also determine partial charges using the gasteiger algorithm
-s.apply_forcefield(forcefield.Gaff(), charges='gasteiger')
+s.apply_forcefield(forcefield.Gaff2(), charges='gasteiger')
 
 # we'll perform energy minimization using the fire algorithm in LAMMPS
 lmps.quick_min(s, min_style='fire')

@@ -1,11 +1,11 @@
-from pysimm import system, lmps, forcefield, gasteiger
+from pysimm import system, lmps, forcefield
 from pysimm.apps.random_walk import random_walk
 
 # use a smiles string to query the pubchem search database and read the mol file returned from the http request
 pmma = system.read_pubchem_smiles('cc(C)(C(=O)OC)')
 
-# we'll instantiate a GAFF forcefield object for use later
-f = forcefield.Gaff()
+# we'll instantiate a GAFF2 forcefield object for use later
+f = forcefield.Gaff2()
 
 # particles 3 and 6 in the monomer are going to be the head and tail linkers
 pmma.particles[3].linker='head'
