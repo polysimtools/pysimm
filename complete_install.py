@@ -55,8 +55,7 @@ def install_ambertools(dir_):
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--apt-update', dest='apt_update', action="store_true", default=True)
-    parser.add_argument('--no-apt-update', dest='apt_update', action="store_false")
+    parser.add_argument('--apt-update', dest='apt_update', action="store_true", default=False)
     parser.add_argument('--pysimm', dest='pysimm_prefix', default=HOME_DIR)
     parser.add_argument('--lammps', dest='lammps_prefix', default=None)
     parser.add_argument('--lammps-packages', dest='lammps_packages', nargs='*',
