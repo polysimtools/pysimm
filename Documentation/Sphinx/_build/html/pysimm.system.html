@@ -86,6 +86,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="pysimm.html">pysimm package</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pysimm.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="pysimm.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pysimm.amber.html">pysimm.amber module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.calc.html">pysimm.calc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.cli.html">pysimm.cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.lmps.html">pysimm.lmps module</a></li>
@@ -977,9 +978,14 @@ properties (True)</li>
 
 <dl class="method">
 <dt id="pysimm.system.System.guess_bonds">
-<code class="descname">guess_bonds</code><span class="sig-paren">(</span><em>heavy_d=2.0</em>, <em>hydrogen_d=1.5</em>, <em>neighbor_cutoff=2.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.guess_bonds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.guess_bonds" title="Permalink to this definition">¶</a></dt>
+<code class="descname">guess_bonds</code><span class="sig-paren">(</span><em>heavy_d=2.0</em>, <em>hydrogen_d=1.5</em>, <em>neighbor_cutoff=2.5</em>, <em>allow_h2=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.guess_bonds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.guess_bonds" title="Permalink to this definition">¶</a></dt>
 <dd><p><strong>* USES BUGGY FUNCTION SET_NEIGHBORS - DO NOT USE *</strong></p>
 </dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.guess_elements_from_mass">
+<code class="descname">guess_elements_from_mass</code><span class="sig-paren">(</span><em>mass_dict=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.guess_elements_from_mass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.guess_elements_from_mass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="pysimm.system.System.guess_hybridization">
@@ -1072,6 +1078,11 @@ For example, if read from file that bond #1 is between particle 1 and 2 set Bond
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.read_ac_charges">
+<code class="descname">read_ac_charges</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.read_ac_charges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.read_ac_charges" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="pysimm.system.System.read_lammps_dump">
@@ -1613,7 +1624,7 @@ Ensure particles are contained within simulation box.</p>
 
 <dl class="method">
 <dt id="pysimm.system.System.write_pdb">
-<code class="descname">write_pdb</code><span class="sig-paren">(</span><em>outfile='data.pdb'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.write_pdb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.write_pdb" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_pdb</code><span class="sig-paren">(</span><em>outfile='data.pdb'</em>, <em>type_names=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.write_pdb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.write_pdb" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write System data in pdb format</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1790,6 +1801,7 @@ Ensure particles are contained within simulation box.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>data_file</strong> &#8211; LAMMPS data file name</li>
 <li><strong>quiet</strong> (<em>optional</em>) &#8211; if False, print status</li>
+<li><strong>atom_style</strong> (<em>optional</em>) &#8211; option to let user override (understands charge, molecular, full)</li>
 <li><strong>pair_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
 <li><strong>bond_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
 <li><strong>angle_style</strong> (<em>optional</em>) &#8211; option to let user override</li>

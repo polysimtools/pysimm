@@ -268,6 +268,8 @@
 <span class="sd">        unwrap: True to unwrap final system</span>
 <span class="sd">        traj: True to build xyz trajectory of polymer growth (True)</span>
 <span class="sd">        pattern: list of pattern for monomer repeat units, should match length of m ([1 for _ in range(len(m))])</span>
+<span class="sd">        limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)</span>
+<span class="sd">        sim: pysimm.lmps.Simulation object for relaxation between polymer growth</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        new copolymer pysimm.system.System</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -280,6 +282,8 @@
     <span class="n">unwrap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;unwrap&#39;</span><span class="p">)</span>
     <span class="n">traj</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;traj&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;traj&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">True</span>
     <span class="n">pattern</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pattern&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">1</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">m</span><span class="p">))]</span>
+    <span class="n">limit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;limit&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;limit&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.1</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sim&#39;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">m_</span> <span class="ow">in</span> <span class="n">m</span><span class="p">:</span>
         <span class="n">m_</span><span class="o">.</span><span class="n">add_particle_bonding</span><span class="p">()</span>
@@ -385,10 +389,15 @@
 
             <span class="k">if</span> <span class="n">unwrap</span><span class="p">:</span>
                 <span class="n">s</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()</span>
-
-            <span class="n">lmps</span><span class="o">.</span><span class="n">relax</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;relax_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">temp_nmon</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
-
-            <span class="n">lmps</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
+                
+            <span class="k">if</span> <span class="n">sim</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">sim</span> <span class="o">=</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;relax_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">temp_nmon</span><span class="p">),</span> <span class="n">log</span><span class="o">=</span><span class="s1">&#39;relax.log&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
+                <span class="n">sim</span><span class="o">.</span><span class="n">add_md</span><span class="p">(</span><span class="n">ensemble</span><span class="o">=</span><span class="s1">&#39;nve&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
+                <span class="n">sim</span><span class="o">.</span><span class="n">add_min</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">):</span>
+                <span class="n">sim</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">s</span>
+                <span class="n">sim</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;relax_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">temp_nmon</span><span class="p">)</span>
+                <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;np&#39;</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">unwrap</span><span class="p">:</span>
                 <span class="n">s</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()</span>

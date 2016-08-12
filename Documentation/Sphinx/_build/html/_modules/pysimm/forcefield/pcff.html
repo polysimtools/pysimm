@@ -157,7 +157,11 @@
 <span class="c1"># THE SOFTWARE.</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">permutations</span><span class="p">,</span> <span class="n">combinations</span>
+
 <span class="kn">import</span> <span class="nn">gasteiger</span>
+<span class="kn">from</span> <span class="nn">pysimm.utils</span> <span class="k">import</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">pysimm.system</span> <span class="k">import</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">Dihedral</span><span class="p">,</span> <span class="n">Improper</span>
 <span class="kn">from</span> <span class="nn">forcefield</span> <span class="k">import</span> <span class="n">Forcefield</span>
 
 
@@ -181,6 +185,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ff_name</span> <span class="o">=</span> <span class="s1">&#39;pcff&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ff_class</span> <span class="o">=</span> <span class="s1">&#39;2&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pair_style</span> <span class="o">=</span> <span class="s1">&#39;class2&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bond_style</span> <span class="o">=</span> <span class="s1">&#39;class2&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_style</span> <span class="o">=</span> <span class="s1">&#39;class2&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dihedral_style</span> <span class="o">=</span> <span class="s1">&#39;class2&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">improper_style</span> <span class="o">=</span> <span class="s1">&#39;class2&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nb_mixing</span> <span class="o">=</span> <span class="s1">&#39;sixth&#39;</span>
 
 <div class="viewcode-block" id="Pcff.assign_ptypes"><a class="viewcode-back" href="../../../pysimm.forcefield.pcff.html#pysimm.forcefield.pcff.Pcff.assign_ptypes">[docs]</a>    <span class="k">def</span> <span class="nf">assign_ptypes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -317,6 +325,7 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">all_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">bond_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_style</span>
         <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">bonds</span><span class="p">:</span>
             <span class="n">bt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">bt</span><span class="p">:</span>
@@ -351,6 +360,7 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">all_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">angle_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle_style</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
             <span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">a</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="n">x</span><span class="o">.</span><span class="n">b</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">b</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bonds</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
@@ -417,6 +427,7 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">all_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">dihedral_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dihedral_style</span>
         <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">bonds</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">b</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">b</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
@@ -497,6 +508,7 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">all_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">improper_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">improper_style</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
                 <span class="n">p1_name</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">eq_improper</span> <span class="ow">or</span> <span class="n">perm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span>

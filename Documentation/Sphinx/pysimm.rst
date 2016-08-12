@@ -14,6 +14,7 @@ Submodules
 
 .. toctree::
 
+   pysimm.amber
    pysimm.calc
    pysimm.cli
    pysimm.lmps

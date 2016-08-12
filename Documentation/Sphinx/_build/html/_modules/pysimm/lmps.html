@@ -163,6 +163,7 @@
 <span class="kn">from</span> <span class="nn">threading</span> <span class="k">import</span> <span class="n">Thread</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">randint</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">strftime</span>
 
@@ -194,6 +195,59 @@
             <span class="nb">print</span> <span class="s1">&#39;using </span><span class="si">%s</span><span class="s1"> LAMMPS machine&#39;</span> <span class="o">%</span> <span class="n">LAMMPS_EXEC</span>
     <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
         <span class="nb">print</span> <span class="s1">&#39;LAMMPS is not configured properly for one reason or another&#39;</span>
+
+
+<div class="viewcode-block" id="Qeq"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.Qeq">[docs]</a><span class="k">class</span> <span class="nc">Qeq</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.lmps.MolecularDynamics</span>
+
+<span class="sd">    Template object to contain LAMMPS qeq settings</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        cutoff: distance cutoff for charge equilibration</span>
+<span class="sd">        tol: tolerance (precision) for charge equilibration</span>
+<span class="sd">        max_iter: maximum iterations</span>
+<span class="sd">        qfile: file with qeq parameters (leave undefined for defaults)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cutoff&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s1">&#39;cutoff&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;tol&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s1">&#39;tol&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mf">1.0e-6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_iter&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s1">&#39;max_iter&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">200</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qfile</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;qfile&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        
+<div class="viewcode-block" id="Qeq.write"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.Qeq.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;pysimm.lmps.Qeq.write</span>
+
+<span class="sd">        Create LAMMPS input for a charge equilibration calculation</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sim: pysimm.lmps.Simulation object reference</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            input string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">qfile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">param_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">__file__</span><span class="p">)),</span>
+                                      <span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">,</span> <span class="s1">&#39;dat&#39;</span><span class="p">,</span> <span class="s1">&#39;qeq&#39;</span><span class="p">,</span> <span class="s1">&#39;hcno.json&#39;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">file</span><span class="p">(</span><span class="n">param_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">qeq_params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">with</span> <span class="n">file</span><span class="p">(</span><span class="s1">&#39;pysimm.qeq.tmp&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">sim</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">particle_types</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\t</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> 
+                                                  <span class="n">qeq_params</span><span class="p">[</span><span class="n">pt</span><span class="o">.</span><span class="n">elem</span><span class="p">][</span><span class="s1">&#39;chi&#39;</span><span class="p">],</span>
+                                                  <span class="n">qeq_params</span><span class="p">[</span><span class="n">pt</span><span class="o">.</span><span class="n">elem</span><span class="p">][</span><span class="s1">&#39;eta&#39;</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span>
+                                                  <span class="n">qeq_params</span><span class="p">[</span><span class="n">pt</span><span class="o">.</span><span class="n">elem</span><span class="p">][</span><span class="s1">&#39;gamma&#39;</span><span class="p">],</span>
+                                                  <span class="n">qeq_params</span><span class="p">[</span><span class="n">pt</span><span class="o">.</span><span class="n">elem</span><span class="p">][</span><span class="s1">&#39;zeta&#39;</span><span class="p">],</span>
+                                                  <span class="n">qeq_params</span><span class="p">[</span><span class="n">pt</span><span class="o">.</span><span class="n">elem</span><span class="p">][</span><span class="s1">&#39;qcore&#39;</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qfile</span> <span class="o">=</span> <span class="s1">&#39;pysimm.qeq.tmp&#39;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;fix 1 all qeq/point 1 </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cutoff</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">qfile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;run 0</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;unfix 1</span><span class="se">\n</span><span class="s1">&#39;</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span></div></div>
 
 
 <div class="viewcode-block" id="MolecularDynamics"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.MolecularDynamics">[docs]</a><span class="k">class</span> <span class="nc">MolecularDynamics</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -436,6 +490,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">custom</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;custom&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sim</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sim&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sim&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span>
+        
+<div class="viewcode-block" id="Simulation.add_qeq"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.Simulation.add_qeq">[docs]</a>    <span class="k">def</span> <span class="nf">add_qeq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;pysimm.lmps.Simulation.add_qeq</span>
+
+<span class="sd">        Add pysimm.lmps.Qeq template to simulation</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            template: pysimm.lmps.Qeq object reference</span>
+<span class="sd">            **kwargs: if template is None these are passed to pysimm.lmps.Qeq constructor to create new template</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Qeq</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="n">Qeq</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">error_print</span><span class="p">(</span><span class="s1">&#39;you must add an object of type Qeq to Simulation&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Simulation.add_md"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.Simulation.add_md">[docs]</a>    <span class="k">def</span> <span class="nf">add_md</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;pysimm.lmps.Simulation.add_md</span>
@@ -509,7 +579,7 @@
         <span class="k">for</span> <span class="n">template</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="n">template</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             
-        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;write_dump all custom pysimm.dump.tmp id x y z vx vy vz</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;write_dump all custom pysimm.dump.tmp id q x y z vx vy vz</span><span class="se">\n</span><span class="s1">&#39;</span>
 
         <span class="sd">&#39;&#39;&#39;if self.write:</span>
 <span class="sd">            self.input += &#39;write_data %s\n&#39; % self.write</span>
@@ -569,7 +639,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting </span><span class="si">%s</span><span class="s1"> simulation using LAMMPS&#39;</span>
                   <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting molecular dynamics using LAMMPS&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting simulation using LAMMPS&#39;</span>
                   <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">np</span><span class="p">:</span>
             <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;mpiexec&#39;</span><span class="p">,</span> <span class="s1">&#39;-np&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="p">),</span>
@@ -625,6 +695,9 @@
     <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="nb">print</span> <span class="n">e</span>
         
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;pysimm.qeq.tmp&#39;</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;pysimm.qeq.tmp&#39;</span><span class="p">)</span>
+        
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;pysimm.dump.tmp&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
@@ -669,6 +742,24 @@
 <span class="sd">                raise PysimmError(&#39;%s simulation using LAMMPS UNsuccessful&#39; % simulation.name)</span>
 <span class="sd">            else:</span>
 <span class="sd">                raise PysimmError(&#39;molecular dynamics using LAMMPS UNsuccessful&#39;)&#39;&#39;&#39;</span></div>
+
+
+<div class="viewcode-block" id="qeq"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.qeq">[docs]</a><span class="k">def</span> <span class="nf">qeq</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">np</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.lmps.qeq</span>
+
+<span class="sd">    Convenience function to call a qeq calculation. kwargs are passed to Qeq constructor</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: system to perform simulation on</span>
+<span class="sd">        np: number of threads to use</span>
+<span class="sd">        nanohub: dictionary containing nanohub resource information default=None</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">add_qeq</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="quick_md"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.quick_md">[docs]</a><span class="k">def</span> <span class="nf">quick_md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">np</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

@@ -4207,7 +4207,8 @@ def read_lammps(data_file, **kwargs):
                         except:
                             atom_style = 'charge'
                     else:
-                        warning_print('cannot determine atom_style')
+                        warning_print('cannot determine atom_style; assuming atom_style "full"')
+                        atom_style = 'full'
                 if atom_style == 'full':
                     d_ = {'tag': tag, 'molecule': int(line[1]), 'type': int(line[2]),
                           'charge': float(line[3]), 'x': float(line[4]),
