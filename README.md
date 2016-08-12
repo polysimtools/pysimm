@@ -5,6 +5,8 @@ pysimm
 
 pysimm stands for <b>Py</b>thon <b>S</b>imulation <b>I</b>nterface for <b>M</b>olecular <b>M</b>odeling. It is an open-source python package designed to assist in the setup and executation of molecular simulations through high level APIs and abstraction from underlying third party simulation software.
 
+Documentation for the python package can be found at http://pysimm.org/documentation
+
 Getting Started
 ===============
 
@@ -32,9 +34,15 @@ Complete Installation (pysimm and LAMMPS)
 
 <i>NOTE: The complete_install.py script is designed to work on debian-based linux machines only. It uses apt-get to install dependencies for pysimm and LAMMPS.</i>
 
-Included in the repository is a python script complete_install.py that will configure pysimm, install LAMMPS from their git repository, and configure the integration between the two pieces of software. First clone the pysimm repository, and run complete_install.py like such:
+Included in the repository is a python script complete_install.py that will configure pysimm, install LAMMPS from their git repository, and configure the integration between the two pieces of software. First clone the pysimm repository, and run complete_install.py. You must provide the path prefix to the recently cloned pysimm directory and the prefix for the new lammps source code directory. The following assumes pysimm was cloned into your home directory and will also install lammps in your home directory:
 
-```python complete_install.py --pysimm /path/to/pysimm/repo --lammps /path/to/new/lammps/directory```
+```
+git clone https://github.com/polysimtools/pysimm
+cd pysimm
+python complete_install.py --pysimm $HOME --lammps $HOME
+```
+
+Using your HOME directory 
 
 Afterwords be sure to source your ~/.bashrc file:
 
