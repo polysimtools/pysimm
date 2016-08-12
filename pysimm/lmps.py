@@ -459,7 +459,7 @@ class Simulation(object):
 
         self.input += 'quit\n'
 
-    def run(self, np=None, nanohub=None, rewrite=True):
+    def run(self, np=None, nanohub=None, rewrite=True, write_input=False):
         """pysimm.lmps.Simulation.run
 
         Begin LAMMPS simulation.
@@ -474,6 +474,12 @@ class Simulation(object):
             self.input += '\nwrite_data pysimm_md.lmps\n'
         if rewrite:
             self.write_input()
+        if isinstance(write_input, str):
+            with file(write_input, 'w') as f:
+                f.write(self.input)
+        elif write_input:
+            with file('pysimm.sim.in', 'w') as f:
+                f.write(self.input)
         call_lammps(self, np, nanohub)
 
 
