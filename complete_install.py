@@ -10,10 +10,10 @@ HOME_DIR = os.environ.get('HOME')
 def install_pysimm(prefix):
     os.chdir(prefix)
     call('git clone https://github.com/polysimtools/pysimm', shell=True)
-    call("echo export PYTHONPATH='$PYTHONPATH':{} >> {}".format(prefix,
+    call("echo export PYTHONPATH='$PYTHONPATH':{} >> {}".format(os.path.join(prefix, 'pysimm'),
                                                                 os.path.join(HOME_DIR, '.bashrc')),
          shell=True)
-    call("echo export PATH='$PATH':{} >> {}".format(os.path.join(prefix, 'bin'),
+    call("echo export PATH='$PATH':{} >> {}".format(os.path.join(prefix, 'pysimm', 'bin'),
                                                     os.path.join(HOME_DIR, '.bashrc')),
          shell=True)
 
@@ -55,7 +55,8 @@ def install_ambertools(dir_):
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--apt-update', dest='apt_update', default=True)
+    parser.add_argument('--apt-update', dest='apt_update', action="store_true", default=True)
+    parser.add_argument('--no-apt-update', dest='apt_update', action="store_false")
     parser.add_argument('--pysimm', dest='pysimm_prefix', default=HOME_DIR)
     parser.add_argument('--lammps', dest='lammps_prefix', default=None)
     parser.add_argument('--lammps-packages', dest='lammps_packages', nargs='*',
