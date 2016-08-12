@@ -45,8 +45,7 @@ def install_ambertools(dir_):
     os.chdir(dir_)
     call("echo export AMBERHOME={} >> {}".format(dir_, os.path.join(HOME_DIR,'.bashrc')),
          shell=True)
-    call("export AMBERHOME={}".format(dir_),
-         shell=True)
+    os.environ['AMBERHOME'] = dir_
     call('./configure gnu', shell=True)
     call('make install', shell=True)
     call("echo export ANTECHAMBER_EXEC={} >> {}".format(os.path.join(dir_, 'bin', 'antechamber'),
