@@ -152,7 +152,7 @@ class MolecularDynamics(object):
         self.new_v = kwargs.get('new_v')
         self.seed = kwargs.get('seed') or randint(10000, 99999)
         self.scale_v = kwargs.get('scale_v')
-        self.length = kwargs.get('length') or 2000
+        self.length = kwargs.get('length') if kwargs.has_key('length') else 2000
         self.thermo = kwargs.get('thermo') or 1000
         self.thermo_style = kwargs.get('thermo_style')
         self.dump = kwargs.get('dump') or False
