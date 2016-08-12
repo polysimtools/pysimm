@@ -139,6 +139,8 @@ def copolymer(m, nmon, s_=None, **kwargs):
         unwrap: True to unwrap final system
         traj: True to build xyz trajectory of polymer growth (True)
         pattern: list of pattern for monomer repeat units, should match length of m ([1 for _ in range(len(m))])
+        limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)
+        sim: pysimm.lmps.Simulation object for relaxation between polymer growth
     Returns:
         new copolymer pysimm.system.System
     """
@@ -151,6 +153,8 @@ def copolymer(m, nmon, s_=None, **kwargs):
     unwrap = kwargs.get('unwrap')
     traj = kwargs.get('traj') if kwargs.get('traj') is not None else True
     pattern = kwargs.get('pattern') or [1 for _ in range(len(m))]
+    limit = kwargs.get('limit') if kwargs.get('limit') is not None else 0.1
+    sim = kwargs.get('sim')
 
     for m_ in m:
         m_.add_particle_bonding()
@@ -256,10 +260,15 @@ def copolymer(m, nmon, s_=None, **kwargs):
 
             if unwrap:
                 s.unwrap()
-
-            lmps.relax(s, name='relax_%03d' % temp_nmon, **settings)
-
-            lmps.minimize(s, **settings)
+                
+            if sim is None:
+                sim = lmps.Simulation(s, name='relax_%03d' % (temp_nmon), log='relax.log', **settings)
+                sim.add_md(ensemble='nve', limit=limit, **settings)
+                sim.add_min(**settings)
+            if isinstance(sim, lmps.Simulation):
+                sim.system = s
+                sim.name = 'relax_%03d' % (temp_nmon)
+                sim.run(np=settings.get('np'))
 
             if unwrap:
                 s.unwrap()
