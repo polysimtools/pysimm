@@ -91,9 +91,10 @@ def equil(s, **kwargs):
     step = 0
     for p, l in izip(p_list, length_list):
         step += 1
-        sim.add_md(length=l/2, temp=tmax, **settings)
-        sim.add_md(length=l, temp=tfinal, **settings)
-        sim.add_md(length=l/2, ensemble='npt', temp=tfinal, pressure=p, **settings)
+        if l:
+            sim.add_md(length=l/2, temp=tmax, **settings)
+            sim.add_md(length=l, temp=tfinal, **settings)
+            sim.add_md(length=l/2, ensemble='npt', temp=tfinal, pressure=p, **settings)
 
     sim.run(np=np, nanohub=nanohub)
 
