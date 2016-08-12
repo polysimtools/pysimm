@@ -78,7 +78,7 @@ if __name__ == '__main__':
 
     args = parse_args()
 
-    if args.apt_update:
+    if bool(args.apt_update):
         apt_update()
 
     if args.pysimm_prefix:
