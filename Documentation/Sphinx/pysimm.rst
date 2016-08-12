@@ -1,23 +1,30 @@
-.. pysimm documentation master file, created by
-   sphinx-quickstart on Mon Jul 25 12:48:29 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+pysimm package
+==============
 
-Welcome to pysimm's documentation!
-==================================
-
-Contents:
+Subpackages
+-----------
 
 .. toctree::
-   :maxdepth: 4
 
-   pysimm
+    pysimm.apps
+    pysimm.forcefield
 
+Submodules
+----------
 
-Indices and tables
-==================
+.. toctree::
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   pysimm.amber
+   pysimm.calc
+   pysimm.cli
+   pysimm.lmps
+   pysimm.system
+   pysimm.utils
 
+Module contents
+---------------
+
+.. automodule:: pysimm
+    :members:
+    :undoc-members:
+    :show-inheritance:
