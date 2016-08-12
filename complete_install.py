@@ -13,12 +13,8 @@ def install_pysimm(prefix):
     call("echo export PYTHONPATH='$PYTHONPATH':{} >> {}".format(prefix,
                                                                 os.path.join(HOME_DIR, '.bashrc')),
          shell=True)
-    call("export PYTHONPATH='$PYTHONPATH':{}".format(prefix),
-         shell=True)
     call("echo export PATH='$PATH':{} >> {}".format(os.path.join(prefix, 'bin'),
                                                     os.path.join(HOME_DIR, '.bashrc')),
-         shell=True)
-    call("export PATH='$PATH':{}".format(os.path.join(prefix, 'bin')),
          shell=True)
 
 
@@ -41,12 +37,8 @@ def install_lammps(prefix, *packages):
     call("echo export PATH='$PATH':{} >> {}".format(os.path.join(prefix, 'lammps', 'src'),
                                                     os.path.join(HOME_DIR,'.bashrc')),
          shell=True)
-    call("export PATH='$PATH':{}".format(os.path.join(prefix, 'lammps', 'src')),
-         shell=True)
     call("echo export LAMMPS_EXEC={} >> {}".format(os.path.join(prefix, 'lammps', 'src', 'lmp_mpi'),
                                                    os.path.join(HOME_DIR,'.bashrc')),
-         shell=True)
-    call("export LAMMPS_EXEC={}".format(os.path.join(prefix, 'lammps', 'src', 'lmp_mpi')),
          shell=True)
          
 def install_ambertools(dir_):
@@ -57,9 +49,6 @@ def install_ambertools(dir_):
     call('make install', shell=True)
     call("echo export ANTECHAMBER_EXEC={} >> {}".format(os.path.join(dir_, 'bin', 'antechamber'),
                                                    os.path.join(HOME_DIR,'.bashrc')),
-         shell=True)
-    
-    call("export ANTECHAMBER_EXEC={}".format(os.path.join(dir_, 'bin', 'antechamber')),
          shell=True)
 
 
