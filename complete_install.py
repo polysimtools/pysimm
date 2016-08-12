@@ -13,8 +13,12 @@ def install_pysimm(prefix):
     call("echo export PYTHONPATH='$PYTHONPATH':{} >> {}".format(prefix,
                                                                 os.path.join(HOME_DIR, '.bashrc')),
          shell=True)
+    call("export PYTHONPATH='$PYTHONPATH':{}".format(prefix),
+         shell=True)
     call("echo export PATH='$PATH':{} >> {}".format(os.path.join(prefix, 'bin'),
                                                     os.path.join(HOME_DIR, '.bashrc')),
+         shell=True)
+    call("export PATH='$PATH':{}".format(os.path.join(prefix, 'bin')),
          shell=True)
 
 
@@ -29,7 +33,7 @@ def apt_install(*packages):
 
 def install_lammps(prefix, *packages):
     os.chdir(prefix)
-    call('git clone git://git.lammps.org/lammps-ro.git lammps'.format(prefix), shell=True)
+    call('git clone git://git.lammps.org/lammps-ro.git lammps', shell=True)
     os.chdir(os.path.join(prefix,'lammps','src'))
     for package in packages:
         call('make yes-{}'.format(package), shell=True)
@@ -37,13 +41,26 @@ def install_lammps(prefix, *packages):
     call("echo export PATH='$PATH':{} >> {}".format(os.path.join(prefix, 'lammps', 'src'),
                                                     os.path.join(HOME_DIR,'.bashrc')),
          shell=True)
+    call("export PATH='$PATH':{}".format(os.path.join(prefix, 'lammps', 'src')),
+         shell=True)
     call("echo export LAMMPS_EXEC={} >> {}".format(os.path.join(prefix, 'lammps', 'src', 'lmp_mpi'),
                                                    os.path.join(HOME_DIR,'.bashrc')),
          shell=True)
+    call("export LAMMPS_EXEC={}".format(os.path.join(prefix, 'lammps', 'src', 'lmp_mpi')),
+         shell=True)
          
-def install_ambertools(prefix):
-    os.chdir(prefix)
+def install_ambertools(dir_):
+    os.chdir(dir_)
+    call("echo export AMBERHOME={} >> {}".format(dir_, os.path.join(HOME_DIR,'.bashrc')),
+         shell=True)
     call('./configure gnu', shell=True)
+    call('make install', shell=True)
+    call("echo export ANTECHAMBER_EXEC={} >> {}".format(os.path.join(dir_, 'bin', 'antechamber'),
+                                                   os.path.join(HOME_DIR,'.bashrc')),
+         shell=True)
+    
+    call("export ANTECHAMBER_EXEC={}".format(os.path.join(dir_, 'bin', 'antechamber')),
+         shell=True)
 
 
 def parse_args():
@@ -52,7 +69,7 @@ def parse_args():
     parser.add_argument('--lammps', dest='lammps_prefix', default=None)
     parser.add_argument('--lammps-packages', dest='lammps_packages', nargs='*',
                         default=['molecule', 'class2', 'kspace', 'user-misc', 'qeq', 'manybody'])
-    parser.add_argument('--amber-tools', dest='ambertools_prefix', default=None)
+    parser.add_argument('--amber-tools', dest='ambertools_dir', default=None)
     return parser.parse_args()
 
 
@@ -82,8 +99,8 @@ if __name__ == '__main__':
         mkdir_p(args.lammps_prefix)
         install_lammps(args.lammps_prefix, *args.lammps_packages)
         
-    if args.ambertools_prefix:
+    if args.ambertools_dir:
         apt_install('make', 'csh', 'gfortran', 'libopenmpi-dev', 'openmpi-bin')
-        install_ambertools(args.ambertools_prefix)
+        install_ambertools(args.ambertools_dir)
         
     os.chdir(HOME_DIR)
