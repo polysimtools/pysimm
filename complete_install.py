@@ -55,6 +55,7 @@ def install_ambertools(dir_):
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--apt-update', dest='apt_update', default=True)
     parser.add_argument('--pysimm', dest='pysimm_prefix', default=HOME_DIR)
     parser.add_argument('--lammps', dest='lammps_prefix', default=None)
     parser.add_argument('--lammps-packages', dest='lammps_packages', nargs='*',
@@ -77,7 +78,8 @@ if __name__ == '__main__':
 
     args = parse_args()
 
-    apt_update()
+    if args.apt_update:
+        apt_update()
 
     if args.pysimm_prefix:
         apt_install('git', 'python-numpy', 'python-matplotlib')
