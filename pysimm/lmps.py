@@ -677,7 +677,7 @@ def quick_min(s, np=None, nanohub=None, **kwargs):
     
 def energy(s, all=False, np=None, **kwargs):
     sim = Simulation(s, **kwargs)
-    sim.add_md(length=0, thermo=1, thermo_style='custom step etotal epair emol evdwl ecoul ebond eangle edihed eimp', name='pysimm_calc.tmp.log', **kwargs)
+    sim.add_md(length=0, thermo=1, thermo_style='custom step etotal epair emol evdwl ecoul ebond eangle edihed eimp', log='pysimm_calc.tmp.log', **kwargs)
     sim.run(np)
     with file('pysimm_calc.tmp.log') as f:
         line = f.next()
