@@ -14,7 +14,8 @@ from xml.dom import minidom
 from xml.etree import ElementTree as ET
 from pysimm.system import ParticleType, BondType, AngleType
 from pysimm.system import DihedralType, ImproperType
-from pysimm.forcefield import Gaff2, element_names_by_mass
+from pysimm.forcefield import Gaff2
+from pysimm.forcefield.forcefield import element_names_by_mass
 from pysimm.utils import Item, ItemContainer
 
 
@@ -96,7 +97,7 @@ def convert(file_, out):
                     name = ','.join([p1, p2, p3, p4])
                     line = line[11:].split()
                     k = float(line[1])/int(float(line[0]))
-                    n = int(float(line[3]))
+                    n = abs(int(float(line[3])))
                     d = int(round(math.cos(float(line[2])/180*math.pi)))
                     dt = ff.dihedral_types.get(name, item_wildcard=None)
                     if dt:

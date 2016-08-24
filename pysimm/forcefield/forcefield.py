@@ -78,10 +78,11 @@ class Forcefield(object):
         self.improper_style = None
         self.improper_types = ItemContainer()
 
-        if format == 'json' or file_.split('.')[-1] == 'json':
-            self.from_json(file_)
-        elif format == 'xml' or file_.split('.')[-1] == 'xml':
-            self.from_xml(file_)
+        if file_:
+            if format == 'json' or file_.split('.')[-1] == 'json':
+                self.from_json(file_)
+            elif format == 'xml' or file_.split('.')[-1] == 'xml':
+                self.from_xml(file_)
             
     
     def from_xml(self, file_):

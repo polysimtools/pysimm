@@ -4602,10 +4602,11 @@ def read_pubchem_smiles(smiles, type_with=None):
         pysimm.system.System object
     """
 
-    print('making request to pubchem RESTful API...')
-
     req = ('https://pubchem.ncbi.nlm.nih.gov/'
            'rest/pug/compound/smiles/%s/SDF/?record_type=3d' % smiles)
+           
+    print('making request to pubchem RESTful API:')
+    print(req)
 
     try:
         resp = urlopen(req)

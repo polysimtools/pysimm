@@ -6314,11 +6314,11 @@ c2-pe-ne-c2   1    0.290         0.000           1          c104 SS AUE=0.4118 R
 c2-pe-pe-c2   1    0.680       180.000           2          c196 SS AUE=0.2486 RMSE=0.3241 TorType=3
 c3-c2-nh-ca   1    1.160       180.000          -2          set1_10 GA AUE=0.3625 RMSE=0.5970 TorType=3
 c3-c2-nh-ca   1    1.880         0.000           1          set1_10 GA AUE=0.3625 RMSE=0.5970 TorType=3
-c3-c3-c3-hc   1    0.080         0.000           3          t2 SS AUE=0.2507 RMSE=0.3027 TorType=3
+#c3-c3-c3-hc   1    0.080         0.000           3          t2 SS AUE=0.2507 RMSE=0.3027 TorType=3
 c3-c3-cc-ca   1    0.082         0.000           3          p3 SS AUE=0.4586 RMSE=0.5633 TorType=3
-c3-c3-n -c    1    0.650       180.000          -4          sialic2 GA AUE=1.1541 RMSE=1.2847 TorType=3
-c3-c3-n -c    1    0.030       180.000          -3          sialic2 GA AUE=1.1541 RMSE=1.2847 TorType=3
-c3-c3-n -c    1    2.260         0.000           1          sialic2 GA AUE=1.1541 RMSE=1.2847 TorType=3
+#c3-c3-n -c    1    0.650       180.000          -4          sialic2 GA AUE=1.1541 RMSE=1.2847 TorType=3
+#c3-c3-n -c    1    0.030       180.000          -3          sialic2 GA AUE=1.1541 RMSE=1.2847 TorType=3
+#c3-c3-n -c    1    2.260         0.000           1          sialic2 GA AUE=1.1541 RMSE=1.2847 TorType=3
 c3-c -c3-c3   1    0.332       180.000           2          p10 SS AUE=0.3226 RMSE=0.4401 TorType=3
 c3-c -ce-c3   1    4.110         0.000           2          set3_25 SS AUE=0.6933 RMSE=1.1187 TorType=3
 c3-ce-ce-c3   1    0.500       180.000           2          set3_22 SS AUE=1.0809 RMSE=1.3455 TorType=3
@@ -6445,7 +6445,7 @@ c3-sy-sy-c3   1    0.378         0.000           2          c231 SS AUE=1.1799 R
 ca-c3-c3-c    1    0.100         0.000           3          p22 SS AUE=0.8008 RMSE=1.0051 TorType=3
 ca-c3-c3-n    1    0.210         0.000           3          p16 SS AUE=0.6330 RMSE=0.8053 TorType=3
 ca-ca-c3-ca   1    0.000       180.000           2          t1 SS AUE=0.1988 RMSE=0.2606 TorType=3
-ca-ca-ce-c2   1    0.618       180.000           2          c24 SS AUE=0.2364 RMSE=0.3330 TorType=3
+#ca-ca-ce-c2   1    0.618       180.000           2          c24 SS AUE=0.2364 RMSE=0.3330 TorType=3
 ca-ca-ce-c3   1    0.540       180.000           2          set1_4 SS AUE=0.2602 RMSE=0.3333 TorType=3
 ca-ca-os-c    1    0.650       180.000           2          t35b SS AUE=0.2491 RMSE=0.3333 TorType=3
 ca-cf-ce-ca   1    8.510       180.000           2          add6b SS AUE=4.0000 RMSE=5.4296 TorType=3
@@ -6604,12 +6604,12 @@ sh-c3-c3-n    1    0.210         0.000           3          p4 SS AUE=1.1296 RMS
 sh-c3-sh-hs   1    0.083         0.000           3          t22 SS AUE=0.4554 RMSE=0.5406 TorType=3
 ss-c3-ss-c3   1    0.497         0.000           3          t23 SS AUE=0.5714 RMSE=0.8553 TorType=3
 c3-c3-ca-ca   1    0.245       180.000           2          m15,m17 SS AUE=0.2499 RMSE=0.3414 TorType=3
-c3-c3-c -o    1    0.030       180.000          -2          sialic1,t37,t41 GA AUE=0.7374 RMSE=0.9897 TorType=3
-c3-c3-c -o    1    0.550       180.000          -3
-c3-c3-c -o    1    0.740         0.000           1
-c3-c3-os-c3   1    0.910         0.000          -3          lactose1,ccoc GA AUE=1.5236 RMSE=2.4206 TorType=3
-c3-c3-os-c3   1    1.000         0.000          -2
-c3-c3-os-c3   1    0.000         0.000           1
+#c3-c3-c -o    1    0.030       180.000          -2          sialic1,t37,t41 GA AUE=0.7374 RMSE=0.9897 TorType=3
+#c3-c3-c -o    1    0.550       180.000          -3
+#c3-c3-c -o    1    0.740         0.000           1
+#c3-c3-os-c3   1    0.910         0.000          -3          lactose1,ccoc GA AUE=1.5236 RMSE=2.4206 TorType=3
+#c3-c3-os-c3   1    1.000         0.000          -2
+#c3-c3-os-c3   1    0.000         0.000           1
 ca-ca-c -o    1    0.5225      180.000           2          phcooh,t36a SS AUE=0.2702 RMSE=0.3317 TorType=3
 o -c -c3-c    1    1.360         0.000          -1          t6,t7,t8 GA AUE=0.3790 RMSE=0.4991 TorType=3
 o -c -c3-c    1    0.180       180.000           3
