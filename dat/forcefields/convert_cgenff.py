@@ -55,9 +55,23 @@ def convert(fname, out):
                         data, desc = line.split('!')[0], '!'.join(line.split('!')[1:]).strip()
                         data = data.split()
                         name = '{},{},{},{}'.format(data[0], data[1], data[2], data[3])
-                        ff.dihedral_types.add(system.DihedralType(name=name, tag=name, k=float(data[4]),
-                                                                      n=int(data[5]), d=cos(float(data[6])),
-                                                                      desc=desc))
+                        k = float(data[4])
+                        n = int(data[5])
+                        d = cos(float(data[6]))
+                        dt = ff.dihedral_types.get(name, item_wildcard=None)
+                        if dt:
+                            dt = dt[0]
+                            dt.m += 1
+                            dt.k.append(k)
+                            dt.n.append(n)
+                            dt.d.append(d)
+                        else:
+                            ff.dihedral_types.add(system.DihedralType(tag=name,
+                                                                      name=name,
+                                                                      m=1,
+                                                                      k=[k],
+                                                                      n=[n],
+                                                                      d=[d]))
                     line = f.next()
             if line.strip() == 'IMPROPERS':
                 line = f.next()
@@ -86,7 +100,7 @@ def convert(fname, out):
                             print name
                     line = f.next()
                     
-    ff.write(out)
+    ff.write_json(out)
 
 if __name__=='__main__':
     convert(sys.argv[1], sys.argv[2])
