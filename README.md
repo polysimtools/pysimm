@@ -42,8 +42,6 @@ cd pysimm
 python complete_install.py --pysimm $HOME --lammps $HOME
 ```
 
-Using your HOME directory 
-
 Afterwords be sure to source your ~/.bashrc file:
 
 ```source ~/.bashrc```
