@@ -52,7 +52,7 @@ def install_ambertools(dir_):
                                                    os.path.join(HOME_DIR,'.bashrc')),
          shell=True)
          
-def install_openbabel(prefix):
+def install_openbabel():
     apt_install('libopenbabel4', 'libopenbabel-dev', 'openbabel', 'python-openbabel')
 
 
@@ -64,6 +64,7 @@ def parse_args():
     parser.add_argument('--lammps-packages', dest='lammps_packages', nargs='*',
                         default=['molecule', 'class2', 'kspace', 'user-misc', 'qeq', 'manybody'])
     parser.add_argument('--amber-tools', dest='ambertools_dir', default=None)
+    parser.add_argument('--openbabel', dest='openbabel', default=None)
     return parser.parse_args()
 
 
@@ -97,5 +98,8 @@ if __name__ == '__main__':
     if args.ambertools_dir:
         apt_install('make', 'csh', 'gfortran', 'libopenmpi-dev', 'openmpi-bin', 'xorg-dev', 'xserver-xorg')
         install_ambertools(args.ambertools_dir)
+        
+    if args.openbabel:
+        install_openbabel()
         
     os.chdir(HOME_DIR)
