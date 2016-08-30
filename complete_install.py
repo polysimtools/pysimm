@@ -51,6 +51,9 @@ def install_ambertools(dir_):
     call("echo export ANTECHAMBER_EXEC={} >> {}".format(os.path.join(dir_, 'bin', 'antechamber'),
                                                    os.path.join(HOME_DIR,'.bashrc')),
          shell=True)
+         
+def install_openbabel(prefix):
+    apt_install('libopenbabel4', 'libopenbabel-dev', 'openbabel', 'python-openbabel')
 
 
 def parse_args():
