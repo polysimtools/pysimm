@@ -513,10 +513,10 @@ def call_lammps(simulation, np, nanohub):
         exit_status, stdo, stde = RapptureExec(cmd)
     else:
         if simulation.name:
-            print('%s: starting %s simulation using LAMMPS'
+            print('%s: starting %s LAMMPS simulation'
                   % (strftime('%H:%M:%S'), simulation.name))
         else:
-            print('%s: starting simulation using LAMMPS'
+            print('%s: starting LAMMPS simulation'
                   % strftime('%H:%M:%S'))
         if np:
             p = Popen(['mpiexec', '-np', str(np),
@@ -543,29 +543,6 @@ def call_lammps(simulation, np, nanohub):
                     sys.stdout.flush()
                     
     simulation.system.read_lammps_dump('pysimm.dump.tmp')
-    '''if simulation.write:
-        n = read_lammps(simulation.write, quiet=True,
-                        pair_style=simulation.system.pair_style,
-                        bond_style=simulation.system.bond_style,
-                        angle_style=simulation.system.angle_style,
-                        dihedral_style=simulation.system.dihedral_style,
-                        improper_style=simulation.system.improper_style)
-    else:
-        n = read_lammps('pysimm_md.lmps', quiet=True,
-                        pair_style=simulation.system.pair_style,
-                        bond_style=simulation.system.bond_style,
-                        angle_style=simulation.system.angle_style,
-                        dihedral_style=simulation.system.dihedral_style,
-                        improper_style=simulation.system.improper_style)
-    for p in n.particles:
-        p_ = simulation.system.particles[p.tag]
-        p_.x = p.x
-        p_.y = p.y
-        p_.z = p.z
-        p_.vx = p.vx
-        p_.vy = p.vy
-        p_.vz = p.vz
-    simulation.system.dim = n.dim'''
 
     try:
         os.remove('temp.lmps')
@@ -676,8 +653,8 @@ def quick_min(s, np=None, nanohub=None, **kwargs):
     
     
 def energy(s, all=False, np=None, **kwargs):
-    sim = Simulation(s, **kwargs)
-    sim.add_md(length=0, thermo=1, thermo_style='custom step etotal epair emol evdwl ecoul ebond eangle edihed eimp', log='pysimm_calc.tmp.log', **kwargs)
+    sim = Simulation(s, log='pysimm_calc.tmp.log', **kwargs)
+    sim.add_md(length=0, thermo=1, thermo_style='custom step etotal epair emol evdwl ecoul ebond eangle edihed eimp', **kwargs)
     sim.run(np)
     with file('pysimm_calc.tmp.log') as f:
         line = f.next()
@@ -685,6 +662,10 @@ def energy(s, all=False, np=None, **kwargs):
             line = f.next()
         line = f.next()
         step, etotal, epair, emol, evdwl, ecoul, ebond, eangle, edihed, eimp = map(float, line.split())
+    try:
+        os.remove('pysimm_calc.tmp.log')
+    except:
+        error_print('error likely occurred during simulation')
     if all:
         return {
                 'step': int(step),
