@@ -2859,8 +2859,8 @@ class System(object):
         out.write('{:<10}pdb written using pySIMM system module\n'
                   .format('HEADER'))
         for p in self.particles:
-            out.write('{:<6}{:>5} {:>4} RES {:4}    '
-                      '{:7< 7f}{:7< 7f}{:7< 7f}{:>22}{:>2}\n'
+            out.write('{:<6}{:>5} {:>4} RES  {:4}   '
+                      '{: 8.4f}{: 8.4f}{: 8.4f}{:>22}{:>2}\n'
                       .format('ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, p.molecule.tag,
                               p.x, p.y, p.z, '', p.type.elem))
         for p in self.particles:
