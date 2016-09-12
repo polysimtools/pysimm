@@ -896,6 +896,22 @@ class System(object):
             raise PysimmError('impropers missing')
         if len(self.molecules) != self.molecules.count:
             raise PysimmError('molecules missing')
+            
+    def update_ff_types_from_ac(self, ff, acname):
+        self.particle_types.remove('all')
+        with file(acname) as f:
+            for line in f:
+                if line.startswith('ATOM'):
+                    tag = int(line.split()[1])
+                    tname = line.split()[-1]
+                    s_pt = self.particle_types.get(tname)
+                    if not s_pt:
+                        s_pt = ff.particle_types.get(tname)
+                        if not s_pt:
+                            error_print('cannot find type with name {}'.format(tname))
+                        self.particle_types.add(s_pt[0].copy())
+                    self.particles[tag].type = self.particle_types.get(tname)[0]
+                    
 
     def update_particle_types_from_forcefield(self, f):
         """pysimm.system.System.update_types_from_forcefield
@@ -1984,11 +2000,9 @@ class System(object):
                 nbonh += 1
             if periodic is None:
                 if b.distance() > self.dim.dx/2 or b.distance() > self.dim.dy/2 or b.distance() > self.dim.dz/2:
-                    periodic = True
+                    periodic = 1 
 
-        if periodic is not None:
-            periodic = 1
-        else:
+        if periodic is None:
             periodic = 0
 
         ntheth = 0
@@ -2004,10 +2018,10 @@ class System(object):
         out_prmtop = open(prmtop, 'w+')
         out_inpcrd = open(inpcrd, 'w+')
 
-        out_prmtop.write('%VERSION  WRITTEN BY PYSIMM\n')
+        out_prmtop.write('%VERSION WRITTEN BY PYSIMM\n')
         out_prmtop.write('%FLAG TITLE\n')
         out_prmtop.write('%FORMAT(20a4)\n')
-        out_prmtop.write('%s\n' % self.name)
+        out_prmtop.write('%s\n' % self.name[:80])
         out_prmtop.write('%FLAG POINTERS\n')
         out_prmtop.write('%FORMAT(10I8)\n')
         out_prmtop.write('%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d\n' % (self.particles.count, self.particle_types.count,
@@ -2018,15 +2032,15 @@ class System(object):
                                                                self.angles_types.count, self.dihedral_types.count, 0,
                                                                0))
         out_prmtop.write('%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d\n' % (0, 0, 0, 0, 0, 0, 0, periodic, 0, 0))
-        out_prmtop.write('%8d\n' % 0)
+        out_prmtop.write('%8d%8d\n' % 0, 0)
 
         out_prmtop.write('%FLAG ATOM_NAME\n')
         out_prmtop.write('%FORMAT(20a4)\n')
         for i in range(1, self.particles.count + 1):
             if (i != 1 and i % 20 == 0) or i == self.particles.count:
-                out_prmtop.write('%s\n' % self.particles[i].type.name[:4])
+                out_prmtop.write('%4s\n' % self.particles[i].type.name[:4])
             else:
-                out_prmtop.write('%s' % self.particles[i].type.name[:4])
+                out_prmtop.write('%4s' % self.particles[i].type.name[:4])
 
         out_prmtop.write('%FLAG CHARGE\n')
         out_prmtop.write('%FORMAT(5E16.8)\n')
@@ -2040,9 +2054,9 @@ class System(object):
         out_prmtop.write('%FORMAT(10I8)\n')
         for i in range(1, self.particles.count + 1):
             if (i != 1 and i % 10 == 0) or i == self.particles.count:
-                out_prmtop.write('%s\n' % self.particles[i].type.atomic_number)
+                out_prmtop.write('%8d\n' % self.particles[i].type.atomic_number)
             else:
-                out_prmtop.write('%s' % self.particles[i].type.atomic_number)
+                out_prmtop.write('%8d' % self.particles[i].type.atomic_number)
 
         out_prmtop.write('%FLAG MASS\n')
         out_prmtop.write('%FORMAT(5E16.8)\n')
@@ -2056,67 +2070,52 @@ class System(object):
         out_prmtop.write('%FORMAT(10I8)\n')
         for i in range(1, self.particles.count + 1):
             if (i != 1 and i % 10 == 0) or i == self.particles.count:
-                out_prmtop.write('%s\n' % self.particles[i].type.tag)
+                out_prmtop.write('%8d\n' % self.particles[i].type.tag)
             else:
-                out_prmtop.write('%s' % self.particles[i].type.tag)
+                out_prmtop.write('%8d' % self.particles[i].type.tag)
 
         out_prmtop.write('%FLAG NUMBER_EXCLUDED_ATOMS\n')
         out_prmtop.write('%FORMAT(10I8)\n')
         for i in range(1, self.particles.count + 1):
             excluded = self.particles[i].excluded_particles.count or 1
             if (i != 1 and i % 10 == 0) or i == self.particles.count:
-                out_prmtop.write('%s\n' % excluded)
+                out_prmtop.write('%8d\n' % excluded)
             else:
-                out_prmtop.write('%s' % excluded)
+                out_prmtop.write('%8d' % excluded)
 
         out_prmtop.write('%FLAG NONBONDED_PARM_INDEX\n')
         out_prmtop.write('%FORMAT(10I8)\n')
         count = 0
-        for i in range(1, self.particles.count + 1):
-            for j in range(1, self.particles.count + 1):
+        for pti in range(1, self.particle_types.count + 1):
+            for ptj in range(1, self.particle_types.count + 1):
                 count += 1
-                if i <= j:
-                    index = self.particle_types.count * (self.particles[i].type.tag-1) + self.particles[j].type.tag
+                if pti <= ptj:
+                    index = self.particle_types.count * (pti-1) + ptj
                 else:
-                    index = self.particle_types.count * (self.particles[j].type.tag-1) + self.particles[i].type.tag
+                    index = self.particle_types.count * (ptj-1) + pti
                 if (count != 1 and count % 10 == 0) or count == self.particle_types.count*self.particle_types.count:
-                    out_prmtop.write('%s\n' % index)
+                    out_prmtop.write('%8d\n' % index)
                 else:
-                    out_prmtop.write('%s' % index)
-
-        out_prmtop.write('%FLAG NONBONDED_PARM_INDEX\n')
-        out_prmtop.write('%FORMAT(10I8)\n')
-        count = 0
-        for i in range(1, self.particles.count + 1):
-            for j in range(1, self.particles.count + 1):
-                count += 1
-                if i <= j:
-                    index = self.particle_types.count * (self.particles[i].type.tag-1) + self.particles[j].type.tag
-                else:
-                    index = self.particle_types.count * (self.particles[j].type.tag-1) + self.particles[i].type.tag
-                if (count != 1 and count % 10 == 0) or count == self.particle_types.count*self.particle_types.count:
-                    out_prmtop.write('%s\n' % index)
-                else:
-                    out_prmtop.write('%s' % index)
+                    out_prmtop.write('%8d' % index)
 
         out_prmtop.write('%FLAG RESIDUE_LABEL\n')
         out_prmtop.write('%FORMAT(20a4)\n')
         for i in range(1, self.molecules.count + 1):
             if (i != 1 and i % 20 == 0) or i == self.molecules.count:
-                out_prmtop.write('%s\n' % self.molecules[i].name[:4])
+                out_prmtop.write('%4s\n' % self.molecules[i].name[:4])
             else:
-                out_prmtop.write('%s' % self.molecules[i].name[:4])
+                out_prmtop.write('%4s' % self.molecules[i].name[:4])
 
         out_prmtop.write('%FLAG RESIDUE_POINTER\n')
         out_prmtop.write('%FORMAT(10I8)\n')
         for i in range(1, self.molecules.count + 1):
             if (i != 1 and i % 10 == 0) or i == self.molecules.count:
                 for p in self.molecules[i].particles:
-                    out_prmtop.write('%s\n' % p.tag)
+                    out_prmtop.write('%8s\n' % p.tag)
                     break
             else:
                 for p in self.molecules[i].particles:
-                    out_prmtop.write('%s' % p.tag)
+                    out_prmtop.write('%8s' % p.tag)
                     break
 
         out_prmtop.write('%FLAG BOND_FORCE_CONSTANT\n')
@@ -2857,20 +2856,20 @@ class System(object):
         else:
             out = open(outfile, 'w+')
 
-        out.write('{0: <10}pdb written using pySIMM system module\n'
+        out.write('{:<10}pdb written using pySIMM system module\n'
                   .format('HEADER'))
         for p in self.particles:
-            out.write('{0: <6}{1: >5} {2: >4} RES {3}     '
-                      '{4: >8.3f}{5: >8.3f}{6: >8.3f}{7: >24}{8: >2}\n'
-                      .format('ATOM', p.tag, p.type.name if type_names else p.type.elem, p.molecule.tag,
+            out.write('{:<6}{:>5} {:>4} RES {:4}    '
+                      '{:7< 7f}{:7< 7f}{:7< 7f}{:>22}{:>2}\n'
+                      .format('ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, p.molecule.tag,
                               p.x, p.y, p.z, '', p.type.elem))
         for p in self.particles:
             if p.bonds:
-                out.write('{0: <6}{1: >5}'
+                out.write('{:<6}{:>5}'
                           .format('CONECT', p.tag))
                 for t in sorted([x.a.tag if p is x.b else x.b.tag for x in
                                  p.bonds]):
-                    out.write('{0: >5}'.format(t))
+                    out.write('{:>5}'.format(t))
                 out.write('\n')
 
         if outfile == 'string':
