@@ -53,6 +53,10 @@ class Dreiding(Forcefield):
         Forcefield.__init__(self, db_file)
         self.ff_name = 'dreiding'
         self.pair_style = 'buck'
+        self.bond_style = 'harmonic'
+        self.angle_style = 'harmonic'
+        self.dihedral_style = 'harmonic'
+        self.improper_style = 'harmonic'
         self.ff_class = '1'
 
     def assign_ptypes(self, s):
@@ -160,6 +164,7 @@ class Dreiding(Forcefield):
             None
         """
         all_types = set()
+        s.bond_style = self.bond_style
         for b in s.bonds:
             bt = self.bond_types.get('%s,%s' % (b.a.type.name, b.b.type.name))
             if bt:
@@ -194,6 +199,7 @@ class Dreiding(Forcefield):
             None
         """
         all_types = set()
+        s.angle_style = self.angle_style
         for p in s.particles:
             p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
             for p1 in p.bonded_to:
@@ -243,6 +249,7 @@ class Dreiding(Forcefield):
             None
         """
         all_types = set()
+        s.dihedral_style = self.dihedral_style
         for b in s.bonds:
             for p1 in b.a.bonded_to:
                 for p2 in b.b.bonded_to:
@@ -310,6 +317,7 @@ class Dreiding(Forcefield):
             None
         """
         all_types = set()
+        s.improper_style = self.improper_style
         for p in s.particles:
             if len(p.bonded_to) == 3:
                 for perm in permutations(p.bonded_to, 3):
