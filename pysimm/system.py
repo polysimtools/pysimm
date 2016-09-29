@@ -2859,10 +2859,16 @@ class System(object):
         out.write('{:<10}pdb written using pySIMM system module\n'
                   .format('HEADER'))
         for p in self.particles:
-            out.write('{:<6}{:>5} {:>4} RES  {:4}   '
-                      '{: 8.4f}{: 8.4f}{: 8.4f}{:>22}{:>2}\n'
-                      .format('ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, p.molecule.tag,
-                              p.x, p.y, p.z, '', p.type.elem))
+            if p.type:
+                out.write('{:<6}{:>5} {:>4} RES  {:4}   '
+                          '{: 8.4f}{: 8.4f}{: 8.4f}{:>22}{:>2}\n'
+                          .format('ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, p.molecule.tag,
+                                  p.x, p.y, p.z, '', p.type.elem))
+            elif p.elem:
+                out.write('{:<6}{:>5} {:>4} RES  {:4}   '
+                          '{: 8.4f}{: 8.4f}{: 8.4f}{:>22}{:>2}\n'
+                          .format('ATOM', p.tag, p.elem, p.molecule.tag,
+                                  p.x, p.y, p.z, '', p.elem))
         for p in self.particles:
             if p.bonds:
                 out.write('{:<6}{:>5}'
