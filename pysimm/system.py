@@ -4770,6 +4770,103 @@ def read_mol(mol_file, type_with=None, version='V2000'):
                   % type_with.ff_name)
 
     return s
+    
+    
+def read_prepc(prec_file):
+    """pysimm.system.read_prepc
+
+    Interprets prepc file and creates pysimm.system.System object
+
+    Args:
+        prepc_file: ac file name
+
+    Returns:
+        pysimm.system.System object
+    """
+    if os.path.isfile(prec_file):
+        debug_print('reading file')
+        f = file(prec_file)
+    elif isinstance(prec_file, basestring):
+        debug_print('reading string')
+        f = StringIO(prec_file)
+    else:
+        raise PysimmError('pysimm.system.read_pdb requires either '
+                          'file or string as argument')
+
+    s = System(name='read using pysimm.system.read_ac')
+
+    for line in f:
+        for _ in range(10):
+            line = f.next()
+        while line.split():
+            tag = int(line.split()[0])
+            name = line.split()[1]
+            type_name = line.split()[2]
+            x = float(line.split()[4])
+            y = float(line.split()[5])
+            z = float(line.split()[6])
+            charge = float(line.split()[7])
+            elem = type_name[0]
+            p = Particle(tag=tag, name=name, type_name=type_name, x=x, y=y, z=z, elem=elem, charge=charge)
+            if not s.particles[tag]:
+                s.particles.add(p)
+            line = f.next()
+        break
+
+    f.close()
+    
+    return s
+    
+def read_ac(ac_file):
+    """pysimm.system.read_ac
+
+    Interprets ac file and creates pysimm.system.System object
+
+    Args:
+        ac_file: ac file name
+
+    Returns:
+        pysimm.system.System object
+    """
+    if os.path.isfile(ac_file):
+        debug_print('reading file')
+        f = file(ac_file)
+    elif isinstance(ac_file, basestring):
+        debug_print('reading string')
+        f = StringIO(ac_file)
+    else:
+        raise PysimmError('pysimm.system.read_pdb requires either '
+                          'file or string as argument')
+
+    s = System(name='read using pysimm.system.read_ac')
+
+    for line in f:
+        if line.startswith('ATOM'):
+            tag = int(line.split()[1])
+            name = line.split()[2]
+            resname = line.split()[3]
+            resid = line.split()[4]
+            x = float(line.split()[5])
+            y = float(line.split()[6])
+            z = float(line.split()[7])
+            charge = float(line.split()[8])
+            type_name = line.split()[9]
+            elem = type_name[0]
+            p = Particle(tag=tag, name=name, type_name=type_name, resname=resname, resid=resid, x=x, y=y, z=z, elem=elem, charge=charge)
+            if not s.particles[tag]:
+                s.particles.add(p)
+        if line.startswith('BOND'):
+            tag = int(line.split()[1])
+            a = s.particles[int(line.split()[2])]
+            b = s.particles[int(line.split()[3])]
+            b = Bond(tag=tag, a=a, b=b)
+            if not s.bonds[tag]:
+                s.bonds.add(b)
+
+
+    f.close()
+    
+    return s
 
 
 def read_pdb(pdb_file, guess_bonds=False):
