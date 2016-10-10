@@ -32,7 +32,7 @@ If the LAMMPS_EXEC environment variable is not set, you will see a warning when 
 Complete Installation (pysimm and LAMMPS)
 =========================================
 
-*** Please be aware LAMMPS is a separate software, developed separately, and protected under a separate license. The following information is installation directions <i>suggested</i> by pysimm developers that may be used to generate a functional version of LAMMPS for integration with pysimm. LAMMPS has many more functionality than is represented by these installation directions, and those interested in these functionalities should visit [LAMMPS documentation](http://lammps.sandia.gov/doc/Manual.html) to learn more. 
+*** Please be aware LAMMPS is a separate software, developed separately, and protected under a separate license. The following information is installation directions <i>suggested</i> by pysimm developers that may be used to generate a functional version of LAMMPS for integration with pysimm. LAMMPS has much more functionality than is represented by these installation directions, and those interested in these functionalities should visit [LAMMPS documentation](http://lammps.sandia.gov/doc/Manual.html) to learn more. 
 
 <i>NOTE: The complete_install.py script is designed to work on debian-based linux machines only. It uses apt-get to install dependencies for pysimm and LAMMPS.</i>
 
