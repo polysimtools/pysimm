@@ -996,17 +996,6 @@ class System(object):
                 else:
                     print('cannot find regular type for linker %s'
                           % p.type.name)
-                          
-    def read_ac_charges(self, fname):
-        with file(fname) as f:
-            f.next()
-            f.next()
-            line = f.next()
-            while line.split()[0] == 'ATOM':
-                tag = int(line.split()[1])
-                charge = float(line.split()[-2])
-                self.particles[tag].charge = charge
-                line = f.next()
             
                           
     def read_lammps_dump(self, fname):
@@ -4618,6 +4607,31 @@ def read_pubchem_smiles(smiles, type_with=None):
         return read_mol(resp.read(), type_with=type_with)
     except HTTPError, URLError:
         print('Could not retrieve pubchem entry for smiles %s' % smiles)
+        
+        
+def read_pubchem_cid(cid, type_with=None):
+    """pysimm.system.read_pubchem_smiles
+
+    Interface with pubchem restful API to create molecular system from SMILES format
+
+    Args:
+        smiles: smiles formatted string of molecule
+        type_with: pysimm.forcefield.Forcefield object to type with default=None
+
+    Returns:
+        pysimm.system.System object
+    """
+
+    req = ('https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/{}/SDF/?record_type=3d'.format(cid))
+           
+    print('making request to pubchem RESTful API:')
+    print(req)
+
+    try:
+        resp = urlopen(req)
+        return read_mol(resp.read(), type_with=type_with)
+    except HTTPError, URLError:
+        print('Could not retrieve pubchem entry for cid %s' % cid)
 
 
 def read_cml(cml_file, **kwargs):
