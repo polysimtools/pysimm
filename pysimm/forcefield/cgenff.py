@@ -189,7 +189,7 @@ class Cgenff(Forcefield):
                             p.type_name = 'NG2S1'
                     elif aromatic_ring:
                         p.type_name = 'NG2R60'
-                    elif nbonds == 3:
+                    elif p.nbonds == 3:
                         if p.bond_elements.count('C') == 3:
                             p.type_name = 'NG301'
                         elif p.bond_elements.count('C') == 2:
