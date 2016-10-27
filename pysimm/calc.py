@@ -308,6 +308,7 @@ def tacticity(s, a_tag=None, b_tag=None, c_tag=None, d_tag=None, offset=None, re
     if rewrap:
         s.wrap()
 
+    print('{}/{} syn diads'.format(syn_diads,(syn_diads+iso_diads)))
     if return_angles:
         return t, stereochem_angles
     else:
