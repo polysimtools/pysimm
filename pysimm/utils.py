@@ -161,6 +161,10 @@ class ItemContainer(Sequence):
 class Item(object):
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
+            if v == 'TRUE':
+                v = True
+            elif v == 'FALSE':
+                v = False
             setattr(self, k, v)
 
     def __getattr__(self, name):
