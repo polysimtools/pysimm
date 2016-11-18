@@ -4811,6 +4811,9 @@ NG2S1  CG321  CG321  SG3O1      0.0800  3   180.00 ! NACT, N-acetyltaurine, comp
 NG2S1  CG321  CG321  HGA2       0.1950  3     0.00 ! TCA, Taurocholic Acid, cacha, 03/06 OK
 OG301  CG321  CG321  OG301      0.2500  1   180.00 ! 1,2 dimethoxyethane, 2/12/05, ATM
 OG301  CG321  CG321  OG301      1.2400  2     0.00 ! 1,2 dimethoxyethane
+OG311  CG321  CG321  OG301      2.65    1    180.0 ! glycol RMV Aug07 # added from ether
+OG311  CG321  CG321  OG301      0.00    2      0.0 ! glycol RMV Aug07 # added from ether
+OG311  CG321  CG321  OG301      0.13    3    180.0 ! glycol RMV Aug07 # added from ether
 OG301  CG321  CG321  HGA2       0.1900  3     0.00 ! alkane, 4/98, yin and mackerell
 OG302  CG321  CG321  HGA2       0.1950  3     0.00 ! PROT alkane update, adm jr., 3/2/92
 OG303  CG321  CG321  OG303      0.1950  3     0.00 ! PROT alkane update, adm jr., 3/2/92
