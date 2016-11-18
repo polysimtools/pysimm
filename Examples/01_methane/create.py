@@ -18,10 +18,7 @@ gaff_c3 = s.particle_types.add(f.particle_types.get('c3')[0].copy())
 c1 = s.particles.add(system.Particle(type=gaff_c3, x=0, y=0, z=0, charge=0, molecule=m))
 
 # get hc particle type object from GAFF
-gaff_hc = f.particle_types.get('hc')[0].copy()
-
-# add hc particle type to system
-s.particle_types.add(gaff_hc)
+gaff_hc = s.particle_types.add(f.particle_types.get('hc')[0].copy())
 
 # now we'll add 4 hydrogen atoms bonded to our carbon atom
 # these atoms will be placed randomly 1.5 angstroms from the carbon atom
