@@ -67,6 +67,10 @@ if __name__ == '__main__':
     parser.add_argument('--yaml', dest='yaml_file',
                         help="read a yaml file and "
                              "store in local variable 's'")
+                             
+    parser.add_argument('--smiles', dest='smiles',
+                        help="create system from smiles using pubchem API and "
+                             "store in local variable 's'")
 
     parser.add_argument('--forcefield', dest='forcefield',
                         help='forcefield name to type system with')
@@ -122,6 +126,8 @@ if __name__ == '__main__':
         s = system.read_cml(args.cml_file)
     elif args.yaml_file:
         s = system.read_yaml(args.yaml_file)
+    elif args.smiles:
+        s = system.read_pubchem_smiles(args.smiles)
     elif args.lmps2xyz:
         s = system.read_lammps(args.lmps2xyz[0])
         if args.unwrap:
