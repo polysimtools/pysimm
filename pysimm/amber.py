@@ -33,37 +33,81 @@ import json
 import glob
 from subprocess import call, Popen, PIPE
 
+from pysimm import forcefield
+from pysimm import error_print
+from pysimm import warning_print
+from pysimm import debug_print
+
+
 ANTECHAMBER_EXEC  = os.environ.get('ANTECHAMBER_EXEC')
 
-def calc_charges(s, charge_method='bcc'):
-    ac = Antechamber(s)
-    ac.convert_to_ac()
-    ac.charges(charge_method)
-    ac.cleanup()
+
+def cleanup_antechamber():
+    fnames = ['pysimm.tmp.pdb', 'pysimm.tmp.ac' ]
+    fnames += ['ATOMTYPE.INF']
+    fnames += glob.glob('ANTECHAMBER*')
+    for fname in fnames:
+        try:
+            os.remove(fname)
+        except:
+            print('problem removing {} during cleanup'.format(fname))
+
+
+def calc_charges(s, charge_method='bcc', cleanup=True):
+    s.write_pdb('pysimm.tmp.pdb')
+    cl = '{} -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -c {}'.format(ANTECHAMBER_EXEC, charge_method)
+    p = Popen(cl.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    p.communicate()
+    with file('pysimm.tmp.ac') as f:
+        f.next()
+        f.next()
+        line = f.next()
+        while line.split()[0] == 'ATOM':
+            tag = int(line.split()[1])
+            charge = float(line.split()[-2])
+            s.particles[tag].charge = charge
+            line = f.next()
+    if cleanup:
+        cleanup_antechamber()
+
+        
+def get_forcefield_types(s, types='gaff', f=None):
+    s.write_pdb('pysimm.tmp.pdb')
+    cl = '{} -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -at {}'.format(ANTECHAMBER_EXEC, types)
+    p = Popen(cl.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    p.communicate()
+    with file('pysimm.tmp.ac') as fr:
+        fr.next()
+        fr.next()
+        line = fr.next()
+        while line.split()[0] == 'ATOM':
+            tag = int(line.split()[1])
+            type_name = line.split()[-1]
+            if s.particle_types.get(type_name):
+                s.particles[tag].type = s.particle_types.get(type_name)[0]
+            elif f:
+                pt = f.particle_types.get(type_name)
+                if pt:
+                    s.particles[tag].type = s.particle_types.add(pt[0].copy())
+                    
+            else:
+                error_print('cannot find type {} in system or forcefield'.format(type_name))
+            line = fr.next()
+
 
 class Antechamber(object):
     def __init__(self, s, **kwargs):
+        at = kwargs.get('types') if kwargs.has_key('types') else 'gaff'
         self.system = s
         
-    def convert_to_ac(self):
+    def convert_to_ac(self, at):
         self.system.write_pdb('pysimm.tmp.pdb', False)
-        cl = '{} -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac'.format(ANTECHAMBER_EXEC)
+        cl = '{} -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -at {}'.format(ANTECHAMBER_EXEC, at)
         p = Popen(cl.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
         p.communicate()
         
-    def charges(self, charge_method='bcc'):
+    def bcc_charges(self, charge_method='bcc'):
         cl = '{} -fi ac -i pysimm.tmp.ac -fo ac -o pysimm_charges.tmp.ac -c {}'.format(ANTECHAMBER_EXEC, charge_method)
         p = Popen(cl.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
         p.communicate()
         self.system.read_ac_charges('pysimm_charges.tmp.ac')
-        
-    def cleanup(self):
-        fnames = ['pysimm.tmp.pdb', 'pysimm.tmp.ac', 'pysimm_charges.tmp.ac', ]
-        fnames += ['ATOMTYPE.INF']
-        fnames += glob.glob('ANTECHAMBER*')
-        for fname in fnames:
-            try:
-                os.remove(fname)
-            except:
-                print('problem removing {}'.format(fname))
-        
