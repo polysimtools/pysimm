@@ -12139,7 +12139,7 @@
         }
     ], 
     "angle_style": "harmonic", 
-    "improper_style": "cvff", 
+    "improper_style": "harmonic", 
     "bond_style": "harmonic", 
     "improper_types": [
         {
@@ -13119,7 +13119,7 @@
             "desc": "NA NICH, adm jr. WILDCARD"
         }
     ], 
-    "ff_name": "gaff2", 
+    "ff_name": "cgenff", 
     "bond_types": [
         {
             "rname": "OG312,CG2R61", 
@@ -23472,28 +23472,25 @@
             "name": "CG2R61,CG2R61,CG2R61,NG2R62"
         }, 
         {
-            "rname": "OG3C51,CG3C52,CG3C51,OG311", 
+            "rname": "OG301,CG321,CG321,OG311", 
             "d": [
-                1.0, 
                 -0.5984600690578581, 
                 1.0, 
-                1.0
+                -0.5984600690578581
             ], 
             "k": [
-                0.2, 
-                0.6, 
-                0.3, 
-                0.5
+                2.65, 
+                0.0, 
+                0.13
             ], 
-            "m": 4, 
+            "m": 3, 
             "n": [
-                3, 
-                4, 
-                5, 
-                6
+                1, 
+                2, 
+                3
             ], 
-            "tag": "OG311,CG3C51,CG3C52,OG3C51", 
-            "name": "OG311,CG3C51,CG3C52,OG3C51"
+            "tag": "OG311,CG321,CG321,OG301", 
+            "name": "OG311,CG321,CG321,OG301"
         }, 
         {
             "rname": "CG2RC0,CG2R67,CG2R67,CG2R61", 
@@ -47809,6 +47806,30 @@
             ], 
             "tag": "OG2D1,CG2O1,CG311,NG2S1", 
             "name": "OG2D1,CG2O1,CG311,NG2S1"
+        }, 
+        {
+            "rname": "OG3C51,CG3C52,CG3C51,OG311", 
+            "d": [
+                1.0, 
+                -0.5984600690578581, 
+                1.0, 
+                1.0
+            ], 
+            "k": [
+                0.2, 
+                0.6, 
+                0.3, 
+                0.5
+            ], 
+            "m": 4, 
+            "n": [
+                3, 
+                4, 
+                5, 
+                6
+            ], 
+            "tag": "OG311,CG3C51,CG3C52,OG3C51", 
+            "name": "OG311,CG3C51,CG3C52,OG3C51"
         }, 
         {
             "rname": "NG2RC0,CG2RC0,CG2R61,HGR61", 
