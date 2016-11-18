@@ -97,6 +97,41 @@ class Particle(Item):
         else:
             error_print('style %s not supported yet' % style)
             return False
+            
+    def environment(self):
+        e = Item()
+        e.elem = self.elem
+        e.nbonds = self.bonds.count
+        e.bonded_elem = [p.elem for p in self.get_bonded_particles()]
+        self.env = e
+        
+    def assign_type(self, f):
+        possible_types = f.particle_types.subset(**vars(self.env))
+        if possible_types.count == 1:
+            self.type_name = iter(possible_types).next().name
+        else:
+            print('particle {} possible types: {}'.format(self.tag, ', '.join([pt.name for pt in possible_types])))
+            
+    def get_bonded_particles(self):
+        return [b.a if b.b is self else b.b for b in self.bonds]
+            
+    def in_ring(self, max_size=6):
+        '''buggggggggy'''
+        network = [[self]]
+        n_set = set([self])
+        network.append(self.get_bonded_particles())
+        for p in self.get_bonded_particles():
+            n_set.add(p)
+        for n in range(max_size - 1):
+            network.append([])
+            for p in network[-2]:
+                for pb in p.get_bonded_particles():
+                    if pb is p:
+                        return n + 2
+                    if pb not in n_set:
+                        n_set.add(pb)
+                        network[-1].append(pb)
+        return network
 
     def delete_bonding(self, s):
         """pysimm.system.Particle.delete_bonding
@@ -181,6 +216,49 @@ class ParticleType(Item):
     """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
+        
+        
+class ParticleContainer(ItemContainer):
+    def __init__(self, _dict=None, **kwargs):
+        ItemContainer.__init__(self, _dict, **kwargs)
+        
+    def subset(self, elem=None, nbonds=None, bonded_elem=None, aromatic=None, hyb=None, united_atom=None):
+        result = ParticleContainer()
+        
+        for pt in self:
+            pt_ = pt.copy()
+            pt_.tag=pt_.name
+            result.add(pt_)
+            
+        result.refine(elem, nbonds, bonded_elem, aromatic, hyb, united_atom)
+        return result
+            
+    def refine(self, elem=None, nbonds=None, bonded_elem=None, aromatic=None, hyb=None, united_atom=None):
+        if elem:
+            for pt in self:
+                if pt.elem != elem:
+                    self.remove(pt.tag, update=False)
+        if nbonds:
+            for pt in self:
+                if pt.nbonds and pt.nbonds != nbonds:
+                    self.remove(pt.tag, update=False)
+        if bonded_elem:
+            for pt in self:
+                for e in bonded_elem:
+                    if pt.bonded_elem and pt.bonded_elem.count(e) != bonded_elem.count(e):
+                        self.remove(pt.tag, update=False)
+        if hyb:
+            for pt in self:
+                if pt.hyb and pt.hyb != hyb:
+                    self.remove(pt.tag, update=False)
+        if aromatic is not None:
+            for pt in self:
+                if pt.aromatic is not None and pt.aromatic != aromatic:
+                    self.remove(pt.tag, update=False)
+        if united_atom is not None:
+            for pt in self:
+                if (united_atom is True and not pt.united_atom) or (united_atom is False and pt.united_atom is True):
+                    self.remove(pt.tag, update=False)
 
 
 class Bond(Item):
@@ -197,6 +275,12 @@ class Bond(Item):
     """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
+        
+    def get_other_particle(self, p):
+        if p is not b.a and p is not b.b:
+            return None
+        else:
+            return b.a if p is b.b else b.b
 
     def distance(self):
         """pysimm.system.Bond.distance
@@ -808,6 +892,20 @@ class System(object):
                 return False
 
         return True
+        
+    def unite_atoms(self):
+        for p in self.particles:
+            if p.elem != 'C':
+                continue
+            for b in p.bonds:
+                pb = b.a if b.b is p else b.b
+                if pb.elem =='H':
+                    if p.implicit_h is not None:
+                        p.implicit_h += 1
+                    else:
+                        p.implicit_h = 1
+                    self.particles.remove(pb.tag, update=False)
+        self.remove_spare_bonding()
 
     def quality(self, tolerance=0.1):
         """pysimm.system.System.quality
