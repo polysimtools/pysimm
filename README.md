@@ -10,20 +10,20 @@ Documentation for the python package can be found at http://pysimm.org/documenta
 Getting Started
 ===============
 
-To get started, clone the repository, cd into the new directory, and install using python setuptools:
+To get started, clone the repository, cd into the new directory, and install using complete_install.py. The --pysimm command line argument passed to the script should be the directory in which you cloned the pysimm repository. The following example assumes you cloned the repository in your home directory:
 
 ```
 git clone https://github.com/polysimtools/pysimm
 cd pysimm
-sudo python setup.py install
+python complete_install.py --pysimm $HOME
 ```
 
-This adds the pysimm package to your PYTHONPATH, and adds a command line tool to your PATH. 
+This adds the pysimm package to your PYTHONPATH, and adds a pysimm command line tool to your PATH. 
 
 Integration with LAMMPS
 =======================
 
-pysimm can integrate seamlessly with parts of the LAMMPS simulation software package through the pysimm.lmps module. To configure the integration, locate your LAMMPS executable. If the path to your LAMMPS executable is /usr/bin/lmp_mpi, add this path as an environment variable "LAMMPS_EXEC":
+pysimm can integrate seamlessly with parts of the LAMMPS simulation software package through the pysimm.lmps module. To configure the integration, locate your LAMMPS executable. For example, if the path to your LAMMPS executable is /usr/bin/lmp_mpi, add this path as an environment variable "LAMMPS_EXEC":
 
 ```echo "export LAMMPS_EXEC=/usr/bin/lmp_mpi" >> ~/.bashrc```
 
