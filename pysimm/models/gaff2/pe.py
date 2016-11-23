@@ -1,4 +1,5 @@
 from pysimm import system, lmps, forcefield
+from pysimm.apps.random_walk import random_walk
 
 def monomer():
     s = system.System()
@@ -30,3 +31,8 @@ def monomer():
     lmps.quick_min(s, min_style='fire')
     
     return s
+    
+def polymer_chain(length):
+    mon = monomer()
+    polym = random_walk(mon, length, forcefield=forcefield.Dreiding())
+    return polym
