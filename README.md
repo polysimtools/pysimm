@@ -16,8 +16,7 @@ To get started, clone the repository, cd into the new directory, and install usi
 
 ```
 git clone https://github.com/polysimtools/pysimm
-cd pysimm
-sudo python complete_install.py --pysimm $HOME
+sudo python pysimm/complete_install.py --pysimm $PWD
 ```
 
 This adds the pysimm package to your PYTHONPATH, and adds a pysimm command line tool to your PATH. 
@@ -42,8 +41,7 @@ Included in the repository is a python script complete_install.py that will conf
 
 ```
 git clone https://github.com/polysimtools/pysimm
-cd pysimm
-sudo python complete_install.py --pysimm $HOME --lammps $HOME
+sudo python pysimm/complete_install.py --pysimm $PWD --lammps $PWD
 ```
 
 Afterwords be sure to source your ~/.bashrc file:
