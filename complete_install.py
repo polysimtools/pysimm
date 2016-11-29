@@ -10,20 +10,20 @@ HOME_DIR = os.environ.get('HOME')
 def install_pysimm(prefix):
     os.chdir(prefix)
     call('git clone https://github.com/polysimtools/pysimm', shell=True)
-    call("echo export PYTHONPATH='$PYTHONPATH':{} >> {}".format(os.path.join(prefix),
+    call("echo export PYTHONPATH='$PYTHONPATH':{} >> {}".format(os.path.join(prefix, 'pysimm'),
                                                                 os.path.join(HOME_DIR, '.bashrc')),
          shell=True)
-    call("echo export PATH='$PATH':{} >> {}".format(os.path.join(prefix, 'bin'),
+    call("echo export PATH='$PATH':{} >> {}".format(os.path.join(prefix, 'pysimm', 'bin'),
                                                     os.path.join(HOME_DIR, '.bashrc')),
          shell=True)
 
 
 def apt_update():
-    call('sudo apt-get update', shell=True)
+    call('apt-get update', shell=True)
 
 
 def apt_install(*packages):
-    call('sudo apt-get -y install {}'.format(' '.join(packages)),
+    call('apt-get -y install {}'.format(' '.join(packages)),
          shell=True)
 
 
@@ -65,6 +65,7 @@ def parse_args():
                         default=['molecule', 'class2', 'kspace', 'user-misc', 'qeq', 'manybody'])
     parser.add_argument('--amber-tools', dest='ambertools_dir', default=None)
     parser.add_argument('--openbabel', dest='openbabel', action='store_true', default=False)
+    parser.add_argument('--skip-apt', dest='skip_apt', action='store_true', default=False)
     return parser.parse_args()
 
 
@@ -86,20 +87,24 @@ if __name__ == '__main__':
         apt_update()
 
     if args.pysimm_prefix:
-        apt_install('git', 'python-numpy', 'python-matplotlib')
+        if not args.skip_apt:
+            apt_install('git', 'python-numpy', 'python-matplotlib')
         mkdir_p(args.pysimm_prefix)
         install_pysimm(args.pysimm_prefix)
 
     if args.lammps_prefix:
-        apt_install('make git g++', 'libopenmpi-dev', 'openmpi-bin')
+        if not args.skip_apt:
+            apt_install('make git g++', 'libopenmpi-dev', 'openmpi-bin')
         mkdir_p(args.lammps_prefix)
         install_lammps(args.lammps_prefix, *args.lammps_packages)
         
     if args.ambertools_dir:
-        apt_install('make', 'csh', 'gfortran', 'libopenmpi-dev', 'openmpi-bin', 'xorg-dev', 'xserver-xorg')
+        if not args.skip_apt:
+            apt_install('make', 'csh', 'gfortran', 'libopenmpi-dev', 'openmpi-bin', 'xorg-dev', 'xserver-xorg')
         install_ambertools(args.ambertools_dir)
         
     if args.openbabel:
         install_openbabel()
         
     os.chdir(HOME_DIR)
+

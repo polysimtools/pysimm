@@ -10,12 +10,14 @@ Documentation for the python package can be found at http://pysimm.org/documenta
 Getting Started
 ===============
 
-To get started, clone the repository, cd into the new directory, and install using complete_install.py. The --pysimm command line argument passed to the script should be the directory in which you cloned the pysimm repository. The following example assumes you cloned the repository in your home directory:
+Those who need to install LAMMPS (or wish to build a new version of LAMMPS with the optional packages utilized in the examples included in the repository) should skip to the Complete Installation section below, which provides instructions on how to setup pysimm, build a LAMMPS version suitable for the examples included here, and configure the integration between the two pieces of software. If you have already installed LAMMPS and simply wish to setup pysimm, continue following the directions below.
+
+To get started, clone the repository, cd into the new directory, and install using complete_install.py. The --pysimm command line argument passed to the script should be the directory in which you cloned the pysimm repository (one directory up). The following example assumes you cloned the repository in your home directory. For users without sudo privilidges, the --skip-apt command line argument can be included, however dependencies for pysimm (python-numpy and python-matplotlib) will have to be installed by your system administor for complete functionality of the pysimm package.
 
 ```
 git clone https://github.com/polysimtools/pysimm
 cd pysimm
-python complete_install.py --pysimm $HOME
+sudo python complete_install.py --pysimm $HOME
 ```
 
 This adds the pysimm package to your PYTHONPATH, and adds a pysimm command line tool to your PATH. 
@@ -41,7 +43,7 @@ Included in the repository is a python script complete_install.py that will conf
 ```
 git clone https://github.com/polysimtools/pysimm
 cd pysimm
-python complete_install.py --pysimm $HOME --lammps $HOME
+sudo python complete_install.py --pysimm $HOME --lammps $HOME
 ```
 
 Afterwords be sure to source your ~/.bashrc file:
