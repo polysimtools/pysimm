@@ -4,12 +4,12 @@ from pysimm.apps.random_walk import random_walk
 # use a smiles string to query the pubchem search database and read the mol file returned from the http request
 pmma = system.read_pubchem_smiles('cc(C)(C(=O)OC)')
 
-# we'll instantiate a Dreiding forcefield object for use later
-f = forcefield.Dreiding()
-
 # particles 3 and 6 in the monomer are going to be the head and tail linkers
 pmma.particles[3].linker='head'
 pmma.particles[6].linker='tail'
+
+# we'll instantiate a Dreiding forcefield object for use later
+f = forcefield.Dreiding()
 
 # the resulting system has sufficient information to type with the forcefield object we made earlier
 # we will also determine partial charges using the gasteiger algorithm
@@ -17,9 +17,6 @@ pmma.apply_forcefield(f, charges='gasteiger')
 
 # do a quick minimization of the monomer
 lmps.quick_min(pmma, min_style='fire')
-
-# write a yaml file for the pmma monomer
-pmma.write_yaml('pmma_monomer.yaml')
 
 pmma.pair_style = 'lj'
 

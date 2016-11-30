@@ -1,6 +1,5 @@
 from pysimm import system, lmps, forcefield
 
-
 # use a smiles string to query the pubchem search database and read the mol file returned from the http request
 s = system.read_pubchem_smiles('CO')
 

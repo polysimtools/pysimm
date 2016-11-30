@@ -14,8 +14,8 @@ for b in s.bonds:
 s.apply_forcefield(forcefield.Dreiding(), charges='gasteiger')
 
 # we'll perform energy minimization using the fire algorithm in LAMMPS
-lmps.quick_min(s, min_style='sd')
-lmps.quick_min(s, min_style='cg')
+lmps.quick_min(s, min_style='sd', name='min_sd')
+lmps.quick_min(s, min_style='cg', name='min_cg')
 
 # write a few different file formats
 s.write_xyz('benzene.xyz')

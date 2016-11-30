@@ -4,22 +4,9 @@ from pysimm.apps.random_walk import copolymer
 # use a smiles string to query the pubchem search database and read the mol file returned from the http request
 pe = system.read_pubchem_smiles('cc')
 
-# we'll instantiate a Dreiding forcefield object for use later
-f = forcefield.Dreiding()
-
 # particles 1 and 2 in the monomer are going to be the head and tail linkers
 pe.particles[1].linker='head'
 pe.particles[2].linker='tail'
-
-# the resulting system has sufficient information to type with the forcefield object we made earlier
-# we will also determine partial charges using the gasteiger algorithm
-pe.apply_forcefield(f, charges='gasteiger')
-
-# do a quick minimization of the monomer
-lmps.quick_min(pe, min_style='fire')
-
-# write a yaml file for the pe monomer
-pe.write_yaml('pe_monomer.yaml')
 
 # use a smiles string to query the pubchem search database and read the mol file returned from the http request
 ps = system.read_pubchem_smiles('cc(C1=CC=CC=C1)')
@@ -33,15 +20,22 @@ for b in ps.bonds:
   if (not b.a.linker and not b.b.linker) and b.a.elem=='C' and b.b.elem=='C':
     b.order='A'
 
+# we'll instantiate a Dreiding forcefield object for use later
+f = forcefield.Dreiding()
+
+# the resulting system has sufficient information to type with the forcefield object we made earlier
+# we will also determine partial charges using the gasteiger algorithm
+pe.apply_forcefield(f, charges='gasteiger')
+
 # the resulting system has sufficient information to type with the forcefield object we made earlier
 # we will also determine partial charges using the gasteiger algorithm
 ps.apply_forcefield(f, charges='gasteiger')
 
 # do a quick minimization of the monomer
-lmps.quick_min(ps, min_style='fire')
+lmps.quick_min(pe, min_style='fire')
 
-# write a yaml file for the ps monomer
-ps.write_yaml('ps_monomer.yaml')
+# do a quick minimization of the monomer
+lmps.quick_min(ps, min_style='fire')
 
 # the buckingham potential isn't great at small distances, and therefore we use the LJ potential while growing the polymer
 pe.pair_style = 'lj'

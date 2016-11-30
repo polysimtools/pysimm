@@ -4,12 +4,12 @@ from pysimm.apps.random_walk import random_walk
 # use a smiles string to query the pubchem search database and read the mol file returned from the http request
 s = system.read_pubchem_smiles('cc')
 
-# we'll instantiate a Dreiding forcefield object for use later
-f = forcefield.Dreiding()
-
 # particles 1 and 2 in the monomer are going to be the head and tail linkers
 s.particles[1].linker='head'
 s.particles[2].linker='tail'
+
+# we'll instantiate a Dreiding forcefield object for use later
+f = forcefield.Dreiding()
 
 # the resulting system has sufficient information to type with the forcefield object we made earlier
 # we will also determine partial charges using the gasteiger algorithm
