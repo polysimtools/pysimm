@@ -12,17 +12,25 @@ Getting Started
 
 Those who need to install LAMMPS (or wish to build a new version of LAMMPS with the optional packages utilized in the examples included in the repository) should skip to the Complete Installation section below, which provides instructions on how to setup pysimm, build a LAMMPS version suitable for the examples included here, and configure the integration between the two pieces of software. If you have already installed LAMMPS and simply wish to setup pysimm, continue following the directions below.
 
-To get started, clone the repository, cd into the new directory, and install using complete_install.py. The --pysimm command line argument passed to the script should be the directory in which you cloned the pysimm repository (one directory up). The following example assumes you cloned the repository in your home directory. For users without sudo privilidges, the --skip-apt command line argument can be included, however dependencies for pysimm (python-numpy and python-matplotlib) will have to be installed by your system administor for complete functionality of the pysimm package.
+To get started, clone the repository, cd into the new directory, and install using complete_install.py. The --pysimm command line argument passed to the script should be the directory in which you cloned the pysimm repository (one directory up). The following example assumes you cloned the repository in your home directory.
 
 ```
 git clone https://github.com/polysimtools/pysimm
-sudo python pysimm/complete_install.py --pysimm $PWD
+python pysimm/complete_install.py --pysimm $PWD
 ```
 
 This adds the pysimm package to your PYTHONPATH, and adds a pysimm command line tool to your PATH. 
 
 Integration with LAMMPS
 =======================
+
+If you are using your own build of LAMMPS, be sure that the following packages were included in your installation as some functionality in the example scripts require some subset of these packages:
+  -  molecule
+  -  class2
+  -  kspace
+  -  user-misc
+  -  qeq
+  -  manybody
 
 pysimm can integrate seamlessly with parts of the LAMMPS simulation software package through the pysimm.lmps module. To configure the integration, locate your LAMMPS executable. For example, if the path to your LAMMPS executable is /usr/bin/lmp_mpi, add this path as an environment variable "LAMMPS_EXEC":
 
@@ -41,7 +49,7 @@ Included in the repository is a python script complete_install.py that will conf
 
 ```
 git clone https://github.com/polysimtools/pysimm
-sudo python pysimm/complete_install.py --pysimm $PWD --lammps $PWD
+python pysimm/complete_install.py --pysimm $PWD --lammps $PWD
 ```
 
 Afterwords be sure to source your ~/.bashrc file:
