@@ -13,12 +13,12 @@ f = forcefield.Gaff2()
 # get method returns a list, we need the first element
 gaff_c3 = s.particle_types.add(f.particle_types.get('c3')[0].copy())
 
+# get hc particle type object from GAFF
+gaff_hc = s.particle_types.add(f.particle_types.get('hc')[0].copy())
+
 # we'll first make the carbon atom at the origin
 # we'll include gasteiger charges later
 c1 = s.particles.add(system.Particle(type=gaff_c3, x=0, y=0, z=0, charge=0, molecule=m))
-
-# get hc particle type object from GAFF
-gaff_hc = s.particle_types.add(f.particle_types.get('hc')[0].copy())
 
 # now we'll add 4 hydrogen atoms bonded to our carbon atom
 # these atoms will be placed randomly 1.5 angstroms from the carbon atom
@@ -43,8 +43,9 @@ s.pair_style='lj'
 s.bond_style='harmonic'
 s.angle_style='harmonic'
 
-# we'll perform energy minimization using the fire algorithm in LAMMPS
-lmps.quick_min(s, min_style='fire')
+# we'll perform a 2 step energy minimization using the steepest decent and conjugate gradient algorithms in LAMMPS
+lmps.quick_min(s, min_style='sd', name='min_sd')
+lmps.quick_min(s, min_style='cg', name='min_cg')
 
 # write xyz, YAML, LAMMPS data, and chemdoodle json files
 s.write_xyz('methane.xyz')

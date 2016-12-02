@@ -13,8 +13,9 @@ for b in s.bonds:
 # we will also determine partial charges using the gasteiger algorithm
 s.apply_forcefield(forcefield.Gaff2(), charges='gasteiger')
 
-# we'll perform energy minimization using the fire algorithm in LAMMPS
-lmps.quick_min(s, min_style='fire')
+# we'll perform a 2 step energy minimization using the steepest decent and conjugate gradient algorithms in LAMMPS
+lmps.quick_min(s, min_style='sd', name='min_sd')
+lmps.quick_min(s, min_style='cg', name='min_cg')
 
 # write a few different file formats
 s.write_xyz('benzene.xyz')
