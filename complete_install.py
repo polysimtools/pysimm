@@ -9,7 +9,13 @@ HOME_DIR = os.environ.get('HOME')
 
 def install_pysimm(prefix):
     os.chdir(prefix)
-    call('git clone https://github.com/polysimtools/pysimm', shell=True)
+    if os.path.isfile('pysimm'):
+        print('pysimm directory already exists...assuming it is the pysimm repository and continuing...')
+    else:
+        call('git clone https://github.com/polysimtools/pysimm', shell=True)
+    if not os.path.isfile('pysimm/complete_install.py'):
+        print('assumption about pysimm repository existing was wrong; exiting...')
+        exit()
     call("echo export PYTHONPATH='$PYTHONPATH':{} >> {}".format(os.path.join(prefix, 'pysimm'),
                                                                 os.path.join(HOME_DIR, '.bashrc')),
          shell=True)
