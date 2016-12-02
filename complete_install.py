@@ -9,7 +9,7 @@ HOME_DIR = os.environ.get('HOME')
 
 def install_pysimm(prefix):
     os.chdir(prefix)
-    if os.path.isfile('pysimm'):
+    if os.path.isdir('pysimm'):
         print('pysimm directory already exists...assuming it is the pysimm repository and continuing...')
     else:
         call('git clone https://github.com/polysimtools/pysimm', shell=True)
