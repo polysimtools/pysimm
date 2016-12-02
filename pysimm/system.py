@@ -2713,6 +2713,30 @@ class System(object):
             return s
         else:
             out_file.close()
+            
+    def write_gro(self, outfile='data.gro', time=0.0):
+        if outfile == 'string':
+            out = StringIO()
+        else:
+            out = open(outfile, 'w+')
+            
+        out.write('{}, time={}\n'.format(self.name, time))
+        out.write('{}\n'.format(self.particles.count))
+        for p in self.particles:
+            if p.vx is None:
+                self.zero_velocity()
+            out.write('{:^5}{:^5}{:^5}{:^5}{:8.3f}{:8.3f}{:8.3f}{:8.4f}{:8.4f}{:8.4f}\n'.format(p.molecule.tag, p.molecule.name[:5],
+                                                    p.type.name[:5], p.tag, p.x/10, p.y/10, p.z/10,
+                                                    p.vx*100, p.vy*100, p.vz*100))
+        out.write('{}\t{}\t{}'.format(self.dim.dx/10, self.dim.dy/10, self.dim.dz/10))
+        
+            
+        if outfile == 'string':
+            s = out.getvalue()
+            out.close()
+            return s
+        else:
+            out.close()
 
     def write_hoomd(self, outfile='data.xml'):
         """pysimm.system.System.write_hoomd
