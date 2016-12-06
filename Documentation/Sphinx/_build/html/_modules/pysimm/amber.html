@@ -127,46 +127,119 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pysimm.amber</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="c1"># ******************************************************************************</span>
+<span class="c1"># pysimm.amber module</span>
+<span class="c1"># ******************************************************************************</span>
+<span class="c1">#</span>
+<span class="c1"># ******************************************************************************</span>
+<span class="c1"># License</span>
+<span class="c1"># ******************************************************************************</span>
+<span class="c1"># The MIT License (MIT)</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2016 Michael E. Fortunato, Coray M. Colina</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in</span>
+<span class="c1"># all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="c1"># THE SOFTWARE.</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">call</span><span class="p">,</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
 
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">forcefield</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">error_print</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">warning_print</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">debug_print</span>
+
+
 <span class="n">ANTECHAMBER_EXEC</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ANTECHAMBER_EXEC&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="calc_charges"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.calc_charges">[docs]</a><span class="k">def</span> <span class="nf">calc_charges</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">charge_method</span><span class="o">=</span><span class="s1">&#39;bcc&#39;</span><span class="p">):</span>
-    <span class="n">ac</span> <span class="o">=</span> <span class="n">Antechamber</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="n">ac</span><span class="o">.</span><span class="n">convert_to_ac</span><span class="p">()</span>
-    <span class="n">ac</span><span class="o">.</span><span class="n">charges</span><span class="p">(</span><span class="n">charge_method</span><span class="p">)</span>
-    <span class="n">ac</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="cleanup_antechamber"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.cleanup_antechamber">[docs]</a><span class="k">def</span> <span class="nf">cleanup_antechamber</span><span class="p">():</span>
+    <span class="n">fnames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pysimm.tmp.pdb&#39;</span><span class="p">,</span> <span class="s1">&#39;pysimm.tmp.ac&#39;</span> <span class="p">]</span>
+    <span class="n">fnames</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;ATOMTYPE.INF&#39;</span><span class="p">]</span>
+    <span class="n">fnames</span> <span class="o">+=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;ANTECHAMBER*&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">fnames</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;problem removing </span><span class="si">{}</span><span class="s1"> during cleanup&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="calc_charges"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.calc_charges">[docs]</a><span class="k">def</span> <span class="nf">calc_charges</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">charge_method</span><span class="o">=</span><span class="s1">&#39;bcc&#39;</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">write_pdb</span><span class="p">(</span><span class="s1">&#39;pysimm.tmp.pdb&#39;</span><span class="p">)</span>
+    <span class="n">cl</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -c </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ANTECHAMBER_EXEC</span><span class="p">,</span> <span class="n">charge_method</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">file</span><span class="p">(</span><span class="s1">&#39;pysimm.tmp.ac&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ATOM&#39;</span><span class="p">:</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">charge</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">charge</span> <span class="o">=</span> <span class="n">charge</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">cleanup</span><span class="p">:</span>
+        <span class="n">cleanup_antechamber</span><span class="p">()</span></div>
+
+        
+<div class="viewcode-block" id="get_forcefield_types"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.get_forcefield_types">[docs]</a><span class="k">def</span> <span class="nf">get_forcefield_types</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="s1">&#39;gaff&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">write_pdb</span><span class="p">(</span><span class="s1">&#39;pysimm.tmp.pdb&#39;</span><span class="p">)</span>
+    <span class="n">cl</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -at </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ANTECHAMBER_EXEC</span><span class="p">,</span> <span class="n">types</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">file</span><span class="p">(</span><span class="s1">&#39;pysimm.tmp.ac&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fr</span><span class="p">:</span>
+        <span class="n">fr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="n">fr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">fr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ATOM&#39;</span><span class="p">:</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">type_name</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">particle_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">type_name</span><span class="p">):</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">particle_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">type_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">pt</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">particle_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">type_name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">pt</span><span class="p">:</span>
+                    <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">particle_types</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+                    
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">error_print</span><span class="p">(</span><span class="s1">&#39;cannot find type </span><span class="si">{}</span><span class="s1"> in system or forcefield&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_name</span><span class="p">))</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">fr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="Antechamber"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.Antechamber">[docs]</a><span class="k">class</span> <span class="nc">Antechamber</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">at</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;types&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s1">&#39;types&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;gaff&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">s</span>
         
-<div class="viewcode-block" id="Antechamber.convert_to_ac"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.Antechamber.convert_to_ac">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_ac</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Antechamber.convert_to_ac"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.Antechamber.convert_to_ac">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_ac</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">at</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">write_pdb</span><span class="p">(</span><span class="s1">&#39;pysimm.tmp.pdb&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-        <span class="n">cl</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ANTECHAMBER_EXEC</span><span class="p">)</span>
+        <span class="n">cl</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -at </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ANTECHAMBER_EXEC</span><span class="p">,</span> <span class="n">at</span><span class="p">)</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span>
         <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span></div>
         
-<div class="viewcode-block" id="Antechamber.charges"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.Antechamber.charges">[docs]</a>    <span class="k">def</span> <span class="nf">charges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">charge_method</span><span class="o">=</span><span class="s1">&#39;bcc&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="Antechamber.bcc_charges"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.Antechamber.bcc_charges">[docs]</a>    <span class="k">def</span> <span class="nf">bcc_charges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">charge_method</span><span class="o">=</span><span class="s1">&#39;bcc&#39;</span><span class="p">):</span>
         <span class="n">cl</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> -fi ac -i pysimm.tmp.ac -fo ac -o pysimm_charges.tmp.ac -c </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ANTECHAMBER_EXEC</span><span class="p">,</span> <span class="n">charge_method</span><span class="p">)</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span>
         <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">read_ac_charges</span><span class="p">(</span><span class="s1">&#39;pysimm_charges.tmp.ac&#39;</span><span class="p">)</span></div>
-        
-<div class="viewcode-block" id="Antechamber.cleanup"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.Antechamber.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">fnames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pysimm.tmp.pdb&#39;</span><span class="p">,</span> <span class="s1">&#39;pysimm.tmp.ac&#39;</span><span class="p">,</span> <span class="s1">&#39;pysimm_charges.tmp.ac&#39;</span><span class="p">,</span> <span class="p">]</span>
-        <span class="n">fnames</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;ATOMTYPE.INF&#39;</span><span class="p">]</span>
-        <span class="n">fnames</span> <span class="o">+=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;ANTECHAMBER*&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">fnames</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-            <span class="k">except</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;problem removing </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span></div></div>
-        
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">read_ac_charges</span><span class="p">(</span><span class="s1">&#39;pysimm_charges.tmp.ac&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

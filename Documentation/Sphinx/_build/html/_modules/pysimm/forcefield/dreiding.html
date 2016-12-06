@@ -136,7 +136,7 @@
 <span class="c1"># ******************************************************************************</span>
 <span class="c1"># The MIT License (MIT)</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2016 Michael E. Fortunato</span>
+<span class="c1"># Copyright (c) 2016 Michael E. Fortunato, Coray M. Colina</span>
 <span class="c1">#</span>
 <span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
 <span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
@@ -182,6 +182,10 @@
         <span class="n">Forcefield</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_file</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ff_name</span> <span class="o">=</span> <span class="s1">&#39;dreiding&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pair_style</span> <span class="o">=</span> <span class="s1">&#39;buck&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bond_style</span> <span class="o">=</span> <span class="s1">&#39;harmonic&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_style</span> <span class="o">=</span> <span class="s1">&#39;harmonic&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dihedral_style</span> <span class="o">=</span> <span class="s1">&#39;harmonic&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">improper_style</span> <span class="o">=</span> <span class="s1">&#39;harmonic&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ff_class</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
 
 <div class="viewcode-block" id="Dreiding.assign_ptypes"><a class="viewcode-back" href="../../../pysimm.forcefield.dreiding.html#pysimm.forcefield.dreiding.Dreiding.assign_ptypes">[docs]</a>    <span class="k">def</span> <span class="nf">assign_ptypes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
@@ -289,6 +293,7 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">all_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">bond_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_style</span>
         <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">bonds</span><span class="p">:</span>
             <span class="n">bt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">bt</span><span class="p">:</span>
@@ -323,6 +328,7 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">all_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">angle_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle_style</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
             <span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">a</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="n">x</span><span class="o">.</span><span class="n">b</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">b</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bonds</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
@@ -372,6 +378,7 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">all_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">dihedral_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dihedral_style</span>
         <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">bonds</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">b</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">b</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
@@ -439,6 +446,7 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">all_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">improper_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">improper_style</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">permutations</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
