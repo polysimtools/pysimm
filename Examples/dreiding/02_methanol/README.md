@@ -1,17 +1,17 @@
-Example 2: Creating methanol using the puchem compound search API
+Example 2: Creating methanol using the PubChem compound search API
 =================================================================
 
 ### Importing pysimm modules/packages
 
-This example code creates a methanol molecule using the pubchem compound search API. To begin we need to import three modules/packages from pysimm: system, lmps, forcefield.
+This example code creates a methanol molecule using the PubChem compound search API. To begin we need to import three modules/packages from pysimm: system, lmps, forcefield.
 
 `from pysimm import system, lmps, forcefield`
 
 If you encounter an error **"ImportError: No module named pysimm"** make sure that the pysimm directory you cloned from github is in your PYTHONPATH. See installation instructions for further directions.
 
-### Searching pubchem for a compound
+### Searching PubChem for a compound
 
-[PubChem](https://pubchem.ncbi.nlm.nih.gov/search/#collection=compounds) offers a database of compounds accessible through a RESTful API. pysimm utilizes this API and allows users to create **system.System** objects from a puchem SMILES query. In this example, we will use the SMILES string "CO" to generate a system using the **system.read_puchem_smiles()** method. The function makes an http request to the PubChem server, which returns a mol file. This mol file is interpreted and the function returns a **system.System** object that we store in variable **s**. This system now contains elemental composition bond connectivity, and bond orders.
+[PubChem](https://pubchem.ncbi.nlm.nih.gov/search/#collection=compounds) offers a database of compounds accessible through a RESTful API. pysimm utilizes this API and allows users to create **system.System** objects from a puchem SMILES or CID query. In this example, we will use the SMILES string "CO" to generate a system using the **system.read_puchem_smiles()** method. The function makes an http request to the PubChem server, which returns a mol file. This mol file is interpreted and the function returns a **system.System** object that we store in variable **s**. This system now contains elemental composition bond connectivity, and bond orders.
 
 `s = system.read_pubchem_smiles('CO')`
 

@@ -14,7 +14,7 @@ If you encounter an error **"ImportError: No module named pysimm"** make sure th
 
 ### Creating a polyethylene monomer
 
-[PubChem](https://pubchem.ncbi.nlm.nih.gov/search/#collection=compounds) offers a database of compounds accessible through a RESTful API. pysimm utilizes this API and allows users to create **system.System** objects from a puchem SMILES query. In this example, we will use the SMILES string "cc" to generate a polyethylene monomer using the **system.read_puchem_smiles()** method. The smiles format supports radicals, which we will exploit here so that each carbon only has two hydrogens and can participate in new polymer bonds. The function makes an http request to the PubChem server, which returns a mol file. This mol file is interpreted and the function returns a **system.System** object that we store in variable **pe**. This system now contains elemental composition bond connectivity, and bond orders.
+[PubChem](https://pubchem.ncbi.nlm.nih.gov/search/#collection=compounds) offers a database of compounds accessible through a RESTful API. pysimm utilizes this API and allows users to create **system.System** objects from a puchem SMILES or CID query. In this example, we will use the SMILES string "cc" to generate a polyethylene monomer using the **system.read_puchem_smiles()** method. The smiles format supports radicals, which we will exploit here so that each carbon only has two hydrogens and can participate in new polymer bonds. The function makes an http request to the PubChem server, which returns a mol file. This mol file is interpreted and the function returns a **system.System** object that we store in variable **pe**. This system now contains elemental composition bond connectivity, and bond orders.
 
 `pe = system.read_pubchem_smiles('cc')`
 
@@ -29,7 +29,7 @@ pe.particles[2].linker='tail'
 
 This time we use the SMILES string "cc(C1=CC=CC=C1)" to generate a polystyrene monomer using the **system.read_puchem_smiles()** method, and store the new system object in variable **ps**.
 
-`ps = system.read_pubchem_smiles('cc')`
+`ps = system.read_pubchem_smiles('cc(C1=CC=CC=C1)')`
 
 The linker atoms in this monomer are 7 and 8.
 
@@ -72,14 +72,14 @@ lmps.quick_min(ps, min_style='fire')
 
 ### Creating a copolymer chain
 
-The force field objects retrieved from the **forcefield.Gaff2** object contain both Lennard-Jones and Buckingham potential parameters. By default the pair style for non bonded interactions is set to buckingham, however the Lennard-Jones potential is a better choice during relaxation of new polymer bonds. We can switch between the two potentials by modifying the **pair_style** attribute of our monomer systems **pe** and **ps**.
+The force field objects retrieved from the **forcefield.Gaff2** object contain both Lennard-Jones and Buckingham potential parameters. By default the pair style for non bonded interactions is set to buckingham, however the Lennard-Jones potential is a better choice during relaxation of new polymer bonds. We can switch between the two potentials by modifying the **pair_style** attribute of our monomer systems **pe** and **ps**. To switch back to the buckingham potential, reassign the **pair_style** attribute to 'buck'. This tells pysimm what parameters to write out for the simulation package later, as well as how to initialize the simulation.
 
 ```
 pe.pair_style = 'lj'
 ps.pair_style = 'lj'
 ```
 
-The **copolymer** method requires a list of reference monomers, the total number of repeat units in the desired chain, and the force field from which new force field types will be acquired. By default the pattern the monomers added to the chain will iterate through the list of reference monomers. This is equivalent to setting the pattern to a list of 1s with the same length as the list of reference monomers. During polymerization, new force field terms will be determined automatically, and LAMMPS simulations will be performed to relax new polymer bonds. To change the number of processors used during simulation, the the **settings** keyword can be used to provide a dictionary of simulation settings. The random_walk function returns the newly created polymer **system.System** object.
+The **copolymer** method requires a list of reference monomers, the total number of repeat units in the desired chain, and the force field from which new force field types will be acquired. For each reference monomer, the value in **pattern** at the same index will indicate how many monomers to add to the chain. For example, [1, 1] in this context will be an alternating copolymer. [1, 2] will be a pattern that has 1 pe monomer, followed by 2 ps monomers, repeated. [2, 5] will be a pattern that has 2 pe monomers, followed by 5 ps monomers, repeated, etc. During polymerization, new force field terms will be determined automatically, and LAMMPS simulations will be performed to relax new polymer bonds. To change the number of processors used during simulation, the the **settings** keyword can be used to provide a dictionary of simulation settings. The random_walk function returns the newly created polymer **system.System** object.
 
 `polymer = copolymer([pe, ps], 10, pattern=[1, 1], forcefield=f, settings={'np': 2})`
 

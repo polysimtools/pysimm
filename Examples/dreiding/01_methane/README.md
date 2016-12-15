@@ -67,7 +67,7 @@ s.bond_style='harmonic'
 s.angle_style='harmonic'
 ```
 
-We'll use a two stage minimzation procedure, first using a steepest decent algorithm followed by a conjugate gradient algorithm. The **lmps** module in pysimm contains convenience methods to configure and execute a simulation. In this case we will use **lmps.quick_min()** passing our system object **s**, the min_style we want to use, and give each simulation a name so that the log files have identifiable names.
+We'll use a two stage minimization procedure, first using a steepest decent algorithm followed by a conjugate gradient algorithm. The **lmps** module in pysimm contains convenience methods to configure and execute a simulation. In this case we will use **lmps.quick_min()** passing our system object **s**, the min_style we want to use, and give each simulation a name so that the log files have identifiable names.
 
 ```
 lmps.quick_min(s, min_style='sd', name='min_sd')

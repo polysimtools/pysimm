@@ -14,7 +14,7 @@ If you encounter an error **"ImportError: No module named pysimm"** make sure th
 
 ### Creating a polymethyl methacrylate monomer
 
-[PubChem](https://pubchem.ncbi.nlm.nih.gov/search/#collection=compounds) offers a database of compounds accessible through a RESTful API. pysimm utilizes this API and allows users to create **system.System** objects from a puchem SMILES query. In this example, we will use the SMILES string "cc(C)(C(=O)OC)" to generate a polymethyl methacrylate monomer using the **system.read_puchem_smiles()** method. The smiles format supports radicals, which we will exploit here so that each carbon only has two hydrogens and can participate in new polymer bonds. The function makes an http request to the PubChem server, which returns a mol file. This mol file is interpreted and the function returns a **system.System** object that we store in variable **pmma**. This system now contains elemental composition bond connectivity, and bond orders.
+[PubChem](https://pubchem.ncbi.nlm.nih.gov/search/#collection=compounds) offers a database of compounds accessible through a RESTful API. pysimm utilizes this API and allows users to create **system.System** objects from a puchem SMILES or CID query. In this example, we will use the SMILES string "cc(C)(C(=O)OC)" to generate a polymethyl methacrylate monomer using the **system.read_puchem_smiles()** method. The smiles format supports radicals, which we will exploit here so that each carbon only has two hydrogens and can participate in new polymer bonds. The function makes an http request to the PubChem server, which returns a mol file. This mol file is interpreted and the function returns a **system.System** object that we store in variable **pmma**. This system now contains elemental composition bond connectivity, and bond orders.
 
 `pmma = system.read_pubchem_smiles('cc(C)(C(=O)OC)')`
 
@@ -55,21 +55,30 @@ The force field objects retrieved from the **forcefield.Dreiding** object contai
 pmma.pair_style = 'lj'
 ```
 
-The **random_walk** application requires a reference monomer, the number of repeat units in the desired chain, and the force field from which new force field types will be acquired. By default, a new **system.System** object will be generated where the polymer chain will grow, and this system will have a density of 0.3 g/ml. We are going to grow four chains in this system, so we explicitly set the density to 0.3/4 g/ml. During polymerization, new force field terms will be determined automatically, and LAMMPS simulations will be performed to relax new polymer bonds. The random_walk function returns the newly created polymer **system.System** object.
+The **random_walk** application requires a reference monomer, the number of repeat units in the desired chain, and the force field from which new force field types will be acquired. By default, a new **system.System** object will be generated where the polymer chain will grow, and this system will have a density of 0.3 g/ml. We are going to grow four chains in this system, so we explicitly set the density to 0.3/4 g/ml. During polymerization, new force field terms will be determined automatically, and LAMMPS simulations will be performed to relax new polymer bonds. The random_walk function returns the newly created polymer **system.System** object. The first polymer chain we build will be 2 monomer units long.
 
-`polymer = random_walk(pmma , nmon=5, forcefield=f, density=0.3/4)`
+`polymer = random_walk(pmma , nmon=2, forcefield=f, density=0.3/4)`
 
-Now we build three more polymer chains, and indicate we want these chains to be build in our already existing polymer system **polymer**, by using the keyword argument **s_**.
+Now we build three more polymer chains, and indicate we want these chains to be built in our already existing polymer system **polymer**, by using the keyword argument **s_**. Each additional polymer chain we build we'll increase the length of the chain by 2 monomer units.
 
 ```
-polymer = random_walk(pmma , nmon=5, s_=polymer, forcefield=f)
-polymer = random_walk(pmma , nmon=5, s_=polymer, forcefield=f)
-polymer = random_walk(pmma , nmon=5, s_=polymer, forcefield=f)
+polymer = random_walk(pmma , nmon=4, s_=polymer, forcefield=f)
+polymer = random_walk(pmma , nmon=6, s_=polymer, forcefield=f)
+polymer = random_walk(pmma , nmon=8, s_=polymer, forcefield=f)
 ```
 
-The **copolymer** method requires a list of reference monomers, the total number of repeat units in the desired chain, and the force field from which new force field types will be acquired. By default the pattern the monomers added to the chain will iterate through the list of reference monomers. This is equivalent to setting the pattern to a list of 1s with the same length as the list of reference monomers. During polymerization, new force field terms will be determined automatically, and LAMMPS simulations will be performed to relax new polymer bonds. To change the number of processors used during simulation, the the **settings** keyword can be used to provide a dictionary of simulation settings. The random_walk function returns the newly created polymer **system.System** object.
+Now that we have a non-uniform distribution of molecular weight polymer chains in our system, we can calculate the dispersity using **system.set_mm_dist()** (set molecular mass distribution).
 
-`polymer = copolymer([pe, ps], 10, pattern=[1, 1], forcefield=f, settings={'np': 2})`
+```
+polymer.set_mm_dist()
+```
+
+This sets a few attributes for our system that we can access: **system.mw**, **system.mn**, **system.dispersity**.
+
+```
+print(polymer.mw)
+print(polymer.mn)
+print(polymer.dispersity)
 
 ### Writing the polymer system to various file formats
 

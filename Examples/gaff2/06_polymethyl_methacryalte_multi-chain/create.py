@@ -1,35 +1,62 @@
 from pysimm import system, lmps, forcefield
 from pysimm.apps.random_walk import random_walk
+from pysimm.models.monomers.gaff2.pmma import monomer
 
-# use a smiles string to query the pubchem search database and read the mol file returned from the http request
-pmma = system.read_pubchem_smiles('cc(C)(C(=O)OC)')
-
-# we'll instantiate a GAFF2 forcefield object for use later
-f = forcefield.Gaff2()
-
-# particles 3 and 6 in the monomer are going to be the head and tail linkers
-pmma.particles[3].linker='head'
-pmma.particles[6].linker='tail'
-
-# the resulting system has sufficient information to type with the forcefield object we made earlier
-# we will also determine partial charges using the gasteiger algorithm
-pmma.apply_forcefield(f, charges='gasteiger')
-
-# do a quick minimization of the monomer
-lmps.quick_min(pmma, min_style='fire')
+# we'll create a pmma monomer from the pysimm.models database
+pmma = monomer()
 
 # write a yaml file for the pmma monomer
 pmma.write_yaml('pmma_monomer.yaml')
 
+# we'll instantiate a GAFF2 forcefield object for use later
+f = forcefield.Gaff2()
+
 # we're going to make 4 chains, each of 5 repeat units
+# the first system we make will be used as the initial system and then replicated to form 4 chains
+# in this case the system.replicate function take a system input(polymer),
+# replicates a defined number of times(4), and inserts the new replication randomly(rand=True) at the specified density(0.022) 
+
+print('Building polymer chain 1...')
+polymer = random_walk(pmma , nmon=5, forcefield=f)
+print('Replicating polymer chain...')
+uniform_polymer = system.replicate(polymer, 4, density = 0.022, rand=True)
+
+# next we're going to make 4 chains, with lengths of 2, 4, 6, and 8 monomer units
 # the first system we make will be used as the initial system for the subsequent random walk calls
-polymer = random_walk(pmma , nmon=5, forcefield=f, density=0.3/4)
-polymer = random_walk(pmma , nmon=5, s_=polymer, forcefield=f)
-polymer = random_walk(pmma , nmon=5, s_=polymer, forcefield=f)
-polymer = random_walk(pmma , nmon=5, s_=polymer, forcefield=f)
+
+print('Building polymer chain 1...')
+nonuniform_polymer = random_walk(pmma , nmon=2, forcefield=f, density=0.3/4)
+print('Building polymer chain 2...')
+nonuniform_polymer = random_walk(pmma , nmon=4, s_=nonuniform_polymer, forcefield=f)
+print('Building polymer chain 3...')
+nonuniform_polymer = random_walk(pmma , nmon=6, s_=nonuniform_polymer, forcefield=f)
+print('Building polymer chain 4...')
+nonuniform_polymer = random_walk(pmma , nmon=8, s_=nonuniform_polymer, forcefield=f)
+
+# now that we have our two polymer systems, let's calculate their molecular weight dispersity
+uniform_polymer.set_mm_dist()
+nonuniform_polymer.set_mm_dist()
+
+print('')
+print('Uniform polymer')
+print('---------------')
+print('Number average molecular weight: {}'.format(uniform_polymer.mn))
+print('Weight average molecular weight: {}'.format(uniform_polymer.mw))
+print('Dispersity: {}'.format(uniform_polymer.dispersity))
+print('')
+print('Nonuniform polymer')
+print('------------------')
+print('Number average molecular weight: {}'.format(nonuniform_polymer.mn))
+print('Weight average molecular weight: {}'.format(nonuniform_polymer.mw))
+print('Dispersity: {}'.format(nonuniform_polymer.dispersity))
 
 # write a few different file formats
-polymer.write_xyz('polymer.xyz')
-polymer.write_yaml('polymer.yaml')
-polymer.write_lammps('polymer.lmps')
-polymer.write_chemdoodle_json('polymer.json')
+uniform_polymer.write_yaml('uniform_polymer.yaml')
+uniform_polymer.write_xyz('uniform_polymer.xyz')
+
+nonuniform_polymer.write_yaml('nonuniform_polymer.yaml')
+nonuniform_polymer.write_xyz('nonuniform_polymer.xyz')
+
+# notice yaml formats can include arbitrary system data like dispersity information
+
+print('Accessing dispersity from nonuniform_polymer.yaml {}'.format(system.read_yaml('nonuniform_polymer.yaml').dispersity))

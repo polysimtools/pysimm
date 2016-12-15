@@ -57,7 +57,7 @@ Lastly we can derive Gasteiger charges using the **system.System.apply_charges()
 
 ### Setting up a simulation box and optimizing the structure
 
-We've added particles to our system but there is currently no simulation box. The **system.System** class has a method to construct a simulation box surrounding the atoms it contains, and optionally we can add a padding around our molecule. Here we opt to use a padding of 10 Angstroms.
+We've added particles to our system but there is currently no simulation box. The **system.System** class has a method to construct a simulation box surrounding the atoms it contains, and optionally we can add a padding around our molecule. Here we opt to use a padding of 10 Angstroms. Without specifying a padding, the simulation walls will be built right at the atoms.
 
 `s.set_box(padding=10)`
 
@@ -69,7 +69,7 @@ s.bond_style='harmonic'
 s.angle_style='harmonic'
 ```
 
-We'll use a two stage minimzation procedure, first using a steepest decent algorithm followed by a conjugate gradient algorithm. The **lmps** module in pysimm contains convenience methods to configure and execute a simulation. In this case we will use **lmps.quick_min()** passing our system object **s**, the min_style we want to use, and give each simulation a name so that the log files have identifiable names.
+We'll use a two stage minimization procedure, first using a steepest decent algorithm followed by a conjugate gradient algorithm. The **lmps** module in pysimm contains convenience methods to configure and execute a simulation. In this case we will use **lmps.quick_min()** passing our system object **s**, the min_style we want to use, and give each simulation a name so that the log files have identifiable names.
 
 ```
 lmps.quick_min(s, min_style='sd', name='min_sd')

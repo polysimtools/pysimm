@@ -56,10 +56,12 @@ def add_bonds(s, p1, p2, f):
         old_molecule_tag = p1.molecule.tag
         for p_ in p1.molecule.particles:
             p_.molecule = p2.molecule
+            p2.molecule.particles.add(p_)
     else:
         old_molecule_tag = p2.molecule.tag
         for p_ in p2.molecule.particles:
             p_.molecule = p1.molecule
+            p1.molecule.particles.add(p_)
     s.molecules.remove(old_molecule_tag)
 
     s.add_bond(p1, p2, f)

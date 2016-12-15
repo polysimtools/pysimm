@@ -657,6 +657,10 @@ class System(object):
                 new_i.type=new.improper_types[i.type.tag]
             new.impropers.add(new_i)
             new_i.a.molecule.impropers.add(new_i)
+            
+        for k, v in vars(self).items():
+            if not isinstance(v, ItemContainer) and not isinstance(v, Item):
+                setattr(new, k, v)
 
         return new
 
@@ -3025,6 +3029,8 @@ class System(object):
                                     s[k][k_][t][key] = value.tag
             elif isinstance(v, Item):
                 s[k] = vars(v)
+            else:
+                s[k] = v
 
         if file_ == 'string':
             f = StringIO()

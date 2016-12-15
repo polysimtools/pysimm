@@ -3,21 +3,21 @@ Example 3: Creating benzene and fixing incorrect bond orders
 
 ### Importing pysimm modules/packages
 
-This example code creates a benzene molecule using the pubchem compound search API. To begin we need to import three modules/packages from pysimm: system, lmps, forcefield.
+This example code creates a benzene molecule using the PubChem compound search API. To begin we need to import three modules/packages from pysimm: system, lmps, forcefield.
 
 `from pysimm import system, lmps, forcefield`
 
 If you encounter an error **"ImportError: No module named pysimm"** make sure that the pysimm directory you cloned from github is in your PYTHONPATH. See installation instructions for further directions.
 
-### Searching pubchem for a compound
+### Searching PubChem for a compound
 
-[PubChem](https://pubchem.ncbi.nlm.nih.gov/search/#collection=compounds) offers a database of compounds accessible through a RESTful API. pysimm utilizes this API and allows users to create **system.System** objects from a puchem SMILES query. In this example, we will use the SMILES string "c1=cc=cc=c1" to generate a system using the **system.read_puchem_smiles()** method. The function makes an http request to the PubChem server, which returns a mol file. This mol file is interpreted and the function returns a **system.System** object that we store in variable **s**. This system now contains elemental composition bond connectivity, and bond orders.
+[PubChem](https://pubchem.ncbi.nlm.nih.gov/search/#collection=compounds) offers a database of compounds accessible through a RESTful API. pysimm utilizes this API and allows users to create **system.System** objects from a puchem SMILES or CID query. In this example, we will use the SMILES string "c1=cc=cc=c1" to generate a system using the **system.read_puchem_smiles()** method. The function makes an http request to the PubChem server, which returns a mol file. This mol file is interpreted and the function returns a **system.System** object that we store in variable **s**. This system now contains elemental composition bond connectivity, and bond orders.
 
 `s = system.read_pubchem_smiles('c1=cc=cc=c1')`
 
 ### Modifying bond orders
 
-Unfortunately, the bond orders in the mol file returned by the pubchem API represent alternating double bonds. When we assign force field parameters, we want the bonds between carbon atoms in the ring to be considered as aromatic bonds. To fix this, we can iterate through the bonds in our **system.System** object **s** by using the iterable **s.bonds** container, check if the two particles involved in the bond **a** and **b** are carbon atoms by accessing their **elem** attribute, and if so, change the **order** attribute of the bond to "A".
+Unfortunately, the bond orders in the mol file returned by the PubChem API represent alternating double bonds. When we assign force field parameters, we want the bonds between carbon atoms in the ring to be considered as aromatic bonds. To fix this, we can iterate through the bonds in our **system.System** object **s** by using the iterable **s.bonds** container, check if the two particles involved in the bond **a** and **b** are carbon atoms by accessing their **elem** attribute, and if so, change the **order** attribute of the bond to "A".
 
 ```
 for b in s.bonds:
@@ -33,7 +33,7 @@ Our **system.System** object **s** contains a class method **s.apply_forcefield(
 
 ### Optimizing the structure using LAMMPS
 
-We'll use a two stage minimzation procedure, first using a steepest decent algorithm followed by a conjugate gradient algorithm. The **lmps** module in pysimm contains convenience methods to configure and execute a simulation. In this case we will use **lmps.quick_min()** passing our system object **s**, the min_style we want to use, and give each simulation a name so that the log files have identifiable names.
+We'll use a two stage minimization procedure, first using a steepest decent algorithm followed by a conjugate gradient algorithm. The **lmps** module in pysimm contains convenience methods to configure and execute a simulation. In this case we will use **lmps.quick_min()** passing our system object **s**, the min_style we want to use, and give each simulation a name so that the log files have identifiable names.
 
 ```
 lmps.quick_min(s, min_style='sd', name='min_sd')
