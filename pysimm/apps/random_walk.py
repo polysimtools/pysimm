@@ -56,12 +56,10 @@ def add_bonds(s, p1, p2, f):
         old_molecule_tag = p1.molecule.tag
         for p_ in p1.molecule.particles:
             p_.molecule = p2.molecule
-            p2.molecule.particles.add(p_)
     else:
         old_molecule_tag = p2.molecule.tag
         for p_ in p2.molecule.particles:
             p_.molecule = p1.molecule
-            p1.molecule.particles.add(p_)
     s.molecules.remove(old_molecule_tag)
 
     s.add_bond(p1, p2, f)
@@ -297,6 +295,10 @@ def copolymer(m, nmon, s_=None, **kwargs):
     
         if unwrap:
             s.wrap()
+            
+    for p in s.particles:
+        if p not in s.molecules[p.molecule.tag].particles:
+            s.molecules[p.molecule.tag].particles.add(p)
 
     s.write_lammps('polymer.lmps')
     s.unwrap()
@@ -439,6 +441,10 @@ def random_walk(m, nmon, s_=None, **kwargs):
 
         if unwrap:
             s.wrap()
+            
+    for p in s.particles:
+        if p not in s.molecules[p.molecule.tag].particles:
+            s.molecules[p.molecule.tag].particles.add(p)
 
     s.write_lammps('polymer.lmps')
     s.unwrap()
