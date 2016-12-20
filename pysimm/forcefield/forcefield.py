@@ -38,7 +38,6 @@ from pysimm import warning_print
 from pysimm import debug_print
 import gasteiger
 from pysimm.utils import PysimmError, Item, ItemContainer, compare
-from pysimm.system import ParticleContainer
 from pysimm.system import ParticleType, BondType, AngleType
 from pysimm.system import Angle, Dihedral, Improper
 from pysimm.system import DihedralType, ImproperType
@@ -69,7 +68,7 @@ class Forcefield(object):
         self.ff_class = 0
         self.ff_name = ''
         self.pair_style = None
-        self.particle_types = ParticleContainer()
+        self.particle_types = ItemContainer()
         self.bond_style = None
         self.bond_types = ItemContainer()
         self.angle_style = None
