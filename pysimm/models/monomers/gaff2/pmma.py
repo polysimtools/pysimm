@@ -32,6 +32,8 @@ def monomer():
     
     lmps.quick_min(s, min_style='fire')
     
+    s.add_particle_bonding()
+    
     return s
     
 def polymer_chain(length):

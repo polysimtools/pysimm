@@ -3,7 +3,6 @@ from pysimm.apps.random_walk import random_walk
 
 def monomer():
     s = system.read_pubchem_smiles('CC(C)C(=O)OC')
-    m = s.molecules[1]
     f = forcefield.Dreiding()
     
     s.apply_forcefield(f)
@@ -25,12 +24,12 @@ def monomer():
             
     s.remove_spare_bonding()
 
-    s.set_box(padding=10)
-    
     c3.linker = 'head'
     c4.linker = 'tail'
     
     lmps.quick_min(s, min_style='fire')
+    
+    s.add_particle_bonding()
     
     return s
     

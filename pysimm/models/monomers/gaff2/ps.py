@@ -29,12 +29,12 @@ def monomer():
             
     s.remove_spare_bonding()
 
-    s.set_box(padding=10)
-    
     c1.linker = 'head'
     c5.linker = 'tail'
     
     lmps.quick_min(s, min_style='fire')
+    
+    s.add_particle_bonding()
     
     return s
     
