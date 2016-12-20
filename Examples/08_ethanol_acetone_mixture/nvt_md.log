@@ -1,0 +1,77 @@
+thermo 500
+timestep 1
+fix 1 all nvt temp 300.0 300.0 100
+run 10000
+PPPM initialization ...
+WARNING: System is not charge neutral, net charge = -3.7e-05 (../kspace.cpp:297)
+WARNING: Using 12-bit tables for long-range coulomb (../kspace.cpp:316)
+  G vector (1/distance) = 0.157726
+  grid = 10 10 10
+  stencil order = 5
+  estimated absolute RMS force accuracy = 0.031957
+  estimated relative force accuracy = 9.62376e-05
+  using double precision FFTs
+  3d grid and FFT values/proc = 3375 1000
+Neighbor list info ...
+  1 neighbor list requests
+  update every 1 steps, delay 10 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7 -> bins = 8 8 8
+WARNING: Inconsistent image flags (../domain.cpp:774)
+Memory usage per processor = 13.3008 Mbytes
+Step Temp E_pair E_mol TotEng Press 
+       0    3.1881811    -977.0964    2198.7102    1266.2701    1218.2986 
+     500    138.14415   -1268.7339    2232.4057    2898.6329    211.57471 
+    1000    320.01476   -930.70872    2562.0053    6113.6878    824.03079 
+    1500    309.42168   -871.42051    2708.1165    6170.7118    629.70136 
+    2000    307.95141    -866.9422    2837.1946    6283.6743    766.55665 
+    2500    303.67778   -813.15718    2976.2083    6416.6131    577.65935 
+    3000    305.94821   -861.16308    3051.5007    6475.7011    719.62014 
+    3500    297.49025   -836.29909    3209.1149    6539.7101    518.25047 
+    4000    295.85376   -819.78802    3295.8677     6620.052    693.93508 
+    4500    299.18782   -843.12312    3314.8027    6662.3514    600.91183 
+    5000    299.79733   -861.17714     3417.728      6755.76    485.45019 
+    5500    299.84295   -881.21414    3456.9395    6775.5735    723.30003 
+    6000    295.75412   -899.66592    3528.1464    6771.0572    280.88132 
+    6500    297.40579   -855.48843    3565.2532     6875.476    649.96143 
+    7000    297.59331   -887.42288    3686.8635    6967.7785   -182.24466 
+    7500    299.18363   -869.07809    3765.0855    7086.6206    609.70132 
+    8000    299.73281   -884.68439    3789.6308    7103.2518   -58.928436 
+    8500    300.79903   -921.69136    3869.7932    7161.3416    -44.95003 
+    9000    298.29684   -906.60724     3952.532    7224.1168    340.60379 
+    9500    303.48503   -923.80429    3976.4256    7303.4835   -112.18426 
+   10000    308.19975   -891.68839    3959.8936    7385.1057    264.93199 
+Loop time of 429.293 on 1 procs for 10000 steps with 4700 atoms
+
+Performance: 2.013 ns/day, 11.925 hours/ns, 23.294 timesteps/s
+69.7% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 326.21     | 326.21     | 326.21     |   0.0 | 75.99
+Bond    | 17.189     | 17.189     | 17.189     |   0.0 |  4.00
+Kspace  | 43.779     | 43.779     | 43.779     |   0.0 | 10.20
+Neigh   | 37.121     | 37.121     | 37.121     |   0.0 |  8.65
+Comm    | 2.465      | 2.465      | 2.465      |   0.0 |  0.57
+Output  | 0.00155    | 0.00155    | 0.00155    |   0.0 |  0.00
+Modify  | 1.8059     | 1.8059     | 1.8059     |   0.0 |  0.42
+Other   |            | 0.7252     |            |       |  0.17
+
+Nlocal:    4700 ave 4700 max 4700 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    12112 ave 12112 max 12112 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    910771 ave 910771 max 910771 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 910771
+Ave neighs/atom = 193.781
+Ave special neighs/atom = 7.2766
+Neighbor list builds = 668
+Dangerous builds = 10
+unfix 1
+write_dump all custom pysimm.dump.tmp id q x y z vx vy vz
+quit
