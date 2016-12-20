@@ -422,7 +422,7 @@ class Simulation(object):
         """
         self.sim.append(CustomInput(custom))
 
-    def write_input(self):
+    def write_input(self, init=True):
         """pysimm.lmps.Simulation.write_input
 
         Creates LAMMPS input string including initialization and input from templates/custom input
@@ -435,10 +435,11 @@ class Simulation(object):
         """
         self.input = ''
 
-        self.input += write_init(self.system, atom_style=self.atom_style, kspace_style=self.kspace_style,
-                                 special_bonds=self.special_bonds, units=self.units,
-                                 nonbond_mixing=self.nonbond_mixing,
-                                 nb_cut=self.cutoff)
+        if init:
+            self.input += write_init(self.system, atom_style=self.atom_style, kspace_style=self.kspace_style,
+                                     special_bonds=self.special_bonds, units=self.units,
+                                     nonbond_mixing=self.nonbond_mixing,
+                                     nb_cut=self.cutoff)
 
         if self.log:
             self.input += 'log %s append\n' % self.log
@@ -459,7 +460,7 @@ class Simulation(object):
 
         self.input += 'quit\n'
 
-    def run(self, np=None, nanohub=None, rewrite=True, write_input=False):
+    def run(self, np=None, nanohub=None, rewrite=True, init=True, write_input=False):
         """pysimm.lmps.Simulation.run
 
         Begin LAMMPS simulation.
@@ -468,12 +469,13 @@ class Simulation(object):
             np: number of threads to use (serial by default) default=None
             nanohub: dictionary containing nanohub resource information default=None
             rewrite: True to rewrite input before running default=True
+            init: True to write initialization part of LAMMPS input script (set to False if using complete custom input)
         """
         if self.custom:
             rewrite = False
             self.input += '\nwrite_data pysimm_md.lmps\n'
         if rewrite:
-            self.write_input()
+            self.write_input(init)
         if isinstance(write_input, str):
             with file(write_input, 'w') as f:
                 f.write(self.input)
@@ -484,6 +486,10 @@ class Simulation(object):
 
 
 def enqueue_output(out, queue):
+    """pysimm.lmps.enqueue_output
+
+    Helps queue output for printing to screen during simulation.
+    """
     for line in iter(out.readline, b''):
         queue.put(line)
     out.close()
@@ -566,37 +572,6 @@ def call_lammps(simulation, np, nanohub):
         else:
             raise PysimmError('molecular dynamics using LAMMPS UNsuccessful')
 
-    '''if not simulation.write:
-        try:
-            os.remove('pysimm_md.lmps')
-            if simulation.name:
-                print('%s: %s simulation using LAMMPS successful'
-                      % (strftime('%H:%M:%S'), simulation.name))
-            else:
-                print('%s: molecular dynamics using LAMMPS successful'
-                      % (strftime('%H:%M:%S')))
-            return True
-        except OSError:
-            if simulation.name:
-                raise PysimmError('%s simulation using LAMMPS UNsuccessful' % simulation.name)
-            else:
-                raise PysimmError('molecular dynamics using LAMMPS UNsuccessful')
-
-    else:
-        if os.path.isfile(simulation.write):
-            if simulation.name:
-                print('%s: %s simulation using LAMMPS successful'
-                      % (strftime('%H:%M:%S'), simulation.name))
-            else:
-                print('%s: molecular dynamics using LAMMPS successful'
-                      % (strftime('%H:%M:%S')))
-            return True
-        else:
-            if simulation.name:
-                raise PysimmError('%s simulation using LAMMPS UNsuccessful' % simulation.name)
-            else:
-                raise PysimmError('molecular dynamics using LAMMPS UNsuccessful')'''
-
 
 def qeq(s, np=None, nanohub=None, **kwargs):
     """pysimm.lmps.qeq
@@ -653,6 +628,18 @@ def quick_min(s, np=None, nanohub=None, **kwargs):
     
     
 def energy(s, all=False, np=None, **kwargs):
+    """pysimm.lmps.energy
+
+    Convenience function to calculate energy of a given System object.
+
+    Args:
+        s: system to calculate energy
+        all: returns decomposition of energy if True (default: False)
+        np: number of threads to use for simulation
+
+    Returns:
+        total energy or disctionary of energy components
+    """
     sim = Simulation(s, log='pysimm_calc.tmp.log', **kwargs)
     sim.add_md(length=0, thermo=1, thermo_style='custom step etotal epair emol evdwl ecoul ebond eangle edihed eimp', **kwargs)
     sim.run(np)

@@ -97,41 +97,6 @@ class Particle(Item):
         else:
             error_print('style %s not supported yet' % style)
             return False
-            
-    def environment(self):
-        e = Item()
-        e.elem = self.elem
-        e.nbonds = self.bonds.count
-        e.bonded_elem = [p.elem for p in self.get_bonded_particles()]
-        self.env = e
-        
-    def assign_type(self, f):
-        possible_types = f.particle_types.subset(**vars(self.env))
-        if possible_types.count == 1:
-            self.type_name = iter(possible_types).next().name
-        else:
-            print('particle {} possible types: {}'.format(self.tag, ', '.join([pt.name for pt in possible_types])))
-            
-    def get_bonded_particles(self):
-        return [b.a if b.b is self else b.b for b in self.bonds]
-            
-    def in_ring(self, max_size=6):
-        '''buggggggggy'''
-        network = [[self]]
-        n_set = set([self])
-        network.append(self.get_bonded_particles())
-        for p in self.get_bonded_particles():
-            n_set.add(p)
-        for n in range(max_size - 1):
-            network.append([])
-            for p in network[-2]:
-                for pb in p.get_bonded_particles():
-                    if pb is p:
-                        return n + 2
-                    if pb not in n_set:
-                        n_set.add(pb)
-                        network[-1].append(pb)
-        return network
 
     def delete_bonding(self, s):
         """pysimm.system.Particle.delete_bonding
@@ -218,51 +183,12 @@ class ParticleType(Item):
         Item.__init__(self, **kwargs)
         
         
-class ParticleContainer(ItemContainer):
-    def __init__(self, _dict=None, **kwargs):
-        ItemContainer.__init__(self, _dict, **kwargs)
-        
-    def subset(self, elem=None, nbonds=None, bonded_elem=None, aromatic=None, hyb=None, united_atom=None):
-        result = ParticleContainer()
-        
-        for pt in self:
-            pt_ = pt.copy()
-            pt_.tag=pt_.name
-            result.add(pt_)
-            
-        result.refine(elem, nbonds, bonded_elem, aromatic, hyb, united_atom)
-        return result
-            
-    def refine(self, elem=None, nbonds=None, bonded_elem=None, aromatic=None, hyb=None, united_atom=None):
-        if elem:
-            for pt in self:
-                if pt.elem != elem:
-                    self.remove(pt.tag, update=False)
-        if nbonds:
-            for pt in self:
-                if pt.nbonds and pt.nbonds != nbonds:
-                    self.remove(pt.tag, update=False)
-        if bonded_elem:
-            for pt in self:
-                for e in bonded_elem:
-                    if pt.bonded_elem and pt.bonded_elem.count(e) != bonded_elem.count(e):
-                        self.remove(pt.tag, update=False)
-        if hyb:
-            for pt in self:
-                if pt.hyb and pt.hyb != hyb:
-                    self.remove(pt.tag, update=False)
-        if aromatic is not None:
-            for pt in self:
-                if pt.aromatic is not None and pt.aromatic != aromatic:
-                    self.remove(pt.tag, update=False)
-        if united_atom is not None:
-            for pt in self:
-                if (united_atom is True and not pt.united_atom) or (united_atom is False and pt.united_atom is True):
-                    self.remove(pt.tag, update=False)
-
-
 class Bond(Item):
     """pysimm.system.Bond
+    
+    Bond between particle a and b
+    
+    a--b
 
     Objects inheriting from pysimm.utils.Item can contain arbitrary data.
     Keyword arguments are assigned as attributes.
@@ -321,6 +247,12 @@ class BondType(Item):
 
 class Angle(Item):
     """pysimm.system.Angle
+    
+    Angle between particles a, b, and c
+    
+      b
+     / \
+    a   c
 
     Objects inheriting from pysimm.utils.Item can contain arbitrary data.
     Keyword arguments are assigned as attributes.
@@ -370,6 +302,14 @@ class AngleType(Item):
 
 class Dihedral(Item):
     """pysimm.system.Dihedral
+    
+    Dihedral between particles a, b, c, and d
+    
+    a
+     \
+      b--c
+          \
+           d
 
     Objects inheriting from pysimm.utils.Item can contain arbitrary data.
     Keyword arguments are assigned as attributes.
@@ -407,7 +347,15 @@ class DihedralType(Item):
 
 class Improper(Item):
     """pysimm.system.Improper
-
+    
+    Improper dihedral around particle a, bonded to b, c, and d
+    
+        b
+        |
+        a
+       / \
+      c   d
+      
     Objects inheriting from pysimm.utils.Item can contain arbitrary data.
     Keyword arguments are assigned as attributes.
     Attributes usually used are given below.
@@ -792,6 +740,10 @@ class System(object):
         for m in other.molecules:
             del m.tag
             self.molecules.add(m)
+            p_list=m.particles.get('all')
+            m.particles.remove('all')
+            for p in p_list:
+                m.particles.add(p)
 
         if update_properties:
             self.set_mass()
@@ -986,6 +938,16 @@ class System(object):
         self.set_charge()
 
     def check_items(self):
+        """pysimm.system.System.check_items
+
+        Checks particles, bonds, angles, dihedrals, impropers, and molecules containers and raises exception if the length of items in the container does not equal the count property
+
+        Args:
+            None:
+
+        Returns:
+            None
+        """
         if len(self.particles) != self.particles.count:
             raise PysimmError('particles missing')
         if len(self.bonds) != self.bonds.count:
@@ -1000,6 +962,17 @@ class System(object):
             raise PysimmError('molecules missing')
             
     def update_ff_types_from_ac(self, ff, acname):
+        """pysimm.system.System.update_ff_types_from_ac
+
+        Updates ParticleType objects in system using type names given in antechamber (ac) file. Retrieves type from System if possible, then searches force field provided by ff.
+
+        Args:
+            ff: forcefield to search for Type objects
+            acname: ac filename containing type names
+
+        Returns:
+            None
+        """
         self.particle_types.remove('all')
         with file(acname) as f:
             for line in f:
@@ -1103,7 +1076,11 @@ class System(object):
     def read_lammps_dump(self, fname):
         """pysimm.system.System.read_lammps_dump
 
-        Updates particle positions and box size from LAMMPS dump file
+        Updates particle positions and box size from LAMMPS dump file.
+        Assumes following format for each atom line:
+     
+        tag charge xcoord ycoord zcoord xvelocity yvelocity zvelocity
+
 
         Args:
             fname: LAMMPS dump file
@@ -1141,7 +1118,19 @@ class System(object):
     def read_lammpstrj(self, trj, frame=1):
         """pysimm.system.System.read_lammpstrj
 
-        Updates particle positions and box size from LAMMPS trajectory file at given frame
+        Updates particle positions and box size from LAMMPS trajectory file at given frame.
+        
+        Assumes one of following formats for each atom line:
+     
+        tag xcoord ycoord zcoord
+        
+        OR
+        
+        tag type_id xcoord ycoord zcoord
+        
+        OR
+        
+        tag type_id xcoord ycoord zcoord ximage yimage zimage
 
         Args:
             trj: LAMMPS trajectory file
@@ -1387,7 +1376,7 @@ class System(object):
     def update_tags(self):
         """pysimm.system.System.update_tags
 
-        Update Item tags in ItemContainer objects to preserve continuous tags
+        Update Item tags in ItemContainer objects to preserve continuous tags. Removes all objects and then reinserts them.
 
          Args:
              None
@@ -1739,6 +1728,16 @@ class System(object):
         return p
 
     def add_particle(self, p):
+        """pysimm.system.System.add_particle
+
+        Add new Particle to System.
+
+        Args:
+            p: new Particle object to be added
+
+        Returns:
+            None
+        """
         self.particles.add(p)
 
     def rotate(self, around=None, theta_x=0, theta_y=0, theta_z=0, rot_matrix=None):
@@ -2025,13 +2024,28 @@ class System(object):
             return
 
     def check_forcefield(self):
+        """pysimm.system.System.check_forcefield
+
+        Iterates through particles and prints the following:
+        
+        tag
+        type name
+        type element
+        type description
+        bonded elements
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         if not self.objectified:
             self.objectify()
         for p in self.particles:
-            if not p.bond_elements:
-                p.bond_elements = [x.a.type.elem if p is x.b else
-                                   x.b.type.elem for x in p.bonds]
-                p.nbonds = len(p.bond_elements)
+            p.bond_elements = [x.a.type.elem if p is x.b else
+                               x.b.type.elem for x in p.bonds]
+            p.nbonds = len(p.bond_elements)
             print(p.tag, p.type.name, p.type.elem, p.type.desc, p.bond_elements)
 
     def apply_forcefield(self, f, charges='default', set_box=True, box_padding=10,
@@ -2072,234 +2086,18 @@ class System(object):
             self.set_box(box_padding)
 
     def apply_charges(self, f, charges='default'):
-        f.assign_charges(self, charges=charges)
+        """pysimm.system.System.apply_charges
 
-    def write_amber(self, prmtop='prmtop', inpcrd='inpcrd', **kwargs):
-        """pysimm.system.System.write_amber
+        Applies charges derived using method provided by user. Defaults to 'default'. Calls Forcefield.assign_charges method of forcefield object provided.
 
-        *** NOT FINISHED ***
+        Args:
+            f: pysimm.forcefield.Forcefield object
+            charges: type of charges ot be applied default='default'
 
+        Returns:
+            None
         """
-        periodic = kwargs.get('periodic') or 1
-
-        self.set_atomic_numbers()
-        self.set_excluded_particles()
-
-        nbonh = 0
-        for b in self.bonds:
-            if b.a.type.elem == 'H' or b.b.type.elem == 'H':
-                nbonh += 1
-            if periodic is None:
-                if b.distance() > self.dim.dx/2 or b.distance() > self.dim.dy/2 or b.distance() > self.dim.dz/2:
-                    periodic = 1 
-
-        if periodic is None:
-            periodic = 0
-
-        ntheth = 0
-        for a in self.angles:
-            if a.a.type.elem == 'H' or a.b.type.elem == 'H' or a.c.type.elem == 'H':
-                ntheth += 1
-
-        nphih = 0
-        for d in self.dihedrals:
-            if d.a.type.elem == 'H' or d.b.type.elem == 'H' or d.c.type.elem == 'H' or d.d.type.elem == 'H':
-                nphih += 1
-
-        out_prmtop = open(prmtop, 'w+')
-        out_inpcrd = open(inpcrd, 'w+')
-
-        out_prmtop.write('%VERSION WRITTEN BY PYSIMM\n')
-        out_prmtop.write('%FLAG TITLE\n')
-        out_prmtop.write('%FORMAT(20a4)\n')
-        out_prmtop.write('%s\n' % self.name[:80])
-        out_prmtop.write('%FLAG POINTERS\n')
-        out_prmtop.write('%FORMAT(10I8)\n')
-        out_prmtop.write('%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d\n' % (self.particles.count, self.particle_types.count,
-                                                               nbonh, (self.bonds.count - nbonh),
-                                                               ntheth, (self.angles.count - ntheth),
-                                                               nphih, (self.dihedrals.count - nphih), 0, 0))
-        out_prmtop.write('%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d\n' % (0, self.molecules.count, 0, 0, 0, self.bond_types.count,
-                                                               self.angles_types.count, self.dihedral_types.count, 0,
-                                                               0))
-        out_prmtop.write('%8d%8d%8d%8d%8d%8d%8d%8d%8d%8d\n' % (0, 0, 0, 0, 0, 0, 0, periodic, 0, 0))
-        out_prmtop.write('%8d%8d\n' % 0, 0)
-
-        out_prmtop.write('%FLAG ATOM_NAME\n')
-        out_prmtop.write('%FORMAT(20a4)\n')
-        for i in range(1, self.particles.count + 1):
-            if (i != 1 and i % 20 == 0) or i == self.particles.count:
-                out_prmtop.write('%4s\n' % self.particles[i].type.name[:4])
-            else:
-                out_prmtop.write('%4s' % self.particles[i].type.name[:4])
-
-        out_prmtop.write('%FLAG CHARGE\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        for i in range(1, self.particles.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.particles.count:
-                out_prmtop.write('%.8e\n' % self.particles[i].charge)
-            else:
-                out_prmtop.write('%.8e' % self.particles[i].charge)
-
-        out_prmtop.write('%FLAG ATOMIC_NUMBER\n')
-        out_prmtop.write('%FORMAT(10I8)\n')
-        for i in range(1, self.particles.count + 1):
-            if (i != 1 and i % 10 == 0) or i == self.particles.count:
-                out_prmtop.write('%8d\n' % self.particles[i].type.atomic_number)
-            else:
-                out_prmtop.write('%8d' % self.particles[i].type.atomic_number)
-
-        out_prmtop.write('%FLAG MASS\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        for i in range(1, self.particles.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.particles.count:
-                out_prmtop.write('%.8e\n' % self.particles[i].type.mass)
-            else:
-                out_prmtop.write('%.8e' % self.particles[i].type.mass)
-
-        out_prmtop.write('%FLAG ATOM_TYPE_INDEX\n')
-        out_prmtop.write('%FORMAT(10I8)\n')
-        for i in range(1, self.particles.count + 1):
-            if (i != 1 and i % 10 == 0) or i == self.particles.count:
-                out_prmtop.write('%8d\n' % self.particles[i].type.tag)
-            else:
-                out_prmtop.write('%8d' % self.particles[i].type.tag)
-
-        out_prmtop.write('%FLAG NUMBER_EXCLUDED_ATOMS\n')
-        out_prmtop.write('%FORMAT(10I8)\n')
-        for i in range(1, self.particles.count + 1):
-            excluded = self.particles[i].excluded_particles.count or 1
-            if (i != 1 and i % 10 == 0) or i == self.particles.count:
-                out_prmtop.write('%8d\n' % excluded)
-            else:
-                out_prmtop.write('%8d' % excluded)
-
-        out_prmtop.write('%FLAG NONBONDED_PARM_INDEX\n')
-        out_prmtop.write('%FORMAT(10I8)\n')
-        count = 0
-        for pti in range(1, self.particle_types.count + 1):
-            for ptj in range(1, self.particle_types.count + 1):
-                count += 1
-                if pti <= ptj:
-                    index = self.particle_types.count * (pti-1) + ptj
-                else:
-                    index = self.particle_types.count * (ptj-1) + pti
-                if (count != 1 and count % 10 == 0) or count == self.particle_types.count*self.particle_types.count:
-                    out_prmtop.write('%8d\n' % index)
-                else:
-                    out_prmtop.write('%8d' % index)
-
-        out_prmtop.write('%FLAG RESIDUE_LABEL\n')
-        out_prmtop.write('%FORMAT(20a4)\n')
-        for i in range(1, self.molecules.count + 1):
-            if (i != 1 and i % 20 == 0) or i == self.molecules.count:
-                out_prmtop.write('%4s\n' % self.molecules[i].name[:4])
-            else:
-                out_prmtop.write('%4s' % self.molecules[i].name[:4])
-
-        out_prmtop.write('%FLAG RESIDUE_POINTER\n')
-        out_prmtop.write('%FORMAT(10I8)\n')
-        for i in range(1, self.molecules.count + 1):
-            if (i != 1 and i % 10 == 0) or i == self.molecules.count:
-                for p in self.molecules[i].particles:
-                    out_prmtop.write('%8s\n' % p.tag)
-                    break
-            else:
-                for p in self.molecules[i].particles:
-                    out_prmtop.write('%8s' % p.tag)
-                    break
-
-        out_prmtop.write('%FLAG BOND_FORCE_CONSTANT\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        for i in range(1, self.bond_types.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.bond_types.count:
-                out_prmtop.write('%.8e\n' % (self.bond_types[i].k*2))
-            else:
-                out_prmtop.write('%.8e' % (self.bond_types[i].k*2))
-
-        out_prmtop.write('%FLAG BOND_EQUIL_VALUE\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        for i in range(1, self.bond_types.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.bond_types.count:
-                out_prmtop.write('%.8e\n' % self.bond_types[i].r0)
-            else:
-                out_prmtop.write('%.8e' % self.bond_types[i].r0)
-
-        out_prmtop.write('%FLAG ANGLE_FORCE_CONSTANT\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        for i in range(1, self.angle_types.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.angle_types.count:
-                out_prmtop.write('%.8e\n' % (self.angle_types[i].k*2))
-            else:
-                out_prmtop.write('%.8e' % (self.angle_types[i].k*2))
-
-        out_prmtop.write('%FLAG ANGLE_EQUIL_VALUE\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        for i in range(1, self.angle_types.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.angle_types.count:
-                out_prmtop.write('%.8e\n' % (self.angle_types[i].theta0*pi/180.))
-            else:
-                out_prmtop.write('%.8e' % (self.angle_types[i].theta0*pi/180.))
-
-        out_prmtop.write('%FLAG DIHEDRAL_FORCE_CONSTANT\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        for i in range(1, self.dihedral_types.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.dihedral_types.count:
-                out_prmtop.write('%.8e\n' % self.dihedral_types[i].k)
-            else:
-                out_prmtop.write('%.8e' % self.dihedral_types[i].k)
-
-        out_prmtop.write('%FLAG DIHEDRAL_PERIODICITY\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        for i in range(1, self.dihedral_types.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.dihedral_types.count:
-                out_prmtop.write('%.8e\n' % self.dihedral_types[i].n)
-            else:
-                out_prmtop.write('%.8e' % self.dihedral_types[i].n)
-
-        out_prmtop.write('%FLAG DIHEDRAL_PHASE\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        for i in range(1, self.dihedral_types.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.dihedral_types.count:
-                out_prmtop.write('%.8e\n' % acos(self.dihedral_types[i].d))
-            else:
-                out_prmtop.write('%.8e' % acos(self.dihedral_types[i].d))
-
-        out_prmtop.write('%FLAG SCEE_SCALE_FACTOR\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        for i in range(1, self.dihedral_types.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.dihedral_types.count:
-                out_prmtop.write('%.8e\n' % 1.2)
-            else:
-                out_prmtop.write('%.8e' % 1.2)
-
-        out_prmtop.write('%FLAG SCNB_SCALE_FACTOR\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        for i in range(1, self.dihedral_types.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.dihedral_types.count:
-                out_prmtop.write('%.8e\n' % 2)
-            else:
-                out_prmtop.write('%.8e' % 2)
-
-        out_prmtop.write('%FLAG LENNARD_JONES_ACOEF\n')
-        out_prmtop.write('%FORMAT(5E16.8)\n')
-        count = 0
-        for i in range(1, self.particle_types.count + 1):
-            for j in range(1, self.particle_types.count + 1):
-                count += 1
-                if i <= j:
-                    index = self.particle_types.count * (self.particles[i].type.tag-1) + self.particles[j].type.tag
-                else:
-                    index = self.particle_types.count * (self.particles[j].type.tag-1) + self.particles[i].type.tag
-                if (count != 1 and count % 10 == 0) or count == self.particle_types.count*self.particle_types.count:
-                    out_prmtop.write('%s\n' % index)
-                else:
-                    out_prmtop.write('%s' % index)
-        for i in range(1, self.particle_types.count + 1):
-            if (i != 1 and i % 5 == 0) or i == self.particle_types.count:
-                out_prmtop.write('%.8e\n' % self.particle_types[i].epsilon)
-            else:
-                out_prmtop.write('%.8e' % self.particle_types[i].epsilon)
+        f.assign_charges(self, charges=charges)
 
     def write_lammps(self, out_data, **kwargs):
         """pysimm.system.System.write_lammps
@@ -2718,109 +2516,6 @@ class System(object):
         else:
             out_file.close()
             
-    def write_gro(self, outfile='data.gro', time=0.0):
-        if outfile == 'string':
-            out = StringIO()
-        else:
-            out = open(outfile, 'w+')
-            
-        out.write('{}, time={}\n'.format(self.name, time))
-        out.write('{}\n'.format(self.particles.count))
-        for p in self.particles:
-            if p.vx is None:
-                self.zero_velocity()
-            out.write('{:^5}{:^5}{:^5}{:^5}{:8.3f}{:8.3f}{:8.3f}{:8.4f}{:8.4f}{:8.4f}\n'.format(p.molecule.tag, p.molecule.name[:5],
-                                                    p.type.name[:5], p.tag, p.x/10, p.y/10, p.z/10,
-                                                    p.vx*100, p.vy*100, p.vz*100))
-        out.write('{}\t{}\t{}'.format(self.dim.dx/10, self.dim.dy/10, self.dim.dz/10))
-        
-            
-        if outfile == 'string':
-            s = out.getvalue()
-            out.close()
-            return s
-        else:
-            out.close()
-
-    def write_hoomd(self, outfile='data.xml'):
-        """pysimm.system.System.write_hoomd
-
-        Write System data formatted for hoomd
-
-        Args:
-            outfile: file name to write data
-
-        Returns:
-            None
-        """
-        hoomd = Et.Element('hoomd_xml')
-        tree = Et.ElementTree(hoomd)
-
-        config = Et.SubElement(hoomd, 'configuration')
-
-        box = Et.SubElement(config, 'box')
-        box.set('lx', str((self.dim.xhi * 0.1) - (self.dim.xlo * 0.1)))
-        box.set('ly', str((self.dim.yhi * 0.1) - (self.dim.ylo * 0.1)))
-        box.set('lz', str((self.dim.zhi * 0.1) - (self.dim.zlo * 0.1)))
-
-        position = Et.SubElement(config, 'position')
-        position.set('num', str(self.particles.count))
-        position.text = ''
-        for p in self.particles:
-            position.text += ('%s %s %s\n' % (p.x * 0.1, p.y * 0.1, p.z * 0.1))
-
-        mass = Et.SubElement(config, 'mass')
-        mass.set('num', str(self.particles.count))
-        mass.text = ''
-        for p in self.particles:
-            mass.text += '%s\n' % p.type.mass
-
-        type_ = Et.SubElement(config, 'type')
-        type_.set('num', str(self.particles.count))
-        type_.text = ''
-        for p in self.particles:
-            type_.text += '%s\n' % p.type.name
-
-        if self.bonds.count > 0:
-            bond = Et.SubElement(config, 'bond')
-            bond.set('num', str(self.bonds.count))
-            bond.text = ''
-            for b in self.bonds:
-                bond.text += '%s %s %s\n' % (b.type.name, b.a.tag - 1,
-                                             b.b.tag - 1)
-
-        if self.angles.count > 0:
-            angle = Et.SubElement(config, 'angle')
-            angle.set('num', str(self.angles.count))
-            angle.text = ''
-            for a in self.angles:
-                angle.text += '%s %s %s %s\n' % (a.type.name, a.a.tag - 1,
-                                                 a.b.tag - 1, a.c.tag - 1)
-
-        if self.dihedrals.count > 0:
-            dihedral = Et.SubElement(config, 'dihedral')
-            dihedral.set('num', str(self.dihedrals.count))
-            dihedral.text = ''
-            for d in self.dihedrals:
-                dihedral.text += '%s %s %s %s %s\n' % (d.type.name,
-                                                       d.a.tag - 1,
-                                                       d.b.tag - 1,
-                                                       d.c.tag - 1,
-                                                       d.d.tag - 1)
-
-        if self.impropers.count > 0:
-            improper = Et.SubElement(config, 'improper')
-            improper.set('num', str(self.impropers.count))
-            improper.text = ''
-            for i in self.impropers:
-                improper.text += '%s %s %s %s %s\n' % (i.type.name,
-                                                       i.a.tag - 1,
-                                                       i.b.tag - 1,
-                                                       i.c.tag - 1,
-                                                       i.d.tag - 1)
-
-        tree.write(outfile)
-
     def write_xyz(self, outfile='data.xyz', **kwargs):
         """pysimm.system.System.write_xyz
 
@@ -3130,174 +2825,6 @@ class System(object):
             p.z -= self.cog[2]
         self.set_cog()
 
-    def set_neighbors(self, cutoff=12.0):
-        """pysimm.system.System.set_neighbors
-
-        *** BUGGY - DO NOT USE ***
-
-        """
-        ncells = [int(ceil(self.dim.dx/cutoff)), int(ceil(self.dim.dy/cutoff)), int(ceil(self.dim.dz/cutoff))]
-        cell_dx = self.dim.dx/ncells[0]
-        cell_dy = self.dim.dy/ncells[1]
-        cell_dz = self.dim.dz/ncells[2]
-        if min(ncells) < 2:
-            warning_print('dimension along one axis is less than cutoff - this is not good')
-        self.neighbors = [[[ItemContainer() for c_z in range(ncells[2])]
-                           for c_y in range(ncells[1])]
-                          for c_x in range(ncells[0])]
-
-        for p in self.particles:
-            p.cell_id = [int(floor((p.x-self.dim.xlo)/cell_dx)),
-                         int(floor((p.y-self.dim.ylo)/cell_dy)),
-                         int(floor((p.z-self.dim.zlo)/cell_dz))]
-            self.neighbors[p.cell_id[0]][p.cell_id[1]][p.cell_id[2]].add(p)
-
-        for p in self.particles:
-            p.neighbors = ItemContainer()
-            p_xcell = p.cell_id[0]
-            p_ycell = p.cell_id[1]
-            p_zcell = p.cell_id[2]
-
-            for x_index in range(p_xcell-1, p_xcell+2):
-                for y_index in range(p_ycell-1, p_ycell+2):
-                    for z_index in range(p_zcell-1, p_zcell+2):
-                        if x_index >= len(self.neighbors):
-                            x_index -= len(self.neighbors)
-                        if y_index >= len(self.neighbors):
-                            y_index -= len(self.neighbors)
-                        if z_index >= len(self.neighbors):
-                            z_index -= len(self.neighbors)
-
-                        for p_ in self.neighbors[x_index][y_index][z_index]:
-                            if p is not p_:
-                                p.neighbors.add(p_)
-
-        self.neighbors_check = True
-        
-    def guess_elements_from_mass(self, mass_dict=None):
-        if mass_dict is None:
-            elem_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                     os.pardir, 'dat', 'elements_by_mass.json')
-            with file(elem_file) as f:
-                mass_dict = json.loads(f.read())
-        
-        for pt in self.particle_types:
-            pt.elem = mass_dict['default']['{}'.format(int(round(pt.mass)))]
-
-    def guess_bonds(self, heavy_d=2.0, hydrogen_d=1.5, neighbor_cutoff=2.5, allow_h2=False):
-        """pysimm.system.System.guess_bonds
-
-        *** USES BUGGY FUNCTION SET_NEIGHBORS - DO NOT USE ***
-
-        """
-        self.bonds.remove('all')
-        for p in self.particles:
-            p.bonds = ItemContainer()
-            p.bonded_to = ItemContainer()
-
-        if not self.neighbors_check:
-            self.set_neighbors(cutoff=neighbor_cutoff)
-
-        for p in self.particles:
-            for p_ in p.neighbors:
-                if p_ in p.bonded_to:
-                    continue
-                if not allow_h2 and p.type.elem == 'H' and p_.type.elem == 'H':
-                    continue
-                if p.type.elem == 'H' or p_.type.elem == 'H':
-                    if calc.pbc_distance(self, p, p_) <= hydrogen_d:
-                        new_bond = Bond(a=p, b=p_)
-                        self.bonds.add(new_bond)
-                        p.bonds.add(new_bond)
-                        p_.bonds.add(new_bond)
-                        p.bonded_to.add(p_)
-                        p_.bonded_to.add(p)
-                else:
-                    if calc.pbc_distance(self, p, p_) <= heavy_d:
-                        new_bond = Bond(a=p, b=p_)
-                        self.bonds.add(new_bond)
-                        p.bonds.add(new_bond)
-                        p_.bonds.add(new_bond)
-                        p.bonded_to.add(p_)
-                        p_.bonded_to.add(p)
-
-    def guess_hybridization(self, unwrap=True):
-        """pysimm.system.System.guess_hybridization
-
-        Simple guessing of hybridization based on element and number of bonds. Cannot detect aromaticity.
-
-        Args:
-            unwrap: if True, unwrap System first default=True
-
-        Returns:
-            None
-        """
-        if unwrap:
-            self.unwrap()
-        self.add_particle_bonding()
-        for p in self.particles:
-            if not p.type or not p.type.elem:
-                error_print('cannot determine hybridization for particle %s because type/element not defined' % p.tag)
-                return
-            if p.type.elem == 'C':
-                if p.bonds.count == 4:
-                    p.hyb = 'sp3'
-                elif p.bonds.count == 3:
-                    p.hyb = 'sp2'
-                elif p.bonds.count == 2:
-                    p.hyb = 'sp1'
-                else:
-                    error_print('unexpected number of bonds for particle %s' % p.tag)
-            elif p.type.elem == 'O':
-                if p.bonds.count == 2:
-                    p.hyb = 'sp3'
-                elif p.bonds.count == 1:
-                    p.hyb = 'sp2'
-                else:
-                    error_print('unexpected number of bonds for particle %s' % p.tag)
-            elif p.type.elem == 'N':
-                if p.bonds.count == 1:
-                    p.hyb = 'sp1'
-                elif p.bonds.count == 2:
-                    p.hyb = 'sp2'
-                elif p.bonds.count == 3:
-                    p.hyb = 'sp3'
-                else:
-                    error_print('unexpected number of bonds for particle %s' % p.tag)
-
-    def guess_bond_order(self):
-        """pysimm.system.System.guess_bond_order
-
-        Simple guessing of bond order based on hybridizations
-
-        Args:
-            None
-
-        Returns:
-            None
-        """
-        for b in self.bonds:
-            if b.a.type.elem == 'H' or b.b.type.elem == 'H':
-                if not b.order:
-                    b.order = 1
-                else:
-                    print(b.order, 1)
-            elif b.a.hyb == 'sp2' and b.b.hyb == 'sp2':
-                if not b.order:
-                    b.order = 2
-                else:
-                    print(b.order, 2)
-            elif b.a.hyb == 'sp1' and b.b.hyb == 'sp1':
-                if not b.order:
-                    b.order = 3
-                else:
-                    print(b.order, 3)
-            else:
-                if not b.order:
-                    b.order = 1
-                else:
-                    print(b.order, 1)
-
     def set_mass(self):
         """pysimm.system.System.set_mass
 
@@ -3403,7 +2930,7 @@ class System(object):
     def set_box(self, padding=0., center=True):
         """pysimm.system.System.set_box
 
-        Update System.Dimension with user defined padding
+        Update System.Dimension with user defined padding. Used to construct a simulation box if it doesn't exist, or adjust the size of the simulation box following system modifications.
 
         Args:
             padding: add padding to all sides of box (Angstrom)
@@ -3541,35 +3068,6 @@ class Molecule(System):
     """
     def __init__(self, **kwargs):
         System.__init__(self, **kwargs)
-
-
-def join(system1, system2, remove_overlaps=True, max_buffer=6):
-    """pysimm.system.join
-
-    *** USES BUGGY FUNCTION SET_NEIGHBORS - DO NOT USE ***
-
-    """
-    s1 = system1.copy()
-    s2 = system2.copy()
-    new_system = replicate([s1, s2], [1, 1], density=None, rand=False, print_insertions=False)
-    new_system.dim = s1.dim.copy()
-    if not remove_overlaps:
-        return new_system
-    for m in new_system.molecules[s1.molecules.count+1:]:
-        overlap = False
-        for mp in m.particles:
-            for p in new_system.particles[1:s1.particles.count+1]:
-                if calc.pbc_distance(new_system, mp, p) < (mp.type.sigma + p.type.sigma)/2:
-                    overlap = True
-                    break
-            if overlap:
-                break
-        if overlap:
-            new_system.molecules.remove(m.tag, update=False)
-            for mp in m.particles:
-                new_system.particles.remove(mp.tag, update=False)
-    new_system.remove_spare_bonding()
-    return new_system
 
 
 def read_yaml(file_, **kwargs):
@@ -4504,213 +4002,6 @@ def read_lammps(data_file, **kwargs):
     return s
 
 
-def read_hoomd(data_file, **kwargs):
-    """pysimm.system.read_hoomd
-
-    Interprets hoomd data file and creates pysimm.system.System object
-
-    Args:
-        data_file: hoomd data file name
-        f (optional): Forcefield object to get data from
-        d_unit (optional): allow user to override distance unit used in data file default='nm'
-
-    Returns:
-        pysimm.system.System object
-    """
-    f = kwargs.get('forcefield')
-    string = kwargs.get('string')
-    d_unit = kwargs.get('d_unit') or 'nm'
-
-    s = System()
-    if string:
-        root = Et.fromstring(string)
-    else:
-        tree = Et.parse(data_file)
-        root = tree.getroot()
-    config = root.find('configuration')
-    box = config.find('box')
-    dims = box.attrib
-    s.dim.xlo = -1*float(dims.get('lx'))/2
-    s.dim.xhi = float(dims.get('lx'))/2
-    s.dim.ylo = -1*float(dims.get('ly'))/2
-    s.dim.yhi = float(dims.get('ly'))/2
-    s.dim.zlo = -1*float(dims.get('lz'))/2
-    s.dim.zhi = float(dims.get('lz'))/2
-    if d_unit == 'nm':
-        s.dim.xlo *= 10
-        s.dim.xhi *= 10
-        s.dim.ylo *= 10
-        s.dim.yhi *= 10
-        s.dim.zlo *= 10
-        s.dim.zhi *= 10
-    position = config.find('position').text.split()
-    mass = config.find('mass').text.split() if config.find('mass') is not None else None
-    charge = config.find('charge').text.split() if config.find('charge') is not None else None
-    types = config.find('type').text.split()
-    bond = config.find('bond').text.split() if config.find('bond') is not None else None
-    angle = config.find('angle').text.split() if config.find('angle') is not None else None
-    dihedral = config.find('dihedral').text.split() if config.find('dihedral') is not None else None
-    improper = config.find('improper').text.split() if config.find('improper') is not None else None
-
-    nparticles = len(types)
-    nbonds = len(bond)/3 if bond else 0
-    nangles = len(angle)/4 if angle else 0
-    ndihedrals = len(dihedral)/5 if dihedral else 0
-    nimpropers = len(improper)/5 if improper else 0
-
-    ptypes = set()
-    for i in range(nparticles):
-        ptypes.add(types[i])
-        x = float(position[3*i])
-        y = float(position[3*i+1])
-        z = float(position[3*i+2])
-        if d_unit == 'nm':
-            x *= 10
-            y *= 10
-            z *= 10
-        p = Particle(tag=i+1, type=types[i], molecule=1, x=x, y=y, z=z, mass=mass[i])
-        s.particles.add(p)
-        if charge:
-            p.charge = charge[i]
-        else:
-            p.charge = 0.
-    ptypes = list(ptypes)
-
-    btypes = set()
-    for i in range(nbonds):
-        btypes.add(bond[3*i])
-        s.bonds.add(Bond(tag=i+1, type=bond[3*i], a=int(bond[3*i+1])+1, b=int(bond[3*i+2])+1))
-    btypes = list(btypes)
-
-    atypes = set()
-    for i in range(nangles):
-        atypes.add(angle[4*i])
-        s.angles.add(Angle(tag=i+1, type=angle[4*i], a=int(angle[4*i+1])+1, b=int(angle[4*i+2])+1,
-                           c=int(angle[4*i+3])+1))
-    atypes = list(atypes)
-
-    dtypes = set()
-    for i in range(ndihedrals):
-        dtypes.add(dihedral[5*i])
-        s.dihedrals.add(Dihedral(tag=i+1, type=dihedral[5*i], a=int(dihedral[5*i+1])+1, b=int(dihedral[5*i+2])+1,
-                                 c=int(dihedral[5*i+3])+1, d=int(dihedral[5*i+4])+1))
-    dtypes = list(dtypes)
-
-    itypes = set()
-    for i in range(nimpropers):
-        itypes.add(improper[5*i])
-        s.impropers.add(Improper(tag=i+1, type=improper[5*i], a=int(improper[5*i+1])+1, b=int(improper[5*i+2])+1,
-                                 c=int(improper[5*i+3])+1, d=int(improper[5*i+4])+1))
-    itypes = list(itypes)
-
-    nparticle_types = len(ptypes)
-    nbond_types = len(btypes)
-    nangle_types = len(atypes)
-    ndihedral_types = len(dtypes)
-    nimproper_types = len(itypes)
-
-    for i in range(nparticle_types):
-        s.particle_types.add(ParticleType(tag=i+1, name=ptypes[i]))
-
-    for i in range(nbond_types):
-        s.bond_types.add(BondType(tag=i+1, name=btypes[i]))
-
-    for i in range(nangle_types):
-        s.angle_types.add(AngleType(tag=i+1, name=atypes[i]))
-
-    for i in range(ndihedral_types):
-        s.dihedral_types.add(DihedralType(tag=i+1, name=dtypes[i]))
-
-    for i in range(nimproper_types):
-        s.improper_types.add(ImproperType(tag=i+1, name=itypes[i]))
-
-    if f:
-
-        for pt in s.particle_types:
-            if f.particle_types.get(pt.name):
-                tag = pt.tag
-                s.particle_types.remove(tag, update=False)
-                pt = f.particle_types.get(pt.name)[0].copy()
-                pt.tag = tag
-                s.particle_types.add(pt)
-
-        for bt in s.bond_types:
-            if f.bond_types.get(bt.name):
-                tag = bt.tag
-                s.bond_types.remove(tag, update=False)
-                bt = f.bond_types.get(bt.name)[0].copy()
-                bt.tag = tag
-                s.bond_types.add(bt)
-
-        for at in s.angle_types:
-            if f.angle_types.get(at.name):
-                tag = at.tag
-                s.angle_types.remove(tag, update=False)
-                at = f.angle_types.get(at.name)[0].copy()
-                at.tag = tag
-                s.angle_types.add(at)
-
-        for dt in s.dihedral_types:
-            if f.dihedral_types.get(dt.name):
-                tag = dt.tag
-                s.dihedral_types.remove(tag, update=False)
-                dt = f.dihedral_types.get(dt.name)[0].copy()
-                dt.tag = tag
-                s.dihedral_types.add(dt)
-
-        for it in s.improper_types:
-            if f.improper_types.get(it.name):
-                tag = it.tag
-                s.improper_types.remove(tag, update=False)
-                it = f.improper_types.get(it.name)[0].copy()
-                it.tag = tag
-                s.improper_types.add(it)
-
-    else:
-        warning_print('no forcefield supplied; types will be incomplete')
-
-    for p in s.particles:
-        for pt in s.particle_types:
-            if p.type == pt.name:
-                p.type = pt
-                p.type.mass = float(p.mass)
-                break
-
-    for b in s.bonds:
-        for bt in s.bond_types:
-            if b.type == bt.name:
-                b.type = bt
-                break
-
-    for a in s.angles:
-        for at in s.angle_types:
-            if a.type == at.name:
-                a.type = at
-                break
-
-    for d in s.dihedrals:
-        for dt in s.dihedral_types:
-            if d.type == dt.name:
-                d.type = dt
-                break
-
-    for i in s.impropers:
-        for it in s.improper_types:
-            if i.type == it.name:
-                i.type = it
-                break
-
-    s.objectify()
-
-    s.set_cog()
-    s.set_mass()
-    s.set_volume()
-    s.set_density()
-    s.set_velocity()
-
-    return s
-
-
 def read_pubchem_smiles(smiles, type_with=None):
     """pysimm.system.read_pubchem_smiles
 
@@ -5161,22 +4452,16 @@ def get_types(*arg, **kwargs):
 
 
 def distance_to_origin(p):
+    """pysimm.system.distance_to_origin
+
+    Calculates distance of particle to origin.
+
+    Args:
+        p: Particle object with x, y, and z attributes
+    Returns:
+        Distance of particle to origin
+    """
     return sqrt(pow(p.x, 2) + pow(p.y, 2) + pow(p.z, 2))
-
-
-def cluster(s, cutoff=35):
-    s.clusters = ItemContainer()
-    for p in s.particles:
-        if p.cluster:
-            for p0 in s.particles:
-                if p0 is not p and calc.pbc_distance(p, p0) < cutoff:
-                    p.cluster.add(p0)
-        else:
-            p.cluster = ItemContainer()
-            s.clusters.add(p.cluster)
-            for p0 in s.particles:
-                if p0 is not p and calc.pbc_distance(p, p0) < cutoff:
-                    p.cluster.add(p0)
 
 
 def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True):

@@ -2,10 +2,6 @@
 # pysimm.calc module
 # ******************************************************************************
 #
-# vector rotation
-# particle separation distance
-# particle separation distance considering PBC
-#
 # ******************************************************************************
 # License
 # ******************************************************************************
@@ -48,27 +44,6 @@ from pysimm.utils import Item
 from pysimm.utils import ItemContainer
 
 
-def hyperbola(x, a, b, c, d, e):
-    if not np:
-        raise PysimmError('pysimm.calc.hyperbola function requires numpy')
-    #   hyperbola(x) with parameters
-    #   a/b = asymptotic slope
-    #    c  = curvature at vertex
-    #    d  = offset to vertex
-    #    e  = vertical offset
-    return a*np.sqrt((b*c)**2 + (x-d)**2)/b + e
-
-
-def rot_hyperbola(x, a, b, c, d, e, th):
-    if not np:
-        raise PysimmError('pysimm.calc.rot_hyperbola function requires numpy')
-    pars = a, b, c, 0, 0  # do the shifting after rotation
-    xd = x - d
-    hsin = hyperbola(xd, *pars)*np.sin(th)
-    xcos = xd*np.cos(th)
-    return e + hyperbola(xcos - hsin, *pars)*np.cos(th) + xcos - hsin
-
-
 def intersection(line1, line2):
     """pysimm.calc.intersection
 
@@ -99,7 +74,7 @@ def intersection(line1, line2):
 def find_rotation(a, b):
     """pysimm.calc.find_rotation
 
-    Finds rotation vector required to align a and b
+    Finds rotation vector required to align vector a and vector b
 
     Args:
         a: 3D vector [x,y,z]
@@ -129,7 +104,7 @@ def find_rotation(a, b):
 def rotate_vector(x, y, z, theta_x=None, theta_y=None, theta_z=None):
     """pysimm.calc.rotate_vector
 
-    Rotates vector
+    Rotates 3d vector around x-axis, y-axis and z-axis given by user defined angles
 
     Args:
         x: x vector component
@@ -169,7 +144,7 @@ def rotate_vector(x, y, z, theta_x=None, theta_y=None, theta_z=None):
 def distance(p1, p2):
     """pysimm.calc.distance
 
-    Finds distance between two pysimm.system.Particle objects
+    Finds distance between two pysimm.system.Particle objects. Simply calculates length of vector between particle coordinates and does not consider periodic boundary conditions.
 
     Args:
         p1: pysimm.system.Particle
@@ -185,7 +160,7 @@ def distance(p1, p2):
 def angle(p1, p2, p3, radians=False):
     """pysimm.calc.angle
 
-    Finds angle between three pysimm.system.Particle objects
+    Finds angle between three pysimm.system.Particle objects. Does not consider periodic boundary conditions.
 
     Args:
         p1: pysimm.system.Particle
@@ -207,15 +182,19 @@ def angle(p1, p2, p3, radians=False):
 def chiral_angle(a, b, c, d):
     """pysimm.calc.chiral_angle
 
-    Finds chiral angle between four pysimm.system.Particle objects
-
+    Finds chiral angle between four pysimm.system.Particle objects. Chiral angle is defined as the angle between the vector resulting from vec(a->c) X vec(a->d) and vec(a->b). Used to help define tacticity where backbone follow b'--a--b and c and d are side groups.
+           
+       b'--a--b
+          / \
+         c   d
+    
     Args:
         a: pysimm.system.Particle
         b: pysimm.system.Particle
         c: pysimm.system.Particle
         d: pysimm.system.Particle
     Returns:
-        chiral angle for particles
+        chiral angle
     """
     if not np:
         raise PysimmError('pysimm.calc.chiral_angle function requires numpy')
@@ -244,7 +223,7 @@ def tacticity(s, a_tag=None, b_tag=None, c_tag=None, d_tag=None, offset=None, re
               rewrap=True, skip_first=False):
     """pysimm.calc.tacticity
 
-    Determines tacticity for polymer chain
+    Determines tacticity for polymer chain. Iterates through groups of four patricles given by X_tags, using offset. This assumes equivalent atoms in each group of four are perfectly offset.
 
     Args:
         s: pysimm.system.System
@@ -319,7 +298,7 @@ def tacticity(s, a_tag=None, b_tag=None, c_tag=None, d_tag=None, offset=None, re
 def frac_free_volume(v_sp, v_void):
     """pysimm.calc.frac_free_volume
 
-    Determines fractional free volume for a poroous system
+    Determines fractional free volume for a poroous system.
 
     Args:
         v_sp: specific volume

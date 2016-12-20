@@ -43,6 +43,16 @@ ANTECHAMBER_EXEC  = os.environ.get('ANTECHAMBER_EXEC')
 
 
 def cleanup_antechamber():
+    """pysimm.amber.cleanup_antechamber
+
+    Removes temporary files created by antechamber and pysimm.
+
+    Args:
+        None
+
+    Returns:
+        None
+    """
     fnames = ['pysimm.tmp.pdb', 'pysimm.tmp.ac' ]
     fnames += ['ATOMTYPE.INF']
     fnames += glob.glob('ANTECHAMBER*')
@@ -54,6 +64,18 @@ def cleanup_antechamber():
 
 
 def calc_charges(s, charge_method='bcc', cleanup=True):
+    """pysimm.amber.calc_charges
+
+    Calculates charges using antechamber. Defaults to am1-bcc charges. 
+
+    Args:
+        s: System for which to calculate charges. System object is updated in place
+        charge_method: name of charge derivation method to use (default: bcc)
+        cleanup: removes temporary files created by antechamber (default: True)
+
+    Returns:
+        None
+    """
     s.write_pdb('pysimm.tmp.pdb')
     cl = '{} -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -c {}'.format(ANTECHAMBER_EXEC, charge_method)
     p = Popen(cl.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
@@ -72,6 +94,18 @@ def calc_charges(s, charge_method='bcc', cleanup=True):
 
         
 def get_forcefield_types(s, types='gaff', f=None):
+    """pysimm.amber.get_forcefield_types
+
+    Uses antechamber to determine atom types. Defaults to GAFF atom types. Retrieves ParticleType objects from force field is provided 
+
+    Args:
+        s: System for which to type
+        types: name of atom types to use (default: gaff)
+        f: forcefield object to retrieve ParticleType objects from if not present in s (default: None)
+
+    Returns:
+        None
+    """
     s.write_pdb('pysimm.tmp.pdb')
     cl = '{} -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -at {}'.format(ANTECHAMBER_EXEC, types)
     p = Popen(cl.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
@@ -93,21 +127,3 @@ def get_forcefield_types(s, types='gaff', f=None):
             else:
                 error_print('cannot find type {} in system or forcefield'.format(type_name))
             line = fr.next()
-
-
-class Antechamber(object):
-    def __init__(self, s, **kwargs):
-        at = kwargs.get('types') if kwargs.has_key('types') else 'gaff'
-        self.system = s
-        
-    def convert_to_ac(self, at):
-        self.system.write_pdb('pysimm.tmp.pdb', False)
-        cl = '{} -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -at {}'.format(ANTECHAMBER_EXEC, at)
-        p = Popen(cl.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        p.communicate()
-        
-    def bcc_charges(self, charge_method='bcc'):
-        cl = '{} -fi ac -i pysimm.tmp.ac -fo ac -o pysimm_charges.tmp.ac -c {}'.format(ANTECHAMBER_EXEC, charge_method)
-        p = Popen(cl.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        p.communicate()
-        self.system.read_ac_charges('pysimm_charges.tmp.ac')
