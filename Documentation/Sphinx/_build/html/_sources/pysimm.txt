@@ -8,6 +8,7 @@ Subpackages
 
     pysimm.apps
     pysimm.forcefield
+    pysimm.models
 
 Submodules
 ----------

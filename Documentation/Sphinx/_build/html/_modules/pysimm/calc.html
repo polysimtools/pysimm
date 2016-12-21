@@ -31,7 +31,7 @@
 
   
     <link rel="top" title="pysimm 0.1 documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
+        <link rel="up" title="pysimm" href="../pysimm.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -114,6 +114,8 @@
       
           <li><a href="../index.html">Module code</a> &raquo;</li>
       
+          <li><a href="../pysimm.html">pysimm</a> &raquo;</li>
+      
     <li>pysimm.calc</li>
       <li class="wy-breadcrumbs-aside">
         
@@ -130,10 +132,6 @@
 <span></span><span class="c1"># ******************************************************************************</span>
 <span class="c1"># pysimm.calc module</span>
 <span class="c1"># ******************************************************************************</span>
-<span class="c1">#</span>
-<span class="c1"># vector rotation</span>
-<span class="c1"># particle separation distance</span>
-<span class="c1"># particle separation distance considering PBC</span>
 <span class="c1">#</span>
 <span class="c1"># ******************************************************************************</span>
 <span class="c1"># License</span>
@@ -177,27 +175,6 @@
 <span class="kn">from</span> <span class="nn">pysimm.utils</span> <span class="k">import</span> <span class="n">ItemContainer</span>
 
 
-<div class="viewcode-block" id="hyperbola"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.hyperbola">[docs]</a><span class="k">def</span> <span class="nf">hyperbola</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;pysimm.calc.hyperbola function requires numpy&#39;</span><span class="p">)</span>
-    <span class="c1">#   hyperbola(x) with parameters</span>
-    <span class="c1">#   a/b = asymptotic slope</span>
-    <span class="c1">#    c  = curvature at vertex</span>
-    <span class="c1">#    d  = offset to vertex</span>
-    <span class="c1">#    e  = vertical offset</span>
-    <span class="k">return</span> <span class="n">a</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">b</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">d</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">b</span> <span class="o">+</span> <span class="n">e</span></div>
-
-
-<div class="viewcode-block" id="rot_hyperbola"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.rot_hyperbola">[docs]</a><span class="k">def</span> <span class="nf">rot_hyperbola</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">th</span><span class="p">):</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;pysimm.calc.rot_hyperbola function requires numpy&#39;</span><span class="p">)</span>
-    <span class="n">pars</span> <span class="o">=</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>  <span class="c1"># do the shifting after rotation</span>
-    <span class="n">xd</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="n">d</span>
-    <span class="n">hsin</span> <span class="o">=</span> <span class="n">hyperbola</span><span class="p">(</span><span class="n">xd</span><span class="p">,</span> <span class="o">*</span><span class="n">pars</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">th</span><span class="p">)</span>
-    <span class="n">xcos</span> <span class="o">=</span> <span class="n">xd</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">th</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">e</span> <span class="o">+</span> <span class="n">hyperbola</span><span class="p">(</span><span class="n">xcos</span> <span class="o">-</span> <span class="n">hsin</span><span class="p">,</span> <span class="o">*</span><span class="n">pars</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">th</span><span class="p">)</span> <span class="o">+</span> <span class="n">xcos</span> <span class="o">-</span> <span class="n">hsin</span></div>
-
-
 <div class="viewcode-block" id="intersection"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.intersection">[docs]</a><span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="n">line1</span><span class="p">,</span> <span class="n">line2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.calc.intersection</span>
 
@@ -228,7 +205,7 @@
 <div class="viewcode-block" id="find_rotation"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.find_rotation">[docs]</a><span class="k">def</span> <span class="nf">find_rotation</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.calc.find_rotation</span>
 
-<span class="sd">    Finds rotation vector required to align a and b</span>
+<span class="sd">    Finds rotation vector required to align vector a and vector b</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        a: 3D vector [x,y,z]</span>
@@ -258,7 +235,7 @@
 <div class="viewcode-block" id="rotate_vector"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.rotate_vector">[docs]</a><span class="k">def</span> <span class="nf">rotate_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">theta_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theta_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theta_z</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.calc.rotate_vector</span>
 
-<span class="sd">    Rotates vector</span>
+<span class="sd">    Rotates 3d vector around x-axis, y-axis and z-axis given by user defined angles</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        x: x vector component</span>
@@ -298,7 +275,7 @@
 <div class="viewcode-block" id="distance"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.distance">[docs]</a><span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.calc.distance</span>
 
-<span class="sd">    Finds distance between two pysimm.system.Particle objects</span>
+<span class="sd">    Finds distance between two pysimm.system.Particle objects. Simply calculates length of vector between particle coordinates and does not consider periodic boundary conditions.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        p1: pysimm.system.Particle</span>
@@ -314,7 +291,7 @@
 <div class="viewcode-block" id="angle"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.angle">[docs]</a><span class="k">def</span> <span class="nf">angle</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">radians</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.calc.angle</span>
 
-<span class="sd">    Finds angle between three pysimm.system.Particle objects</span>
+<span class="sd">    Finds angle between three pysimm.system.Particle objects. Does not consider periodic boundary conditions.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        p1: pysimm.system.Particle</span>
@@ -336,15 +313,19 @@
 <div class="viewcode-block" id="chiral_angle"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.chiral_angle">[docs]</a><span class="k">def</span> <span class="nf">chiral_angle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.calc.chiral_angle</span>
 
-<span class="sd">    Finds chiral angle between four pysimm.system.Particle objects</span>
-
+<span class="sd">    Finds chiral angle between four pysimm.system.Particle objects. Chiral angle is defined as the angle between the vector resulting from vec(a-&gt;c) X vec(a-&gt;d) and vec(a-&gt;b). Used to help define tacticity where backbone follow b&#39;--a--b and c and d are side groups.</span>
+<span class="sd">           </span>
+<span class="sd">       b&#39;--a--b</span>
+<span class="sd">          / \</span>
+<span class="sd">         c   d</span>
+<span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        a: pysimm.system.Particle</span>
 <span class="sd">        b: pysimm.system.Particle</span>
 <span class="sd">        c: pysimm.system.Particle</span>
 <span class="sd">        d: pysimm.system.Particle</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        chiral angle for particles</span>
+<span class="sd">        chiral angle</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;pysimm.calc.chiral_angle function requires numpy&#39;</span><span class="p">)</span>
@@ -373,7 +354,7 @@
               <span class="n">rewrap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_first</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.calc.tacticity</span>
 
-<span class="sd">    Determines tacticity for polymer chain</span>
+<span class="sd">    Determines tacticity for polymer chain. Iterates through groups of four patricles given by X_tags, using offset. This assumes equivalent atoms in each group of four are perfectly offset.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        s: pysimm.system.System</span>
@@ -448,7 +429,7 @@
 <div class="viewcode-block" id="frac_free_volume"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.frac_free_volume">[docs]</a><span class="k">def</span> <span class="nf">frac_free_volume</span><span class="p">(</span><span class="n">v_sp</span><span class="p">,</span> <span class="n">v_void</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.calc.frac_free_volume</span>
 
-<span class="sd">    Determines fractional free volume for a poroous system</span>
+<span class="sd">    Determines fractional free volume for a poroous system.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        v_sp: specific volume</span>

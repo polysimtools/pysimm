@@ -31,7 +31,7 @@
 
   
     <link rel="top" title="pysimm 0.1 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
+        <link rel="up" title="pysimm" href="../../pysimm.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -113,6 +113,8 @@
     <li><a href="../../../index.html">Docs</a> &raquo;</li>
       
           <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+          <li><a href="../../pysimm.html">pysimm</a> &raquo;</li>
       
     <li>pysimm.apps.random_walk</li>
       <li class="wy-breadcrumbs-aside">
@@ -424,6 +426,10 @@
     
         <span class="k">if</span> <span class="n">unwrap</span><span class="p">:</span>
             <span class="n">s</span><span class="o">.</span><span class="n">wrap</span><span class="p">()</span>
+            
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
     <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;polymer.lmps&#39;</span><span class="p">)</span>
     <span class="n">s</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()</span>
@@ -566,6 +572,10 @@
 
         <span class="k">if</span> <span class="n">unwrap</span><span class="p">:</span>
             <span class="n">s</span><span class="o">.</span><span class="n">wrap</span><span class="p">()</span>
+            
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">molecules</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">molecule</span><span class="o">.</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
     <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;polymer.lmps&#39;</span><span class="p">)</span>
     <span class="n">s</span><span class="o">.</span><span class="n">unwrap</span><span class="p">()</span>

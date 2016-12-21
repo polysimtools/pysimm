@@ -1,0 +1,19 @@
+pysimm.models.monomers.gaff2 package
+====================================
+
+Submodules
+----------
+
+.. toctree::
+
+   pysimm.models.monomers.gaff2.pe
+   pysimm.models.monomers.gaff2.pmma
+   pysimm.models.monomers.gaff2.ps
+
+Module contents
+---------------
+
+.. automodule:: pysimm.models.monomers.gaff2
+    :members:
+    :undoc-members:
+    :show-inheritance:

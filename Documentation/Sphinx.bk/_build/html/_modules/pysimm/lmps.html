@@ -136,7 +136,7 @@
 <span class="c1"># ******************************************************************************</span>
 <span class="c1"># The MIT License (MIT)</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2016 Michael E. Fortunato</span>
+<span class="c1"># Copyright (c) 2016 Michael E. Fortunato, Coray M. Colina</span>
 <span class="c1">#</span>
 <span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
 <span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
@@ -642,10 +642,10 @@
         <span class="n">exit_status</span><span class="p">,</span> <span class="n">stdo</span><span class="p">,</span> <span class="n">stde</span> <span class="o">=</span> <span class="n">RapptureExec</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting </span><span class="si">%s</span><span class="s1"> simulation using LAMMPS&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting </span><span class="si">%s</span><span class="s1"> LAMMPS simulation&#39;</span>
                   <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting simulation using LAMMPS&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting LAMMPS simulation&#39;</span>
                   <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">np</span><span class="p">:</span>
             <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;mpiexec&#39;</span><span class="p">,</span> <span class="s1">&#39;-np&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="p">),</span>
@@ -672,29 +672,6 @@
                     <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
                     
     <span class="n">simulation</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">read_lammps_dump</span><span class="p">(</span><span class="s1">&#39;pysimm.dump.tmp&#39;</span><span class="p">)</span>
-    <span class="sd">&#39;&#39;&#39;if simulation.write:</span>
-<span class="sd">        n = read_lammps(simulation.write, quiet=True,</span>
-<span class="sd">                        pair_style=simulation.system.pair_style,</span>
-<span class="sd">                        bond_style=simulation.system.bond_style,</span>
-<span class="sd">                        angle_style=simulation.system.angle_style,</span>
-<span class="sd">                        dihedral_style=simulation.system.dihedral_style,</span>
-<span class="sd">                        improper_style=simulation.system.improper_style)</span>
-<span class="sd">    else:</span>
-<span class="sd">        n = read_lammps(&#39;pysimm_md.lmps&#39;, quiet=True,</span>
-<span class="sd">                        pair_style=simulation.system.pair_style,</span>
-<span class="sd">                        bond_style=simulation.system.bond_style,</span>
-<span class="sd">                        angle_style=simulation.system.angle_style,</span>
-<span class="sd">                        dihedral_style=simulation.system.dihedral_style,</span>
-<span class="sd">                        improper_style=simulation.system.improper_style)</span>
-<span class="sd">    for p in n.particles:</span>
-<span class="sd">        p_ = simulation.system.particles[p.tag]</span>
-<span class="sd">        p_.x = p.x</span>
-<span class="sd">        p_.y = p.y</span>
-<span class="sd">        p_.z = p.z</span>
-<span class="sd">        p_.vx = p.vx</span>
-<span class="sd">        p_.vy = p.vy</span>
-<span class="sd">        p_.vz = p.vz</span>
-<span class="sd">    simulation.system.dim = n.dim&#39;&#39;&#39;</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
@@ -802,6 +779,37 @@
     <span class="n">sim</span> <span class="o">=</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">sim</span><span class="o">.</span><span class="n">add_min</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="p">)</span></div>
+    
+    
+<div class="viewcode-block" id="energy"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.energy">[docs]</a><span class="k">def</span> <span class="nf">energy</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">all</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">np</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="s1">&#39;pysimm_calc.tmp.log&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">add_md</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">thermo</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">thermo_style</span><span class="o">=</span><span class="s1">&#39;custom step etotal epair emol evdwl ecoul ebond eangle edihed eimp&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">file</span><span class="p">(</span><span class="s1">&#39;pysimm_calc.tmp.log&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;Step&#39;</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="n">step</span><span class="p">,</span> <span class="n">etotal</span><span class="p">,</span> <span class="n">epair</span><span class="p">,</span> <span class="n">emol</span><span class="p">,</span> <span class="n">evdwl</span><span class="p">,</span> <span class="n">ecoul</span><span class="p">,</span> <span class="n">ebond</span><span class="p">,</span> <span class="n">eangle</span><span class="p">,</span> <span class="n">edihed</span><span class="p">,</span> <span class="n">eimp</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;pysimm_calc.tmp.log&#39;</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">error_print</span><span class="p">(</span><span class="s1">&#39;error likely occurred during simulation&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">all</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+                <span class="s1">&#39;step&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">step</span><span class="p">),</span>
+                <span class="s1">&#39;etotal&#39;</span><span class="p">:</span> <span class="n">etotal</span><span class="p">,</span>
+                <span class="s1">&#39;epair&#39;</span><span class="p">:</span> <span class="n">epair</span><span class="p">,</span>
+                <span class="s1">&#39;emol&#39;</span><span class="p">:</span> <span class="n">emol</span><span class="p">,</span>
+                <span class="s1">&#39;evdwl&#39;</span><span class="p">:</span> <span class="n">evdwl</span><span class="p">,</span>
+                <span class="s1">&#39;ecoul&#39;</span><span class="p">:</span> <span class="n">ecoul</span><span class="p">,</span>
+                <span class="s1">&#39;ebond&#39;</span><span class="p">:</span> <span class="n">ebond</span><span class="p">,</span>
+                <span class="s1">&#39;eangle&#39;</span><span class="p">:</span> <span class="n">eangle</span><span class="p">,</span>
+                <span class="s1">&#39;edihed&#39;</span><span class="p">:</span> <span class="n">edihed</span><span class="p">,</span>
+                <span class="s1">&#39;eimp&#39;</span><span class="p">:</span> <span class="n">eimp</span>
+               <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">etotal</span></div>
 
 
 <div class="viewcode-block" id="md"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.md">[docs]</a><span class="k">def</span> <span class="nf">md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">template</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>

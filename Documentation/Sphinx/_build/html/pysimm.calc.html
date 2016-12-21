@@ -94,7 +94,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pysimm.utils.html">pysimm.utils module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="pysimm.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pysimm.html#module-pysimm">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -148,7 +148,7 @@
 <dl class="function">
 <dt id="pysimm.calc.angle">
 <code class="descclassname">pysimm.calc.</code><code class="descname">angle</code><span class="sig-paren">(</span><em>p1</em>, <em>p2</em>, <em>p3</em>, <em>radians=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.angle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds angle between three pysimm.system.Particle objects</p>
+<dd><p>Finds angle between three pysimm.system.Particle objects. Does not consider periodic boundary conditions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -171,7 +171,13 @@
 <dl class="function">
 <dt id="pysimm.calc.chiral_angle">
 <code class="descclassname">pysimm.calc.</code><code class="descname">chiral_angle</code><span class="sig-paren">(</span><em>a</em>, <em>b</em>, <em>c</em>, <em>d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#chiral_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.chiral_angle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds chiral angle between four pysimm.system.Particle objects</p>
+<dd><p>Finds chiral angle between four pysimm.system.Particle objects. Chiral angle is defined as the angle between the vector resulting from vec(a-&gt;c) X vec(a-&gt;d) and vec(a-&gt;b). Used to help define tacticity where backbone follow b&#8217;&#8211;a&#8211;b and c and d are side groups.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>b&#8217;&#8211;a&#8211;b</dt>
+<dd>/          c   d</dd>
+</dl>
+</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -184,7 +190,7 @@
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">chiral angle for particles</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">chiral angle</p>
 </td>
 </tr>
 </tbody>
@@ -194,7 +200,7 @@
 <dl class="function">
 <dt id="pysimm.calc.distance">
 <code class="descclassname">pysimm.calc.</code><code class="descname">distance</code><span class="sig-paren">(</span><em>p1</em>, <em>p2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.distance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds distance between two pysimm.system.Particle objects</p>
+<dd><p>Finds distance between two pysimm.system.Particle objects. Simply calculates length of vector between particle coordinates and does not consider periodic boundary conditions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -215,7 +221,7 @@
 <dl class="function">
 <dt id="pysimm.calc.find_rotation">
 <code class="descclassname">pysimm.calc.</code><code class="descname">find_rotation</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#find_rotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.find_rotation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Finds rotation vector required to align a and b</p>
+<dd><p>Finds rotation vector required to align vector a and vector b</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -236,7 +242,7 @@
 <dl class="function">
 <dt id="pysimm.calc.frac_free_volume">
 <code class="descclassname">pysimm.calc.</code><code class="descname">frac_free_volume</code><span class="sig-paren">(</span><em>v_sp</em>, <em>v_void</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#frac_free_volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.frac_free_volume" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines fractional free volume for a poroous system</p>
+<dd><p>Determines fractional free volume for a poroous system.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -253,11 +259,6 @@
 </tbody>
 </table>
 </dd></dl>
-
-<dl class="function">
-<dt id="pysimm.calc.hyperbola">
-<code class="descclassname">pysimm.calc.</code><code class="descname">hyperbola</code><span class="sig-paren">(</span><em>x</em>, <em>a</em>, <em>b</em>, <em>c</em>, <em>d</em>, <em>e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#hyperbola"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.hyperbola" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="function">
 <dt id="pysimm.calc.intersection">
@@ -308,14 +309,9 @@
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="pysimm.calc.rot_hyperbola">
-<code class="descclassname">pysimm.calc.</code><code class="descname">rot_hyperbola</code><span class="sig-paren">(</span><em>x</em>, <em>a</em>, <em>b</em>, <em>c</em>, <em>d</em>, <em>e</em>, <em>th</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#rot_hyperbola"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.rot_hyperbola" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
 <dt id="pysimm.calc.rotate_vector">
 <code class="descclassname">pysimm.calc.</code><code class="descname">rotate_vector</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em>, <em>theta_x=None</em>, <em>theta_y=None</em>, <em>theta_z=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#rotate_vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.rotate_vector" title="Permalink to this definition">¶</a></dt>
-<dd><p>Rotates vector</p>
+<dd><p>Rotates 3d vector around x-axis, y-axis and z-axis given by user defined angles</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -340,7 +336,7 @@
 <dl class="function">
 <dt id="pysimm.calc.tacticity">
 <code class="descclassname">pysimm.calc.</code><code class="descname">tacticity</code><span class="sig-paren">(</span><em>s</em>, <em>a_tag=None</em>, <em>b_tag=None</em>, <em>c_tag=None</em>, <em>d_tag=None</em>, <em>offset=None</em>, <em>return_angles=True</em>, <em>unwrap=True</em>, <em>rewrap=True</em>, <em>skip_first=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#tacticity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.tacticity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines tacticity for polymer chain</p>
+<dd><p>Determines tacticity for polymer chain. Iterates through groups of four patricles given by X_tags, using offset. This assumes equivalent atoms in each group of four are perfectly offset.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

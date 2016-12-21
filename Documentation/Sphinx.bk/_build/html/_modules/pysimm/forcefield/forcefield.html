@@ -127,7 +127,36 @@
            <div itemprop="articleBody">
             
   <h1>Source code for pysimm.forcefield.forcefield</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="c1"># ******************************************************************************</span>
+<span class="c1"># pysimm.forcefield module</span>
+<span class="c1"># ******************************************************************************</span>
+<span class="c1">#</span>
+<span class="c1"># ******************************************************************************</span>
+<span class="c1"># License</span>
+<span class="c1"># ******************************************************************************</span>
+<span class="c1"># The MIT License (MIT)</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2016 Michael E. Fortunato, Coray M. Colina</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in</span>
+<span class="c1"># all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="c1"># THE SOFTWARE.</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">xml.dom</span> <span class="k">import</span> <span class="n">minidom</span>
 <span class="kn">from</span> <span class="nn">xml.etree</span> <span class="k">import</span> <span class="n">ElementTree</span> <span class="k">as</span> <span class="n">Et</span>
@@ -138,6 +167,7 @@
 <span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">debug_print</span>
 <span class="kn">import</span> <span class="nn">gasteiger</span>
 <span class="kn">from</span> <span class="nn">pysimm.utils</span> <span class="k">import</span> <span class="n">PysimmError</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">ItemContainer</span><span class="p">,</span> <span class="n">compare</span>
+<span class="kn">from</span> <span class="nn">pysimm.system</span> <span class="k">import</span> <span class="n">ParticleContainer</span>
 <span class="kn">from</span> <span class="nn">pysimm.system</span> <span class="k">import</span> <span class="n">ParticleType</span><span class="p">,</span> <span class="n">BondType</span><span class="p">,</span> <span class="n">AngleType</span>
 <span class="kn">from</span> <span class="nn">pysimm.system</span> <span class="k">import</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">Dihedral</span><span class="p">,</span> <span class="n">Improper</span>
 <span class="kn">from</span> <span class="nn">pysimm.system</span> <span class="k">import</span> <span class="n">DihedralType</span><span class="p">,</span> <span class="n">ImproperType</span>
@@ -168,7 +198,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ff_class</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ff_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pair_style</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">particle_types</span> <span class="o">=</span> <span class="n">ItemContainer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">particle_types</span> <span class="o">=</span> <span class="n">ParticleContainer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bond_style</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bond_types</span> <span class="o">=</span> <span class="n">ItemContainer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">angle_style</span> <span class="o">=</span> <span class="kc">None</span>
@@ -178,10 +208,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">improper_style</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">improper_types</span> <span class="o">=</span> <span class="n">ItemContainer</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span> <span class="ow">or</span> <span class="n">file_</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s1">&#39;xml&#39;</span> <span class="ow">or</span> <span class="n">file_</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;xml&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">from_xml</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span> <span class="ow">or</span> <span class="n">file_</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">format</span> <span class="o">==</span> <span class="s1">&#39;xml&#39;</span> <span class="ow">or</span> <span class="n">file_</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;xml&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">from_xml</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span>
             
     
 <div class="viewcode-block" id="Forcefield.from_xml"><a class="viewcode-back" href="../../../pysimm.forcefield.forcefield.html#pysimm.forcefield.forcefield.Forcefield.from_xml">[docs]</a>    <span class="k">def</span> <span class="nf">from_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_</span><span class="p">):</span>

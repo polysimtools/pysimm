@@ -94,7 +94,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pysimm.utils.html">pysimm.utils module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="pysimm.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pysimm.html#module-pysimm">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -550,7 +550,7 @@ pysimm.lmps.MolecularDynamics, pysimm.lmps.Minimization, and/or pysimm.lmps.Cust
 
 <dl class="method">
 <dt id="pysimm.lmps.Simulation.run">
-<code class="descname">run</code><span class="sig-paren">(</span><em>np=None</em>, <em>nanohub=None</em>, <em>rewrite=True</em>, <em>write_input=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/lmps.html#Simulation.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.lmps.Simulation.run" title="Permalink to this definition">¶</a></dt>
+<code class="descname">run</code><span class="sig-paren">(</span><em>np=None</em>, <em>nanohub=None</em>, <em>rewrite=True</em>, <em>init=True</em>, <em>write_input=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/lmps.html#Simulation.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.lmps.Simulation.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Begin LAMMPS simulation.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -560,6 +560,7 @@ pysimm.lmps.MolecularDynamics, pysimm.lmps.Minimization, and/or pysimm.lmps.Cust
 <li><strong>np</strong> &#8211; number of threads to use (serial by default) default=None</li>
 <li><strong>nanohub</strong> &#8211; dictionary containing nanohub resource information default=None</li>
 <li><strong>rewrite</strong> &#8211; True to rewrite input before running default=True</li>
+<li><strong>init</strong> &#8211; True to write initialization part of LAMMPS input script (set to False if using complete custom input)</li>
 </ul>
 </td>
 </tr>
@@ -569,7 +570,7 @@ pysimm.lmps.MolecularDynamics, pysimm.lmps.Minimization, and/or pysimm.lmps.Cust
 
 <dl class="method">
 <dt id="pysimm.lmps.Simulation.write_input">
-<code class="descname">write_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/lmps.html#Simulation.write_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.lmps.Simulation.write_input" title="Permalink to this definition">¶</a></dt>
+<code class="descname">write_input</code><span class="sig-paren">(</span><em>init=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/lmps.html#Simulation.write_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.lmps.Simulation.write_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates LAMMPS input string including initialization and input from templates/custom input</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -610,12 +611,30 @@ pysimm.lmps.MolecularDynamics, pysimm.lmps.Minimization, and/or pysimm.lmps.Cust
 <dl class="function">
 <dt id="pysimm.lmps.energy">
 <code class="descclassname">pysimm.lmps.</code><code class="descname">energy</code><span class="sig-paren">(</span><em>s</em>, <em>all=False</em>, <em>np=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/lmps.html#energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.lmps.energy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Convenience function to calculate energy of a given System object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>s</strong> &#8211; system to calculate energy</li>
+<li><strong>all</strong> &#8211; returns decomposition of energy if True (default: False)</li>
+<li><strong>np</strong> &#8211; number of threads to use for simulation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">total energy or disctionary of energy components</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="pysimm.lmps.enqueue_output">
 <code class="descclassname">pysimm.lmps.</code><code class="descname">enqueue_output</code><span class="sig-paren">(</span><em>out</em>, <em>queue</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/lmps.html#enqueue_output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.lmps.enqueue_output" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Helps queue output for printing to screen during simulation.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="pysimm.lmps.md">

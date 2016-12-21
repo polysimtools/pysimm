@@ -31,7 +31,7 @@
 
   
     <link rel="top" title="pysimm 0.1 documentation" href="../../index.html"/>
-        <link rel="up" title="Module code" href="../index.html"/> 
+        <link rel="up" title="pysimm" href="../pysimm.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -114,6 +114,8 @@
       
           <li><a href="../index.html">Module code</a> &raquo;</li>
       
+          <li><a href="../pysimm.html">pysimm</a> &raquo;</li>
+      
     <li>pysimm.utils</li>
       <li class="wy-breadcrumbs-aside">
         
@@ -130,11 +132,6 @@
 <span></span><span class="c1"># ******************************************************************************</span>
 <span class="c1"># pysimm.utils module</span>
 <span class="c1"># ******************************************************************************</span>
-<span class="c1">#</span>
-<span class="c1"># Container class definition</span>
-<span class="c1"># Item class definition</span>
-<span class="c1"># ItemContainer(Sequence) class deinition</span>
-<span class="c1"># comma separated string compare</span>
 <span class="c1">#</span>
 <span class="c1"># ******************************************************************************</span>
 <span class="c1"># License</span>
@@ -175,12 +172,19 @@
 
 
 <div class="viewcode-block" id="Container"><a class="viewcode-back" href="../../pysimm.utils.html#pysimm.utils.Container">[docs]</a><span class="k">class</span> <span class="nc">Container</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.utils.Container</span>
 
+<span class="sd">    Abitrary container object that returns None if trying to access an attribute that does not exist</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="ItemContainer"><a class="viewcode-back" href="../../pysimm.utils.html#pysimm.utils.ItemContainer">[docs]</a><span class="k">class</span> <span class="nc">ItemContainer</span><span class="p">(</span><span class="n">Sequence</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.utils.ItemContainer</span>
+
+<span class="sd">    Container object intended to organize Item objects. Arbitrary attributes can be set using keyword arguments. Underlying data structure is a dictionary where the key is referred to as a tag, and the value should be an Item object. Item.tag should equal the key for the object in the dictionary.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dict</span> <span class="o">=</span> <span class="n">_dict</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">_dict</span><span class="p">)</span> <span class="k">if</span> <span class="n">_dict</span> <span class="k">else</span> <span class="mi">0</span>

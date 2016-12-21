@@ -93,7 +93,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">pysimm.utils module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="pysimm.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pysimm.html#module-pysimm">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -148,6 +148,7 @@
 <dt id="pysimm.utils.Container">
 <em class="property">class </em><code class="descclassname">pysimm.utils.</code><code class="descname">Container</code><a class="reference internal" href="_modules/pysimm/utils.html#Container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.utils.Container" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Abitrary container object that returns None if trying to access an attribute that does not exist</p>
 </dd></dl>
 
 <dl class="class">
@@ -170,6 +171,7 @@
 <dt id="pysimm.utils.ItemContainer">
 <em class="property">class </em><code class="descclassname">pysimm.utils.</code><code class="descname">ItemContainer</code><span class="sig-paren">(</span><em>_dict=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/utils.html#ItemContainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.utils.ItemContainer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">_abcoll.Sequence</span></code></p>
+<p>Container object intended to organize Item objects. Arbitrary attributes can be set using keyword arguments. Underlying data structure is a dictionary where the key is referred to as a tag, and the value should be an Item object. Item.tag should equal the key for the object in the dictionary.</p>
 <dl class="method">
 <dt id="pysimm.utils.ItemContainer.add">
 <code class="descname">add</code><span class="sig-paren">(</span><em>_item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/utils.html#ItemContainer.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.utils.ItemContainer.add" title="Permalink to this definition">¶</a></dt>

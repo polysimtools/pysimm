@@ -31,7 +31,7 @@
 
   
     <link rel="top" title="pysimm 0.1 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
+        <link rel="up" title="pysimm" href="../../pysimm.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -114,6 +114,8 @@
       
           <li><a href="../../index.html">Module code</a> &raquo;</li>
       
+          <li><a href="../../pysimm.html">pysimm</a> &raquo;</li>
+      
     <li>pysimm.forcefield.forcefield</li>
       <li class="wy-breadcrumbs-aside">
         
@@ -167,7 +169,6 @@
 <span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">debug_print</span>
 <span class="kn">import</span> <span class="nn">gasteiger</span>
 <span class="kn">from</span> <span class="nn">pysimm.utils</span> <span class="k">import</span> <span class="n">PysimmError</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">ItemContainer</span><span class="p">,</span> <span class="n">compare</span>
-<span class="kn">from</span> <span class="nn">pysimm.system</span> <span class="k">import</span> <span class="n">ParticleContainer</span>
 <span class="kn">from</span> <span class="nn">pysimm.system</span> <span class="k">import</span> <span class="n">ParticleType</span><span class="p">,</span> <span class="n">BondType</span><span class="p">,</span> <span class="n">AngleType</span>
 <span class="kn">from</span> <span class="nn">pysimm.system</span> <span class="k">import</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">Dihedral</span><span class="p">,</span> <span class="n">Improper</span>
 <span class="kn">from</span> <span class="nn">pysimm.system</span> <span class="k">import</span> <span class="n">DihedralType</span><span class="p">,</span> <span class="n">ImproperType</span>
@@ -198,7 +199,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ff_class</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ff_name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pair_style</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">particle_types</span> <span class="o">=</span> <span class="n">ParticleContainer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">particle_types</span> <span class="o">=</span> <span class="n">ItemContainer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bond_style</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bond_types</span> <span class="o">=</span> <span class="n">ItemContainer</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">angle_style</span> <span class="o">=</span> <span class="kc">None</span>

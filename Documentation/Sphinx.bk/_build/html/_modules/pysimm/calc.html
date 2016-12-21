@@ -140,7 +140,7 @@
 <span class="c1"># ******************************************************************************</span>
 <span class="c1"># The MIT License (MIT)</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2016 Michael E. Fortunato</span>
+<span class="c1"># Copyright (c) 2016 Michael E. Fortunato, Coray M. Colina</span>
 <span class="c1">#</span>
 <span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
 <span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
@@ -437,6 +437,8 @@
     <span class="k">if</span> <span class="n">rewrap</span><span class="p">:</span>
         <span class="n">s</span><span class="o">.</span><span class="n">wrap</span><span class="p">()</span>
 
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.1f}% s</span><span class="s1">yn diads&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">syn_diads</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">syn_diads</span><span class="o">+</span><span class="n">iso_diads</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.1f}% i</span><span class="s1">so diads&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">iso_diads</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">syn_diads</span><span class="o">+</span><span class="n">iso_diads</span><span class="p">)))</span>
     <span class="k">if</span> <span class="n">return_angles</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">t</span><span class="p">,</span> <span class="n">stereochem_angles</span>
     <span class="k">else</span><span class="p">:</span>
