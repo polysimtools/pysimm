@@ -1,4 +1,4 @@
-Example 1: Running energy minimization and molecular dynamics simulations of a polymer system using LAMMPS
+Example 7: Running energy minimization and molecular dynamics simulations of a polymer system using LAMMPS
 =======================================================================
 
 ### Importing pysimm modules/packages
