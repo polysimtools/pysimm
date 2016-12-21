@@ -29,9 +29,6 @@
 
 from __future__ import print_function
 import os
-from distutils.spawn import find_executable
-
-__all__ = ['calc', 'forcefield', 'system', 'amber', 'lmps', 'utils', 'gasteiger', 'apps']
 
 error = True
 warning = True

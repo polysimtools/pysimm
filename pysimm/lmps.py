@@ -169,6 +169,17 @@ class MolecularDynamics(object):
         else:
             self.t_start = self.temp
             self.t_stop = self.temp
+            
+        if self.pressure is None:
+            self.p_start = kwargs.get('p_start')
+            self.p_stop = kwargs.get('p_stop')
+            if self.p_start is None:
+                self.p_start = 1.
+            if self.p_stop is None:
+                self.p_stop = 1.
+        else:
+            self.p_start = self.pressure
+            self.p_stop = self.pressure
 
         self.input = ''
 
@@ -195,7 +206,7 @@ class MolecularDynamics(object):
             self.input += 'fix 1 all %s temp %s %s 100\n' % (self.ensemble, self.t_start, self.t_stop)
         elif self.ensemble == 'npt':
             self.input += ('fix 1 all %s temp %s %s 100 iso %s %s 100\n'
-                           % (self.ensemble, self.t_start, self.t_stop, self.pressure, self.pressure))
+                           % (self.ensemble, self.t_start, self.t_stop, self.p_start, self.p_stop))
         elif self.ensemble == 'nve' and self.limit:
             self.input += 'fix 1 all %s/limit %s\n' % (self.ensemble, self.limit)
         elif self.ensemble == 'nve':

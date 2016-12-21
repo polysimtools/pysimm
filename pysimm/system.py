@@ -203,10 +203,10 @@ class Bond(Item):
         Item.__init__(self, **kwargs)
         
     def get_other_particle(self, p):
-        if p is not b.a and p is not b.b:
+        if p is not self.a and p is not self.b:
             return None
         else:
-            return b.a if p is b.b else b.b
+            return self.a if p is self.b else self.b
 
     def distance(self):
         """pysimm.system.Bond.distance
@@ -250,9 +250,7 @@ class Angle(Item):
     
     Angle between particles a, b, and c
     
-      b
-     / \
-    a   c
+    a--b--c
 
     Objects inheriting from pysimm.utils.Item can contain arbitrary data.
     Keyword arguments are assigned as attributes.
@@ -305,11 +303,7 @@ class Dihedral(Item):
     
     Dihedral between particles a, b, c, and d
     
-    a
-     \
-      b--c
-          \
-           d
+    a--b--c--d
 
     Objects inheriting from pysimm.utils.Item can contain arbitrary data.
     Keyword arguments are assigned as attributes.
@@ -350,11 +344,11 @@ class Improper(Item):
     
     Improper dihedral around particle a, bonded to b, c, and d
     
-        b
-        |
-        a
-       / \
-      c   d
+    | b
+    | |
+    | a--d
+    | |
+    | c
       
     Objects inheriting from pysimm.utils.Item can contain arbitrary data.
     Keyword arguments are assigned as attributes.
