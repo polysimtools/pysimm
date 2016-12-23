@@ -1,5 +1,6 @@
 Example 3: Creating benzene and fixing incorrect bond orders
 ============================================================
+by Michael E. Fortunato
 
 ### Importing pysimm modules/packages
 

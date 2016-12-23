@@ -1,5 +1,6 @@
 Example 1: Creating Methane Atom-by-Atom
 ========================================
+by Michael E. Fortunato
 
 ### Importing pysimm modules/packages
 

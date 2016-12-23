@@ -1,5 +1,6 @@
 Example 1: Creating Methane Atom-by-Atom
 ========================================
+by Michael E. Fortunato
 
 __*Note: These examples require the fourier dihedral style in LAMMPS which is included in the user-misc package. This package is sometimes not installed with LAMMPS. Be sure your version of LAMMPS supports this dihedral style before continuing.*__
 

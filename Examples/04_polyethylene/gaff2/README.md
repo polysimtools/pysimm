@@ -1,5 +1,6 @@
 Example 4: Creating a polyethylene chain using the random walk application
 ==========================================================================
+by Michael E. Fortunato and Dylan Anstine
 
 ### Importing pysimm modules/packages
 

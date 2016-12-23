@@ -20,9 +20,37 @@ n_molecules=[300,200]
 
 s=system.replicate(molecule_list, n_molecules , density=0.3)
 
-lmps.quick_min(s, name='fire_min', min_style='fire', print_to_screen=True, thermo=500)
-lmps.quick_md(s, name='nvt_md', ensemble='nvt', length=10000, print_to_screen=True, thermo=500)
-lmps.quick_md(s, name='npt_md', ensemble='npt', length=100000, print_to_screen=True, thermo=500)
+min_settings = {
+    'name': 'fire_min',
+    'min_style': 'fire',
+    'print_to_screen': True
+}
+
+nvt_settings = {
+    'name': 'nvt_md',
+    'print_to_screen': True,
+    'ensemble': 'nvt',
+    't_start': 100,
+    't_stop': 300,
+    'new_v': True,
+    'length': 10000
+}
+
+npt_settings = {
+    'name': 'npt_md',
+    'print_to_screen': True,
+    'ensemble': 'npt',
+    'temp': 300,
+    'new_v': True,
+    'p_start': 1000,
+    'p_stop': 1,
+    'length': 100000,
+    'thermo_style': 'custom step temp press density'
+}
+
+lmps.quick_min(s, **min_settings)
+lmps.quick_md(s, **nvt_settings)
+lmps.quick_md(s, **npt_settings)
 
 s.write_xyz('mixture.xyz')
 s.write_yaml('mixture.yaml')

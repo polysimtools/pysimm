@@ -1,5 +1,6 @@
 Example 6: Creating systems of multiple polymethyl methacrylate chains using the random walk application
 ========================================================================================================
+by Michael E. Fortunato and Dylan Anstine
 
 ### Importing pysimm modules/packages
 

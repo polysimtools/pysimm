@@ -1,5 +1,6 @@
 Example 2: Creating methanol using the PubChem compound search API
 =================================================================
+by Michael E. Fortunato
 
 ### Importing pysimm modules/packages
 
