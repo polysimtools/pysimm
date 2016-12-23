@@ -36,8 +36,7 @@ from pysimm import debug_print
 
 
 class PysimmError(Exception):
-    def __init__(self, *args, **kwargs):
-        Exception.__init__(self, *args, **kwargs)
+    pass
 
 
 class Container(object):

@@ -41,5 +41,4 @@ verbose_print = lambda *a, **k: print('PySIMM:', *a) if verbose else lambda *a, 
 debug_print = lambda *a, **k: print('(debug) PySIMM:', *a) if debug else lambda *a, **k: None
 
 class PysimmError(Exception):
-    def __init__(self, *args, **kwargs):
-        Exception.__init__(self, *args, **kwargs)
+    pass
