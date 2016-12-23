@@ -43,7 +43,6 @@ from pysimm import error_print
 from pysimm import warning_print
 from pysimm import verbose_print
 from pysimm import debug_print
-from pysimm import PysimmError
 from pysimm.utils import PysimmError, Item, ItemContainer
 
 try:
@@ -55,18 +54,23 @@ LAMMPS_EXEC = os.environ.get('LAMMPS_EXEC')
 verbose = False
 templates = {}
 
-if LAMMPS_EXEC is None:
-    print 'you must set environment variable LAMMPS_EXEC'
-else:
-    try:
-        stdout, stderr = Popen([LAMMPS_EXEC, '-e', 'both', '-l', 'none'],
-                               stdin=PIPE, stdout=PIPE,
-                               stderr=PIPE).communicate()
-        if verbose:
-            print 'using %s LAMMPS machine' % LAMMPS_EXEC
-    except OSError:
-        print 'LAMMPS is not configured properly for one reason or another'
-
+def check_lmps_exec():
+    if LAMMPS_EXEC is None:
+        print 'you must set environment variable LAMMPS_EXEC'
+        return False
+    else:
+        try:
+            stdout, stderr = Popen([LAMMPS_EXEC, '-e', 'both', '-l', 'none'],
+                                   stdin=PIPE, stdout=PIPE,
+                                   stderr=PIPE).communicate()
+            if verbose:
+                print 'using %s LAMMPS machine' % LAMMPS_EXEC
+            return True
+        except OSError:
+            print 'LAMMPS is not configured properly for one reason or another'
+            return False
+            
+check_lmps_exec()
 
 class Qeq(object):
     """pysimm.lmps.MolecularDynamics
@@ -464,11 +468,6 @@ class Simulation(object):
             
         self.input += 'write_dump all custom pysimm.dump.tmp id q x y z vx vy vz\n'
 
-        '''if self.write:
-            self.input += 'write_data %s\n' % self.write
-        else:
-            self.input += 'write_data pysimm_md.lmps\n'''
-
         self.input += 'quit\n'
 
     def run(self, np=None, nanohub=None, rewrite=True, init=True, write_input=False):
@@ -493,7 +492,15 @@ class Simulation(object):
         elif write_input:
             with file('pysimm.sim.in', 'w') as f:
                 f.write(self.input)
-        call_lammps(self, np, nanohub)
+        try:
+            call_lammps(self, np, nanohub)
+        except OSError as ose:
+            raise PysimmError('There was a problem calling LAMMPS with mpiexec'), None, sys.exc_info()[2]
+        except IOError as ioe:
+            if check_lmps_exec():
+                raise PysimmError('There was a problem running LAMMPS. The process started but did not finish successfully. Check the log file, or rerun the simulation with print_to_screen=True to debug issue from LAMMPS output'), None, sys.exc_info()[2]
+            else:
+                raise PysimmError('There was a problem running LAMMPS. LAMMPS is not configured properly. Make sure the LAMMPS_EXEC environment variable is set to the correct LAMMPS executable path. The current path is set to:\n\n{}'.format(LAMMPS_EXEC)), None, sys.exc_info()[2]
 
 
 def enqueue_output(out, queue):
