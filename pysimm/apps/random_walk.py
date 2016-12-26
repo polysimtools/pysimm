@@ -340,6 +340,8 @@ def random_walk(m, nmon, s_=None, **kwargs):
     traj = kwargs.get('traj') if kwargs.get('traj') is not None else True
     limit = kwargs.get('limit') if kwargs.get('limit') is not None else 0.1
     sim = kwargs.get('sim')
+    
+    steered = kwargs.get('steered')
 
     m.add_particle_bonding()
 
@@ -428,7 +430,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
             sim.add_min(**settings)
         if isinstance(sim, lmps.Simulation):
             sim.system = s
-            sim.name = 'relax_%03d' % (insertion+2)
+            sim.name = 'custom_relax_%03d' % (insertion+2)
             sim.run(np=settings.get('np'))
 
         if unwrap:
