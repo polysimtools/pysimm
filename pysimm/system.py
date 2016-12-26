@@ -3281,6 +3281,47 @@ def read_xyz(file_, **kwargs):
     s.set_box(padding=0.5)
 
     return s
+    
+def read_chemdoodle_json(file_, **kwargs):
+    """pysimm.system.read_xyz
+
+    Interprets xyz file and creates pysimm.system.System object
+
+    Args:
+        file_: xyz file name
+        quiet(optional): if False, print status
+
+    Returns:
+        pysimm.system.System object
+    """
+    quiet = kwargs.get('quiet')
+
+    if os.path.isfile(file_):
+        debug_print('reading file')
+        f = file(file_)
+    elif isinstance(file_, basestring):
+        debug_print('reading string')
+        f = StringIO(file_)
+        
+    s = System()
+    data = json.loads(f.read())
+    for a in data.get('a'):
+        s.particles.add(Particle(
+            x=a.get('x'),
+            y=a.get('y'),
+            z=a.get('z'),
+            charge=a.get('c'),
+            elem=a.get('l'),
+            type_name=a.get('i')
+        ))
+    for b in data.get('b'):
+        s.bonds.add(Bond(
+            a=s.particles[b.get('b')+1],
+            b=s.particles[b.get('e')+1],
+            order=b.get('o')
+        ))
+        
+    return s
 
 
 def read_lammps(data_file, **kwargs):
