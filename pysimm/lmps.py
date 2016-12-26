@@ -262,6 +262,7 @@ class Minimization(object):
     def __init__(self, **kwargs):
 
         self.min_style = kwargs.get('min_style') or 'fire'
+        self.dmax = kwargs.get('dmax')
         self.etol = kwargs.get('etol') or 1.0e-3
         self.ftol = kwargs.get('ftol') or 1.0e-3
         self.maxiter = kwargs.get('maxiter') or 10000
@@ -271,6 +272,23 @@ class Minimization(object):
         self.dump = kwargs.get('dump') or False
         self.dump_name = kwargs.get('dump_name')
         self.dump_append = kwargs.get('dump_append')
+        
+        self.temp = kwargs.get('temp')
+        
+        if self.temp is None:
+            self.t_start = kwargs.get('t_start')
+            self.t_stop = kwargs.get('t_stop')
+            if self.t_start is None:
+                self.t_start = 300.
+            if self.t_stop is None:
+                self.t_stop = self.t_start
+        else:
+            self.t_start = self.temp
+            self.t_stop = self.temp
+        
+        self.new_v = kwargs.get('new_v')
+        self.seed = kwargs.get('seed') or randint(10000, 99999)
+        self.scale_v = kwargs.get('scale_v')
 
         self.input = ''
 
@@ -290,6 +308,11 @@ class Minimization(object):
             self.input += 'thermo %s\n' % int(self.thermo)
         if self.thermo_style:
             self.input += 'thermo_style %s\n' % self.thermo_style
+            
+        if self.new_v:
+            self.input += 'velocity all create %s %s\n' % (self.t_start, self.seed)
+        elif self.scale_v:
+            self.input += 'velocity all scale %s\n' % self.t_start
 
         if self.dump:
             if self.dump_name:
@@ -305,6 +328,8 @@ class Minimization(object):
                 self.input += 'dump_modify pysimm_dump append yes\n'
 
         self.input += 'min_style %s\n' % self.min_style
+        if self.dmax:
+            self.input += 'min_modify dmax %s\n' % self.dmax
         self.input += ('minimize %s %s %s %s\n' % (self.etol, self.ftol,
                                                    self.maxiter, self.maxeval))
         if self.dump:
