@@ -556,6 +556,8 @@ def call_lammps(simulation, np, nanohub):
             f.write(simulation.input)
         if simulation.name:
             print('%s: sending %s simulation to computer cluster at nanoHUB' % (strftime('%H:%M:%S'), simulation.name))
+        else:
+            print('%s: sending simulation to computer cluster at nanoHUB' % strftime('%H:%M:%S'))
         sys.stdout.flush()
         cmd = ('submit -n %s -w %s -i temp.lmps -i temp.in '
                'lammps-09Dec14-parallel -e both -l none -i temp.in'
