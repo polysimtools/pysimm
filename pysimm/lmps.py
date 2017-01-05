@@ -552,6 +552,8 @@ def call_lammps(simulation, np, nanohub):
         None
     """
     if nanohub:
+        with file('temp.in', 'w') as f:
+            f.write(simulation.input)
         if simulation.name:
             print('%s: sending %s simulation to computer cluster at nanoHUB' % (strftime('%H:%M:%S'), simulation.name))
         sys.stdout.flush()
