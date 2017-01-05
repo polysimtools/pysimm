@@ -1,5 +1,6 @@
 Example 8: Creating a system of a mixture of ethanol and acetone, and run NPT simulation using LAMMPS
 =========================================================================================================
+by Michael E. Fortunato and Ping Lin
 
 ### Importing pysimm modules/packages
 
