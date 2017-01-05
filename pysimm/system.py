@@ -800,7 +800,6 @@ class System(object):
         """
         self.dim.check()
         self.add_particle_bonding()
-        self.add_particle_bonding()
         next_to_unwrap = []
         for p in self.particles:
             p.unwrapped = False
