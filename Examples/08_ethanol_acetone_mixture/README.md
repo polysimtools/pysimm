@@ -12,7 +12,7 @@ from pysimm import system, lmps, forcefield
 
 If you encounter an error **"ImportError: No module named pysimm"** make sure that the pysimm directory you cloned from github is in your PYTHONPATH. See installation instructions for further directions.
 
-### Creating a ethanol and acetone molecule
+### Creating an ethanol and acetone molecule
 
 [PubChem](https://pubchem.ncbi.nlm.nih.gov/search/#collection=compounds) offers a database of compounds accessible through a RESTful API. pysimm utilizes this API and allows users to create **system.System** objects from a puchem SMILES query. In this example, we will use the SMILES string "CCO" to generate a ethanol molecule using the **system.read_puchem_smiles()** method. The function makes an http request to the PubChem server, which returns a mol file. This mol file is interpreted and the function returns a **system.System** object that we store in variable **ethanol**. This system now contains elemental composition bond connectivity, and bond orders.
 
