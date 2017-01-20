@@ -1798,25 +1798,25 @@ class System(object):
         if angles or dihedrals or impropers:
             for p in p1.bonded_to:
                 if angles:
-                    self.add_angle(p, p1, p2, f)
+                    if p is not p2:
+                        self.add_angle(p, p1, p2, f)
                 if dihedrals:
                     for pb in p.bonded_to:
-                        if pb is not p1:
+                        if pb is not p1 and p is not p2:
                             self.add_dihedral(pb, p, p1, p2, f)
             for p in p2.bonded_to:
                 if angles:
-                    self.add_angle(p1, p2, p, f)
+                    if p is not p1:
+                        self.add_angle(p1, p2, p, f)
                 if dihedrals:
                     for pb in p.bonded_to:
-                        if pb is not p2:
+                        if pb is not p2 and p is not p1:
                             self.add_dihedral(p1, p2, p, pb, f)
             if dihedrals:
                 for pb1 in p1.bonded_to:
                     for pb2 in p2.bonded_to:
-                        self.add_dihedral(pb1, p1, p2, pb2, f)
-
-        p1.bonded_to.add(p2)
-        p2.bonded_to.add(p1)
+                        if pb1 is not p2 and pb2 is not p1:
+                            self.add_dihedral(pb1, p1, p2, pb2, f)
 
         if impropers:
             if self.ff_class == '2':
