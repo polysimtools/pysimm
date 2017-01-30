@@ -2663,12 +2663,12 @@ class System(object):
         for p in self.particles:
             if p.type:
                 out.write('{:<6}{:>5} {:>4} RES  {:4}   '
-                          '{: 8.4f}{: 8.4f}{: 8.4f}{:>22}{:>2}\n'
+                          '{: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'
                           .format('ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, p.molecule.tag,
                                   p.x, p.y, p.z, '', p.type.elem))
             elif p.elem:
                 out.write('{:<6}{:>5} {:>4} RES  {:4}   '
-                          '{: 8.4f}{: 8.4f}{: 8.4f}{:>22}{:>2}\n'
+                          '{: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'
                           .format('ATOM', p.tag, p.elem, p.molecule.tag,
                                   p.x, p.y, p.z, '', p.elem))
         for p in self.particles:
@@ -3050,7 +3050,7 @@ class System(object):
         os.remove(name_)
 
     def viz(self, **kwargs):
-        self.visualize(vis_exec='vmd', unwrap=False, format='xyz')
+        self.visualize(vis_exec='vmd', unwrap=False, format='xyz', **kwargs)
 
 
 class Molecule(System):
