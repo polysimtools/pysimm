@@ -1855,6 +1855,8 @@ class System(object):
         Returns:
             None
         """
+        if a is b:
+            return
         a_name = a.type.eq_bond or a.type.name
         b_name = b.type.eq_bond or b.type.name
         btype = self.bond_types.get('%s,%s' % (a_name, b_name))
@@ -1893,6 +1895,8 @@ class System(object):
         Returns:
             None
         """
+        if a is c:
+            return
         a_name = a.type.eq_angle or a.type.name
         b_name = b.type.eq_angle or b.type.name
         c_name = c.type.eq_angle or c.type.name
@@ -1930,6 +1934,8 @@ class System(object):
         Returns:
             None
         """
+        if a is c or b is d:
+            return
         a_name = a.type.eq_dihedral or a.type.name
         b_name = b.type.eq_dihedral or b.type.name
         c_name = c.type.eq_dihedral or c.type.name
