@@ -428,7 +428,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
             sim.add_min(**settings)
         if isinstance(sim, lmps.Simulation):
             sim.system = s
-            sim.name = 'custom_relax_%03d' % (insertion+2)
+            sim.name = 'relax_%03d' % (insertion+2)
             sim.run(np=settings.get('np'))
 
         if unwrap:
