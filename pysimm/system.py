@@ -2081,7 +2081,7 @@ class System(object):
             f.assign_charges(self, charges=charges)
 
         if set_box:
-            self.set_box(box_padding)
+            self.set_box(box_padding, center=False)
 
     def apply_charges(self, f, charges='default'):
         """pysimm.system.System.apply_charges
@@ -2821,6 +2821,12 @@ class System(object):
             p.x -= self.cog[0]
             p.y -= self.cog[1]
             p.z -= self.cog[2]
+        self.dim.xhi -= self.cog[0]
+        self.dim.xlo -= self.cog[0]
+        self.dim.yhi -= self.cog[1]
+        self.dim.ylo -= self.cog[1]
+        self.dim.zhi -= self.cog[2]
+        self.dim.zlo -= self.cog[2]
         self.set_cog()
 
     def set_mass(self):
@@ -2964,7 +2970,7 @@ class System(object):
         self.dim.dx = self.dim.xhi - self.dim.xlo
         self.dim.dy = self.dim.yhi - self.dim.ylo
         self.dim.dz = self.dim.zhi - self.dim.zlo
-
+        
     def set_mm_dist(self, molecules=None):
         """pysimm.system.System.set_mm_dist
 
