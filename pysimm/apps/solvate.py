@@ -21,9 +21,9 @@ def solvate(s, **kwargs):
     empty_wat = system.System()
     empty_wat.dim = s.dim.copy()
     
-    n_wat_x = int(math.ceil(s.dim.dx/wat.dim.dx - 0.5))
-    n_wat_y = int(math.ceil(s.dim.dy/wat.dim.dy - 0.5))
-    n_wat_z = int(math.ceil(s.dim.dz/wat.dim.dz - 0.5))
+    n_wat_x = int(math.ceil(s.dim.xhi/wat.dim.dx - 0.5))
+    n_wat_y = int(math.ceil(s.dim.yhi/wat.dim.dy - 0.5))
+    n_wat_z = int(math.ceil(s.dim.zhi/wat.dim.dz - 0.5))
     
     n_water_added = 0
     for nx in range(-n_wat_x, n_wat_x+1):
@@ -39,13 +39,13 @@ def solvate(s, **kwargs):
                     outside = False
                     for sp in s.particles:
                         for wp in m.particles:
+                            if (wp.x > empty_wat.dim.xhi - 0.2 or wp.x < empty_wat.dim.xlo + 0.2 or 
+                                wp.y > empty_wat.dim.yhi - 0.2 or wp.y < empty_wat.dim.ylo + 0.2 or
+                                wp.z > empty_wat.dim.zhi - 0.2 or wp.z < empty_wat.dim.zlo + 0.2):
+                                outside = True
+                                break
                             if calc.distance(sp, wp) <= closeness:
                                 too_close = True
-                                break
-                            if (wp.x > empty_wat.dim.xhi or wp.x < empty_wat.dim.xlo or 
-                                wp.y > empty_wat.dim.yhi or wp.y < empty_wat.dim.ylo or
-                                wp.z > empty_wat.dim.zhi or wp.z < empty_wat.dim.zlo):
-                                outside = True
                                 break
                         if too_close or outside:
                             break
