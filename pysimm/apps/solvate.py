@@ -8,8 +8,8 @@ from pysimm import system, lmps, forcefield
 def solvate(s, **kwargs):
     wat = water_box()
     water_mol = water()
-    buffer_dist = kwargs.get('buffer_dist') if kwargs.get('buffer_dist') is None else 12.0
-    closeness = kwargs.get('closeness') if kwargs.get('closeness') is None else 1.0
+    buffer_dist = kwargs.get('buffer_dist') if kwargs.get('buffer_dist') is not None else 12.0
+    closeness = kwargs.get('closeness') if kwargs.get('closeness') is not None else 1.0
     if buffer_dist:
         s.set_box(buffer_dist)
     
