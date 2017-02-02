@@ -4041,7 +4041,7 @@ def read_lammps(data_file, **kwargs):
     return s
 
 
-def read_pubchem_smiles(smiles, type_with=None):
+def read_pubchem_smiles(smiles, quiet=False, type_with=None):
     """pysimm.system.read_pubchem_smiles
 
     Interface with pubchem restful API to create molecular system from SMILES format
@@ -4057,8 +4057,9 @@ def read_pubchem_smiles(smiles, type_with=None):
     req = ('https://pubchem.ncbi.nlm.nih.gov/'
            'rest/pug/compound/smiles/%s/SDF/?record_type=3d' % smiles)
            
-    print('making request to pubchem RESTful API:')
-    print(req)
+    if not quiet:
+        print('making request to pubchem RESTful API:')
+        print(req)
 
     try:
         resp = urlopen(req)
