@@ -12,7 +12,7 @@ def solvate(s, **kwargs):
     buffer_dist = kwargs.get('buffer_dist') if kwargs.get('buffer_dist') is not None else 12.0
     closeness = kwargs.get('closeness') if kwargs.get('closeness') is not None else 1.0
     s.set_box(buffer_dist)
-        
+    
     print('adding waters to box with dimension:')
     print(s.dim.xlo, s.dim.xhi)
     print(s.dim.ylo, s.dim.yhi)
