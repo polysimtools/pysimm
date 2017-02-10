@@ -69,7 +69,7 @@ def parse_args():
     parser.add_argument('--pysimm', dest='pysimm_prefix', default=HOME_DIR)
     parser.add_argument('--lammps', dest='lammps_prefix', default=None)
     parser.add_argument('--lammps-packages', dest='lammps_packages', nargs='*',
-                        default=['molecule', 'class2', 'kspace', 'user-misc', 'qeq', 'manybody'])
+                        default=['molecule', 'class2', 'kspace', 'user-misc', 'misc', 'qeq', 'manybody'])
     parser.add_argument('--amber-tools', dest='ambertools_dir', default=None)
     parser.add_argument('--openbabel', dest='openbabel', action='store_true', default=False)
     return parser.parse_args()
