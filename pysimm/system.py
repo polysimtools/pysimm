@@ -2096,6 +2096,87 @@ class System(object):
             None
         """
         f.assign_charges(self, charges=charges)
+        
+    def write_lammps_mol(self, out_data):
+        """pysimm.system.System.write_lammps_mol
+
+        Write System data formatted as LAMMPS molecule template
+
+        Args:
+            out_data: where to write data, file name or 'string'
+
+        Returns:
+            None or string if data file if out_data='string'
+        """
+        if out_data == 'string':
+            out_file = StringIO()
+        else:
+            out_file = open(out_data, 'w+')
+            
+        self.set_mass()
+        self.set_cog()
+            
+        out_file.write('%s\n\n' % self.name)
+        out_file.write('%s atoms\n' % self.particles.count)
+        out_file.write('%s bonds\n' % self.bonds.count)
+        out_file.write('%s angles\n' % self.angles.count)
+        out_file.write('%s dihedrals\n' % self.dihedrals.count)
+        out_file.write('%s impropers\n' % self.impropers.count)
+        
+        if self.particles.count > 0:
+            out_file.write('Coords\n\n')
+            for p in self.particles:
+                out_file.write('{} {} {} {}\n'.format(p.tag, p.x, p.y, p.z))
+        
+        out_file.write('\n')
+        
+        if self.particles.count > 0:
+            out_file.write('Types\n\n')
+            for p in self.particles:
+                out_file.write('{} {}\n'.format(p.tag, p.type.tag))
+        
+        out_file.write('\n')
+        
+        if self.particles.count > 0:
+            out_file.write('Charges\n\n')
+            for p in self.particles:
+                out_file.write('{} {}\n'.format(p.tag, p.charge))
+        
+        out_file.write('\n')
+        
+        if self.bonds.count > 0:
+            out_file.write('Bonds\n\n')
+            for b in self.bonds:
+                out_file.write('{} {} {} {}\n'.format(b.tag, b.type.tag, b.a.tag, b.b.tag))
+        
+        out_file.write('\n')
+        
+        if self.angles.count > 0:
+            out_file.write('Angles\n\n')
+            for a in self.angles:
+                out_file.write('{} {} {} {} {}\n'.format(a.tag, a.type.tag, a.a.tag, a.b.tag, a.c.tag))
+        
+        out_file.write('\n')
+        
+        if self.dihedrals.count > 0:
+            out_file.write('Dihedrals\n\n')
+            for d in self.dihedrals:
+                out_file.write('{} {} {} {} {} {}\n'.format(d.tag, d.type.tag, d.a.tag, d.b.tag, d.c.tag, d.d.tag))
+        
+        out_file.write('\n')
+        
+        if self.impropers.count > 0:
+            out_file.write('Impropers\n\n')
+            for i in self.impropers:
+                out_file.write('{} {} {} {} {} {}\n'.format(i.tag, i.type.tag, i.a.tag, i.b.tag, i.c.tag, i.d.tag))
+                
+        if out_data == 'string':
+            s = out_file.getvalue()
+            out_file.close()
+            return s
+        else:
+            out_file.close()
+        
 
     def write_lammps(self, out_data, **kwargs):
         """pysimm.system.System.write_lammps
@@ -2106,7 +2187,7 @@ class System(object):
             out_data: where to write data, file name or 'string'
 
         Returns:
-            None or string of data file if out_data='string'
+            None or string if data file if out_data='string'
         """
         empty = kwargs.get('empty')
 
