@@ -844,15 +844,14 @@ class System(object):
         
     def unite_atoms(self):
         for p in self.particles:
+            p.implicit_h = 0
             if p.elem != 'C':
                 continue
             for b in p.bonds:
                 pb = b.a if b.b is p else b.b
                 if pb.elem =='H':
-                    if p.implicit_h is not None:
-                        p.implicit_h += 1
-                    else:
-                        p.implicit_h = 1
+                    p.implicit_h += 1
+                    p.charge += pb.charge
                     self.particles.remove(pb.tag, update=False)
         self.remove_spare_bonding()
 
@@ -1856,6 +1855,8 @@ class System(object):
         Returns:
             None
         """
+        if a is b:
+            return
         a_name = a.type.eq_bond or a.type.name
         b_name = b.type.eq_bond or b.type.name
         btype = self.bond_types.get('%s,%s' % (a_name, b_name))
@@ -1894,6 +1895,8 @@ class System(object):
         Returns:
             None
         """
+        if a is c:
+            return
         a_name = a.type.eq_angle or a.type.name
         b_name = b.type.eq_angle or b.type.name
         c_name = c.type.eq_angle or c.type.name
@@ -1931,6 +1934,8 @@ class System(object):
         Returns:
             None
         """
+        if a is c or b is d:
+            return
         a_name = a.type.eq_dihedral or a.type.name
         b_name = b.type.eq_dihedral or b.type.name
         c_name = c.type.eq_dihedral or c.type.name
@@ -2076,7 +2081,7 @@ class System(object):
             f.assign_charges(self, charges=charges)
 
         if set_box:
-            self.set_box(box_padding)
+            self.set_box(box_padding, center=False)
 
     def apply_charges(self, f, charges='default'):
         """pysimm.system.System.apply_charges
@@ -2091,6 +2096,87 @@ class System(object):
             None
         """
         f.assign_charges(self, charges=charges)
+        
+    def write_lammps_mol(self, out_data):
+        """pysimm.system.System.write_lammps_mol
+
+        Write System data formatted as LAMMPS molecule template
+
+        Args:
+            out_data: where to write data, file name or 'string'
+
+        Returns:
+            None or string if data file if out_data='string'
+        """
+        if out_data == 'string':
+            out_file = StringIO()
+        else:
+            out_file = open(out_data, 'w+')
+            
+        self.set_mass()
+        self.set_cog()
+            
+        out_file.write('%s\n\n' % self.name)
+        out_file.write('%s atoms\n' % self.particles.count)
+        out_file.write('%s bonds\n' % self.bonds.count)
+        out_file.write('%s angles\n' % self.angles.count)
+        out_file.write('%s dihedrals\n' % self.dihedrals.count)
+        out_file.write('%s impropers\n' % self.impropers.count)
+        
+        if self.particles.count > 0:
+            out_file.write('Coords\n\n')
+            for p in self.particles:
+                out_file.write('{} {} {} {}\n'.format(p.tag, p.x, p.y, p.z))
+        
+        out_file.write('\n')
+        
+        if self.particles.count > 0:
+            out_file.write('Types\n\n')
+            for p in self.particles:
+                out_file.write('{} {}\n'.format(p.tag, p.type.tag))
+        
+        out_file.write('\n')
+        
+        if self.particles.count > 0:
+            out_file.write('Charges\n\n')
+            for p in self.particles:
+                out_file.write('{} {}\n'.format(p.tag, p.charge))
+        
+        out_file.write('\n')
+        
+        if self.bonds.count > 0:
+            out_file.write('Bonds\n\n')
+            for b in self.bonds:
+                out_file.write('{} {} {} {}\n'.format(b.tag, b.type.tag, b.a.tag, b.b.tag))
+        
+        out_file.write('\n')
+        
+        if self.angles.count > 0:
+            out_file.write('Angles\n\n')
+            for a in self.angles:
+                out_file.write('{} {} {} {} {}\n'.format(a.tag, a.type.tag, a.a.tag, a.b.tag, a.c.tag))
+        
+        out_file.write('\n')
+        
+        if self.dihedrals.count > 0:
+            out_file.write('Dihedrals\n\n')
+            for d in self.dihedrals:
+                out_file.write('{} {} {} {} {} {}\n'.format(d.tag, d.type.tag, d.a.tag, d.b.tag, d.c.tag, d.d.tag))
+        
+        out_file.write('\n')
+        
+        if self.impropers.count > 0:
+            out_file.write('Impropers\n\n')
+            for i in self.impropers:
+                out_file.write('{} {} {} {} {} {}\n'.format(i.tag, i.type.tag, i.a.tag, i.b.tag, i.c.tag, i.d.tag))
+                
+        if out_data == 'string':
+            s = out_file.getvalue()
+            out_file.close()
+            return s
+        else:
+            out_file.close()
+        
 
     def write_lammps(self, out_data, **kwargs):
         """pysimm.system.System.write_lammps
@@ -2101,7 +2187,7 @@ class System(object):
             out_data: where to write data, file name or 'string'
 
         Returns:
-            None or string of data file if out_data='string'
+            None or string if data file if out_data='string'
         """
         empty = kwargs.get('empty')
 
@@ -2664,12 +2750,12 @@ class System(object):
         for p in self.particles:
             if p.type:
                 out.write('{:<6}{:>5} {:>4} RES  {:4}   '
-                          '{: 8.4f}{: 8.4f}{: 8.4f}{:>22}{:>2}\n'
+                          '{: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'
                           .format('ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, p.molecule.tag,
                                   p.x, p.y, p.z, '', p.type.elem))
             elif p.elem:
                 out.write('{:<6}{:>5} {:>4} RES  {:4}   '
-                          '{: 8.4f}{: 8.4f}{: 8.4f}{:>22}{:>2}\n'
+                          '{: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'
                           .format('ATOM', p.tag, p.elem, p.molecule.tag,
                                   p.x, p.y, p.z, '', p.elem))
         for p in self.particles:
@@ -2816,6 +2902,12 @@ class System(object):
             p.x -= self.cog[0]
             p.y -= self.cog[1]
             p.z -= self.cog[2]
+        self.dim.xhi -= self.cog[0]
+        self.dim.xlo -= self.cog[0]
+        self.dim.yhi -= self.cog[1]
+        self.dim.ylo -= self.cog[1]
+        self.dim.zhi -= self.cog[2]
+        self.dim.zlo -= self.cog[2]
         self.set_cog()
 
     def set_mass(self):
@@ -2959,7 +3051,7 @@ class System(object):
         self.dim.dx = self.dim.xhi - self.dim.xlo
         self.dim.dy = self.dim.yhi - self.dim.ylo
         self.dim.dz = self.dim.zhi - self.dim.zlo
-
+        
     def set_mm_dist(self, molecules=None):
         """pysimm.system.System.set_mm_dist
 
@@ -3051,7 +3143,7 @@ class System(object):
         os.remove(name_)
 
     def viz(self, **kwargs):
-        self.visualize(vis_exec='vmd', unwrap=False, format='xyz')
+        self.visualize(vis_exec='vmd', unwrap=False, format='xyz', **kwargs)
 
 
 class Molecule(System):
@@ -4036,7 +4128,7 @@ def read_lammps(data_file, **kwargs):
     return s
 
 
-def read_pubchem_smiles(smiles, type_with=None):
+def read_pubchem_smiles(smiles, quiet=False, type_with=None):
     """pysimm.system.read_pubchem_smiles
 
     Interface with pubchem restful API to create molecular system from SMILES format
@@ -4052,8 +4144,9 @@ def read_pubchem_smiles(smiles, type_with=None):
     req = ('https://pubchem.ncbi.nlm.nih.gov/'
            'rest/pug/compound/smiles/%s/SDF/?record_type=3d' % smiles)
            
-    print('making request to pubchem RESTful API:')
-    print(req)
+    if not quiet:
+        print('making request to pubchem RESTful API:')
+        print(req)
 
     try:
         resp = urlopen(req)

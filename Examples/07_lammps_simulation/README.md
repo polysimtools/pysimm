@@ -1,6 +1,6 @@
 Example 7: Running energy minimization and molecular dynamics simulations of a polymer system using LAMMPS
 =======================================================================
-by Michael E. Fortunato and Alexander Demidov
+by Alexander Demidov and Michael E. Fortunato
 
 ### Importing pysimm modules/packages
 This example code performs a simulation using the LAMMPS software package performing both energy optimization and molecular dynamics  routines of 4 polymer chains created in Example 6. The structure file we need from the previous example is 'polymer.yaml'. The yaml file written from pysimm attempts to recreate the **system.System** data structure as closely as possible, and contains the force field information we will need when running our simulation. Alternatively, you could use the 'polymer.lmps' data file written from Example 6 as well, as this also contains all the information needed to begin our simulation. We've provided a sample 'polymer.yaml' file here, but feel free to use the polymer you created previously.

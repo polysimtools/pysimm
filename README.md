@@ -29,6 +29,7 @@ If you are using your own build of LAMMPS, be sure that the following packages w
   -  class2
   -  kspace
   -  user-misc
+  -  misc
   -  qeq
   -  manybody
 
