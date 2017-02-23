@@ -6,12 +6,29 @@ from pysimm import system, lmps, forcefield
 
 
 def solvate(s, **kwargs):
-    s.wrap()
     wat = water_box()
     water_mol = water()
     buffer_dist = kwargs.get('buffer_dist') if kwargs.get('buffer_dist') is not None else 12.0
     closeness = kwargs.get('closeness') if kwargs.get('closeness') is not None else 1.0
+    cubic = kwargs.get('cubic')
+    
     s.set_box(buffer_dist)
+    
+    if cubic and buffer_dist:
+        max_dim = max(abs(s.dim.xhi), abs(s.dim.yhi), abs(s.dim.zhi), abs(s.dim.xlo), abs(s.dim.ylo), abs(s.dim.zlo))
+        s.dim.xlo = -1*max_dim
+        s.dim.xhi = max_dim
+        s.dim.ylo = -1*max_dim
+        s.dim.yhi = max_dim
+        s.dim.zlo = -1*max_dim
+        s.dim.zhi = max_dim
+        
+    if not buffer_dist:
+        s.wrap()
+        
+    s.dim.dx = s.dim.xhi - s.dim.xlo
+    s.dim.dy = s.dim.yhi - s.dim.ylo
+    s.dim.dz = s.dim.zhi - s.dim.zlo
     
     print('adding waters to box with dimension:')
     print(s.dim.xlo, s.dim.xhi)
