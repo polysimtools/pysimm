@@ -3032,8 +3032,6 @@ class System(object):
         Returns:
             None
         """
-        if center:
-            self.center_at_origin()
         xmin = ymin = zmin = sys.float_info.max
         xmax = ymax = zmax = sys.float_info.min
         for p in self.particles:
@@ -3059,6 +3057,9 @@ class System(object):
         self.dim.dx = self.dim.xhi - self.dim.xlo
         self.dim.dy = self.dim.yhi - self.dim.ylo
         self.dim.dz = self.dim.zhi - self.dim.zlo
+        
+        if center:
+            self.center_at_origin()
         
     def set_mm_dist(self, molecules=None):
         """pysimm.system.System.set_mm_dist
