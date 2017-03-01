@@ -4451,14 +4451,13 @@ def read_ac(ac_file):
     return s
 
 
-def read_pdb(pdb_file, guess_bonds=False):
+def read_pdb(pdb_file):
     """pysimm.system.read_pdb
 
     Interprets pdb file and creates pysimm.system.System object
 
     Args:
         pdb_file: pdb file name
-        guess_bonds: if True, guess bonds default=False ** probably buggy ***
 
     Returns:
         pysimm.system.System object
@@ -4492,9 +4491,6 @@ def read_pdb(pdb_file, guess_bonds=False):
 
 
     f.close()
-
-    if guess_bonds:
-        s.guess_bonds()
 
     return s
 
