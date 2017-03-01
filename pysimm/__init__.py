@@ -57,10 +57,8 @@ def check_version():
             if remote_version > local_version:
                 print('remote version {} is newer than local version {}'.format('.'.join(remote_version), '.'.join(local_version)))
                 print('consider checking release notes in case of bug patches or updates http://pysimm.org/release-notes')
-        else:
-            print('tried to check remote version on pysimm.org server but failed')
     except:
-        print('tried to check remote version on pysimm.org server but failed')
+        pass
         
 
 check_version()
