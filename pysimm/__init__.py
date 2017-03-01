@@ -27,8 +27,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+
 from __future__ import print_function
-import os
+import urllib3
 
 __version__ = '0.1.0'
 
@@ -44,3 +45,22 @@ debug_print = lambda *a, **k: print('(debug) PySIMM:', *a) if debug else lambda 
 
 class PysimmError(Exception):
     pass
+
+
+def check_version():
+    try:
+        http = urllib3.PoolManager()
+        r = http.request('GET', 'http://pysimm.org/version')
+        if r.status == 200:
+            remote_version = r.data.split('.')
+            local_version = __version__.split('.')
+            if remote_version > local_version:
+                print('remote version {} is newer than local version {}'.format('.'.join(remote_version), '.'.join(local_version)))
+                print('consider checking release notes in case of bug patches or updates http://pysimm.org/release-notes')
+        else:
+            print('tried to check remote version on pysimm.org server but failed')
+    except:
+        print('tried to check remote version on pysimm.org server but failed')
+        
+
+check_version()

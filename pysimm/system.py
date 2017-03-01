@@ -2331,7 +2331,7 @@ class System(object):
             for dt in self.dihedral_types:
                 if self.dihedral_style == 'fourier':
                     dt_str = '{:4d}\t{}'.format(dt.tag, dt.m)
-                    for k, d, n in zip(dt.k, dt.d, dt.n):
+                    for k, d, n in zip(dt.k, dt.n, dt.d):
                         dt_str += '\t{}\t{}\t{}'.format(k, d, n)
                     dt_str += '\t# {}\n'.format(dt.name)
                     out_file.write(dt_str)
@@ -3771,8 +3771,8 @@ def read_lammps(data_file, **kwargs):
                     n=[]
                     for i in range(m):
                         k.append(data.pop(0))
-                        d.append(data.pop(0))
                         n.append(data.pop(0))
+                        d.append(data.pop(0))
                     s.dihedral_types.add(DihedralType(tag=tag, name=name,
                                                       m=m,
                                                       k=map(float, k),
