@@ -1979,10 +1979,8 @@ class System(object):
             if dtype:
                 if not self.dihedral_types.get(dtype[0].name, item_wildcard=None):
                     dtype = self.dihedral_types.add(dtype[0].copy())
-                    print('adding type {} to system'.format(dtype.name))
                 else:
                     dtype = self.dihedral_types.get(dtype[0].name, item_wildcard=None)[0]
-                    print('using type {} from system'.format(dtype.name))
             
         elif dtype:
             dtype = dtype[0]
