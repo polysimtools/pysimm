@@ -2331,8 +2331,8 @@ class System(object):
             for dt in self.dihedral_types:
                 if self.dihedral_style == 'fourier':
                     dt_str = '{:4d}\t{}'.format(dt.tag, dt.m)
-                    for k, d, n in zip(dt.k, dt.n, dt.d):
-                        dt_str += '\t{}\t{}\t{}'.format(k, d, n)
+                    for k, n, d in zip(dt.k, dt.n, dt.d):
+                        dt_str += '\t{}\t{}\t{}'.format(k, n, d)
                     dt_str += '\t# {}\n'.format(dt.name)
                     out_file.write(dt_str)
                 elif self.dihedral_style == 'harmonic' or self.ff_class == '1':
