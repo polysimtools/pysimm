@@ -1908,19 +1908,31 @@ class System(object):
         a_name = a.type.eq_angle or a.type.name
         b_name = b.type.eq_angle or b.type.name
         c_name = c.type.eq_angle or c.type.name
-        atype = self.angle_types.get('%s,%s,%s'
-                                     % (a_name, b_name, c_name))
+        atype = self.angle_types.get(
+            '%s,%s,%s' % (a_name, b_name, c_name),
+            item_wildcard=None
+        )
         if not atype and f:
-            atype = f.angle_types.get('%s,%s,%s'
-                                      % (a_name, b_name, c_name))
+            atype = self.angle_types.get(
+                '%s,%s,%s' % (a_name, b_name, c_name)
+            )
+            atype.extend(
+                f.angle_types.get(
+                    '%s,%s,%s' % (a_name, b_name, c_name)
+                )
+            )
+            
+            atype = sorted(atype, key=lambda x: x.name.count('X'))
+            
             if atype:
-                at = atype[0].copy()
-                self.angle_types.add(at)
-            atype = self.angle_types.get('%s,%s,%s'
-                                         % (a_name, b_name,
-                                            c_name))
+                if not self.angle_types.get(atype[0].name, item_wildcard=None):
+                    atype = self.angle_types.add(atype[0].copy())
+                else:
+                    atype = self.angle_types.get(atype[0].name, item_wildcard=None)[0]
+        elif atype:
+            atype = atype[0]
         if atype:
-            self.angles.add(Angle(type=atype[0], a=a, b=b, c=c))
+            self.angles.add(Angle(type=atype, a=a, b=b, c=c))
         else:
             error_print('error: system does not contain angle type named '
                         '%s,%s,%s or could not find type in forcefield supplied'
@@ -1948,21 +1960,34 @@ class System(object):
         b_name = b.type.eq_dihedral or b.type.name
         c_name = c.type.eq_dihedral or c.type.name
         d_name = d.type.eq_dihedral or d.type.name
-        dtype = self.dihedral_types.get('%s,%s,%s,%s'
-                                        % (a_name, b_name,
-                                           c_name, d_name))
+        dtype = self.dihedral_types.get(
+            '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name),
+            item_wildcard=None
+        )
         if not dtype and f:
-            dtype = f.dihedral_types.get('%s,%s,%s,%s'
-                                         % (a_name, b_name,
-                                            c_name, d_name))
+            dtype = self.dihedral_types.get(
+                '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name)
+            )
+            dtype.extend(
+                f.dihedral_types.get(
+                    '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name)
+                )
+            )
+            
+            dtype = sorted(dtype, key=lambda x: x.name.count('X'))
+            
             if dtype:
-                dt = dtype[0].copy()
-                self.dihedral_types.add(dt)
-            dtype = self.dihedral_types.get('%s,%s,%s,%s'
-                                            % (a_name, b_name,
-                                               c_name, d_name))
+                if not self.dihedral_types.get(dtype[0].name, item_wildcard=None):
+                    dtype = self.dihedral_types.add(dtype[0].copy())
+                    print('adding type {} to system'.format(dtype.name))
+                else:
+                    dtype = self.dihedral_types.get(dtype[0].name, item_wildcard=None)[0]
+                    print('using type {} from system'.format(dtype.name))
+            
+        elif dtype:
+            dtype = dtype[0]
         if dtype:
-            self.dihedrals.add(Dihedral(type=dtype[0], a=a, b=b, c=c, d=d))
+            self.dihedrals.add(Dihedral(type=dtype, a=a, b=b, c=c, d=d))
         else:
             error_print('error: system does not contain dihedral type named '
                         '%s,%s,%s,%s or could not find type in forcefield '
@@ -1986,46 +2011,42 @@ class System(object):
         Returns:
             None
         """
+        if a is b or a is c or a is d:
+            return
         a_name = a.type.eq_improper or a.type.name
         b_name = b.type.eq_improper or b.type.name
         c_name = c.type.eq_improper or c.type.name
         d_name = d.type.eq_improper or d.type.name
-        if self.ff_class == '2' or self.improper_style == 'class2':
-            itype = self.improper_types.get('%s,%s,%s,%s'
-                                            % (b_name, a_name,
-                                               c_name, d_name),
-                                            improper_type=True)
-        else:
-            itype = self.improper_types.get('%s,%s,%s,%s'
-                                            % (a_name, b_name,
-                                               c_name, d_name),
-                                            improper_type=True)
+        itype = self.improper_types.get('%s,%s,%s,%s'
+                                        % (a_name, b_name,
+                                           c_name, d_name),
+                                        improper_type=True,
+                                        item_wildcard=None)
         if not itype and f:
-            if f.ff_class == '2':
-                itype = f.improper_types.get('%s,%s,%s,%s'
-                                             % (b_name, a_name,
-                                                c_name, d_name),
-                                             improper_type=True)
-            else:
-                itype = f.improper_types.get('%s,%s,%s,%s'
-                                             % (a_name, b_name,
-                                                c_name, d_name),
-                                             improper_type=True)
+            itype = self.improper_types.get(
+                '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name),
+                improper_type=True
+            )
+            itype.extend(
+                f.improper_types.get(
+                    '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name),
+                    improper_type=True
+                )
+            )
+                
+            itype = sorted(itype, key=lambda x: x.name.count('X'))
+            
             if itype:
-                it = itype[0].copy()
-                self.improper_types.add(it)
-            if f.ff_class == '2':
-                itype = self.improper_types.get('%s,%s,%s,%s'
-                                                % (b_name, a_name,
-                                                   c_name, d_name),
-                                                improper_type=True)
-            else:
-                itype = self.improper_types.get('%s,%s,%s,%s'
-                                                % (a_name, b_name,
-                                                   c_name, d_name),
-                                                improper_type=True)
+                if not self.improper_types.get(itype[0].name, item_wildcard=None, improper_type=True):
+                    itype = self.improper_types.add(itype[0].copy())
+                else:
+                    itype = self.improper_types.get(itype[0].name, item_wildcard=None, improper_type=True)[0]
+            
+        elif itype:
+            itype = itype[0]
+                
         if itype:
-            self.impropers.add(Improper(type=itype[0], a=a, b=b, c=c, d=d))
+            self.impropers.add(Improper(type=itype, a=a, b=b, c=c, d=d))
         else:
             return
 
