@@ -39,69 +39,6 @@ from pysimm import system, lmps, forcefield, calc
 from pysimm import error_print
 
 
-def add_bonds(s, p1, p2, f):
-    """pysimm.apps.random_walk.add_bonds
-
-    Add bonding information from force field f to system s given a new bond is forming between p1 and p2
-
-    Args:
-        s: pysimm.system.System object
-        p1: pysimm.system.Particle object
-        p2: pysimm.system.Particle object
-        f: pysimm.forcefield.Forcefield object
-    Returns:
-        None
-    """
-    if p1.molecule.particles.count < p2.molecule.particles.count:
-        old_molecule_tag = p1.molecule.tag
-        for p_ in p1.molecule.particles:
-            p_.molecule = p2.molecule
-    else:
-        old_molecule_tag = p2.molecule.tag
-        for p_ in p2.molecule.particles:
-            p_.molecule = p1.molecule
-    s.molecules.remove(old_molecule_tag)
-
-    s.add_bond(p1, p2, f)
-    for p in p1.bonded_to:
-        s.add_angle(p, p1, p2, f)
-        for pb in p.bonded_to:
-            if pb is not p1:
-                s.add_dihedral(pb, p, p1, p2, f)
-    for p in p2.bonded_to:
-        s.add_angle(p1, p2, p, f)
-        for pb in p.bonded_to:
-            if pb is not p2:
-                s.add_dihedral(p1, p2, p, pb, f)
-    for pb1 in p1.bonded_to:
-        for pb2 in p2.bonded_to:
-            s.add_dihedral(pb1, p1, p2, pb2, f)
-
-    if s.ff_class == '2':
-        for perm in permutations(p1.bonded_to, 3):
-            unique = True
-            for i in s.impropers:
-                if i.a is not p1:
-                    continue
-                if set([i.b, i.c, i.d]) == set([perm[0], perm[1],
-                                                perm[2]]):
-                    unique = False
-                    break
-            if unique:
-                s.add_improper(p1, perm[0], perm[1], perm[2], f)
-        for perm in permutations(p2.bonded_to, 3):
-            unique = True
-            for i in s.impropers:
-                if i.a is not p2:
-                    continue
-                if set([i.b, i.c, i.d]) == set([perm[0], perm[1],
-                                                perm[2]]):
-                    unique = False
-                    break
-            if unique:
-                s.add_improper(p2, perm[0], perm[1], perm[2], f)
-
-
 def find_last_backbone_vector(s, m):
     """pysimm.apps.random_walk.find_last_backbone_vector
 
@@ -254,7 +191,7 @@ def copolymer(m, nmon, s_=None, **kwargs):
                 if p.linker == 'tail':
                     tail = p
 
-            add_bonds(s, head, tail, f)
+            s.make_new_bonds(head, tail, f)
             temp_nmon += 1
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), temp_nmon, nmon))
 
@@ -413,11 +350,11 @@ def random_walk(m, nmon, s_=None, **kwargs):
                 print(p.tag)
 
         if head and tail:
-            add_bonds(s, head, tail, f)
+            s.make_new_bonds(head, tail, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
         elif extra_bonds and len(heads) == len(tails):
             for h, t in izip(heads, tails):
-                add_bonds(s, h, t, f)
+                s.make_new_bonds(h, t, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
         else:
             print('cannot find head and tail')

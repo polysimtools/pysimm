@@ -625,11 +625,6 @@ class System(object):
                                                   is not None) else True
         update_properties = kwargs.get('update_properties') if kwargs.get('update_properties') is not None else True
 
-        if self.ff_class is not None and self.ff_class != other.ff_class:
-            warning_print('warning: mixing forcefield classes is highly '
-                          'unadvised. only continue if you know what you '
-                          'are doing')
-
         for pt in other.particle_types:
             if unique_types:
                 if pt.name not in [x.name for x in self.particle_types]:
@@ -1792,7 +1787,20 @@ class System(object):
         Returns:
             None
         """
+        
         self.add_particle_bonding()
+        
+        if p1.molecule is not p2.molecule:
+            if p1.molecule.particles.count < p2.molecule.particles.count:
+                old_molecule_tag = p1.molecule.tag
+                for p_ in p1.molecule.particles:
+                    p_.molecule = p2.molecule
+            else:
+                old_molecule_tag = p2.molecule.tag
+                for p_ in p2.molecule.particles:
+                    p_.molecule = p1.molecule
+            self.molecules.remove(old_molecule_tag)
+        
         self.add_bond(p1, p2, f)
         if angles or dihedrals or impropers:
             for p in p1.bonded_to:
@@ -1900,19 +1908,31 @@ class System(object):
         a_name = a.type.eq_angle or a.type.name
         b_name = b.type.eq_angle or b.type.name
         c_name = c.type.eq_angle or c.type.name
-        atype = self.angle_types.get('%s,%s,%s'
-                                     % (a_name, b_name, c_name))
+        atype = self.angle_types.get(
+            '%s,%s,%s' % (a_name, b_name, c_name),
+            item_wildcard=None
+        )
         if not atype and f:
-            atype = f.angle_types.get('%s,%s,%s'
-                                      % (a_name, b_name, c_name))
+            atype = self.angle_types.get(
+                '%s,%s,%s' % (a_name, b_name, c_name)
+            )
+            atype.extend(
+                f.angle_types.get(
+                    '%s,%s,%s' % (a_name, b_name, c_name)
+                )
+            )
+            
+            atype = sorted(atype, key=lambda x: x.name.count('X'))
+            
             if atype:
-                at = atype[0].copy()
-                self.angle_types.add(at)
-            atype = self.angle_types.get('%s,%s,%s'
-                                         % (a_name, b_name,
-                                            c_name))
+                if not self.angle_types.get(atype[0].name, item_wildcard=None):
+                    atype = self.angle_types.add(atype[0].copy())
+                else:
+                    atype = self.angle_types.get(atype[0].name, item_wildcard=None)[0]
+        elif atype:
+            atype = atype[0]
         if atype:
-            self.angles.add(Angle(type=atype[0], a=a, b=b, c=c))
+            self.angles.add(Angle(type=atype, a=a, b=b, c=c))
         else:
             error_print('error: system does not contain angle type named '
                         '%s,%s,%s or could not find type in forcefield supplied'
@@ -1940,21 +1960,32 @@ class System(object):
         b_name = b.type.eq_dihedral or b.type.name
         c_name = c.type.eq_dihedral or c.type.name
         d_name = d.type.eq_dihedral or d.type.name
-        dtype = self.dihedral_types.get('%s,%s,%s,%s'
-                                        % (a_name, b_name,
-                                           c_name, d_name))
+        dtype = self.dihedral_types.get(
+            '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name),
+            item_wildcard=None
+        )
         if not dtype and f:
-            dtype = f.dihedral_types.get('%s,%s,%s,%s'
-                                         % (a_name, b_name,
-                                            c_name, d_name))
+            dtype = self.dihedral_types.get(
+                '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name)
+            )
+            dtype.extend(
+                f.dihedral_types.get(
+                    '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name)
+                )
+            )
+            
+            dtype = sorted(dtype, key=lambda x: x.name.count('X'))
+            
             if dtype:
-                dt = dtype[0].copy()
-                self.dihedral_types.add(dt)
-            dtype = self.dihedral_types.get('%s,%s,%s,%s'
-                                            % (a_name, b_name,
-                                               c_name, d_name))
+                if not self.dihedral_types.get(dtype[0].name, item_wildcard=None):
+                    dtype = self.dihedral_types.add(dtype[0].copy())
+                else:
+                    dtype = self.dihedral_types.get(dtype[0].name, item_wildcard=None)[0]
+            
+        elif dtype:
+            dtype = dtype[0]
         if dtype:
-            self.dihedrals.add(Dihedral(type=dtype[0], a=a, b=b, c=c, d=d))
+            self.dihedrals.add(Dihedral(type=dtype, a=a, b=b, c=c, d=d))
         else:
             error_print('error: system does not contain dihedral type named '
                         '%s,%s,%s,%s or could not find type in forcefield '
@@ -1978,46 +2009,42 @@ class System(object):
         Returns:
             None
         """
+        if a is b or a is c or a is d:
+            return
         a_name = a.type.eq_improper or a.type.name
         b_name = b.type.eq_improper or b.type.name
         c_name = c.type.eq_improper or c.type.name
         d_name = d.type.eq_improper or d.type.name
-        if self.ff_class == '2' or self.improper_style == 'class2':
-            itype = self.improper_types.get('%s,%s,%s,%s'
-                                            % (b_name, a_name,
-                                               c_name, d_name),
-                                            improper_type=True)
-        else:
-            itype = self.improper_types.get('%s,%s,%s,%s'
-                                            % (a_name, b_name,
-                                               c_name, d_name),
-                                            improper_type=True)
+        itype = self.improper_types.get('%s,%s,%s,%s'
+                                        % (a_name, b_name,
+                                           c_name, d_name),
+                                        improper_type=True,
+                                        item_wildcard=None)
         if not itype and f:
-            if f.ff_class == '2':
-                itype = f.improper_types.get('%s,%s,%s,%s'
-                                             % (b_name, a_name,
-                                                c_name, d_name),
-                                             improper_type=True)
-            else:
-                itype = f.improper_types.get('%s,%s,%s,%s'
-                                             % (a_name, b_name,
-                                                c_name, d_name),
-                                             improper_type=True)
+            itype = self.improper_types.get(
+                '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name),
+                improper_type=True
+            )
+            itype.extend(
+                f.improper_types.get(
+                    '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name),
+                    improper_type=True
+                )
+            )
+                
+            itype = sorted(itype, key=lambda x: x.name.count('X'))
+            
             if itype:
-                it = itype[0].copy()
-                self.improper_types.add(it)
-            if f.ff_class == '2':
-                itype = self.improper_types.get('%s,%s,%s,%s'
-                                                % (b_name, a_name,
-                                                   c_name, d_name),
-                                                improper_type=True)
-            else:
-                itype = self.improper_types.get('%s,%s,%s,%s'
-                                                % (a_name, b_name,
-                                                   c_name, d_name),
-                                                improper_type=True)
+                if not self.improper_types.get(itype[0].name, item_wildcard=None, improper_type=True):
+                    itype = self.improper_types.add(itype[0].copy())
+                else:
+                    itype = self.improper_types.get(itype[0].name, item_wildcard=None, improper_type=True)[0]
+            
+        elif itype:
+            itype = itype[0]
+                
         if itype:
-            self.impropers.add(Improper(type=itype[0], a=a, b=b, c=c, d=d))
+            self.impropers.add(Improper(type=itype, a=a, b=b, c=c, d=d))
         else:
             return
 
@@ -2323,8 +2350,8 @@ class System(object):
             for dt in self.dihedral_types:
                 if self.dihedral_style == 'fourier':
                     dt_str = '{:4d}\t{}'.format(dt.tag, dt.m)
-                    for k, d, n in zip(dt.k, dt.d, dt.n):
-                        dt_str += '\t{}\t{}\t{}'.format(k, d, n)
+                    for k, n, d in zip(dt.k, dt.n, dt.d):
+                        dt_str += '\t{}\t{}\t{}'.format(k, n, d)
                     dt_str += '\t# {}\n'.format(dt.name)
                     out_file.write(dt_str)
                 elif self.dihedral_style == 'harmonic' or self.ff_class == '1':
@@ -3024,8 +3051,6 @@ class System(object):
         Returns:
             None
         """
-        if center:
-            self.center_at_origin()
         xmin = ymin = zmin = sys.float_info.max
         xmax = ymax = zmax = sys.float_info.min
         for p in self.particles:
@@ -3051,6 +3076,9 @@ class System(object):
         self.dim.dx = self.dim.xhi - self.dim.xlo
         self.dim.dy = self.dim.yhi - self.dim.ylo
         self.dim.dz = self.dim.zhi - self.dim.zlo
+        
+        if center:
+            self.center_at_origin()
         
     def set_mm_dist(self, molecules=None):
         """pysimm.system.System.set_mm_dist
@@ -3762,8 +3790,8 @@ def read_lammps(data_file, **kwargs):
                     n=[]
                     for i in range(m):
                         k.append(data.pop(0))
-                        d.append(data.pop(0))
                         n.append(data.pop(0))
+                        d.append(data.pop(0))
                     s.dihedral_types.add(DihedralType(tag=tag, name=name,
                                                       m=m,
                                                       k=map(float, k),
@@ -3908,15 +3936,28 @@ def read_lammps(data_file, **kwargs):
                     s.improper_types.add(ImproperType(tag=tag, name=name,
                                                       k=float(line[1]),
                                                       x0=float(line[2])))
+                elif (improper_style and
+                      improper_style.lower().startswith('cvff')):
+                    s.improper_types.add(ImproperType(tag=tag, name=name,
+                                                      k=float(line[1]),
+                                                      d=int(line[2]),
+                                                      n=int(line[3])))
                 elif not improper_style:
                     if not quiet and i == 0:
                             warning_print('cannot guess improper_style '
                                           'from number of parameters - '
                                           'will try to determine style later '
                                           'based on other types')
-                    s.improper_types.add(ImproperType(tag=tag, name=name,
-                                                      k=float(line[1]),
-                                                      x0=float(line[2])))
+                    if len(line) == 3:
+                        s.improper_types.add(ImproperType(tag=tag, name=name,
+                                                          k=float(line[1]),
+                                                          x0=float(line[2])))
+                    elif len(line) == 4:
+                        improper_style = 'cvff'
+                        s.improper_types.add(ImproperType(tag=tag, name=name,
+                                                          k=float(line[1]),
+                                                          d=int(line[2]),
+                                                          n=int(line[3])))
 
             if not quiet and improper_style:
                 verbose_print('read "%s" improper parameters '
@@ -4429,14 +4470,13 @@ def read_ac(ac_file):
     return s
 
 
-def read_pdb(pdb_file, guess_bonds=False):
+def read_pdb(pdb_file):
     """pysimm.system.read_pdb
 
     Interprets pdb file and creates pysimm.system.System object
 
     Args:
         pdb_file: pdb file name
-        guess_bonds: if True, guess bonds default=False ** probably buggy ***
 
     Returns:
         pysimm.system.System object
@@ -4470,9 +4510,6 @@ def read_pdb(pdb_file, guess_bonds=False):
 
 
     f.close()
-
-    if guess_bonds:
-        s.guess_bonds()
 
     return s
 

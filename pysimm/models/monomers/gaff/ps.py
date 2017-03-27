@@ -4,7 +4,7 @@ from pysimm.apps.random_walk import random_walk
 def monomer():
     s = system.read_pubchem_smiles('CCc1=cc=cc=c1')
     m = s.molecules[1]
-    f = forcefield.Gaff2()
+    f = forcefield.Gaff()
     
     for b in s.bonds:
         if b.a.bonds.count == 3 and b.b.bonds.count == 3:
@@ -40,5 +40,5 @@ def monomer():
     
 def polymer_chain(length):
     mon = monomer()
-    polym = random_walk(mon, length, forcefield=forcefield.Gaff2())
+    polym = random_walk(mon, length, forcefield=forcefield.Gaff())
     return polym
