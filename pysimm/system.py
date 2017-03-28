@@ -3795,7 +3795,7 @@ def read_lammps(data_file, **kwargs):
                     s.dihedral_types.add(DihedralType(tag=tag, name=name,
                                                       m=m,
                                                       k=map(float, k),
-                                                      d=map(int, d),
+                                                      d=map(float, d),
                                                       n=map(int, n)))
                 elif not dihedral_style:
                     if not quiet and i == 0:
@@ -3822,16 +3822,16 @@ def read_lammps(data_file, **kwargs):
                         data = line[1:]
                         m = int(data.pop(0))
                         k=[]
-                        d=[]
                         n=[]
+                        d=[]
                         for i in range(m):
                             k.append(data.pop(0))
-                            d.append(data.pop(0))
                             n.append(data.pop(0))
+                            d.append(data.pop(0))
                         s.dihedral_types.add(DihedralType(tag=tag, name=name,
                                                           m=m,
                                                           k=map(float, k),
-                                                          d=map(int, d),
+                                                          d=map(float, d),
                                                           n=map(int, n)))
             if not quiet and dihedral_style:
                 verbose_print('read "%s" dihedral parameters '
