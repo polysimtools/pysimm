@@ -2774,17 +2774,20 @@ class System(object):
 
         out.write('{:<10}pdb written using pySIMM system module\n'
                   .format('HEADER'))
-        for p in self.particles:
-            if p.type:
-                out.write('{:<6}{:>5} {:>4} RES  {:4}   '
-                          '{: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'
-                          .format('ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, p.molecule.tag,
-                                  p.x, p.y, p.z, '', p.type.elem))
-            elif p.elem:
-                out.write('{:<6}{:>5} {:>4} RES  {:4}   '
-                          '{: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'
-                          .format('ATOM', p.tag, p.elem, p.molecule.tag,
-                                  p.x, p.y, p.z, '', p.elem))
+        for m in self.molecules:
+            for p in m.particles:
+                if p.type:
+                    out.write('{:<6}{:>5} {:>4} RES  {:4}   '
+                              '{: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'
+                              .format('ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, p.molecule.tag,
+                                      p.x, p.y, p.z, '', p.type.elem))
+                elif p.elem:
+                    out.write('{:<6}{:>5} {:>4} RES  {:4}   '
+                              '{: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'
+                              .format('ATOM', p.tag, p.elem, p.molecule.tag,
+                                      p.x, p.y, p.z, '', p.elem))
+            out.write('TER\n')
+        
         for p in self.particles:
             if p.bonds:
                 out.write('{:<6}{:>5}'
@@ -3795,7 +3798,7 @@ def read_lammps(data_file, **kwargs):
                     s.dihedral_types.add(DihedralType(tag=tag, name=name,
                                                       m=m,
                                                       k=map(float, k),
-                                                      d=map(int, d),
+                                                      d=map(float, d),
                                                       n=map(int, n)))
                 elif not dihedral_style:
                     if not quiet and i == 0:
@@ -3822,16 +3825,16 @@ def read_lammps(data_file, **kwargs):
                         data = line[1:]
                         m = int(data.pop(0))
                         k=[]
-                        d=[]
                         n=[]
+                        d=[]
                         for i in range(m):
                             k.append(data.pop(0))
-                            d.append(data.pop(0))
                             n.append(data.pop(0))
+                            d.append(data.pop(0))
                         s.dihedral_types.add(DihedralType(tag=tag, name=name,
                                                           m=m,
                                                           k=map(float, k),
-                                                          d=map(int, d),
+                                                          d=map(float, d),
                                                           n=map(int, n)))
             if not quiet and dihedral_style:
                 verbose_print('read "%s" dihedral parameters '
