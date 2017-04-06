@@ -720,7 +720,7 @@ class System(object):
             del i.tag
             if unique_types and i.type not in self.improper_types:
                 it = self.improper_types.get(i.type.name)
-                if not it or len(it) > 1:
+                if not it:
                     error_print('ImproperType error')
                 else:
                     i.type = it[0]
