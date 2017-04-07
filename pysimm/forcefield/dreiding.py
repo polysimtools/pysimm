@@ -74,8 +74,8 @@ class Dreiding(Forcefield):
         """
         s.pair_style = self.pair_style
         all_types = set()
+        s.add_particle_bonding()
         for p in s.particles:
-            p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
             p.bond_orders = [x.order for x in p.bonds]
             if len(set(p.bond_orders)) == 1 and p.bond_orders[0] is None:
                 error_print('error: bond orders are not set')
@@ -200,8 +200,8 @@ class Dreiding(Forcefield):
         """
         all_types = set()
         s.angle_style = self.angle_style
+        s.add_particle_bonding()
         for p in s.particles:
-            p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
             for p1 in p.bonded_to:
                 for p2 in p.bonded_to:
                     if p1 is not p2:
