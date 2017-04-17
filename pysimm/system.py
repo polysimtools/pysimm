@@ -2775,7 +2775,7 @@ class System(object):
         out.write('{:<10}pdb written using pySIMM system module\n'
                   .format('HEADER'))
         for m in self.molecules:
-            for p in m.particles:
+            for p in sorted(m.particles, key=lambda x: x.tag):
                 if p.type:
                     out.write('{:<6}{:>5} {:>4} RES  {:4}   '
                               '{: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'
