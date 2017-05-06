@@ -2777,15 +2777,19 @@ class System(object):
         for m in self.molecules:
             for p in sorted(m.particles, key=lambda x: x.tag):
                 if p.type:
-                    out.write('{:<6}{:>5} {:>4} RES  {:4}   '
-                              '{: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'
-                              .format('ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, p.molecule.tag,
-                                      p.x, p.y, p.z, '', p.type.elem))
+                    out.write(
+                        '{:<6}{:>5} {:>4} RES  {:4}    {: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'.format(
+                            'ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, 
+                            p.molecule.tag, p.x, p.y, p.z, '', p.type.elem
+                        )
+                    )
                 elif p.elem:
-                    out.write('{:<6}{:>5} {:>4} RES  {:4}   '
-                              '{: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'
-                              .format('ATOM', p.tag, p.elem, p.molecule.tag,
-                                      p.x, p.y, p.z, '', p.elem))
+                    out.write(
+                        '{:<6}{:>5} {:>4} RES  {:4}    {: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'.format(
+                            'ATOM', p.tag, p.elem, p.molecule.tag, 
+                            p.x, p.y, p.z, '', p.elem
+                        )
+                    )
             out.write('TER\n')
         
         for p in self.particles:
