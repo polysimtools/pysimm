@@ -20,8 +20,14 @@ import logging
 import types
 from collections import Iterable, OrderedDict
 import pysimm
+from pysimm import utils
 
-CASSANDRA_EXEC = os.environ.get('CASSANDRA_EXEC')
+kcalMol2K = 503.22271716452
+isomp = False
+if isomp:
+    CASSANDRA_EXEC = os.environ.get('CASSANDRA_OMP_EXEC')
+else:
+    CASSANDRA_EXEC = os.environ.get('CASSANDRA_EXEC')
 
 # Creating a logger instance and send its output to console 'deafault'
 logging.basicConfig(level=logging.INFO)
@@ -47,7 +53,7 @@ check_cs_exec()
 
 class GCMC(object):
 
-    def __init__(self, **kwargs):
+    def __init__(self, mc_syst=None, **kwargs):
         # Text output stream
         self.input = ''
         self.logger = logging.getLogger('GCMC')
@@ -67,24 +73,27 @@ class GCMC(object):
         # They **absolutely** needed to start calculation
         mol_files = OrderedDict()
         write_statics = kwargs.get('write_statics')
-
-        count = 1
-        fixed_mcf = '_fixed_atoms_params.mcf'
-        self.polymer_mcf_file = None
+        fixed_mcf = 'fixed_syst.mcf'
+        self.fixed_syst_mcf_file = None
         if write_statics:
-            self.polymer_mcf_file = os.path.join(self.out_folder, fixed_mcf)
-            mol_files['file1'] = [fixed_mcf, count]
-            count += count
+            self.fixed_syst_mcf_file = os.path.join(self.out_folder, fixed_mcf)
+            mol_files['file1'] = [fixed_mcf, 1]
 
-        if self.adsorbers is not None:
-            for ads in self.adsorbers:
-                mol_files['file' + str(count)] = [os.path.join(self.adsorob_path, str.lower(ads[0]) + '.mcf'), ads[1]]
-                count += count
+        if mc_syst:
+            mol_files = mc_syst.update_props(mol_files)
+
+        # count = 2
+        # if self.adsorbers is not None:
+        #     for ads in self.adsorbers:
+        #         mol_files['file' + str(count)] = [os.path.join(self.adsorob_path, str.lower(ads[0]) + '.mcf'), ads[1]]
+        #         count += count
+
         if kwargs.get('Molecule_Files'):
             mol_files = OrderedDict(sorted(kwargs.get('Molecule_Files').items()))
 
+        # Raising an error and stop execution if no MCF information is provided
         if (self.adsorbers is None) and (not kwargs.get('Molecule_Files')):
-            self.logger.error('The molecular configuration files for gas molecules for simulation are not set')
+            self.logger.error('The molecular configuration files of gas molecules for simulation are not set')
             exit(1)
 
         n_spec = len(mol_files)
@@ -178,20 +187,14 @@ class GCMC(object):
 
         # Synchronzing Fragment files:
         frag_files = None
-        if self.adsorbers is not None:
-            frag_files = OrderedDict()
-            count = 1
-            for ads in self.adsorbers:
-
-                frag_files['file' + str(count)] = [os.path.join(self.adsorob_path, str.lower(ads[0]) + '.dat'), count]
-                count += count
+        if mc_syst:
+            frag_files = mc_syst.update_frag_record(frag_files)
         if kwargs.get('Fragment_Files'):
             frag_files = OrderedDict(sorted(kwargs.get('Fragment_Files').items()))
         if (self.adsorbers is None) and (not kwargs.get('Fragment_Files')):
             self.logger.error('Cannot set the fragment files of gas molecules for simulation')
             exit(1)
         self.props['Fragment_Files'] = InpSpec('Fragment_Files', frag_files, None, **{'new_line': True})
-
         self.props['Property_Info 1'] = InpSpec('Property_Info 1', kwargs.get('Property_Info'),
                                                 None, **{'new_line': True})
 
@@ -211,8 +214,6 @@ class GCMC(object):
 
 class InpSpec(object):
     def __init__(self, key, value, default, **kwargs):
-
-        self.key = key
         self.write_headers = kwargs.get('write_headers')
         self.is_new_line = kwargs.get('new_line')
 
@@ -293,6 +294,58 @@ class InpFileSpec(InpSpec):
             print("ERROR: cannot find a file " + the_name + ".\n Please specify the file.\n" + " Aborting execution")
 
 
+
+class InpMcfSpec(InpSpec):
+    def __init__(self, key, value, default, **kwargs):
+        super(InpMcfSpec, self).__init__(key, value, default, **kwargs)
+
+
+class McSystem(object):
+    def __init__(self, s, **kwargs):
+        self.sst = s
+        self.max_ins = kwargs.get('max_ins') # or TODO: say to user that property is undefined and we allocate A LOT of memory!
+        self.chem_pot = kwargs.get('chem_pot')
+
+        self.mcf_file = []
+        self.generate_mcf()
+
+        self.frag_file = []
+        self.generate_frag_file()
+
+    def update_props(self, props):
+        offset = len(props)
+        for (mcf, ins, count) in zip(self.mcf_file, self.max_ins, range(1 + offset, len(self.mcf_file) + 1 + offset)):
+            props['file' + str(count)] = [mcf, ins]
+        return props
+
+    def update_frag_record(self, frag_files):
+        for (frags, count) in zip(self.frag_file, range(1, len(self.frag_file) + 1)):
+            frag_files['file' + str(count)] = [frags, count]
+        return frag_files
+
+    def generate_mcf(self):
+        fake_path = '/home/alleksd/Work/pysimm/Examples/09_cassandra/gcmc_tests'
+        protocol = [True, True, True, False, False, True, False, False]
+        if isinstance(self.sst, Iterable):
+            count = 1
+            for sstm in self.sst:
+                fullfile = os.path.join(fake_path, ['particle' + str(count) + '.mcf'])
+                tmp = McfWriter(sstm, fullfile, protocol)
+                tmp.write()
+                self.mcf_file.append(fullfile)
+                count += count
+        else:
+            fullfile = os.path.join(fake_path, 'particle1.mcf')
+            tmp = McfWriter(self.sst, fullfile, protocol)
+            tmp.write()
+            self.mcf_file.append(fullfile)
+
+    def generate_frag_file(self):
+        return 'fake_frag_file'
+
+    def read_xyz(self):
+        print('Not supported yet!')
+
 class Cassandra(object):
     """
     pysimm.cassandra.Cassandra
@@ -303,7 +356,6 @@ class Cassandra(object):
 
     def __init__(self, s, **kwargs):
         # Important simulation stuff
-        self.kcalMol2K = 503.22271716452
         self.system = s
 
         # Important programmatic stuff
@@ -386,20 +438,36 @@ class Cassandra(object):
 
         return props_dict
 
-    def write_mcf(self, out_file):
+    def write_mcf(self, out_file, what_to_write='all'):
         # Initializing output stream
         if out_file == 'string':
             out_stream = StringIO()
         else:
             out_stream = open(out_file, 'w+')
 
+        # Analysing the MCF headers that should be described
+        mcf_tags = ['# Atom_Info', '# Bond_Info', '# Angle_Info', '# Dihedral_Info',
+                    '# Fragment_Info', '# Improper_Info', '# Fragment_Connectivity']
+        if what_to_write == 'all':
+            tags_to_write = [True] * 7
+        elif what_to_write == 'atoms':
+            tags_to_write = [True, False, False, False, False, False, False]
+        elif isinstance(what_to_write, types.ListType) and (len(what_to_write) == 7):
+            tags_to_write = what_to_write
+        else:
+            tags_to_write = [False] * 7
+            print('yada-yada...')
+
+        for (ttwr, ind) in zip(tags_to_write, range(len(mcf_tags))):
+            if ttwr:
+                method = getattr(self, 'write_' + str.lower(mcf_tags[ind][2:]))
+                method()
+
         # Writing "Static content"
         # Default value to fill in unimportant .mcf file categories
-        empty_val = 0
-        mcf_tags = ['# Bond_Info', '# Angle_Info', '# Dihedral_Info', '# Fragment_Info',
-                    '# Improper_Info', '# Fragment_Connectivity']
+        filler_val = 0
         for tag in mcf_tags:
-            out_stream.write('{0:}\n{1:d}\n\n'.format(tag, empty_val))
+            out_stream.write('{0:}\n{1:d}\n\n'.format(tag, filler_val))
 
         # Writing important for .mcf atomic data
         syst = self.system  # alias of the System object
@@ -430,7 +498,7 @@ class Cassandra(object):
                     if hasattr(parts.type,  'mass'):
                         line[3] = parts.type.mass
                     if hasattr(parts.type,  'epsilon'):
-                        line[6] = self.kcalMol2K * parts.type.epsilon
+                        line[6] = kcalMol2K * parts.type.epsilon
                         line[7] = parts.type.sigma
                     else:
                         continue
@@ -441,16 +509,7 @@ class Cassandra(object):
             out_stream.write('\nEND')
         out_stream.close()
 
-    def create_mcf(self, structure):
-        s = pysimm.system.read_pubchem_smiles(structure)
-        s.write_pdb(structure + '.pdb')
-
-        head, foo = os.path.split(CASSANDRA_EXEC)
-        os.system(os.path.join(head, '..', 'Scripts', 'MCF_Generation', 'mcfgen.py') + ' ' +
-                  structure + '_mod.pdb' + ' --ffTemplate')
-
-
-    def write_chk(self, out_file):
+    def __write_chk__(self, out_file):
         # Initializing output stream
         if out_file == 'string':
             out_stream = StringIO()
@@ -638,3 +697,134 @@ class Cassandra(object):
 
         else:
             return cells[1]
+
+
+class McfWriter(object):
+    # Static section names in MCF file
+    mcf_tags = ['# Atom_Info', '# Bond_Info', '# Angle_Info', '# Dihedral_Info',
+                '# Improper_Info', '# Intra_Scaling', '# Fragment_Info', '# Fragment_Connectivity']
+
+    def __init__(self, psm_syst, file_ref, what_to_write='all'):
+        self.out_stream = None
+        self.empty_line = '0'
+        self.syst = psm_syst
+        self.file_ref = file_ref
+        self.tags_to_write = self.__to_tags__(what_to_write)
+
+    def write(self):
+        # Initializing output stream
+
+        with open(self.file_ref, 'w+') as out_stream:
+            for (ttwr, ind) in zip(self.tags_to_write, range(len(self.mcf_tags))):
+                if ttwr:
+                    method = getattr(self, '__write_' + str.lower(self.mcf_tags[ind][2:]) + '__')
+                    method(out_stream)
+                else:
+                    self.__write_empty__(out_stream, ind)
+            out_stream.write('\nEND')
+            out_stream.close()
+
+    def __write_empty__(self, out_stream, ind):
+        out_stream.write('{0:}\n{1:}\n\n'.format(self.mcf_tags[ind], self.empty_line))
+
+    def __write_atom_info__(self, out):
+        global kcalMol2K
+        if out:
+            # writing section header
+            out.write('{:}\n'.format(self.mcf_tags[0]))
+            # Verify and fix net system charge
+            self.syst.zero_charge()
+            # writing total number of particles
+            out.write('{0:<6}\n'.format(self.syst.particles.count))
+            count = 0
+            line_template = '{l[0]:<6}{l[1]:<7}{l[2]:<5}{l[3]:<8.3f}{l[4]:<7.3f}' \
+                            '{l[5]:<6}{l[6]:<11.3f}{l[7]:<9.3f}\n'
+            if self.syst.particles.count > 0:
+                for item in self.syst.particles:
+                    line = [count + 1, '', '', '', 0, 'LJ', 0, 0]
+                    if hasattr(item, 'charge'):
+                        line[4] = item.charge
+                    else:
+                        line[4] = 0
+                    if hasattr(item, 'type'):
+                        if hasattr(item.type, 'name'):
+                            line[1] = item.type.name
+                        if hasattr(item.type, 'elem'):
+                            line[2] = item.type.elem
+                        if hasattr(item.type, 'mass'):
+                            line[3] = item.type.mass
+                        if hasattr(item.type, 'epsilon'):
+                            line[6] = kcalMol2K * item.type.epsilon
+                            line[7] = item.type.sigma
+                    else:
+                        continue
+                    out.write(line_template.format(l=line))
+                    count += 1
+            out.write('\n')
+
+    def __write_bond_info__(self, out):
+        # writing section header
+        out.write('{:}\n'.format(self.mcf_tags[1]))
+        # writing total number of bonds
+        out.write('{0:<6}\n'.format(self.syst.bonds.count))
+        line_template = '{l[0]:<6d}{l[1]:<6d}{l[2]:<6d}{l[3]:<9}{l[4]:<6.3f}\n'
+        count = 1
+        for bond in self.syst.bonds:
+            tmp = bond.type.k
+            if tmp > 1000:
+                tmp = 'fixed'
+            line = [count, bond.a.tag, bond.b.tag, tmp, bond.type.r0]
+            count += 1
+            out.write(line_template.format(l=line))
+        out.write('\n')
+
+    def __write_angle_info__(self, out):
+        # writing section header
+        out.write('{:}\n'.format(self.mcf_tags[2]))
+        # writing total number of angles
+        out.write('{0:<6}\n'.format(self.syst.angles.count))
+        line_template = '{l[0]:<6d}{l[1]:<6d}{l[2]:<6d}{l[3]:<6d}{l[4]:<12}{l[5]:<6.3f}\n'
+        count = 1
+        for angle in self.syst.angles:
+            tmp = angle.type.k
+            if tmp > 1000:
+                tmp = 'fixed'
+            line = [count, angle.a.tag, angle.b.tag, angle.c.tag, tmp, angle.type.theta0]
+            count += 1
+            out.write(line_template.format(l=line))
+        out.write('\n')
+
+    def __write_intra_scaling__(self, out):
+        # writing section header
+        out.write('{:}\n'.format(self.mcf_tags[5]))
+        # writing vdW scaling:  1-2 1-3 1-4 1-N
+        out.write('{:<5.1f}{:<5.1f}{:<8.4f}{:<4.1f}\n'.format(0, 0, 0, 1))
+        # writing charge scaling:  1-2 1-3 1-4 1-N
+        out.write('{:<5.1f}{:<5.1f}{:<8.4f}{:<4.1f}\n\n'.format(0, 0, 0, 1))
+
+    def __write_dihidral_info__(self):
+        print('Not supported yet')
+
+    def __write_fragment_info__(self):
+        print('Not supported yet')
+
+    def __write_improper_info__(self):
+        print('Not supported yet')
+
+    def __write_fragment_connectivity__(self):
+        print('Not supported yet')
+
+    def __to_tags__(self, inpt):
+        idxs = [False] * 8
+        if inpt == 'all':
+            idxs = [True] * 8
+        elif inpt == 'atoms':
+            idxs[0] = True
+        elif isinstance(inpt, types.ListType) and (len(inpt) == 8):
+            idxs = inpt
+        return idxs
+
+
+
+
+
