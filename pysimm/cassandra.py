@@ -82,12 +82,6 @@ class GCMC(object):
         if mc_syst:
             mol_files = mc_syst.update_props(mol_files)
 
-        # count = 2
-        # if self.adsorbers is not None:
-        #     for ads in self.adsorbers:
-        #         mol_files['file' + str(count)] = [os.path.join(self.adsorob_path, str.lower(ads[0]) + '.mcf'), ads[1]]
-        #         count += count
-
         if kwargs.get('Molecule_Files'):
             mol_files = OrderedDict(sorted(kwargs.get('Molecule_Files').items()))
 
@@ -182,12 +176,12 @@ class GCMC(object):
 
         # if write_statics:
         #     start_conf_dict['file_name'] = loc_coords
-
         self.props['Start_Type'] = InpSpec('Start_Type', None, start_conf_dict)
 
         # Synchronzing Fragment files:
         frag_files = None
         if mc_syst:
+            mc_syst.temperature = self.props['Temperature_Info'].value
             frag_files = mc_syst.update_frag_record(frag_files)
         if kwargs.get('Fragment_Files'):
             frag_files = OrderedDict(sorted(kwargs.get('Fragment_Files').items()))
@@ -302,49 +296,57 @@ class InpMcfSpec(InpSpec):
 
 class McSystem(object):
     def __init__(self, s, **kwargs):
-        self.sst = s
+
+        # Force our pysimm system be iterable (wrap in a list if it contains of only one item)
+        iter_syst = s
+        if not isinstance(s, Iterable):
+            iter_syst = [s]
+        self.sst = iter_syst
+        self.file_store = '/home/alleksd/Work/pysimm/Examples/09_cassandra/gcmc_tests'
         self.max_ins = kwargs.get('max_ins') # or TODO: say to user that property is undefined and we allocate A LOT of memory!
         self.chem_pot = kwargs.get('chem_pot')
-
         self.mcf_file = []
-        self.generate_mcf()
-
         self.frag_file = []
-        self.generate_frag_file()
+        self.temperature = None
 
     def update_props(self, props):
+        self.generate_mcf()
         offset = len(props)
         for (mcf, ins, count) in zip(self.mcf_file, self.max_ins, range(1 + offset, len(self.mcf_file) + 1 + offset)):
             props['file' + str(count)] = [mcf, ins]
         return props
 
-    def update_frag_record(self, frag_files):
+    def update_frag_record(self, frag_record):
+        self.__generate_frag_file__()
         for (frags, count) in zip(self.frag_file, range(1, len(self.frag_file) + 1)):
-            frag_files['file' + str(count)] = [frags, count]
-        return frag_files
+            frag_record['file' + str(count)] = [frags, count]
+        return frag_record
 
     def generate_mcf(self):
-        fake_path = '/home/alleksd/Work/pysimm/Examples/09_cassandra/gcmc_tests'
         protocol = [True, True, True, False, False, True, False, False]
-        if isinstance(self.sst, Iterable):
-            count = 1
-            for sstm in self.sst:
-                fullfile = os.path.join(fake_path, ['particle' + str(count) + '.mcf'])
-                tmp = McfWriter(sstm, fullfile, protocol)
-                tmp.write()
-                self.mcf_file.append(fullfile)
-                count += count
-        else:
-            fullfile = os.path.join(fake_path, 'particle1.mcf')
-            tmp = McfWriter(self.sst, fullfile, protocol)
-            tmp.write()
+        for (sstm, count) in zip(self.sst, range(len(self.sst))):
+            fullfile = os.path.join(self.file_store, '{:}{:}{:}'.format('particle', str(count + 1), '.mcf'))
+            McfWriter(sstm, fullfile, protocol).write()
             self.mcf_file.append(fullfile)
 
-    def generate_frag_file(self):
-        return 'fake_frag_file'
+    def __generate_frag_file__(self):
+        if self.temperature is None:
+            self.temperature = 300
+        for (sstm, count) in zip(self.sst, range(len(self.sst))):
+            fullfile = os.path.join(self.file_store, '{:}{:}{:}'.format('particle', str(count + 1), '.dat'))
+            with open(fullfile, 'w+') as out:
+                frag_count = 1
+                out.write('{:>12d}\n'.format(frag_count))
+                out.write('{:>21.14f}{:>21.14f}\n'.format(self.temperature, 0))
+                tmplte = '{:<5}{:<24.16f}{:<24.16f}{:<24.16f}\n'
+                for prt in sstm.particles:
+                    out.write(tmplte.format(prt.type.name, prt.x, prt.y, prt.z))
+            self.frag_file.append(fullfile)
 
     def read_xyz(self):
         print('Not supported yet!')
+
+
 
 class Cassandra(object):
     """
@@ -368,7 +370,7 @@ class Cassandra(object):
         for task in self.run_queue:
             task.write()
             if task.polymer_mcf_file is not None:
-                self.write_mcf(task.polymer_mcf_file)
+                McfWriter(self.system, task.polymer_mcf_file, 'atoms').write()
             if task.polymer_xyz_file is not None:
                 self.system.write_xyz(task.polymer_xyz_file)
             try:
@@ -437,77 +439,6 @@ class Cassandra(object):
         # ...
 
         return props_dict
-
-    def write_mcf(self, out_file, what_to_write='all'):
-        # Initializing output stream
-        if out_file == 'string':
-            out_stream = StringIO()
-        else:
-            out_stream = open(out_file, 'w+')
-
-        # Analysing the MCF headers that should be described
-        mcf_tags = ['# Atom_Info', '# Bond_Info', '# Angle_Info', '# Dihedral_Info',
-                    '# Fragment_Info', '# Improper_Info', '# Fragment_Connectivity']
-        if what_to_write == 'all':
-            tags_to_write = [True] * 7
-        elif what_to_write == 'atoms':
-            tags_to_write = [True, False, False, False, False, False, False]
-        elif isinstance(what_to_write, types.ListType) and (len(what_to_write) == 7):
-            tags_to_write = what_to_write
-        else:
-            tags_to_write = [False] * 7
-            print('yada-yada...')
-
-        for (ttwr, ind) in zip(tags_to_write, range(len(mcf_tags))):
-            if ttwr:
-                method = getattr(self, 'write_' + str.lower(mcf_tags[ind][2:]))
-                method()
-
-        # Writing "Static content"
-        # Default value to fill in unimportant .mcf file categories
-        filler_val = 0
-        for tag in mcf_tags:
-            out_stream.write('{0:}\n{1:d}\n\n'.format(tag, filler_val))
-
-        # Writing important for .mcf atomic data
-        syst = self.system  # alias of the System object
-        out_stream.write('{:}\n'.format('# Atom_Info'))
-
-        # writing total number of particles
-        out_stream.write('{0:5}\n'.format(syst.particles.count))
-
-        # writing atom-specific data
-        line_template = '{l[0]:>5}{l[1]:>7}{l[2]:>5}{l[3]:>3.0f}{l[4]:>14.9f}{l[5]:>3}{l[6]:>11.6f}{l[7]:>11.6f}\n'
-        count = 0
-
-        # Verify and fix net system charge
-        syst.zero_charge()
-
-        if syst.particles.count > 0:
-            for parts in syst.particles:
-                line = [count + 1,  '',  '',  '',  0, 'LJ', 0, 0]
-                if hasattr(parts,  'charge'):
-                    line[4] = parts.charge
-                else:
-                    line[4] = 0
-                if hasattr(parts,  'type'):
-                    if hasattr(parts.type,  'name'):
-                        line[1] = parts.type.name
-                    if hasattr(parts.type,  'elem'):
-                        line[2] = parts.type.elem
-                    if hasattr(parts.type,  'mass'):
-                        line[3] = parts.type.mass
-                    if hasattr(parts.type,  'epsilon'):
-                        line[6] = kcalMol2K * parts.type.epsilon
-                        line[7] = parts.type.sigma
-                    else:
-                        continue
-                    out_stream.write(line_template.format(l=line))
-                else:
-                    continue
-                count += 1
-            out_stream.write('\nEND')
-        out_stream.close()
 
     def __write_chk__(self, out_file):
         # Initializing output stream
@@ -805,10 +736,10 @@ class McfWriter(object):
     def __write_dihidral_info__(self):
         print('Not supported yet')
 
-    def __write_fragment_info__(self):
+    def __write_improper_info__(self):
         print('Not supported yet')
 
-    def __write_improper_info__(self):
+    def __write_fragment_info__(self):
         print('Not supported yet')
 
     def __write_fragment_connectivity__(self):
@@ -823,8 +754,6 @@ class McfWriter(object):
         elif isinstance(inpt, types.ListType) and (len(inpt) == 8):
             idxs = inpt
         return idxs
-
-
 
 
 
