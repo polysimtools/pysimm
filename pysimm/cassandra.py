@@ -7,12 +7,9 @@
 # ******************************************************************************
 # The MIT License (MIT)
 
-from IPython.config.application import catch_config_error
 from StringIO import StringIO
 import subprocess
 from subprocess import call, Popen, PIPE
-import re
-import sys
 import os
 import numpy as np
 import random
@@ -20,7 +17,7 @@ import logging
 import types
 from collections import Iterable, OrderedDict
 import pysimm
-from pysimm import utils
+from pysimm import utils, system
 
 kcalMol2K = 503.22271716452
 isomp = False
@@ -53,8 +50,8 @@ check_cs_exec()
 
 class GCMC(object):
 
-    def __init__(self, mc_syst=None, **kwargs):
-        # Text output stream
+    def __init__(self, fxd_sst=None, mc_sst=None, **kwargs):
+        # Text output stream, empty at the beggining
         self.input = ''
         self.logger = logging.getLogger('GCMC')
         self.adsorob_path = '/home/alleksd/Work/pysimm/dat/csndra_data'
@@ -72,22 +69,29 @@ class GCMC(object):
         # Molecule configuration files describing all species of the system.
         # They **absolutely** needed to start calculation
         mol_files = OrderedDict()
-        write_statics = kwargs.get('write_statics')
+
         fixed_mcf = 'fixed_syst.mcf'
+        self.fxd_sst = fxd_sst
+        self.fxd_sst.zero_charge()
         self.fixed_syst_mcf_file = None
-        if write_statics:
+        if fxd_sst:
             self.fixed_syst_mcf_file = os.path.join(self.out_folder, fixed_mcf)
             mol_files['file1'] = [fixed_mcf, 1]
+            fs_count = 1
+        else:
+            fs_count = 0
 
-        if mc_syst:
-            mol_files = mc_syst.update_props(mol_files)
+        self.mc_sst = mc_sst
+        if mc_sst:
+            mol_files = mc_sst.update_props(mol_files)
 
         if kwargs.get('Molecule_Files'):
             mol_files = OrderedDict(sorted(kwargs.get('Molecule_Files').items()))
 
         # Raising an error and stop execution if no MCF information is provided
-        if (self.adsorbers is None) and (not kwargs.get('Molecule_Files')):
-            self.logger.error('The molecular configuration files of gas molecules for simulation are not set')
+        if (mc_sst is None) and (not kwargs.get('Molecule_Files')):
+            self.logger.error('The molecular configuration files of gas molecules for simulation are not set. '
+                              'Nothing to simulate. Exiting...')
             exit(1)
 
         n_spec = len(mol_files)
@@ -102,8 +106,9 @@ class GCMC(object):
         self.props['Rcutoff_Low'] = InpSpec('Rcutoff_Low', kwargs.get('Rcutoff_Low'), 0.0)
         self.props['Mixing_Rule'] = InpSpec('Mixing_Rule', kwargs.get('Mixing_Rule'), 'lb')
         self.props['Bond_Prob_Cutoff'] = InpSpec('Bond_Prob_Cutoff', kwargs.get('Bond_Prob_Cutoff'), 1e-10)
-        self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info',
-                                                        kwargs.get('Chemical_Potential_Info'), -10)
+        self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info', mc_sst.chem_pot,
+                                                        [-25] * (n_spec - fs_count))
+
         self.props['Seed_Info'] = InpSpec('Seed_Info', kwargs.get('Seed_Info'),
                                           [random.randint(int(1e+7), int(1e+8 - 1)),
                                            random.randint(int(1e+7), int(1e+8 - 1))])
@@ -144,7 +149,7 @@ class GCMC(object):
 
         # Order of the next three items is IMPORTANT! Check the CASSANDRA spec file for further info
         limits = [0.36] * n_spec
-        if write_statics:
+        if fxd_sst:
             limits[0] = 0
         self.props['Prob_Translation'] = InpProbSpec('Prob_Translation', kwargs.get('Prob_Translation'),
                                                      OrderedDict([('tot_prob', 0.4),
@@ -152,7 +157,7 @@ class GCMC(object):
                                                      **{'new_line': True, 'indicator': 'start'})
 
         tps = ['cbmc'] * n_spec
-        if write_statics:
+        if fxd_sst:
             tps[0] = 'none'
         self.props['Prob_Insertion'] = InpProbSpec('Prob_Insertion', kwargs.get('Prob_Insertion'),
                                                    OrderedDict([('tot_prob', 0.3),
@@ -163,14 +168,14 @@ class GCMC(object):
                                                   kwargs.get('Prob_Deletion'), 0.3, **{'indicator': 'end'})
 
         # Synchronzing "start type" .inp record
-        self.polymer_xyz_file = None
+        self.fixed_syst__xyz_file = None
         pops_list = [0] * n_spec
         st_type = 'make_config'
         loc_coords = ''
-        if write_statics:
+        if fxd_sst:
             pops_list[0] = 1
             loc_coords = '_fixed_atoms_coords.xyz'
-            self.polymer_xyz_file = os.path.join(self.out_folder, loc_coords)
+            self.fixed_syst__xyz_file = os.path.join(self.out_folder, loc_coords)
             st_type = 'read_config'
         start_conf_dict = OrderedDict([('start_type', st_type), ('species', pops_list), ('file_name', loc_coords)])
 
@@ -179,13 +184,13 @@ class GCMC(object):
         self.props['Start_Type'] = InpSpec('Start_Type', None, start_conf_dict)
 
         # Synchronzing Fragment files:
-        frag_files = None
-        if mc_syst:
-            mc_syst.temperature = self.props['Temperature_Info'].value
-            frag_files = mc_syst.update_frag_record(frag_files)
+        frag_files = OrderedDict()
+        if mc_sst:
+            mc_sst.temperature = self.props['Temperature_Info'].value
+            frag_files = mc_sst.update_frag_record(frag_files)
         if kwargs.get('Fragment_Files'):
             frag_files = OrderedDict(sorted(kwargs.get('Fragment_Files').items()))
-        if (self.adsorbers is None) and (not kwargs.get('Fragment_Files')):
+        if (mc_sst is None) and (not kwargs.get('Fragment_Files')):
             self.logger.error('Cannot set the fragment files of gas molecules for simulation')
             exit(1)
         self.props['Fragment_Files'] = InpSpec('Fragment_Files', frag_files, None, **{'new_line': True})
@@ -205,12 +210,34 @@ class GCMC(object):
         out_stream.close()
         self.logger.info('File: "{:}" was created sucsessfully'.format(self.props_file))
 
+    def __check_params__(self):
+        # Synchronizing the simulation box parameters
+        dx = self.fxd_sst.dim.dx
+        dy = self.fxd_sst.dim.dy
+        dz = self.fxd_sst.dim.dz
+        if (dx == dy) and (dy == dz):
+            box_type = 'cubic'
+            box_dims = str(dx)
+        else:
+            box_type = 'orthogonal'
+            box_dims = '{0:} {1:} {2:}'.format(dx, dy, dz)
+
+        upd_vals = OrderedDict([('box_count', 1),
+                                ('box_type', box_type),
+                                ('box_size', box_dims)])
+        if ('Box_Info' in self.props.keys()) and isinstance(self.props['Box_Info'], InpSpec):
+            self.props['Box_Info'] = InpSpec('Box_Info', upd_vals, None, **{'new_line': True})
+        else:
+            self.props['Box_Info'] = upd_vals
+
 
 class InpSpec(object):
     def __init__(self, key, value, default, **kwargs):
+        self.key = key
         self.write_headers = kwargs.get('write_headers')
         self.is_new_line = kwargs.get('new_line')
 
+        self.value = value
         if value:
             if isinstance(default, types.DictType):
                 # Add from default structure all properties that were not defined by user
@@ -297,17 +324,18 @@ class InpMcfSpec(InpSpec):
 class McSystem(object):
     def __init__(self, s, **kwargs):
 
-        # Force our pysimm system be iterable (wrap in a list if it contains of only one item)
-        iter_syst = s
-        if not isinstance(s, Iterable):
-            iter_syst = [s]
-        self.sst = iter_syst
+        self.sst = self.__make_iterable__(s)
+        for sst in self.sst:
+            sst.zero_charge()
         self.file_store = '/home/alleksd/Work/pysimm/Examples/09_cassandra/gcmc_tests'
-        self.max_ins = kwargs.get('max_ins') # or TODO: say to user that property is undefined and we allocate A LOT of memory!
-        self.chem_pot = kwargs.get('chem_pot')
+        self.max_ins = self.__make_iterable__(kwargs.get('max_ins')) or 5000
+        self.chem_pot = self.__make_iterable__(kwargs.get('chem_pot'))
         self.mcf_file = []
         self.frag_file = []
         self.temperature = None
+
+    def update_cp(self, cp):
+        return self.chem_pot
 
     def update_props(self, props):
         self.generate_mcf()
@@ -323,15 +351,24 @@ class McSystem(object):
         return frag_record
 
     def generate_mcf(self):
-        protocol = [True, True, True, False, False, True, False, False]
+        protocol = [True, True, True, False, False, True, True, False]
         for (sstm, count) in zip(self.sst, range(len(self.sst))):
             fullfile = os.path.join(self.file_store, '{:}{:}{:}'.format('particle', str(count + 1), '.mcf'))
             McfWriter(sstm, fullfile, protocol).write()
             self.mcf_file.append(fullfile)
 
+    # Force our fields be iterable (wrap in a list if it contains of only one item)
+    def __make_iterable__(self, obj):
+        it_obj = obj
+        if not isinstance(obj, Iterable):
+            it_obj = [obj]
+        return it_obj
+
+    # Now is private because it is works only for single-configuration fragment file
     def __generate_frag_file__(self):
         if self.temperature is None:
             self.temperature = 300
+
         for (sstm, count) in zip(self.sst, range(len(self.sst))):
             fullfile = os.path.join(self.file_store, '{:}{:}{:}'.format('particle', str(count + 1), '.dat'))
             with open(fullfile, 'w+') as out:
@@ -347,7 +384,6 @@ class McSystem(object):
         print('Not supported yet!')
 
 
-
 class Cassandra(object):
     """
     pysimm.cassandra.Cassandra
@@ -356,9 +392,10 @@ class Cassandra(object):
 
     """
 
-    def __init__(self, s, **kwargs):
+    def __init__(self, **kwargs):
         # Important simulation stuff
-        self.system = s
+        # self.fxd_sst = fxd
+        # self.mc_sst = mc
 
         # Important programmatic stuff
         self.logger = logging.getLogger('CSNDRA')
@@ -368,11 +405,13 @@ class Cassandra(object):
         global CASSANDRA_EXEC
 
         for task in self.run_queue:
+            # Write .inp file
             task.write()
-            if task.polymer_mcf_file is not None:
-                McfWriter(self.system, task.polymer_mcf_file, 'atoms').write()
-            if task.polymer_xyz_file is not None:
-                self.system.write_xyz(task.polymer_xyz_file)
+            if task.fixed_syst_mcf_file is not None:
+                McfWriter(task.fxd_sst, task.fixed_syst_mcf_file,
+                          [True, False, False, False, False, True, False, False]).write()
+            if task.fixed_syst__xyz_file is not None:
+                task.fxd_sst.write_xyz(task.fixed_syst__xyz_file)
             try:
                 self.logger.info('Start execution of the GCMC simulations with CASSANDRA...')
                 print('{:.^60}'.format(''))
@@ -400,45 +439,17 @@ class Cassandra(object):
                                       'Make sure the CSNDRA_EXEC environment variable is set to the correct CASSANDRA '
                                       'executable path. The current path is set to:\n\n{}'.format(CASSANDRA_EXEC))
 
-    def add_gcmc(self, template=None, **kwargs):
-        if template is None:
-            valid_args = self.__check_params__(kwargs)
-            template = GCMC(**valid_args)
-        elif isinstance(template, GCMC):
-            template.props = self.__check_params__(template.props)
+    def add_gcmc(self, obj1=None, obj2=None, **kwargs):
+        if isinstance(obj1, GCMC):
+            new_job = obj1
+        elif isinstance(obj1, system.System) or isinstance(obj1, McSystem):
+            new_job = GCMC(obj1, obj2, **kwargs)
         else:
-            self.logger.error('Unknown GCMC initialization. Please provide either correct GCMC parameters or '
-                              'GCMC simulation object')
-        self.run_queue.append(template)
-
-    def __check_params__(self, props_dict):
-        # Synchronizing the simulation box parameters
-        dx = self.system.dim.dx
-        dy = self.system.dim.dy
-        dz = self.system.dim.dz
-        if (dx == dy) and (dy == dz):
-            box_type = 'cubic'
-            box_dims = str(dx)
-        else:
-            box_type = 'orthogonal'
-            box_dims = '{0:} {1:} {2:}'.format(dx, dy, dz)
-
-        upd_vals = OrderedDict([('box_count', 1),
-                                ('box_type', box_type),
-                                ('box_size', box_dims)])
-        if ('Box_Info' in props_dict.keys()) and isinstance(props_dict['Box_Info'], InpSpec):
-            props_dict['Box_Info'] = InpSpec('Box_Info', upd_vals, None, **{'new_line': True})
-        else:
-            props_dict['Box_Info'] = upd_vals
-
-        # Synchronizing static molecular parts
-        if (self.system.particles is not None) and len(self.system.particles) > 0:
-            props_dict['write_statics'] = True
-
-        # Synchronizing some other fancy staff
-        # ...
-
-        return props_dict
+            self.logger.error('Unknown GCMC initialization. Please provide either '
+                              'correct GCMC parameters or GCMC simulation object')
+            exit(1)
+        new_job.__check_params__()
+        self.run_queue.append(new_job)
 
     def __write_chk__(self, out_file):
         # Initializing output stream
@@ -668,7 +679,7 @@ class McfWriter(object):
             # writing total number of particles
             out.write('{0:<6}\n'.format(self.syst.particles.count))
             count = 0
-            line_template = '{l[0]:<6}{l[1]:<7}{l[2]:<5}{l[3]:<8.3f}{l[4]:<7.3f}' \
+            line_template = '{l[0]:<6}{l[1]:<7}{l[2]:<5}{l[3]:<8.3f}{l[4]:<10.6f}' \
                             '{l[5]:<6}{l[6]:<11.3f}{l[7]:<9.3f}\n'
             if self.syst.particles.count > 0:
                 for item in self.syst.particles:
@@ -733,16 +744,23 @@ class McfWriter(object):
         # writing charge scaling:  1-2 1-3 1-4 1-N
         out.write('{:<5.1f}{:<5.1f}{:<8.4f}{:<4.1f}\n\n'.format(0, 0, 0, 1))
 
-    def __write_dihidral_info__(self):
+    def __write_dihidral_info__(self, out):
         print('Not supported yet')
 
-    def __write_improper_info__(self):
+    def __write_improper_info__(self, out):
         print('Not supported yet')
 
-    def __write_fragment_info__(self):
-        print('Not supported yet')
+    def __write_fragment_info__(self, out):
+        # TODO: Temporary implementation for one fragment
+        # writing section header
+        out.write('{:}\n'.format(self.mcf_tags[6]))
+        # writing indexing
+        out.write('{:}\n'.format(1))
+        n = len(self.syst.particles)
+        out.write('  '.join('{}'.format(item) for item in [1, n] + range(1, n + 1)))
+        out.write('\n\n')
 
-    def __write_fragment_connectivity__(self):
+    def __write_fragment_connectivity__(self, out):
         print('Not supported yet')
 
     def __to_tags__(self, inpt):
@@ -754,6 +772,5 @@ class McfWriter(object):
         elif isinstance(inpt, types.ListType) and (len(inpt) == 8):
             idxs = inpt
         return idxs
-
 
 
