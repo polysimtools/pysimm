@@ -19,6 +19,7 @@ from collections import Iterable, OrderedDict
 import pysimm
 from pysimm import utils, system
 
+data_path = '/home/alleksd/Work/pysimm/dat/csndra_data'
 kcalMol2K = 503.22271716452
 isomp = False
 if isomp:
@@ -51,44 +52,58 @@ check_cs_exec()
 class GCMC(object):
 
     def __init__(self, fxd_sst=None, mc_sst=None, **kwargs):
-        # Text output stream, empty at the beggining
+        global data_path
+
+        # Initializing text output stream, empty at the beginning
         self.input = ''
         self.logger = logging.getLogger('GCMC')
-        self.adsorob_path = '/home/alleksd/Work/pysimm/dat/csndra_data'
 
-        self.props_file = 'gcmc_params.inp'
-        self.adsorbers = kwargs.get('adsorbers') or None
-        self.out_folder = kwargs.get('out_folder') or os.getcwd()
-
-        # Dictionary containing records that are directly will be sent to the .inp file
+        # Initializing dictionary that contains records that directly will be sent to the .inp file
         self.props = OrderedDict()
+
+        # Reading default properties of the GCMC simulations
+        def_dat = Cassandra().read_input(os.path.join(data_path, '_gcmc_default.inp'))
 
         # Static (unchangeable) properties
         self.props['Sim_Type'] = InpSpec('Sim_Type', 'gcmc', 'gcmc')
 
-        # Molecule configuration files describing all species of the system.
-        # They **absolutely** needed to start calculation
-        mol_files = OrderedDict()
-
-        fixed_mcf = 'fixed_syst.mcf'
-        self.fxd_sst = fxd_sst
-        self.fxd_sst.zero_charge()
-        self.fixed_syst_mcf_file = None
-        if fxd_sst:
-            self.fixed_syst_mcf_file = os.path.join(self.out_folder, fixed_mcf)
-            mol_files['file1'] = [fixed_mcf, 1]
-            fs_count = 1
+        # Defining the path where to write all intermediate files () and results
+        pwd = os.getcwd()
+        self.props_file = 'gcmc_input_file.inp'
+        tmp = kwargs.get('out_folder')  # Folder for the results
+        if tmp:
+            if os.path.isabs(tmp):
+                self.out_folder = tmp
+            else:
+                self.out_folder = os.path.join(pwd, tmp)
         else:
-            fs_count = 0
+            self.out_folder = pwd
+        if not os.path.exists(self.out_folder):
+            os.makedirs(self.out_folder)
+        prefix = kwargs.get('Run_Name') or def_dat['Run_Name']
+        self.props['Run_Name'] = InpSpec('Run_Name', os.path.join(self.out_folder, prefix), '')
+
+        # Molecule configuration files describing all species of the system.
+        # They are **absolutely** needed to start calculation
+        mol_files = OrderedDict()
+        fs_count = 0
+        self.fxd_sst = fxd_sst
+        self.fixed_syst_mcf_file = None
+        if self.fxd_sst:
+            self.fxd_sst.zero_charge()
+            self.fixed_syst_mcf_file = os.path.join(self.out_folder, 'fixed_syst.mcf')
+            mol_files['file1'] = [self.fixed_syst_mcf_file, 1]
+            fs_count = 1
 
         self.mc_sst = mc_sst
         if mc_sst:
+            mc_sst.file_store = self.out_folder
             mol_files = mc_sst.update_props(mol_files)
 
         if kwargs.get('Molecule_Files'):
             mol_files = OrderedDict(sorted(kwargs.get('Molecule_Files').items()))
 
-        # Raising an error and stop execution if no MCF information is provided
+        # Raising an error and stop execution if no MCF information in one or another way is provided
         if (mc_sst is None) and (not kwargs.get('Molecule_Files')):
             self.logger.error('The molecular configuration files of gas molecules for simulation are not set. '
                               'Nothing to simulate. Exiting...')
@@ -97,55 +112,32 @@ class GCMC(object):
         n_spec = len(mol_files)
         self.props['Nbr_Species'] = InpSpec('Nbr_Species', n_spec, n_spec)
         self.props['Molecule_Files'] = InpSpec('Molecule_Files', mol_files, None, **{'new_line': True})
-
-        # Simple (one-value) dynamic properties
-        self.props['Run_Name'] = InpSpec('Run_Name', kwargs.get('Run_Name'), 'gcmc_simulation')
-        self.props['Temperature_Info'] = InpSpec('Temperature_Info', kwargs.get('Temperature_Info'), 273)
-        self.props['Average_Info'] = InpSpec('Average_Info', kwargs.get('Average_Info'), 1)
-        self.props['Pair_Energy'] = InpSpec('Pair_Energy', kwargs.get('Pair_Energy'), 'true')
-        self.props['Rcutoff_Low'] = InpSpec('Rcutoff_Low', kwargs.get('Rcutoff_Low'), 0.0)
-        self.props['Mixing_Rule'] = InpSpec('Mixing_Rule', kwargs.get('Mixing_Rule'), 'lb')
-        self.props['Bond_Prob_Cutoff'] = InpSpec('Bond_Prob_Cutoff', kwargs.get('Bond_Prob_Cutoff'), 1e-10)
         self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info', mc_sst.chem_pot,
-                                                        [-25] * (n_spec - fs_count))
-
+                                                        [-31.8] * (n_spec - fs_count))
         self.props['Seed_Info'] = InpSpec('Seed_Info', kwargs.get('Seed_Info'),
                                           [random.randint(int(1e+7), int(1e+8 - 1)),
                                            random.randint(int(1e+7), int(1e+8 - 1))])
 
+        # Simple (one-value) dynamic properties
+        self.props['Temperature_Info'] = InpSpec('Temperature_Info', kwargs.get('Temperature_Info'), def_dat['Temperature_Info'])
+        self.props['Average_Info'] = InpSpec('Average_Info', kwargs.get('Average_Info'), def_dat['Average_Info'])
+        self.props['Pair_Energy'] = InpSpec('Pair_Energy', kwargs.get('Pair_Energy'), def_dat['Pair_Energy'])
+        self.props['Rcutoff_Low'] = InpSpec('Rcutoff_Low', kwargs.get('Rcutoff_Low'), def_dat['Rcutoff_Low'])
+        self.props['Mixing_Rule'] = InpSpec('Mixing_Rule', kwargs.get('Mixing_Rule'), def_dat['Mixing_Rule'])
+        self.props['Bond_Prob_Cutoff'] = InpSpec('Bond_Prob_Cutoff', kwargs.get('Bond_Prob_Cutoff'), def_dat['Bond_Prob_Cutoff'])
+
         # Multiple-value one/many line dynamic properties
-        self.props['Run_Type'] = InpSpec('Run_Type', kwargs.get('Run_Type'),
-                                         OrderedDict([('type', 'Equilibration'),
-                                                      ('steps', 100)]))
-
-        self.props['Charge_Style'] = InpSpec('Charge_Style', kwargs.get('Charge_Style'),
-                                             OrderedDict([('type', 'coul'),
-                                                          ('sum_type', 'ewald'),
-                                                          ('cut_val', 15.00),
-                                                          ('accuracy', 1e-5)]))
-
-        self.props['VDW_Style'] = InpSpec('VDW_Style', kwargs.get('VDW_Style'),
-                                          OrderedDict([('type', 'lj'),
-                                                       ('cut_type', 'cut_tail'),
-                                                       ('cut_val', 15.00)]))
-
+        self.props['Run_Type'] = InpSpec('Run_Type', kwargs.get('Run_Type'), def_dat['Run_Type'])
+        self.props['Charge_Style'] = InpSpec('Charge_Style', kwargs.get('Charge_Style'), def_dat['Charge_Style'])
+        self.props['VDW_Style'] = InpSpec('VDW_Style', kwargs.get('VDW_Style'), def_dat['VDW_Style'])
         self.props['Simulation_Length_Info'] = InpSpec('Simulation_Length_Info', kwargs.get('Simulation_Length_Info'),
-                                                       OrderedDict([('units', 'steps'),
-                                                                    ('prop_freq', 100),
-                                                                    ('coord_freq', 1000),
-                                                                    ('run', 10000)]),
+                                                       def_dat['Simulation_Length_Info'],
                                                        **{'write_headers': True, 'new_line': True})
-        self.props['CBMC_Info'] = InpSpec('CBMC_Info', kwargs.get('CBMC_Info'),
-                                          OrderedDict([('kappa_ins', 12),
-                                                       ('kappa_dih', 12),
-                                                       ('rcut_cbmc', 6.5)]),
+        self.props['CBMC_Info'] = InpSpec('CBMC_Info', kwargs.get('CBMC_Info'), def_dat['CBMC_Info'],
                                           **{'write_headers': True, 'new_line': True})
 
-        self.props['Box_Info'] = InpSpec('Box_Info', kwargs.get('Box_Info'),
-                                         OrderedDict([('box_count', 1),
-                                                      ('box_type', 'cubic'),
-                                                      ('box_size', 100)]),
-                                         **{'new_line': True})
+        self.props['Box_Info'] = InpSpec('Box_Info', kwargs.get('Box_Info'), def_dat['Box_Info'], **{'new_line': True})
+        self.props['Property_Info 1'] = InpSpec('Property_Info 1', kwargs.get('Property_Info'), None, **{'new_line': True})
 
         # Order of the next three items is IMPORTANT! Check the CASSANDRA spec file for further info
         limits = [0.36] * n_spec
@@ -160,27 +152,21 @@ class GCMC(object):
         if fxd_sst:
             tps[0] = 'none'
         self.props['Prob_Insertion'] = InpProbSpec('Prob_Insertion', kwargs.get('Prob_Insertion'),
-                                                   OrderedDict([('tot_prob', 0.3),
-                                                                ('types', tps)]),
+                                                   OrderedDict([('tot_prob', 0.3), ('types', tps)]),
                                                    **{'new_line': True})
 
         self.props['Prob_Deletion'] = InpProbSpec('Prob_Deletion',
                                                   kwargs.get('Prob_Deletion'), 0.3, **{'indicator': 'end'})
 
         # Synchronzing "start type" .inp record
-        self.fixed_syst__xyz_file = None
+        self.fxd_sst_xyz = ''
         pops_list = [0] * n_spec
-        st_type = 'make_config'
-        loc_coords = ''
+        start_type = 'make_config'
         if fxd_sst:
             pops_list[0] = 1
-            loc_coords = '_fixed_atoms_coords.xyz'
-            self.fixed_syst__xyz_file = os.path.join(self.out_folder, loc_coords)
-            st_type = 'read_config'
-        start_conf_dict = OrderedDict([('start_type', st_type), ('species', pops_list), ('file_name', loc_coords)])
-
-        # if write_statics:
-        #     start_conf_dict['file_name'] = loc_coords
+            self.fxd_sst_xyz = os.path.join(self.out_folder, 'fixed_syst.xyz')
+            start_type = 'read_config'
+        start_conf_dict = OrderedDict([('start_type', start_type), ('species', pops_list), ('file_name', self.fxd_sst_xyz)])
         self.props['Start_Type'] = InpSpec('Start_Type', None, start_conf_dict)
 
         # Synchronzing Fragment files:
@@ -194,8 +180,6 @@ class GCMC(object):
             self.logger.error('Cannot set the fragment files of gas molecules for simulation')
             exit(1)
         self.props['Fragment_Files'] = InpSpec('Fragment_Files', frag_files, None, **{'new_line': True})
-        self.props['Property_Info 1'] = InpSpec('Property_Info 1', kwargs.get('Property_Info'),
-                                                None, **{'new_line': True})
 
     def write(self):
         for key in self.props.keys():
@@ -315,7 +299,6 @@ class InpFileSpec(InpSpec):
             print("ERROR: cannot find a file " + the_name + ".\n Please specify the file.\n" + " Aborting execution")
 
 
-
 class InpMcfSpec(InpSpec):
     def __init__(self, key, value, default, **kwargs):
         super(InpMcfSpec, self).__init__(key, value, default, **kwargs)
@@ -327,15 +310,12 @@ class McSystem(object):
         self.sst = self.__make_iterable__(s)
         for sst in self.sst:
             sst.zero_charge()
-        self.file_store = '/home/alleksd/Work/pysimm/Examples/09_cassandra/gcmc_tests'
-        self.max_ins = self.__make_iterable__(kwargs.get('max_ins')) or 5000
+        self.file_store = os.getcwd()
+        self.max_ins = self.__make_iterable__(kwargs.get('max_ins')) or 10000
         self.chem_pot = self.__make_iterable__(kwargs.get('chem_pot'))
         self.mcf_file = []
         self.frag_file = []
         self.temperature = None
-
-    def update_cp(self, cp):
-        return self.chem_pot
 
     def update_props(self, props):
         self.generate_mcf()
@@ -410,8 +390,8 @@ class Cassandra(object):
             if task.fixed_syst_mcf_file is not None:
                 McfWriter(task.fxd_sst, task.fixed_syst_mcf_file,
                           [True, False, False, False, False, True, False, False]).write()
-            if task.fixed_syst__xyz_file is not None:
-                task.fxd_sst.write_xyz(task.fixed_syst__xyz_file)
+            if task.fxd_sst_xyz is not None:
+                task.fxd_sst.write_xyz(task.fxd_sst_xyz)
             try:
                 self.logger.info('Start execution of the GCMC simulations with CASSANDRA...')
                 print('{:.^60}'.format(''))
