@@ -56,6 +56,7 @@ class GCMC(object):
 
         # Initializing text output stream, empty at the beginning
         self.input = ''
+        self.tot_sst = system.System()
         self.logger = logging.getLogger('GCMC')
 
         # Initializing dictionary that contains records that directly will be sent to the .inp file
@@ -70,7 +71,7 @@ class GCMC(object):
         # Defining the path where to write all intermediate files () and results
         pwd = os.getcwd()
         self.props_file = 'gcmc_input_file.inp'
-        tmp = kwargs.get('out_folder')  # Folder for the results
+        tmp = kwargs.get('out_folder')  # Folder for the results and intermediate files
         if tmp:
             if os.path.isabs(tmp):
                 self.out_folder = tmp
@@ -194,26 +195,42 @@ class GCMC(object):
         out_stream.close()
         self.logger.info('File: "{:}" was created sucsessfully'.format(self.props_file))
 
+    def upd_simulation(self):
+        record_list = None
+        with open('{:}{:}'.format(self.props['Run_Name'].value, '.chk'), 'r') as inp:
+            lines = inp.read()
+            all_coords = lines.split('coordinates for all the boxes')
+            raw_coords = all_coords[-1].split('\n')
+            record_list = raw_coords[1:]
+            inp.close()
+        self.tot_sst.add(self.mc_sst.make_systems(record_list))
+
+
     def __check_params__(self):
         # Synchronizing the simulation box parameters
-        dx = self.fxd_sst.dim.dx
-        dy = self.fxd_sst.dim.dy
-        dz = self.fxd_sst.dim.dz
-        if (dx == dy) and (dy == dz):
-            box_type = 'cubic'
-            box_dims = str(dx)
-        else:
-            box_type = 'orthogonal'
-            box_dims = '{0:} {1:} {2:}'.format(dx, dy, dz)
+        if self.fxd_sst:
+            dx = self.fxd_sst.dim.dx
+            dy = self.fxd_sst.dim.dy
+            dz = self.fxd_sst.dim.dz
+            if (dx == dy) and (dy == dz):
+                box_type = 'cubic'
+                box_dims = str(dx)
+            else:
+                box_type = 'orthogonal'
+                box_dims = '{0:} {1:} {2:}'.format(dx, dy, dz)
 
-        upd_vals = OrderedDict([('box_count', 1),
-                                ('box_type', box_type),
-                                ('box_size', box_dims)])
-        if ('Box_Info' in self.props.keys()) and isinstance(self.props['Box_Info'], InpSpec):
-            self.props['Box_Info'] = InpSpec('Box_Info', upd_vals, None, **{'new_line': True})
-        else:
-            self.props['Box_Info'] = upd_vals
+            upd_vals = OrderedDict([('box_count', 1),
+                                    ('box_type', box_type),
+                                    ('box_size', box_dims)])
+            if ('Box_Info' in self.props.keys()) and isinstance(self.props['Box_Info'], InpSpec):
+                self.props['Box_Info'] = InpSpec('Box_Info', upd_vals, None, **{'new_line': True})
+            else:
+                self.props['Box_Info'] = upd_vals
 
+        tmp = self.props['Box_Info'].value['box_size']
+        if self.props['Box_Info'].value['box_type'] == 'cubic':
+            tmp = [tmp] * 3
+        self.tot_sst.dim = system.Dimension(center=True, dx=tmp[0], dy=tmp[1], dz=tmp[2])
 
 class InpSpec(object):
     def __init__(self, key, value, default, **kwargs):
@@ -360,8 +377,22 @@ class McSystem(object):
                     out.write(tmplte.format(prt.type.name, prt.x, prt.y, prt.z))
             self.frag_file.append(fullfile)
 
-    def read_xyz(self):
-        print('Not supported yet!')
+    def make_systems(self, atoms_positions):
+        out_sst = system.System()
+        count = 0
+        while count < len(atoms_positions) - 1:
+            sys_idx = 0
+            tmp = self.sst[sys_idx].copy()
+            dictn = atoms_positions[count:(len(tmp.particles) + count)]
+            for (p, idxs) in zip(tmp.particles, range(len(tmp.particles))):
+                vals = dictn[idxs].split()
+                p.x = float(vals[1])
+                p.y = float(vals[2])
+                p.z = float(vals[3])
+            out_sst.add(tmp)
+            count += len(tmp.particles)
+        out_sst.update_tags()
+        return out_sst
 
 
 class Cassandra(object):
@@ -390,7 +421,7 @@ class Cassandra(object):
             if task.fixed_syst_mcf_file is not None:
                 McfWriter(task.fxd_sst, task.fixed_syst_mcf_file,
                           [True, False, False, False, False, True, False, False]).write()
-            if task.fxd_sst_xyz is not None:
+            if task.fxd_sst:
                 task.fxd_sst.write_xyz(task.fxd_sst_xyz)
             try:
                 self.logger.info('Start execution of the GCMC simulations with CASSANDRA...')
@@ -400,6 +431,8 @@ class Cassandra(object):
                 # p = Popen([CASSANDRA_EXEC, task.props_file], stdin=PIPE, stdout=PIPE, stderr=PIPE)
                 # outp, errst = p.communicate()
 
+                self.logger.info('Reading simulated parameters from the files')
+                task.upd_simulation()
                 # fileName = task.props['Run_Name'].value + '.xyz'
                 # self.logger.info('Updating CASSANDRA system from the file "{:}"...'.format(fileName))
                 # self.system = pysimm.system.read_xyz(fileName)
@@ -506,7 +539,6 @@ class Cassandra(object):
             # Reading the cassandra .inp file as one long string
             inp_stream = open(inp_file, 'r')
             lines = inp_stream.read()
-
             raw_props = lines.split('#')
 
             for prop in raw_props:
