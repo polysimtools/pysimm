@@ -6,10 +6,30 @@
 # License
 # ******************************************************************************
 # The MIT License (MIT)
+#
+# Copyright (c) 2017 Alexander Demidov, Michael E. Fortunato, Coray M. Colina
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
 
 from StringIO import StringIO
 import subprocess
-from subprocess import call, Popen, PIPE
 import os
 import numpy as np
 import random
@@ -19,10 +39,11 @@ from collections import Iterable, OrderedDict
 import pysimm
 from pysimm import utils, system
 
-data_path = '/home/alleksd/Work/pysimm/dat/csndra_data'
-kcalMol2K = 503.22271716452
-isomp = False
-if isomp:
+DATA_PATH = '/home/alleksd/Work/pysimm/dat/csndra_data'
+KCAL_MOL_2_K = 503.22271716452
+IS_OMP = False
+
+if IS_OMP:
     CASSANDRA_EXEC = os.environ.get('CASSANDRA_OMP_EXEC')
 else:
     CASSANDRA_EXEC = os.environ.get('CASSANDRA_EXEC')
@@ -52,7 +73,7 @@ check_cs_exec()
 class GCMC(object):
 
     def __init__(self, fxd_sst=None, mc_sst=None, **kwargs):
-        global data_path
+        global DATA_PATH
 
         # Initializing text output stream, empty at the beginning
         self.input = ''
@@ -63,7 +84,7 @@ class GCMC(object):
         self.props = OrderedDict()
 
         # Reading default properties of the GCMC simulations
-        def_dat = Cassandra().read_input(os.path.join(data_path, '_gcmc_default.inp'))
+        def_dat = Cassandra().read_input(os.path.join(DATA_PATH, '_gcmc_default.inp'))
 
         # Static (unchangeable) properties
         self.props['Sim_Type'] = InpSpec('Sim_Type', 'gcmc', 'gcmc')
@@ -120,12 +141,12 @@ class GCMC(object):
                                            random.randint(int(1e+7), int(1e+8 - 1))])
 
         # Simple (one-value) dynamic properties
-        self.props['Temperature_Info'] = InpSpec('Temperature_Info', kwargs.get('Temperature_Info'), def_dat['Temperature_Info'])
+        self.props['Temperature_Info'] = InpSpec('Temperature_Info',
+                                                 kwargs.get('Temperature_Info'), def_dat['Temperature_Info'])
         self.props['Average_Info'] = InpSpec('Average_Info', kwargs.get('Average_Info'), def_dat['Average_Info'])
         self.props['Pair_Energy'] = InpSpec('Pair_Energy', kwargs.get('Pair_Energy'), def_dat['Pair_Energy'])
         self.props['Rcutoff_Low'] = InpSpec('Rcutoff_Low', kwargs.get('Rcutoff_Low'), def_dat['Rcutoff_Low'])
         self.props['Mixing_Rule'] = InpSpec('Mixing_Rule', kwargs.get('Mixing_Rule'), def_dat['Mixing_Rule'])
-        self.props['Bond_Prob_Cutoff'] = InpSpec('Bond_Prob_Cutoff', kwargs.get('Bond_Prob_Cutoff'), def_dat['Bond_Prob_Cutoff'])
 
         # Multiple-value one/many line dynamic properties
         self.props['Run_Type'] = InpSpec('Run_Type', kwargs.get('Run_Type'), def_dat['Run_Type'])
@@ -141,23 +162,28 @@ class GCMC(object):
         self.props['Property_Info 1'] = InpSpec('Property_Info 1', kwargs.get('Property_Info'), None, **{'new_line': True})
 
         # Order of the next three items is IMPORTANT! Check the CASSANDRA spec file for further info
-        limits = [0.5] * n_spec
+        limits = [0.3] * n_spec
         if fxd_sst:
             limits[0] = 0
         self.props['Prob_Translation'] = InpProbSpec('Prob_Translation', kwargs.get('Prob_Translation'),
-                                                     OrderedDict([('tot_prob', 0.4),
+                                                     OrderedDict([('tot_prob', 0.25),
                                                                   ('limit_vals', limits)]),
                                                      **{'new_line': True, 'indicator': 'start'})
-
         tps = ['cbmc'] * n_spec
         if fxd_sst:
             tps[0] = 'none'
         self.props['Prob_Insertion'] = InpProbSpec('Prob_Insertion', kwargs.get('Prob_Insertion'),
-                                                   OrderedDict([('tot_prob', 0.3), ('types', tps)]),
+                                                   OrderedDict([('tot_prob', 0.25), ('types', tps)]),
                                                    **{'new_line': True})
+        max_ang = [180] * n_spec
+        if fxd_sst:
+            max_ang[0] = 0
+        self.props['Prob_Rotation'] = InpProbSpec('Prob_Rotation', kwargs.get('Prob_Rotation'),
+                                                  OrderedDict([('tot_prob', 0.25), ('limit_vals', max_ang)]),
+                                                  **{'new_line': True})
 
         self.props['Prob_Deletion'] = InpProbSpec('Prob_Deletion',
-                                                  kwargs.get('Prob_Deletion'), 0.3, **{'indicator': 'end'})
+                                                  kwargs.get('Prob_Deletion'), 0.25, **{'indicator': 'end'})
 
         # Synchronzing "start type" .inp record
         self.fxd_sst_xyz = ''
@@ -167,7 +193,8 @@ class GCMC(object):
             pops_list[0] = 1
             self.fxd_sst_xyz = os.path.join(self.out_folder, 'fixed_syst.xyz')
             start_type = 'read_config'
-        start_conf_dict = OrderedDict([('start_type', start_type), ('species', pops_list), ('file_name', self.fxd_sst_xyz)])
+        start_conf_dict = OrderedDict([('start_type', start_type), ('species', pops_list),
+                                       ('file_name', self.fxd_sst_xyz)])
         self.props['Start_Type'] = InpSpec('Start_Type', None, start_conf_dict)
 
         # Synchronzing Fragment files:
@@ -199,11 +226,19 @@ class GCMC(object):
         record_list = None
         with open('{:}{:}'.format(self.props['Run_Name'].value, '.chk'), 'r') as inp:
             lines = inp.read()
-            all_coords = lines.split('coordinates for all the boxes')
-            raw_coords = all_coords[-1].split('\n')
-            record_list = raw_coords[1:]
+            # Define the starting index of the lines with inserted atoms
+            start_ind = lines.find('total number of molecules')
+            end_ind = start_ind + lines[start_ind:-1].find('****', 1)
+            count_info = lines[start_ind:end_ind].split('\n')
+            offset = 1
+            if self.fxd_sst:
+                tmp = count_info[1].split()
+                offset += int(tmp[1]) * len(self.fxd_sst.particles)
+            # Grab the lines with inserted atoms
+            start_ind = lines.find('coordinates for all the boxes')
+            all_coord_lines = lines[start_ind:-1].split('\n')
             inp.close()
-        self.tot_sst.add(self.mc_sst.make_systems(record_list))
+        self.tot_sst.add(self.mc_sst.make_systems(all_coord_lines[offset:]))
 
     def __check_params__(self):
         # Synchronizing the simulation box parameters
@@ -254,7 +289,7 @@ class InpSpec(object):
             self.value = default
 
     def to_string(self):
-        if self.value:
+        if self.value is not None:
             result = '# {:}\n'.format(self.key)
             # Strings
             if isinstance(self.value, types.StringTypes):
@@ -394,7 +429,7 @@ class McSystem(object):
             self.frag_file.append(fullfile)
 
     def make_systems(self, atoms_positions):
-        out_sst = system.System()
+        out_sst = system.System(ff_class='1')
         count = 0
         while count < len(atoms_positions) - 1:
             sys_idx = 0
@@ -420,11 +455,6 @@ class Cassandra(object):
     """
 
     def __init__(self, **kwargs):
-        # Important simulation stuff
-        # self.fxd_sst = fxd
-        # self.mc_sst = mc
-
-        # Important programmatic stuff
         self.logger = logging.getLogger('CSNDRA')
         self.run_queue = []
 
@@ -468,6 +498,7 @@ class Cassandra(object):
                                       'executable path. The current path is set to:\n\n{}'.format(CASSANDRA_EXEC))
 
     def add_gcmc(self, obj1=None, obj2=None, **kwargs):
+        new_job = None
         if isinstance(obj1, GCMC):
             new_job = obj1
         elif isinstance(obj1, system.System) or isinstance(obj1, McSystem):
@@ -476,8 +507,9 @@ class Cassandra(object):
             self.logger.error('Unknown GCMC initialization. Please provide either '
                               'correct GCMC parameters or GCMC simulation object')
             exit(1)
-        new_job.__check_params__()
-        self.run_queue.append(new_job)
+        if new_job:
+            new_job.__check_params__()
+            self.run_queue.append(new_job)
 
     def __write_chk__(self, out_file):
         # Initializing output stream
@@ -698,7 +730,7 @@ class McfWriter(object):
         out.write('{0:}\n{1:}\n\n'.format(name, self.empty_line))
 
     def __write_atom_info__(self, out):
-        global kcalMol2K
+        global KCAL_MOL_2_K
         text_tag = '# Atom_Info'
         if self.syst.particles.count > 0:
             # writing section header
@@ -724,7 +756,7 @@ class McfWriter(object):
                     if hasattr(item.type, 'mass'):
                         line[3] = item.type.mass
                     if hasattr(item.type, 'epsilon'):
-                        line[6] = kcalMol2K * item.type.epsilon
+                        line[6] = KCAL_MOL_2_K * item.type.epsilon
                         line[7] = item.type.sigma
                 else:
                     continue
@@ -764,7 +796,7 @@ class McfWriter(object):
                 line_template = '{l[0]:<6d}{l[1]:<6d}{l[2]:<6d}{l[3]:<6d}{l[4]:<10}{l[5]:<13.3f}'
                 line = [count, angle.a.tag, angle.b.tag, angle.c.tag]
                 tmp = angle.type.k
-                if tmp > 200000:
+                if tmp > 5000:
                     addon = ['fixed', angle.type.theta0]
                 else:
                     addon = ['harmonic', angle.type.k, angle.type.theta0]
