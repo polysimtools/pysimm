@@ -56,7 +56,7 @@ class GCMC(object):
 
         # Initializing text output stream, empty at the beginning
         self.input = ''
-        self.tot_sst = system.System()
+        self.tot_sst = system.System(ff_class='1')
         self.logger = logging.getLogger('GCMC')
 
         # Initializing dictionary that contains records that directly will be sent to the .inp file
@@ -141,7 +141,7 @@ class GCMC(object):
         self.props['Property_Info 1'] = InpSpec('Property_Info 1', kwargs.get('Property_Info'), None, **{'new_line': True})
 
         # Order of the next three items is IMPORTANT! Check the CASSANDRA spec file for further info
-        limits = [0.36] * n_spec
+        limits = [0.5] * n_spec
         if fxd_sst:
             limits[0] = 0
         self.props['Prob_Translation'] = InpProbSpec('Prob_Translation', kwargs.get('Prob_Translation'),
@@ -205,7 +205,6 @@ class GCMC(object):
             inp.close()
         self.tot_sst.add(self.mc_sst.make_systems(record_list))
 
-
     def __check_params__(self):
         # Synchronizing the simulation box parameters
         if self.fxd_sst:
@@ -230,7 +229,8 @@ class GCMC(object):
         tmp = self.props['Box_Info'].value['box_size']
         if self.props['Box_Info'].value['box_type'] == 'cubic':
             tmp = [tmp] * 3
-        self.tot_sst.dim = system.Dimension(center=True, dx=tmp[0], dy=tmp[1], dz=tmp[2])
+        self.tot_sst.dim = system.Dimension(center=True, dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
+
 
 class InpSpec(object):
     def __init__(self, key, value, default, **kwargs):
@@ -324,9 +324,11 @@ class InpMcfSpec(InpSpec):
 class McSystem(object):
     def __init__(self, s, **kwargs):
 
+        self.logger = logging.getLogger('MC_SYSTEM')
         self.sst = self.__make_iterable__(s)
         for sst in self.sst:
             sst.zero_charge()
+            self.__check_ff_class__(sst)
         self.file_store = os.getcwd()
         self.max_ins = self.__make_iterable__(kwargs.get('max_ins')) or 10000
         self.chem_pot = self.__make_iterable__(kwargs.get('chem_pot'))
@@ -348,11 +350,25 @@ class McSystem(object):
         return frag_record
 
     def generate_mcf(self):
-        protocol = [True, True, True, False, False, True, True, False]
+        protocol = [True, True, True, False, False, True, False]
         for (sstm, count) in zip(self.sst, range(len(self.sst))):
             fullfile = os.path.join(self.file_store, '{:}{:}{:}'.format('particle', str(count + 1), '.mcf'))
-            McfWriter(sstm, fullfile, protocol).write()
+            McfWriter(sstm, fullfile).write()
             self.mcf_file.append(fullfile)
+
+    def __check_ff_class__(self, sst):
+        if isinstance(sst, system.System):
+            if sst.ff_class:
+                if not (sst.ff_class == '1'):
+                    self.logger.error('Currently cassandra supports only with **Type-I** force fields. '
+                                      'The PYSIMM systems you provided are of the different types'
+                                      'Exiting...')
+                    exit(1)
+            else:
+                self.logger.info('The Force-Field type of the system is not defined. '
+                                 'Assuming it is **Type-I** force field')
+
+                sst.ff_class = '1'
 
     # Force our fields be iterable (wrap in a list if it contains of only one item)
     def __make_iterable__(self, obj):
@@ -419,8 +435,7 @@ class Cassandra(object):
             # Write .inp file
             task.write()
             if task.fixed_syst_mcf_file is not None:
-                McfWriter(task.fxd_sst, task.fixed_syst_mcf_file,
-                          [True, False, False, False, False, True, False, False]).write()
+                McfWriter(task.fxd_sst, task.fixed_syst_mcf_file).write('atoms')
             if task.fxd_sst:
                 task.fxd_sst.write_xyz(task.fxd_sst_xyz)
             try:
@@ -658,34 +673,36 @@ class McfWriter(object):
     mcf_tags = ['# Atom_Info', '# Bond_Info', '# Angle_Info', '# Dihedral_Info',
                 '# Improper_Info', '# Intra_Scaling', '# Fragment_Info', '# Fragment_Connectivity']
 
-    def __init__(self, psm_syst, file_ref, what_to_write='all'):
+    def __init__(self, psm_syst, file_ref):
         self.out_stream = None
         self.empty_line = '0'
         self.syst = psm_syst
         self.file_ref = file_ref
-        self.tags_to_write = self.__to_tags__(what_to_write)
 
-    def write(self):
+    def write(self, typing='all'):
         # Initializing output stream
-
         with open(self.file_ref, 'w+') as out_stream:
-            for (ttwr, ind) in zip(self.tags_to_write, range(len(self.mcf_tags))):
-                if ttwr:
-                    method = getattr(self, '__write_' + str.lower(self.mcf_tags[ind][2:]) + '__')
-                    method(out_stream)
+            for (name, is_write) in zip(self.mcf_tags, self.__to_tags__(typing)):
+                if is_write:
+                    try:
+                        method = getattr(self, '__write_' + str.lower(name[2:]) + '__')
+                        method(out_stream)
+                    except AttributeError:
+                        self.__write_empty__(out_stream, name)
                 else:
-                    self.__write_empty__(out_stream, ind)
+                    self.__write_empty__(out_stream, name)
             out_stream.write('\nEND')
             out_stream.close()
 
-    def __write_empty__(self, out_stream, ind):
-        out_stream.write('{0:}\n{1:}\n\n'.format(self.mcf_tags[ind], self.empty_line))
+    def __write_empty__(self, out, name):
+        out.write('{0:}\n{1:}\n\n'.format(name, self.empty_line))
 
     def __write_atom_info__(self, out):
         global kcalMol2K
-        if out:
+        text_tag = '# Atom_Info'
+        if self.syst.particles.count > 0:
             # writing section header
-            out.write('{:}\n'.format(self.mcf_tags[0]))
+            out.write('{:}\n'.format(text_tag))
             # Verify and fix net system charge
             self.syst.zero_charge()
             # writing total number of particles
@@ -693,79 +710,92 @@ class McfWriter(object):
             count = 0
             line_template = '{l[0]:<6}{l[1]:<7}{l[2]:<5}{l[3]:<8.3f}{l[4]:<10.6f}' \
                             '{l[5]:<6}{l[6]:<11.3f}{l[7]:<9.3f}\n'
-            if self.syst.particles.count > 0:
-                for item in self.syst.particles:
-                    line = [count + 1, '', '', '', 0, 'LJ', 0, 0]
-                    if hasattr(item, 'charge'):
-                        line[4] = item.charge
-                    else:
-                        line[4] = 0
-                    if hasattr(item, 'type'):
-                        if hasattr(item.type, 'name'):
-                            line[1] = item.type.name
-                        if hasattr(item.type, 'elem'):
-                            line[2] = item.type.elem
-                        if hasattr(item.type, 'mass'):
-                            line[3] = item.type.mass
-                        if hasattr(item.type, 'epsilon'):
-                            line[6] = kcalMol2K * item.type.epsilon
-                            line[7] = item.type.sigma
-                    else:
-                        continue
-                    out.write(line_template.format(l=line))
-                    count += 1
-            out.write('\n')
+            for item in self.syst.particles:
+                line = [count + 1, '', '', '', 0, 'LJ', 0, 0]
+                if hasattr(item, 'charge'):
+                    line[4] = item.charge
+                else:
+                    line[4] = 0
+                if hasattr(item, 'type'):
+                    if hasattr(item.type, 'name'):
+                        line[1] = item.type.name
+                    if hasattr(item.type, 'elem'):
+                        line[2] = item.type.elem
+                    if hasattr(item.type, 'mass'):
+                        line[3] = item.type.mass
+                    if hasattr(item.type, 'epsilon'):
+                        line[6] = kcalMol2K * item.type.epsilon
+                        line[7] = item.type.sigma
+                else:
+                    continue
+                out.write(line_template.format(l=line))
+                count += 1
+        else:
+            self.__write_empty__(out, text_tag)
+        out.write('\n')
 
     def __write_bond_info__(self, out):
-        # writing section header
-        out.write('{:}\n'.format(self.mcf_tags[1]))
-        # writing total number of bonds
-        out.write('{0:<6}\n'.format(self.syst.bonds.count))
-        line_template = '{l[0]:<6d}{l[1]:<6d}{l[2]:<6d}{l[3]:<9}{l[4]:<6.3f}\n'
-        count = 1
-        for bond in self.syst.bonds:
-            tmp = bond.type.k
-            if tmp > 1000:
-                tmp = 'fixed'
-            line = [count, bond.a.tag, bond.b.tag, tmp, bond.type.r0]
-            count += 1
-            out.write(line_template.format(l=line))
-        out.write('\n')
+        text_tag = '# Bond_Info'
+        if self.syst.bonds.count > 0:
+            # writing section header
+            out.write('{:}\n'.format(text_tag))
+            # writing total number of bonds
+            out.write('{0:<6}\n'.format(self.syst.bonds.count))
+            line_template = '{l[0]:<6d}{l[1]:<6d}{l[2]:<6d}{l[3]:<9}{l[4]:<6.3f}\n'
+            count = 1
+            for bond in self.syst.bonds:
+                tmp = 'fixed'  # Fixed bond is the only option for CASSANDRA V-1.2
+                line = [count, bond.a.tag, bond.b.tag, tmp, bond.type.r0]
+                count += 1
+                out.write(line_template.format(l=line))
+            out.write('\n')
+        else:
+            self.__write_empty__(out, text_tag)
 
     def __write_angle_info__(self, out):
-        # writing section header
-        out.write('{:}\n'.format(self.mcf_tags[2]))
-        # writing total number of angles
-        out.write('{0:<6}\n'.format(self.syst.angles.count))
-        line_template = '{l[0]:<6d}{l[1]:<6d}{l[2]:<6d}{l[3]:<6d}{l[4]:<12}{l[5]:<6.3f}\n'
-        count = 1
-        for angle in self.syst.angles:
-            tmp = angle.type.k
-            if tmp > 1000:
-                tmp = 'fixed'
-            line = [count, angle.a.tag, angle.b.tag, angle.c.tag, tmp, angle.type.theta0]
-            count += 1
-            out.write(line_template.format(l=line))
-        out.write('\n')
+        text_tag = '# Angle_Info'
+        if self.syst.angles.count > 0:
+            # writing section header
+            out.write('{:}\n'.format(text_tag))
+            # writing total number of angles
+            out.write('{0:<6}\n'.format(self.syst.angles.count))
+            count = 1
+            for angle in self.syst.angles:
+                line_template = '{l[0]:<6d}{l[1]:<6d}{l[2]:<6d}{l[3]:<6d}{l[4]:<10}{l[5]:<13.3f}'
+                line = [count, angle.a.tag, angle.b.tag, angle.c.tag]
+                tmp = angle.type.k
+                if tmp > 200000:
+                    addon = ['fixed', angle.type.theta0]
+                else:
+                    addon = ['harmonic', angle.type.k, angle.type.theta0]
+                    line_template += '{l[6]:<13.3f}'
+                count += 1
+                out.write(line_template.format(l=line + addon) + '\n')
+            out.write('\n')
+        else:
+            self.__write_empty__(out, text_tag)
 
     def __write_intra_scaling__(self, out):
+        format_line = '{:<6.2f}{:<6.2f}{:<6.2f}{:<6.2f}'
         # writing section header
-        out.write('{:}\n'.format(self.mcf_tags[5]))
+        out.write('{:}\n'.format('# Intra_Scaling'))
         # writing vdW scaling:  1-2 1-3 1-4 1-N
-        out.write('{:<5.1f}{:<5.1f}{:<8.4f}{:<4.1f}\n'.format(0, 0, 0, 1))
+        out.write(format_line.format(0, 0, 0, 0) + '\n')
         # writing charge scaling:  1-2 1-3 1-4 1-N
-        out.write('{:<5.1f}{:<5.1f}{:<8.4f}{:<4.1f}\n\n'.format(0, 0, 0, 1))
+        out.write(format_line.format(0, 0, 0, 0) + '\n\n')
 
-    def __write_dihidral_info__(self, out):
-        print('Not supported yet')
+    def __write_dihedral_info__(self, out):
+        text_tag = '# Dihedral_Info'
+        self.__write_empty__(out, text_tag)
 
     def __write_improper_info__(self, out):
-        print('Not supported yet')
+        text_tag = '# Improper_Info'
+        self.__write_empty__(out, text_tag)
 
     def __write_fragment_info__(self, out):
         # TODO: Temporary implementation for one fragment
         # writing section header
-        out.write('{:}\n'.format(self.mcf_tags[6]))
+        out.write('{:}\n'.format('# Fragment_Info'))
         # writing indexing
         out.write('{:}\n'.format(1))
         n = len(self.syst.particles)
@@ -773,16 +803,16 @@ class McfWriter(object):
         out.write('\n\n')
 
     def __write_fragment_connectivity__(self, out):
-        print('Not supported yet')
+        text_tag = '# Fragment_Connectivity'
+        self.__write_empty__(out, text_tag)
 
     def __to_tags__(self, inpt):
-        idxs = [False] * 8
-        if inpt == 'all':
-            idxs = [True] * 8
-        elif inpt == 'atoms':
-            idxs[0] = True
-        elif isinstance(inpt, types.ListType) and (len(inpt) == 8):
-            idxs = inpt
+        n = len(self.mcf_tags)
+        idxs = [True] * n
+        if inpt.lower() == 'atoms':
+            idxs = [False] * n
+            idxs[self.mcf_tags.index('# Atom_Info')] = True
+            idxs[self.mcf_tags.index('# Intra_Scaling')] = True
         return idxs
 
 
