@@ -38,9 +38,10 @@ import types
 from collections import Iterable, OrderedDict
 import pysimm
 from pysimm import utils, system
+from string import ascii_uppercase
 
 DATA_PATH = '/home/alleksd/Work/pysimm/dat/csndra_data'
-KCAL_MOL_2_K = 503.22271716452
+KCALMOL_2_K = 503.22271716452
 IS_OMP = False
 
 if IS_OMP:
@@ -112,7 +113,11 @@ class GCMC(object):
         self.fxd_sst = fxd_sst
         self.fixed_syst_mcf_file = None
         if self.fxd_sst:
-            self.fxd_sst.zero_charge()
+            # Check few things of the system in order for CASSANDRA not to raise an exception
+            self.fxd_sst.zero_charge()         # 1) the sum of the charges should be 0
+            self.fxd_sst.wrap()                # 2) the system should be wrapped
+            self.fxd_sst.center_at_origin()    # 3) the center of the box around the system should be at origin
+            self.tot_sst.add(fxd_sst)
             self.fixed_syst_mcf_file = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fixed_syst_mcf_file, 1]
             fs_count = 1
@@ -240,6 +245,33 @@ class GCMC(object):
             inp.close()
         self.tot_sst.add(self.mc_sst.make_systems(all_coord_lines[offset:]))
 
+    def get_shake_string(self, **kwargs):
+        str_id = kwargs.get('str_id') or 5
+        group_id = kwargs.get('group_id') or 'all'
+        toler = kwargs.get('toler') or 1E-4
+        n_iter = kwargs.get('n_iter') or 20
+        n_iter_show = kwargs.get('n_iter_show') or 0
+
+        out_string = ''
+        b = []
+        for bt in self.tot_sst.bond_types:
+            if hasattr(bt, 'is_fixed') and bt.is_fixed:
+                b.append(bt.tag)
+        a = []
+        for at in self.tot_sst.angle_types:
+            if hasattr(at, 'is_fixed') and at.is_fixed:
+                a.append(at.tag)
+        if len(b) + len(a) > 0:
+            out_string = 'fix {:d} {:s} shake {:1.4f} {:d} {:d} '
+            out_string = out_string.format(str_id, group_id, toler, n_iter, n_iter_show)
+            if len(b) > 0:
+                out_string += 'b {:s} '
+                out_string = out_string.format(' '.join((str(i) for i in b)))
+            if len(a) > 0:
+                out_string += 'a {:s} '
+                out_string = out_string.format(' '.join((str(i) for i in a)))
+        return out_string
+
     def __check_params__(self):
         # Synchronizing the simulation box parameters
         if self.fxd_sst:
@@ -341,19 +373,19 @@ class InpProbSpec(InpSpec):
         return tmp
 
 
-class InpFileSpec(InpSpec):
-    def __init__(self, key, value, default, **kwargs):
-        super(InpFileSpec, self).__init__(key, value, default, **kwargs)
+# class InpFileSpec(InpSpec):
+#     def __init__(self, key, value, default, **kwargs):
+#         super(InpFileSpec, self).__init__(key, value, default, **kwargs)
+#
+#         the_name = self.value['file_name']
+#         # Check the existence of the file-type variables. Continue only when the files exist!
+#         if the_name & (not os.path.isfile(the_name)):
+#             print("ERROR: cannot find a file " + the_name + ".\n Please specify the file.\n" + " Aborting execution")
 
-        the_name = self.value['file_name']
-        # Check the existence of the file-type variables. Continue only when the files exist!
-        if the_name & (not os.path.isfile(the_name)):
-            print("ERROR: cannot find a file " + the_name + ".\n Please specify the file.\n" + " Aborting execution")
 
-
-class InpMcfSpec(InpSpec):
-    def __init__(self, key, value, default, **kwargs):
-        super(InpMcfSpec, self).__init__(key, value, default, **kwargs)
+# class InpMcfSpec(InpSpec):
+#     def __init__(self, key, value, default, **kwargs):
+#         super(InpMcfSpec, self).__init__(key, value, default, **kwargs)
 
 
 class McSystem(object):
@@ -364,6 +396,8 @@ class McSystem(object):
         for sst in self.sst:
             sst.zero_charge()
             self.__check_ff_class__(sst)
+            self.__mark_fixed__(sst)
+
         self.file_store = os.getcwd()
         self.max_ins = self.__make_iterable__(kwargs.get('max_ins')) or 10000
         self.chem_pot = self.__make_iterable__(kwargs.get('chem_pot'))
@@ -385,9 +419,12 @@ class McSystem(object):
         return frag_record
 
     def generate_mcf(self):
-        protocol = [True, True, True, False, False, True, False]
+        al_ind = 0
         for (sstm, count) in zip(self.sst, range(len(self.sst))):
             fullfile = os.path.join(self.file_store, '{:}{:}{:}'.format('particle', str(count + 1), '.mcf'))
+            for p_type in sstm.particle_types:
+                p_type.mcf_alias = ascii_uppercase[int(al_ind / 10)] + str(al_ind % 10)
+                al_ind += 1
             McfWriter(sstm, fullfile).write()
             self.mcf_file.append(fullfile)
 
@@ -412,7 +449,7 @@ class McSystem(object):
             it_obj = [obj]
         return it_obj
 
-    # Now is private because it is works only for single-configuration fragment file
+    # Now is private because it is works only for single-configuration (rigid) fragment file
     def __generate_frag_file__(self):
         if self.temperature is None:
             self.temperature = 300
@@ -428,22 +465,39 @@ class McSystem(object):
                     out.write(tmplte.format(prt.type.name, prt.x, prt.y, prt.z))
             self.frag_file.append(fullfile)
 
-    def make_systems(self, atoms_positions):
+    def make_systems(self, text_output):
         out_sst = system.System(ff_class='1')
         count = 0
-        while count < len(atoms_positions) - 1:
+        while count < len(text_output) - 1:
+            # TODO: make it work for more than one molecule (sys_idx might br > 0)
             sys_idx = 0
             tmp = self.sst[sys_idx].copy()
-            dictn = atoms_positions[count:(len(tmp.particles) + count)]
+            dictn = text_output[count:(len(tmp.particles) + count)]
             for (p, idxs) in zip(tmp.particles, range(len(tmp.particles))):
                 vals = dictn[idxs].split()
+                # Read the coordinates from the text output of the CASSANDRA simulation
                 p.x = float(vals[1])
                 p.y = float(vals[2])
                 p.z = float(vals[3])
+                # Force velocities of the particle to be 0
+                p.vx = 0.0
+                p.vy = 0.0
+                p.vz = 0.0
             out_sst.add(tmp)
             count += len(tmp.particles)
         out_sst.update_tags()
+        out_sst.objectify()
         return out_sst
+
+    def __mark_fixed__(self, sst):
+        max_k_bond = 3000
+        max_k_angle = 3000
+        for bt in sst.bond_types:
+            if bt.k > max_k_bond:
+                bt.is_fixed = True
+        for at in sst.angle_types:
+            if at.k > max_k_angle:
+                at.is_fixed = True
 
 
 class Cassandra(object):
@@ -705,7 +759,7 @@ class McfWriter(object):
     mcf_tags = ['# Atom_Info', '# Bond_Info', '# Angle_Info', '# Dihedral_Info',
                 '# Improper_Info', '# Intra_Scaling', '# Fragment_Info', '# Fragment_Connectivity']
 
-    def __init__(self, psm_syst, file_ref):
+    def __init__(self, psm_syst, file_ref, **kwargs):
         self.out_stream = None
         self.empty_line = '0'
         self.syst = psm_syst
@@ -730,7 +784,7 @@ class McfWriter(object):
         out.write('{0:}\n{1:}\n\n'.format(name, self.empty_line))
 
     def __write_atom_info__(self, out):
-        global KCAL_MOL_2_K
+        global KCALMOL_2_K
         text_tag = '# Atom_Info'
         if self.syst.particles.count > 0:
             # writing section header
@@ -752,11 +806,14 @@ class McfWriter(object):
                     if hasattr(item.type, 'name'):
                         line[1] = item.type.name
                     if hasattr(item.type, 'elem'):
-                        line[2] = item.type.elem
+                        if hasattr(item.type, 'mcf_alias'):
+                            line[2] = item.type.mcf_alias
+                        else:
+                            line[2] = item.type.elem
                     if hasattr(item.type, 'mass'):
                         line[3] = item.type.mass
                     if hasattr(item.type, 'epsilon'):
-                        line[6] = KCAL_MOL_2_K * item.type.epsilon
+                        line[6] = KCALMOL_2_K * item.type.epsilon
                         line[7] = item.type.sigma
                 else:
                     continue
@@ -795,8 +852,7 @@ class McfWriter(object):
             for angle in self.syst.angles:
                 line_template = '{l[0]:<6d}{l[1]:<6d}{l[2]:<6d}{l[3]:<6d}{l[4]:<10}{l[5]:<13.3f}'
                 line = [count, angle.a.tag, angle.b.tag, angle.c.tag]
-                tmp = angle.type.k
-                if tmp > 5000:
+                if hasattr(angle.type, 'is_fixed') and angle.type.is_fixed:
                     addon = ['fixed', angle.type.theta0]
                 else:
                     addon = ['harmonic', angle.type.k, angle.type.theta0]
