@@ -73,7 +73,7 @@ check_cs_exec()
 
 class GCMC(object):
 
-    def __init__(self, fxd_sst=None, mc_sst=None, **kwargs):
+    def __init__(self, mc_sst=None, fxd_sst=None, **kwargs):
         global DATA_PATH
 
         # Initializing text output stream, empty at the beginning
@@ -200,7 +200,7 @@ class GCMC(object):
             start_type = 'read_config'
         start_conf_dict = OrderedDict([('start_type', start_type), ('species', pops_list),
                                        ('file_name', self.fxd_sst_xyz)])
-        self.props['Start_Type'] = InpSpec('Start_Type', None, start_conf_dict)
+        self.props['Start_Type'] = InpSpec('Start_Type', kwargs.get('Start_Type'), start_conf_dict)
 
         # Synchronzing Fragment files:
         frag_files = OrderedDict()
@@ -222,7 +222,7 @@ class GCMC(object):
         self.input += '\nEND'
         # Initializing output stream
         self.logger.info('Writing CASSANDRA .inp file to "{:}"...'.format(self.props_file))
-        out_stream = open(self.props_file, 'w+')
+        out_stream = open(self.props_file, 'w')
         out_stream.write('{:}'.format(self.input))
         out_stream.close()
         self.logger.info('File: "{:}" was created sucsessfully'.format(self.props_file))
@@ -243,7 +243,8 @@ class GCMC(object):
             start_ind = lines.find('coordinates for all the boxes')
             all_coord_lines = lines[start_ind:-1].split('\n')
             inp.close()
-        self.tot_sst.add(self.mc_sst.make_systems(all_coord_lines[offset:]))
+        self.mc_sst.make_system(all_coord_lines[offset:])
+        self.tot_sst.add(self.mc_sst.simul_sst)
 
     def get_shake_string(self, **kwargs):
         str_id = kwargs.get('str_id') or 5
@@ -271,6 +272,22 @@ class GCMC(object):
                 out_string += 'a {:s} '
                 out_string = out_string.format(' '.join((str(i) for i in a)))
         return out_string
+
+    def make_rigid(self):
+        for bt in self.tot_sst.bond_types:
+            if bt.is_fixed:
+                bt.k = 1000000
+        for at in self.tot_sst.angle_types:
+            if at.is_fixed:
+                at.k = 1000000
+
+    def make_loose(self):
+        for bt in self.tot_sst.bond_types:
+            if bt.is_fixed:
+                bt.k = 3000
+        for at in self.tot_sst.angle_types:
+            if at.is_fixed:
+                at.k = 3000
 
     def __check_params__(self):
         # Synchronizing the simulation box parameters
@@ -404,6 +421,7 @@ class McSystem(object):
         self.mcf_file = []
         self.frag_file = []
         self.temperature = None
+        self.simul_sst = system.System(ff_class='1')
 
     def update_props(self, props):
         self.generate_mcf()
@@ -456,7 +474,7 @@ class McSystem(object):
 
         for (sstm, count) in zip(self.sst, range(len(self.sst))):
             fullfile = os.path.join(self.file_store, '{:}{:}{:}'.format('particle', str(count + 1), '.dat'))
-            with open(fullfile, 'w+') as out:
+            with open(fullfile, 'w') as out:
                 frag_count = 1
                 out.write('{:>12d}\n'.format(frag_count))
                 out.write('{:>21.14f}{:>21.14f}\n'.format(self.temperature, 0))
@@ -465,8 +483,7 @@ class McSystem(object):
                     out.write(tmplte.format(prt.type.name, prt.x, prt.y, prt.z))
             self.frag_file.append(fullfile)
 
-    def make_systems(self, text_output):
-        out_sst = system.System(ff_class='1')
+    def make_system(self, text_output):
         count = 0
         while count < len(text_output) - 1:
             # TODO: make it work for more than one molecule (sys_idx might br > 0)
@@ -483,11 +500,10 @@ class McSystem(object):
                 p.vx = 0.0
                 p.vy = 0.0
                 p.vz = 0.0
-            out_sst.add(tmp)
+            self.simul_sst.add(tmp)
             count += len(tmp.particles)
-        out_sst.update_tags()
-        out_sst.objectify()
-        return out_sst
+        self.simul_sst.update_tags()
+        self.simul_sst.objectify()
 
     def __mark_fixed__(self, sst):
         max_k_bond = 3000
@@ -512,15 +528,15 @@ class Cassandra(object):
         self.logger = logging.getLogger('CSNDRA')
         self.run_queue = []
 
-    def run(self):
+    def run(self, is_replace=False):
         global CASSANDRA_EXEC
-
         for task in self.run_queue:
             # Write .inp file
             task.write()
-            if task.fixed_syst_mcf_file is not None:
-                McfWriter(task.fxd_sst, task.fixed_syst_mcf_file).write('atoms')
+            # Write .xyz of the fixed system if provided
             if task.fxd_sst:
+                if task.fixed_syst_mcf_file is not None:
+                    McfWriter(task.fxd_sst, task.fixed_syst_mcf_file).write('atoms')
                 task.fxd_sst.write_xyz(task.fxd_sst_xyz)
             try:
                 self.logger.info('Start execution of the GCMC simulations with CASSANDRA...')
@@ -538,14 +554,11 @@ class Cassandra(object):
 
             except OSError as ose:
                 self.logger.error('There was a problem calling CASSANDRA executable')
-                # raise PysimmError('There was a problem calling CASSANDRA executable'), None, sys.exc_info()[2]
             except IOError as ioe:
                 if check_cs_exec():
-                    self.logger.error('There was a problem running CASSANDRA. The process started but did not finish'
-                                      )
+                    self.logger.error('There was a problem running CASSANDRA. The process started but did not finish')
                     # raise PysimmError('There was a problem running CASSANDRA. The process started but did not finish '
                     #                  'successfully. Check the generated log file'), None, sys.exc_info()[2]
-
                 else:
                     self.logger.error('There was a problem running CASSANDRA: seems it is not configured properly.'
                                       'Make sure the CSNDRA_EXEC environment variable is set to the correct CASSANDRA '
@@ -561,6 +574,8 @@ class Cassandra(object):
             self.logger.error('Unknown GCMC initialization. Please provide either '
                               'correct GCMC parameters or GCMC simulation object')
             exit(1)
+        if kwargs.get('is_new'):
+            self.run_queue[:] = []
         if new_job:
             new_job.__check_params__()
             self.run_queue.append(new_job)
@@ -767,7 +782,7 @@ class McfWriter(object):
 
     def write(self, typing='all'):
         # Initializing output stream
-        with open(self.file_ref, 'w+') as out_stream:
+        with open(self.file_ref, 'w') as out_stream:
             for (name, is_write) in zip(self.mcf_tags, self.__to_tags__(typing)):
                 if is_write:
                     try:
@@ -806,7 +821,7 @@ class McfWriter(object):
                     if hasattr(item.type, 'name'):
                         line[1] = item.type.name
                     if hasattr(item.type, 'elem'):
-                        if hasattr(item.type, 'mcf_alias'):
+                        if item.type.mcf_alias:
                             line[2] = item.type.mcf_alias
                         else:
                             line[2] = item.type.elem
@@ -902,5 +917,4 @@ class McfWriter(object):
             idxs[self.mcf_tags.index('# Atom_Info')] = True
             idxs[self.mcf_tags.index('# Intra_Scaling')] = True
         return idxs
-
 
