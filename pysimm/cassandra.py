@@ -31,6 +31,7 @@
 from StringIO import StringIO
 import subprocess
 import os
+import re
 import numpy as np
 import random
 import logging
@@ -50,7 +51,7 @@ else:
     CASSANDRA_EXEC = os.environ.get('CASSANDRA_EXEC')
 
 # Creating a logger instance and send its output to console 'deafault'
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s: %(message)s', datefmt='%I:%M:%S')
 
 
 def check_cs_exec():
@@ -116,7 +117,7 @@ class GCMC(object):
             # Check few things of the system in order for CASSANDRA not to raise an exception
             self.fxd_sst.zero_charge()         # 1) the sum of the charges should be 0
             self.fxd_sst.wrap()                # 2) the system should be wrapped
-            self.fxd_sst.center_at_origin()    # 3) the center of the box around the system should be at origin
+            # self.fxd_sst.center_at_origin()    # 3) the center of the box around the system should be at origin
             self.tot_sst.add(fxd_sst)
             self.fixed_syst_mcf_file = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fixed_syst_mcf_file, 1]
@@ -140,7 +141,7 @@ class GCMC(object):
         self.props['Nbr_Species'] = InpSpec('Nbr_Species', n_spec, n_spec)
         self.props['Molecule_Files'] = InpSpec('Molecule_Files', mol_files, None, **{'new_line': True})
         self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info', mc_sst.chem_pot,
-                                                        [-31.8] * (n_spec - fs_count))
+                                                        def_dat['Chemical_Potential_Info'] * (n_spec - fs_count))
         self.props['Seed_Info'] = InpSpec('Seed_Info', kwargs.get('Seed_Info'),
                                           [random.randint(int(1e+7), int(1e+8 - 1)),
                                            random.randint(int(1e+7), int(1e+8 - 1))])
@@ -273,28 +274,12 @@ class GCMC(object):
                 out_string = out_string.format(' '.join((str(i) for i in a)))
         return out_string
 
-    def make_rigid(self):
-        for bt in self.tot_sst.bond_types:
-            if bt.is_fixed:
-                bt.k = 1000000
-        for at in self.tot_sst.angle_types:
-            if at.is_fixed:
-                at.k = 1000000
-
-    def make_loose(self):
-        for bt in self.tot_sst.bond_types:
-            if bt.is_fixed:
-                bt.k = 3000
-        for at in self.tot_sst.angle_types:
-            if at.is_fixed:
-                at.k = 3000
-
     def __check_params__(self):
         # Synchronizing the simulation box parameters
         if self.fxd_sst:
-            dx = self.fxd_sst.dim.dx
-            dy = self.fxd_sst.dim.dy
-            dz = self.fxd_sst.dim.dz
+            dx = self.fxd_sst.dim.xhi - self.fxd_sst.dim.xlo
+            dy = self.fxd_sst.dim.yhi - self.fxd_sst.dim.ylo
+            dz = self.fxd_sst.dim.zhi - self.fxd_sst.dim.zlo
             if (dx == dy) and (dy == dz):
                 box_type = 'cubic'
                 box_dims = str(dx)
@@ -314,6 +299,74 @@ class GCMC(object):
         if self.props['Box_Info'].value['box_type'] == 'cubic':
             tmp = [tmp] * 3
         self.tot_sst.dim = system.Dimension(center=True, dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
+
+    def get_grouped_md(self, str_input):
+        result = str_input
+        if isinstance(result, types.StringTypes):
+            tmp = 'group '
+            m_len = len(self.fxd_sst.particles)
+            if self.fxd_sst:
+               tmp += 'matrix id 1:' + str(m_len) + '\n'
+
+            sst_tags = [[] for i in range(len(self.mc_sst.sst))]
+            for part in self.tot_sst.particles[m_len:]:
+                sst_tags[self.tot_sst.particles[part.tag].molecule.syst_tag].append(
+                    self.tot_sst.particles[part.tag].molecule.tag
+                )
+            for sst_count in range(len(self.mc_sst.sst)):
+                tags = list(set(sst_tags[sst_count]))
+                tags.sort()
+                sst_tags[sst_count] = tags
+
+            for sst_count in range(len(self.mc_sst.sst)):
+                tags = sst_tags[sst_count]
+                if len(tags) > 0:
+                    strt_idxs = [tags[0]]
+                    end_idxs = [tags[-1]]
+                    i = 0
+                    while i < len(tags) - 1:
+                        if tags[i + 1] - tags[i] > 1:
+                            end_idxs.append(tags[i])
+                            strt_idxs.append(tags[i + 1])
+                        i += 1
+
+                    tmp += 'group particles' + str(sst_count + 1) + ' molecule '
+                    if len(strt_idxs) > 1:
+                        tmp += 'union '
+                    for (st_i, fin_i) in zip(strt_idxs, end_idxs):
+                        tmp += str(st_i) + ':' + str(fin_i) + ' '
+                    tmp += '\n'
+
+            parts = result.split('thermo')
+            result = parts[0] + tmp + 'thermo' + parts[1]
+
+            tmp_parts = result.split('fix 1 all')
+            parts = list()
+
+            first = ''
+            last = result
+            if len(tmp_parts) > 1:
+                first = tmp_parts[0]
+                last = tmp_parts[1]
+            parts.append(first)
+            tmp_parts = last.split('\n', 1)
+            ensemble = tmp_parts[0].split()[0]
+            parts.append(tmp_parts[0].strip().strip(ensemble))
+            parts.append(tmp_parts[1])
+
+            tmp = ''
+            shift = 1
+            if self.fxd_sst:
+                tmp += 'fix 1 matrix ' + ensemble + parts[1] + '\n'
+                shift = 2
+
+            idx = 0
+            while idx < len(sst_tags):
+                tmp += 'fix ' + str(idx + shift) + ' particles' + str(idx + 1) + ' rigid/' + \
+                       ensemble + '/small molecule' + parts[1] + '\n'
+                idx += 1
+            result = parts[0] + tmp + parts[2]
+        return result
 
 
 class InpSpec(object):
@@ -397,7 +450,7 @@ class InpProbSpec(InpSpec):
 #         the_name = self.value['file_name']
 #         # Check the existence of the file-type variables. Continue only when the files exist!
 #         if the_name & (not os.path.isfile(the_name)):
-#             print("ERROR: cannot find a file " + the_name + ".\n Please specify the file.\n" + " Aborting execution")
+#             print("ERROR: cannot find a file " + the_name + ".\n Please specify the file.\n" + " Aborting...")
 
 
 # class InpMcfSpec(InpSpec):
@@ -486,7 +539,7 @@ class McSystem(object):
     def make_system(self, text_output):
         count = 0
         while count < len(text_output) - 1:
-            # TODO: make it work for more than one molecule (sys_idx might br > 0)
+            # TODO: make it work for more than one molecule (sys_idx might be > 0)
             sys_idx = 0
             tmp = self.sst[sys_idx].copy()
             dictn = text_output[count:(len(tmp.particles) + count)]
@@ -500,6 +553,7 @@ class McSystem(object):
                 p.vx = 0.0
                 p.vy = 0.0
                 p.vz = 0.0
+                p.molecule.syst_tag = 0
             self.simul_sst.add(tmp)
             count += len(tmp.particles)
         self.simul_sst.update_tags()
@@ -539,7 +593,7 @@ class Cassandra(object):
                     McfWriter(task.fxd_sst, task.fixed_syst_mcf_file).write('atoms')
                 task.fxd_sst.write_xyz(task.fxd_sst_xyz)
             try:
-                self.logger.info('Start execution of the GCMC simulations with CASSANDRA...')
+                self.logger.info('Start the GCMC simulations with CASSANDRA...')
                 print('{:.^60}'.format(''))
                 print(subprocess.check_output([CASSANDRA_EXEC, task.props_file]))
 
@@ -560,9 +614,10 @@ class Cassandra(object):
                     # raise PysimmError('There was a problem running CASSANDRA. The process started but did not finish '
                     #                  'successfully. Check the generated log file'), None, sys.exc_info()[2]
                 else:
-                    self.logger.error('There was a problem running CASSANDRA: seems it is not configured properly.'
-                                      'Make sure the CSNDRA_EXEC environment variable is set to the correct CASSANDRA '
-                                      'executable path. The current path is set to:\n\n{}'.format(CASSANDRA_EXEC))
+                    self.logger.error('There was a problem running CASSANDRA: seems it is not configured properly.\n'
+                                      'Please, be sure the CSNDRA_EXEC environment variable is set to the correct '
+                                      'CASSANDRA executable path. The current path is set to:'
+                                      '\n\n{}\n\n'.format(CASSANDRA_EXEC))
 
     def add_gcmc(self, obj1=None, obj2=None, **kwargs):
         new_job = None
@@ -918,3 +973,16 @@ class McfWriter(object):
             idxs[self.mcf_tags.index('# Intra_Scaling')] = True
         return idxs
 
+
+def replace_lmps_inp(lmmps_inp, comand_id, to_replace, to_erase):
+    result = lmmps_inp
+    if isinstance(lmmps_inp, types.StringTypes):
+        comand = comand_id.strip().split()
+        tmp = ''
+        if len(comand) == 2:
+            tmp = '\s+' + comand[1]
+
+        cmd_line_old = re.search('(?<=(' + comand[0] + tmp + ')).*', lmmps_inp).group(0)
+        cmd_line_new = re.sub(to_erase, to_replace, cmd_line_old)
+        result = re.sub(cmd_line_old, cmd_line_new, lmmps_inp)
+    return result
