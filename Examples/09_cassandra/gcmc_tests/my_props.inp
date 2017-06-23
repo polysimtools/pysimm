@@ -1,0 +1,55 @@
+# Temperature_Info
+300
+!^^^^^^^^^^^^^^^^^^^^
+
+# Average_Info
+1
+!^^^^^^^^^^^^^^^^^^^^
+
+# Pair_Energy
+true
+!^^^^^^^^^^^^^^^^^^^^
+
+# Rcutoff_Low
+1.0
+!^^^^^^^^^^^^^^^^^^^^
+
+# Mixing_Rule
+lb
+!^^^^^^^^^^^^^^^^^^^^
+
+# Bond_Prob_Cutoff
+1e-10
+!^^^^^^^^^^^^^^^^^^^^
+
+# Run_Type
+Equilibration 100
+!^^^^^^^^^^^^^^^^^^^^
+
+# Charge_Style
+coul ewald 14.0 1e-05
+!^^^^^^^^^^^^^^^^^^^^
+
+# VDW_Style
+lj cut_tail 14.0
+!^^^^^^^^^^^^^^^^^^^^
+
+# Simulation_Length_Info
+units   steps
+prop_freq   5000
+coord_freq   10000
+run   10000
+!^^^^^^^^^^^^^^^^^^^^
+
+# CBMC_Info
+kappa_ins   12
+kappa_dih   10
+rcut_cbmc   2
+!^^^^^^^^^^^^^^^^^^^^
+
+# Property_Info 1
+nmols
+energy_total
+!^^^^^^^^^^^^^^^^^^^^
+
+END
