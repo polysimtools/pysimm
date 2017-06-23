@@ -209,7 +209,7 @@ class MolecularDynamics(object):
         if self.ensemble == 'nvt':
             self.input += 'fix 1 all %s temp %s %s 100\n' % (self.ensemble, self.t_start, self.t_stop)
         elif self.ensemble == 'npt':
-            self.input += ('fix 1 all %s temp %s %s 100 iso %s %s 100\n'
+            self.input += ('fix 1 all %s temp %s %s 100 iso %s %s 1000\n'
                            % (self.ensemble, self.t_start, self.t_stop, self.p_start, self.p_stop))
         elif self.ensemble == 'nve' and self.limit:
             self.input += 'fix 1 all %s/limit %s\n' % (self.ensemble, self.limit)
@@ -396,6 +396,7 @@ class Simulation(object):
         self.name = kwargs.get('name') or False
         self.log = kwargs.get('log')
         self.write = kwargs.get('write') or False
+        self.dump_unwraped = kwargs.get('dump_unwraped') or False
 
         self.input = ''
         self.custom = kwargs.get('custom')
@@ -490,8 +491,11 @@ class Simulation(object):
 
         for template in self.sim:
             self.input += template.write(self)
-            
-        self.input += 'write_dump all custom pysimm.dump.tmp id q x y z vx vy vz\n'
+
+        line = 'write_dump all custom pysimm.dump.tmp id q x y z vx vy vz\n'
+        if self.dump_unwraped:
+            line = line.replace('x y z', 'xu yu zu')
+        self.input += line
 
         self.input += 'quit\n'
 
@@ -783,7 +787,7 @@ def md(s, template=None, **kwargs):
     if ensemble == 'nvt':
         command += 'fix 1 all %s temp %s %s 100\n' % (ensemble, t_start, t_stop)
     elif ensemble == 'npt':
-        command += ('fix 1 all %s temp %s %s 100 iso %s %s 100\n'
+        command += ('fix 1 all %s temp %s %s 100 iso %s %s 1000\n'
                     % (ensemble, t_start, t_stop, pressure, pressure))
     if new_v:
         command += 'velocity all create %s %s\n' % (t_start, seed)

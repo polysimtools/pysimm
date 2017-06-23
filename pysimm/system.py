@@ -562,10 +562,10 @@ class System(object):
 
         for b in self.bonds:
             new_b = b.copy()
-            new_b.a=new.particles[b.a.tag]
-            new_b.b=new.particles[b.b.tag]
+            new_b.a = new.particles[b.a.tag]
+            new_b.b = new.particles[b.b.tag]
             if b.type:
-                new_b.type=new.bond_types[b.type.tag]
+                new_b.type = new.bond_types[b.type.tag]
             new.bonds.add(new_b)
             new_b.a.molecule.bonds.add(new_b)
             new_b.a.bonds.add(new_b)
@@ -897,6 +897,25 @@ class System(object):
         self.dim.xlo -= self.dim.xlo
         self.dim.ylo -= self.dim.ylo
         self.dim.zlo -= self.dim.zlo
+
+    def center_system(self):
+        shiftx = (self.dim.xhi - self.dim.xlo) / 2.0
+        shifty = (self.dim.yhi - self.dim.ylo) / 2.0
+        shiftz = (self.dim.zhi - self.dim.zlo) / 2.0
+        shiftvaluex = self.dim.xhi - shiftx
+        shiftvaluey = self.dim.yhi - shifty
+        shiftvaluez = self.dim.zhi - shiftz
+        for p in self.particles:
+                p.x -= shiftvaluex
+                p.y -= shiftvaluey
+                p.z -= shiftvaluez
+
+        self.dim.xhi = shiftx
+        self.dim.xlo = -shiftx
+        self.dim.yhi = shifty
+        self.dim.ylo = -shifty
+        self.dim.zhi = shiftz
+        self.dim.zlo = -shiftz
 
     def set_charge(self):
         """pysimm.system.System.set_charge
@@ -2464,7 +2483,7 @@ class System(object):
                 if not p.vy:
                     p.vy = 0.
                 if not p.vz:
-                    p.vz = 0
+                    p.vz = 0.
                 out_file.write('%4d\t%s\t%s\t%s\n' % (p.tag, p.vx, p.vy, p.vz))
             out_file.write('\n')
 
@@ -4122,7 +4141,7 @@ def read_cml(cml_file, **kwargs):
     bonds = root.find('bondArray')
 
     for p_ in particles:
-        tag = int(p_.attrib['id'].replace('a', ''))
+        tag = int(p_.attrib['id'].replace('a', '').replace(',', ''))
         elem = p_.attrib['elementType']
         x = float(p_.attrib['x3'])
         y = float(p_.attrib['y3'])
@@ -4137,8 +4156,8 @@ def read_cml(cml_file, **kwargs):
 
     for b_ in bonds:
         a, b = b_.attrib['atomRefs2'].split()
-        a = int(a.replace('a', ''))
-        b = int(b.replace('a', ''))
+        a = int(a.replace('a', '').replace(',', ''))
+        b = int(b.replace('a', '').replace(',', ''))
         order = b_.attrib['order']
         if order == 'A':
             order = 4
