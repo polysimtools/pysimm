@@ -37,24 +37,24 @@ import random
 import logging
 import types
 from collections import Iterable, OrderedDict
-import pysimm
-from pysimm import utils, system
+from pysimm import system
 from string import ascii_uppercase
 
 DATA_PATH = '/home/alleksd/Work/pysimm/dat/csndra_data'
 KCALMOL_2_K = 503.22271716452
-IS_OMP = False
+IS_OMP = True
 
+CASSANDRA_EXEC = os.environ.get('CASSANDRA_EXEC')
 if IS_OMP:
     CASSANDRA_EXEC = os.environ.get('CASSANDRA_OMP_EXEC')
-else:
-    CASSANDRA_EXEC = os.environ.get('CASSANDRA_EXEC')
 
 # Creating a logger instance and send its output to console 'deafault'
-logging.basicConfig(level=logging.INFO, format='%(asctime)s: %(message)s', datefmt='%I:%M:%S')
+logging.basicConfig(level=logging.INFO, datefmt='%H:%M:%S',
+                    format='[%(levelname)s] %(asctime)s: %(message)s')
 
 
 def check_cs_exec():
+    global CASSANDRA_EXEC
     if CASSANDRA_EXEC is None:
         print('Please specify the OS environment variable ''CASSANDRA_EXEC'' that points to '
               'CASSANDRA compiled binary file ( cassandra_{compiler-name}[_openMP].exe )')
@@ -116,8 +116,7 @@ class GCMC(object):
         if self.fxd_sst:
             # Check few things of the system in order for CASSANDRA not to raise an exception
             self.fxd_sst.zero_charge()         # 1) the sum of the charges should be 0
-            self.fxd_sst.wrap()                # 2) the system should be wrapped
-            # self.fxd_sst.center_at_origin()    # 3) the center of the box around the system should be at origin
+            self.fxd_sst.center_system()       # 2) the center of the box around the system should be at origin
             self.tot_sst.add(fxd_sst)
             self.fixed_syst_mcf_file = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fixed_syst_mcf_file, 1]
@@ -245,7 +244,7 @@ class GCMC(object):
             all_coord_lines = lines[start_ind:-1].split('\n')
             inp.close()
         self.mc_sst.make_system(all_coord_lines[offset:])
-        self.tot_sst.add(self.mc_sst.simul_sst)
+        self.tot_sst.add(self.mc_sst.simul_sst, change_dim=False)
 
     def get_shake_string(self, **kwargs):
         str_id = kwargs.get('str_id') or 5
@@ -304,39 +303,14 @@ class GCMC(object):
         result = str_input
         if isinstance(result, types.StringTypes):
             tmp = 'group '
-            m_len = len(self.fxd_sst.particles)
+
+            m_len = 0
             if self.fxd_sst:
+               m_len = len(self.fxd_sst.particles)
                tmp += 'matrix id 1:' + str(m_len) + '\n'
 
-            sst_tags = [[] for i in range(len(self.mc_sst.sst))]
-            for part in self.tot_sst.particles[m_len:]:
-                sst_tags[self.tot_sst.particles[part.tag].molecule.syst_tag].append(
-                    self.tot_sst.particles[part.tag].molecule.tag
-                )
-            for sst_count in range(len(self.mc_sst.sst)):
-                tags = list(set(sst_tags[sst_count]))
-                tags.sort()
-                sst_tags[sst_count] = tags
-
-            for sst_count in range(len(self.mc_sst.sst)):
-                tags = sst_tags[sst_count]
-                if len(tags) > 0:
-                    strt_idxs = [tags[0]]
-                    end_idxs = [tags[-1]]
-                    i = 0
-                    while i < len(tags) - 1:
-                        if tags[i + 1] - tags[i] > 1:
-                            end_idxs.append(tags[i])
-                            strt_idxs.append(tags[i + 1])
-                        i += 1
-
-                    tmp += 'group particles' + str(sst_count + 1) + ' molecule '
-                    if len(strt_idxs) > 1:
-                        tmp += 'union '
-                    for (st_i, fin_i) in zip(strt_idxs, end_idxs):
-                        tmp += str(st_i) + ':' + str(fin_i) + ' '
-                    tmp += '\n'
-
+            # All gas molecules go in one group and all assumed to be fixed
+            tmp += 'group gas id ' + str(m_len + 1) + ':' + str(len(self.tot_sst.particles)) + '\n'
             parts = result.split('thermo')
             result = parts[0] + tmp + 'thermo' + parts[1]
 
@@ -359,12 +333,7 @@ class GCMC(object):
             if self.fxd_sst:
                 tmp += 'fix 1 matrix ' + ensemble + parts[1] + '\n'
                 shift = 2
-
-            idx = 0
-            while idx < len(sst_tags):
-                tmp += 'fix ' + str(idx + shift) + ' particles' + str(idx + 1) + ' rigid/' + \
-                       ensemble + '/small molecule' + parts[1] + '\n'
-                idx += 1
+            tmp += 'fix 2 gas rigid/' + ensemble + '/small molecule' + parts[1] + '\n'
             result = parts[0] + tmp + parts[2]
         return result
 
@@ -443,21 +412,6 @@ class InpProbSpec(InpSpec):
         return tmp
 
 
-# class InpFileSpec(InpSpec):
-#     def __init__(self, key, value, default, **kwargs):
-#         super(InpFileSpec, self).__init__(key, value, default, **kwargs)
-#
-#         the_name = self.value['file_name']
-#         # Check the existence of the file-type variables. Continue only when the files exist!
-#         if the_name & (not os.path.isfile(the_name)):
-#             print("ERROR: cannot find a file " + the_name + ".\n Please specify the file.\n" + " Aborting...")
-
-
-# class InpMcfSpec(InpSpec):
-#     def __init__(self, key, value, default, **kwargs):
-#         super(InpMcfSpec, self).__init__(key, value, default, **kwargs)
-
-
 class McSystem(object):
     def __init__(self, s, **kwargs):
 
@@ -509,7 +463,7 @@ class McSystem(object):
                     exit(1)
             else:
                 self.logger.info('The Force-Field type of the system is not defined. '
-                                 'Assuming it is **Type-I** force field')
+                                 'Assuming it is **Type-1** force field')
 
                 sst.ff_class = '1'
 
@@ -573,7 +527,7 @@ class McSystem(object):
 class Cassandra(object):
     """
     pysimm.cassandra.Cassandra
-    Organizational object for Cassandra simulation that is able to run
+    Organizational object for CASSANDRA simulation that is able to run
     e.g. Gibbs Canonical Monte-Carlo (GCMC) simulations (see the GCMC class)
 
     """
@@ -595,29 +549,27 @@ class Cassandra(object):
             try:
                 self.logger.info('Start the GCMC simulations with CASSANDRA...')
                 print('{:.^60}'.format(''))
-                print(subprocess.check_output([CASSANDRA_EXEC, task.props_file]))
-
-                # p = Popen([CASSANDRA_EXEC, task.props_file], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-                # outp, errst = p.communicate()
-
-                self.logger.info('Reading simulated parameters from the files')
+                subprocess.call([CASSANDRA_EXEC, task.props_file])
+                self.logger.info('Updating MC system from the CASSANDRA files')
                 task.upd_simulation()
+
                 # fileName = task.props['Run_Name'].value + '.xyz'
                 # self.logger.info('Updating CASSANDRA system from the file "{:}"...'.format(fileName))
                 # self.system = pysimm.system.read_xyz(fileName)
 
             except OSError as ose:
                 self.logger.error('There was a problem calling CASSANDRA executable')
+                exit(1)
             except IOError as ioe:
                 if check_cs_exec():
                     self.logger.error('There was a problem running CASSANDRA. The process started but did not finish')
-                    # raise PysimmError('There was a problem running CASSANDRA. The process started but did not finish '
-                    #                  'successfully. Check the generated log file'), None, sys.exc_info()[2]
+                    exit(1)
                 else:
                     self.logger.error('There was a problem running CASSANDRA: seems it is not configured properly.\n'
                                       'Please, be sure the CSNDRA_EXEC environment variable is set to the correct '
                                       'CASSANDRA executable path. The current path is set to:'
                                       '\n\n{}\n\n'.format(CASSANDRA_EXEC))
+                    exit(1)
 
     def add_gcmc(self, obj1=None, obj2=None, **kwargs):
         new_job = None
