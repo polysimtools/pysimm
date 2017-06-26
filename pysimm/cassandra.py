@@ -40,13 +40,10 @@ from collections import Iterable, OrderedDict
 from pysimm import system
 from string import ascii_uppercase
 
-DATA_PATH = '/home/alleksd/Work/pysimm/dat/csndra_data'
+DATA_PATH = os.path.relpath(os.path.join(os.path.dirname(system.__file__), '../dat/csndra_data'))
 KCALMOL_2_K = 503.22271716452
-IS_OMP = True
 
 CASSANDRA_EXEC = os.environ.get('CASSANDRA_EXEC')
-if IS_OMP:
-    CASSANDRA_EXEC = os.environ.get('CASSANDRA_OMP_EXEC')
 
 # Creating a logger instance and send its output to console 'deafault'
 logging.basicConfig(level=logging.INFO, datefmt='%H:%M:%S',
@@ -57,7 +54,7 @@ def check_cs_exec():
     global CASSANDRA_EXEC
     if CASSANDRA_EXEC is None:
         print('Please specify the OS environment variable ''CASSANDRA_EXEC'' that points to '
-              'CASSANDRA compiled binary file ( cassandra_{compiler-name}[_openMP].exe )')
+              'CASSANDRA compiled binary file, which is by default cassandra_{compiler-name}[_openMP].exe ')
         return False
     # else:
     #     try:
@@ -92,16 +89,14 @@ class GCMC(object):
         self.props['Sim_Type'] = InpSpec('Sim_Type', 'gcmc', 'gcmc')
 
         # Defining the path where to write all intermediate files () and results
-        pwd = os.getcwd()
         self.props_file = 'gcmc_input_file.inp'
         tmp = kwargs.get('out_folder')  # Folder for the results and intermediate files
         if tmp:
+            self.out_folder = tmp
             if os.path.isabs(tmp):
-                self.out_folder = tmp
-            else:
-                self.out_folder = os.path.join(pwd, tmp)
+                self.out_folder = os.path.relpath(tmp)
         else:
-            self.out_folder = pwd
+            self.out_folder = os.getcwd()
         if not os.path.exists(self.out_folder):
             os.makedirs(self.out_folder)
         prefix = kwargs.get('Run_Name') or def_dat['Run_Name']
@@ -228,7 +223,6 @@ class GCMC(object):
         self.logger.info('File: "{:}" was created sucsessfully'.format(self.props_file))
 
     def upd_simulation(self):
-        record_list = None
         with open('{:}{:}'.format(self.props['Run_Name'].value, '.chk'), 'r') as inp:
             lines = inp.read()
             # Define the starting index of the lines with inserted atoms
