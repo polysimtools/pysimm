@@ -407,7 +407,7 @@ class InpProbSpec(InpSpec):
 
 
 class McSystem(object):
-    def __init__(self, s, **kwargs):
+    def __init__(self, s, chem_pot, **kwargs):
 
         self.logger = logging.getLogger('MC_SYSTEM')
         self.sst = self.__make_iterable__(s)
@@ -417,8 +417,9 @@ class McSystem(object):
             self.__mark_fixed__(sst)
 
         self.file_store = os.getcwd()
-        self.max_ins = self.__make_iterable__(kwargs.get('max_ins')) or 10000
-        self.chem_pot = self.__make_iterable__(kwargs.get('chem_pot'))
+        self.max_ins = self.__make_iterable__(kwargs.get('max_ins') or 10000)
+        self.chem_pot = self.__make_iterable__(chem_pot)
+        self.made_ins = [0] * len(s)
         self.mcf_file = []
         self.frag_file = []
         self.temperature = None
@@ -486,26 +487,52 @@ class McSystem(object):
 
     def make_system(self, text_output):
         count = 0
+        sys_idx = 0
         while count < len(text_output) - 1:
-            # TODO: make it work for more than one molecule (sys_idx might be > 0)
-            sys_idx = 0
             tmp = self.sst[sys_idx].copy()
             dictn = text_output[count:(len(tmp.particles) + count)]
-            for (p, idxs) in zip(tmp.particles, range(len(tmp.particles))):
-                vals = dictn[idxs].split()
-                # Read the coordinates from the text output of the CASSANDRA simulation
-                p.x = float(vals[1])
-                p.y = float(vals[2])
-                p.z = float(vals[3])
-                # Force velocities of the particle to be 0
-                p.vx = 0.0
-                p.vy = 0.0
-                p.vz = 0.0
-                p.molecule.syst_tag = 0
-            self.simul_sst.add(tmp)
-            count += len(tmp.particles)
+            if self.__fit_atoms__(tmp, dictn):
+                for p in tmp.particles:
+                    vals = dictn[p.tag - 1].split()
+                    # Read the coordinates from the text output of the CASSANDRA simulation
+                    p.x = float(vals[1])
+                    p.y = float(vals[2])
+                    p.z = float(vals[3])
+                    # Force velocities of the particle to be 0
+                    p.vx = 0.0
+                    p.vy = 0.0
+                    p.vz = 0.0
+                    p.molecule.syst_tag = 0
+                self.simul_sst.add(tmp)
+                self.made_ins[sys_idx] += 1
+                count += len(tmp.particles)
+                sys_idx = 0
+            else:
+                sys_idx += 1
+                if sys_idx >= len(self.sst):
+                    self.logger.error('Wasn\'t able to read CASSANDRA .chk file. '
+                                      'Please check either MC-simulation provided to PySIMM or the CASSANDRA '
+                                      'checkpoint file ')
+                    exit(1)
         self.simul_sst.update_tags()
         self.simul_sst.objectify()
+
+    def __fit_atoms__(self, molec, text_lines):
+        flag = True
+        # Cannot map anything if number of molecules is different from number of data lines
+        if len(molec.particles) != len(text_lines):
+            return False
+        # Check the sequence of element names they
+        for p in molec.particles:
+            vals = text_lines[p.tag - 1].split()
+
+            if vals[0] != p.type.elem:
+                if hasattr(p.type, 'mcf_alias'):
+                    if vals[0] != p.type.mcf_alias:
+                        return False
+                else:
+                    return False
+        return flag
 
     def __mark_fixed__(self, sst):
         max_k_bond = 3000
@@ -541,7 +568,7 @@ class Cassandra(object):
                     McfWriter(task.fxd_sst, task.fixed_syst_mcf_file).write('atoms')
                 task.fxd_sst.write_xyz(task.fxd_sst_xyz)
             try:
-                self.logger.info('Start the GCMC simulations with CASSANDRA...')
+                self.logger.info('Starting the GCMC simulations with CASSANDRA...')
                 print('{:.^60}'.format(''))
                 subprocess.call([CASSANDRA_EXEC, task.props_file])
                 self.logger.info('Updating MC system from the CASSANDRA files')
