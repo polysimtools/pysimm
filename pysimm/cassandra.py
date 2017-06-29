@@ -223,49 +223,31 @@ class GCMC(object):
         self.logger.info('File: "{:}" was created sucsessfully'.format(self.props_file))
 
     def upd_simulation(self):
-        with open('{:}{:}'.format(self.props['Run_Name'].value, '.chk'), 'r') as inp:
-            lines = inp.read()
-            # Define the starting index of the lines with inserted atoms
-            start_ind = lines.find('total number of molecules')
-            end_ind = start_ind + lines[start_ind:-1].find('****', 1)
-            count_info = lines[start_ind:end_ind].split('\n')
-            offset = 1
-            if self.fxd_sst:
-                tmp = count_info[1].split()
-                offset += int(tmp[1]) * len(self.fxd_sst.particles)
-            # Grab the lines with inserted atoms
-            start_ind = lines.find('coordinates for all the boxes')
-            all_coord_lines = lines[start_ind:-1].split('\n')
-            inp.close()
-        self.mc_sst.make_system(all_coord_lines[offset:])
-        self.tot_sst.add(self.mc_sst.simul_sst, change_dim=False)
+        fname = '{:}{:}'.format(self.props['Run_Name'].value, '.chk')
 
-    def get_shake_string(self, **kwargs):
-        str_id = kwargs.get('str_id') or 5
-        group_id = kwargs.get('group_id') or 'all'
-        toler = kwargs.get('toler') or 1E-4
-        n_iter = kwargs.get('n_iter') or 20
-        n_iter_show = kwargs.get('n_iter_show') or 0
-
-        out_string = ''
-        b = []
-        for bt in self.tot_sst.bond_types:
-            if hasattr(bt, 'is_fixed') and bt.is_fixed:
-                b.append(bt.tag)
-        a = []
-        for at in self.tot_sst.angle_types:
-            if hasattr(at, 'is_fixed') and at.is_fixed:
-                a.append(at.tag)
-        if len(b) + len(a) > 0:
-            out_string = 'fix {:d} {:s} shake {:1.4f} {:d} {:d} '
-            out_string = out_string.format(str_id, group_id, toler, n_iter, n_iter_show)
-            if len(b) > 0:
-                out_string += 'b {:s} '
-                out_string = out_string.format(' '.join((str(i) for i in b)))
-            if len(a) > 0:
-                out_string += 'a {:s} '
-                out_string = out_string.format(' '.join((str(i) for i in a)))
-        return out_string
+        if os.path.isfile(fname):
+            try:
+                with open('{:}{:}'.format(self.props['Run_Name'].value, '.chk'), 'r') as inp:
+                    lines = inp.read()
+                    # Define the starting index of the lines with inserted atoms
+                    start_ind = lines.find('total number of molecules')
+                    end_ind = start_ind + lines[start_ind:-1].find('****', 1)
+                    count_info = lines[start_ind:end_ind].split('\n')
+                    offset = 1
+                    if self.fxd_sst:
+                        tmp = count_info[1].split()
+                        offset += int(tmp[1]) * len(self.fxd_sst.particles)
+                    # Grab the lines with inserted atoms
+                    start_ind = lines.find('coordinates for all the boxes')
+                    all_coord_lines = lines[start_ind:-1].split('\n')
+                    inp.close()
+                self.mc_sst.make_system(all_coord_lines[offset:])
+                self.tot_sst.add(self.mc_sst.simul_sst, change_dim=False)
+            except IndexError:
+                self.logger.error('')
+        else:
+            self.logger.error('Cannot find the CASSANDRA checkpoint file to update simulation. '
+                              'Probably it cannot be written by CASSANDRA to the place you specified')
 
     def __check_params__(self):
         # Synchronizing the simulation box parameters
@@ -419,7 +401,7 @@ class McSystem(object):
         self.file_store = os.getcwd()
         self.max_ins = self.__make_iterable__(kwargs.get('max_ins') or 10000)
         self.chem_pot = self.__make_iterable__(chem_pot)
-        self.made_ins = [0] * len(s)
+        self.made_ins = [0] * len(self.sst)
         self.mcf_file = []
         self.frag_file = []
         self.temperature = None
@@ -548,7 +530,7 @@ class McSystem(object):
 class Cassandra(object):
     """
     pysimm.cassandra.Cassandra
-    Organizational object for CASSANDRA simulation that is able to run
+    Organizational object for CASSANDRA simulations that is able to run
     e.g. Gibbs Canonical Monte-Carlo (GCMC) simulations (see the GCMC class)
 
     """
@@ -748,6 +730,13 @@ class Cassandra(object):
                 vals.append(cells[i])
             return OrderedDict([('tot_prob', float(cells[1])),
                                 ('types', vals)])
+
+        elif title == 'Prob_Rotation':
+            vals = []
+            for i in range(2, len(cells) - 1):
+                vals.append(cells[i])
+            return OrderedDict([('tot_prob', float(cells[1])),
+                                ('limit_vals', vals)])
 
         elif (title == 'Molecule_Files') or (title == 'Fragment_Files'):
             tmp = OrderedDict()
