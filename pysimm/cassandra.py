@@ -98,7 +98,7 @@ class GCMC(object):
         else:
             self.out_folder = os.getcwd()
         if not os.path.exists(self.out_folder):
-            os.makedirs(self.out_folder)
+            os.makedirs(self.out_folder, mode=0755)
         prefix = kwargs.get('Run_Name') or def_dat['Run_Name']
         self.props['Run_Name'] = InpSpec('Run_Name', os.path.join(self.out_folder, prefix), '')
 
@@ -425,7 +425,9 @@ class McSystem(object):
         for (sstm, count) in zip(self.sst, range(len(self.sst))):
             fullfile = os.path.join(self.file_store, '{:}{:}{:}'.format('particle', str(count + 1), '.mcf'))
             for p_type in sstm.particle_types:
-                p_type.mcf_alias = ascii_uppercase[int(al_ind / 10)] + str(al_ind % 10)
+                if p_type.elem and (not p_type.real_elem):
+                    p_type.real_elem = p_type.elem
+                p_type.elem = ascii_uppercase[int(al_ind / 10)] + str(al_ind % 10)
                 al_ind += 1
             McfWriter(sstm, fullfile).write()
             self.mcf_file.append(fullfile)
@@ -462,7 +464,7 @@ class McSystem(object):
                 frag_count = 1
                 out.write('{:>12d}\n'.format(frag_count))
                 out.write('{:>21.14f}{:>21.14f}\n'.format(self.temperature, 0))
-                tmplte = '{:<5}{:<24.16f}{:<24.16f}{:<24.16f}\n'
+                tmplte = '{:<10}{:<24.16f}{:<24.16f}{:<24.16f}\n'
                 for prt in sstm.particles:
                     out.write(tmplte.format(prt.type.name, prt.x, prt.y, prt.z))
             self.frag_file.append(fullfile)
@@ -509,11 +511,7 @@ class McSystem(object):
             vals = text_lines[p.tag - 1].split()
 
             if vals[0] != p.type.elem:
-                if hasattr(p.type, 'mcf_alias'):
-                    if vals[0] != p.type.mcf_alias:
-                        return False
-                else:
-                    return False
+                return False
         return flag
 
     def __mark_fixed__(self, sst):
@@ -838,10 +836,7 @@ class McfWriter(object):
                     if hasattr(item.type, 'name'):
                         line[1] = item.type.name
                     if hasattr(item.type, 'elem'):
-                        if item.type.mcf_alias:
-                            line[2] = item.type.mcf_alias
-                        else:
-                            line[2] = item.type.elem
+                        line[2] = item.type.elem
                     if hasattr(item.type, 'mass'):
                         line[3] = item.type.mass
                     if hasattr(item.type, 'epsilon'):
