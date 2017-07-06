@@ -88,8 +88,6 @@ class GCMC(object):
         # Static (unchangeable) properties
         self.props['Sim_Type'] = InpSpec('Sim_Type', 'gcmc', 'gcmc')
 
-        # Defining the path where to write all intermediate files () and results
-        self.props_file = 'gcmc_input_file.inp'
         tmp = kwargs.get('out_folder')  # Folder for the results and intermediate files
         if tmp:
             self.out_folder = tmp
@@ -101,6 +99,9 @@ class GCMC(object):
             os.makedirs(self.out_folder, mode=0755)
         prefix = kwargs.get('Run_Name') or def_dat['Run_Name']
         self.props['Run_Name'] = InpSpec('Run_Name', os.path.join(self.out_folder, prefix), '')
+
+        # Defining the path where to write all intermediate files () and results
+        self.props_file = os.path.join(self.out_folder, kwargs.get('props_file') or 'gcmc_input_file.inp')
 
         # Molecule configuration files describing all species of the system.
         # They are **absolutely** needed to start calculation
@@ -463,8 +464,8 @@ class McSystem(object):
             with open(fullfile, 'w') as out:
                 frag_count = 1
                 out.write('{:>12d}\n'.format(frag_count))
-                out.write('{:>21.14f}{:>21.14f}\n'.format(self.temperature, 0))
-                tmplte = '{:<10}{:<24.16f}{:<24.16f}{:<24.16f}\n'
+                out.write('{:>21f}{:>21f}\n'.format(self.temperature, 0))
+                tmplte = '{:<10}{:<24f}{:<24f}{:<24f}\n'
                 for prt in sstm.particles:
                     out.write(tmplte.format(prt.type.name, prt.x, prt.y, prt.z))
             self.frag_file.append(fullfile)
