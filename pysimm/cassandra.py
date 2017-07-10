@@ -693,22 +693,22 @@ class Cassandra(object):
         return tmp_dict
 
     def __parse_value__(self, cells):
-        title = cells[0]
-        if title == 'Run_Type':
+        title = cells[0].lower()
+        if title == 'run_type':
             return OrderedDict([('type', cells[1]), ('steps', int(cells[2]))])
 
-        elif title == 'Charge_Style':
+        elif title == 'charge_style':
             return OrderedDict([('type', cells[1]),
                                 ('sum_type', cells[2]),
                                 ('cut_val', float(cells[3])),
                                 ('accuracy', float(cells[4]))])
 
-        elif title == 'VDW_Style':
+        elif title == 'vdw_style':
             return OrderedDict([('type', cells[1]),
                                 ('cut_type', cells[2]),
                                 ('cut_val', float(cells[3]))])
 
-        elif title == 'Simulation_Length_Info':
+        elif title == 'simulation_length_info':
             tmp = OrderedDict([('units', cells[2]),
                                ('prop_freq', int(cells[4])),
                                ('coord_freq', int(cells[6])),
@@ -719,45 +719,45 @@ class Cassandra(object):
                     tmp['block_averages'] = int(cells[12])
             return tmp
 
-        elif title == 'CBMC_Info':
+        elif title == 'cbmc_info':
             return OrderedDict([('kappa_ins', int(cells[2])),
                                 ('kappa_dih', int(cells[4])),
                                 ('rcut_cbmc', float(cells[6]))])
 
-        elif title == 'Box_Info':
+        elif title == 'box_info':
             size = float(cells[3])
             if len(cells) > 6:
                 size = [float(cells[3]), float(cells[4]), float(cells[5])]
             return OrderedDict([('box_count', int(cells[1])), ('box_type', cells[2]), ('box_size', size)])
 
-        elif title == 'Prob_Translation':
+        elif title == 'prob_translation':
             vals = []
             for i in range(2, len(cells) - 1):
                 vals.append(float(cells[i]))
             return OrderedDict([('tot_prob', float(cells[1])),
                                 ('limit_vals', vals)])
 
-        elif title == 'Prob_Insertion':
+        elif title == 'prob_insertion':
             vals = []
             for i in range(2, len(cells) - 1):
                 vals.append(cells[i])
             return OrderedDict([('tot_prob', float(cells[1])),
                                 ('types', vals)])
 
-        elif title == 'Prob_Rotation':
+        elif title == 'prob_rotation':
             vals = []
             for i in range(2, len(cells) - 1):
                 vals.append(cells[i])
             return OrderedDict([('tot_prob', float(cells[1])),
                                 ('limit_vals', vals)])
 
-        elif (title == 'Molecule_Files') or (title == 'Fragment_Files'):
+        elif (title == 'molecule_files') or (title == 'fragment_files'):
             tmp = OrderedDict()
             for i in range(1, len(cells) - 2, 2):
                 tmp['file' + str(i)] = [cells[i], int(cells[i + 1])]
             return tmp
 
-        elif title == 'Start_Type':
+        elif title == 'start_type':
             if cells[1] == 'read_config':
                 specs = []
                 for i in range(2, len(cells) - 3):
@@ -767,32 +767,35 @@ class Cassandra(object):
                                     ('file_name', cells[len(cells) - 3])])
 
             if cells[1] == 'make_config':
-                self.logger.error('Sorry, ''make_config'' regime  of ''Start_Type option is not supported yet'' ')
-                exit(0)
-
+                specs = []
+                for i in range(2, len(cells) - 2):
+                    specs.append(int(cells[i]))
+                return OrderedDict([('start_type', 'make_config'),
+                                    ('species', specs),
+                                    ('file_name', '')])
             if cells[1] == 'add to config':
-                self.logger.error('Sorry, ''add to config'' regime  of ''Start_Type option is not supported yet'' ')
-                exit(0)
+                self.logger.error('Sorry, \'add to config\' regime  of ''Start_Type option is not supported yet')
+                exit(1)
 
             if cells[1] == 'checkpoint':
-                self.logger.error('Sorry, ''checkpoint'' regime  of ''Start_Type option is not supported yet'' ')
-                exit(0)
+                self.logger.error('Sorry, \'checkpoint\' regime  of ''Start_Type option is not supported yet ')
+                exit(1)
 
-        elif title == 'Property_Info':
+        elif title == 'property_info':
             if int(cells[1]) == 1:
                 tmp = OrderedDict()
                 for i in range(2, len(cells) - 2):
                     tmp['prop' + str(i - 1)] = str.lower(cells[i])
                 return tmp
 
-        elif title == 'Seed_Info':
+        elif title == 'seed_info':
             return [int(cells[1]), int(cells[2])]
 
-        elif (title == 'Prob_Deletion') or (title == 'Rcutoff_Low') or \
-             (title == 'Bond_Prob_Cutoff') or (title == 'Chemical_Potential_Info'):
+        elif (title == 'prob_deletion') or (title == 'rcutoff_low') or \
+             (title == 'bond_prob_cutoff') or (title == 'chemical_potential_info'):
             return float(cells[1])
 
-        elif (title == 'Average_Info') or (title == 'Nbr_Species') or (title == 'Temperature_Info'):
+        elif (title == 'average_Info') or (title == 'nbr_species') or (title == 'temperature_info'):
             return int(cells[1])
 
         else:
