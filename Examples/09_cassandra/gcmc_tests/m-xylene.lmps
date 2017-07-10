@@ -16,9 +16,9 @@ read using pysimm.system.read_mol
 
 Masses
 
-   1	15.034	# CH3
-   2	13.018	# CH
-   3	12.01	# C
+   1	15.034	# CH3_x
+   2	13.018	# CH_x
+   3	12.01	# C_x
 
 Pair Coeffs
 

@@ -11,17 +11,15 @@ gcmcPropsRead = css.read_input('my_props.inp')
 gcmcPropsRead['Box_Info'] = OrderedDict([('box_count', 1), ('box_size', bxSize)])
 
 # The prefix for the all files that will be created by this run
-gcmcPropsRead['Run_Name'] = 'no_pim_box'
+gcmcPropsRead['Run_Name'] = 'no_pim_nitrogens'
 gcmcPropsRead['Rcutoff_Low'] = 0.
 
 # Set the gas (gas system) to be purged in a box
-h2 = system.read_lammps('h2.lmps')
-gas_syst = cassandra.McSystem(h2, max_ins=5000, chem_pot=-23.34)
+gas_syst = cassandra.McSystem(system.read_lammps('n2.lmps'), max_ins=5000, chem_pot=-27.34)
 
 job = cassandra.GCMC(gas_syst, out_folder='gcmc_test_1', **gcmcPropsRead)
 css.add_gcmc(job)
 
 css.run()
-
 job.tot_sst.write_lammps('hydrogens.lmps')
-job.tot_sst.system.visualize()
+# job.tot_sst.system.visualize()

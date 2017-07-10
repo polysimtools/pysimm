@@ -279,6 +279,8 @@ class GCMC(object):
     def get_grouped_md(self, str_input):
         result = str_input
         if isinstance(result, types.StringTypes):
+            fix_name = 'matrix'
+            mc_name = 'gas'
             tmp = 'group '
 
             m_len = 0
@@ -308,9 +310,22 @@ class GCMC(object):
             tmp = ''
             shift = 1
             if self.fxd_sst:
-                tmp += 'fix 1 matrix ' + ensemble + parts[1] + '\n'
+                tmp += 'fix 1 ' + fix_name + ' ' + ensemble + parts[1] + '\n'
                 shift = 2
-            tmp += 'fix 2 gas rigid/' + ensemble + '/small molecule' + parts[1] + '\n'
+            tmp += 'fix ' + str(shift) + ' ' + mc_name + ' rigid/' + ensemble + '/small molecule' + parts[1] + '\n'
+
+            # temperature = 300.0
+            # tmplte = 'velocity $1$ $2$ ' + str(temperature) + ' $3$\n'
+            # if self.fxd_sst:
+            #     tmp += tmplte.replace('$1$', fix_name).replace('$2$', 'create')\
+            #                  .replace('$3$', str(random.randint(int(1e+6), int(1e+7 - 1))))
+            # tmp += tmplte.replace('$1$', mc_name).replace('$2$', 'create')\
+            #              .replace('$3$', str(random.randint(int(1e+6), int(1e+7 - 1))))
+            # tmp += 'run 0\n'
+            # if self.fxd_sst:
+            #     tmp += tmplte.replace('$1$', fix_name).replace('$2$', 'scale').replace('$3$', '')
+            # tmp += tmplte.replace('$1$', mc_name).replace('$2$', 'scale').replace('$3$', '')
+
             result = parts[0] + tmp + parts[2]
         return result
 
@@ -391,7 +406,6 @@ class InpProbSpec(InpSpec):
 
 class McSystem(object):
     def __init__(self, s, chem_pot, **kwargs):
-
         self.logger = logging.getLogger('MC_SYSTEM')
         self.sst = self.__make_iterable__(s)
         for sst in self.sst:
