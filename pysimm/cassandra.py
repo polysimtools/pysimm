@@ -113,6 +113,7 @@ class GCMC(object):
             # Check few things of the system in order for CASSANDRA not to raise an exception
             self.fxd_sst.zero_charge()         # 1) the sum of the charges should be 0
             self.fxd_sst.center_system()       # 2) the center of the box around the system should be at origin
+            self.fxd_sst.name = 'matrix'
             self.tot_sst.add(fxd_sst)
             self.fixed_syst_mcf_file = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fixed_syst_mcf_file, 1]
@@ -225,10 +226,9 @@ class GCMC(object):
 
     def upd_simulation(self):
         fname = '{:}{:}'.format(self.props['Run_Name'].value, '.chk')
-
         if os.path.isfile(fname):
             try:
-                with open('{:}{:}'.format(self.props['Run_Name'].value, '.chk'), 'r') as inp:
+                with open(fname, 'r') as inp:
                     lines = inp.read()
                     # Define the starting index of the lines with inserted atoms
                     start_ind = lines.find('total number of molecules')
@@ -279,10 +279,7 @@ class GCMC(object):
     def get_grouped_md(self, str_input):
         result = str_input
         if isinstance(result, types.StringTypes):
-            fix_name = 'matrix'
-            mc_name = 'gas'
             tmp = 'group '
-
             m_len = 0
             if self.fxd_sst:
                m_len = len(self.fxd_sst.particles)
@@ -310,21 +307,10 @@ class GCMC(object):
             tmp = ''
             shift = 1
             if self.fxd_sst:
-                tmp += 'fix 1 ' + fix_name + ' ' + ensemble + parts[1] + '\n'
+                tmp += 'fix 1 ' + self.fxd_sst.name + ' ' + ensemble + parts[1] + '\n'
                 shift = 2
-            tmp += 'fix ' + str(shift) + ' ' + mc_name + ' rigid/' + ensemble + '/small molecule' + parts[1] + '\n'
-
-            # temperature = 300.0
-            # tmplte = 'velocity $1$ $2$ ' + str(temperature) + ' $3$\n'
-            # if self.fxd_sst:
-            #     tmp += tmplte.replace('$1$', fix_name).replace('$2$', 'create')\
-            #                  .replace('$3$', str(random.randint(int(1e+6), int(1e+7 - 1))))
-            # tmp += tmplte.replace('$1$', mc_name).replace('$2$', 'create')\
-            #              .replace('$3$', str(random.randint(int(1e+6), int(1e+7 - 1))))
-            # tmp += 'run 0\n'
-            # if self.fxd_sst:
-            #     tmp += tmplte.replace('$1$', fix_name).replace('$2$', 'scale').replace('$3$', '')
-            # tmp += tmplte.replace('$1$', mc_name).replace('$2$', 'scale').replace('$3$', '')
+            tmp += 'fix ' + str(shift) + ' ' + self.mc_sst.name + \
+                   ' rigid/' + ensemble + '/small molecule' + parts[1] + '\n'
 
             result = parts[0] + tmp + parts[2]
         return result
@@ -415,6 +401,7 @@ class McSystem(object):
 
         self.file_store = os.getcwd()
         self.max_ins = self.__make_iterable__(kwargs.get('max_ins') or 10000)
+        self.name = 'gas'
         self.chem_pot = self.__make_iterable__(chem_pot)
         self.made_ins = [0] * len(self.sst)
         self.mcf_file = []
