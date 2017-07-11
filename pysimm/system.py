@@ -2168,7 +2168,7 @@ class System(object):
         if self.particle_types.count > 0:
             out_file.write('Masses\n\n')
             for pt in self.particle_types:
-                if not pt.mass:
+                if pt.mass is None:
                     error_print('error: some particle types do not have masses')
                     return
                 out_file.write('%4d\t%s\t# %s\n' % (pt.tag, pt.mass, pt.name))

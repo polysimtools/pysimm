@@ -8,8 +8,6 @@ CHEM_POT = [-33.15, -60.37]
 TMPR = 300
 L_MAX = 6
 
-restart_from_md = None  # 'gcmc_test_2/4.before_md.lmps'
-
 # First, for CASSANDRA GCMC the governing CASSANDRA object should be created
 css = cassandra.Cassandra()
 
@@ -27,28 +25,17 @@ xylene = system.read_lammps('m-xylene.lmps')
 # I Preliminary MC step (pure insertion)
 gas_mc = cassandra.McSystem([co2, xylene], chem_pot=CHEM_POT, max_ins=MAX_INS)
 out_folder = 'gcmc_test_2'
-
-if not restart_from_md:
-    gcmcPropsRead['Run_Name'] = '1.gcmc'
-    gcmc = cassandra.GCMC(gas_mc, fixed_sst, out_folder=out_folder, props_file='1.gcmc_props.inp', **gcmcPropsRead)
-    css.add_gcmc(gcmc)
-    css.run()
-else:
-    gcmcPropsRead['Run_Name'] = '4.gcmc'
-    gcmc = cassandra.GCMC(gas_mc, fixed_sst, out_folder=out_folder, props_file='1.gcmc_props.inp', **gcmcPropsRead)
-    gcmc.upd_simulation()
+gcmcPropsRead['Run_Name'] = '1.gcmc'
+gcmc = cassandra.GCMC(gas_mc, fixed_sst, out_folder=out_folder, props_file='1.gcmc_props.inp', **gcmcPropsRead)
+css.add_gcmc(gcmc)
+css.run()
 
 l = 1
 time_steps = [0.15] * L_MAX
 while l < L_MAX:
     # >>> 2N: MD (LAMMPS) step:
-    if not restart_from_md:
-        sim_sst = gcmc.tot_sst
-        sim_sst.write_lammps(str(l) + '.before_md.lmps')
-    else:
-        sim_sst = system.read_lammps(restart_from_md)
-        restart_from_md = None
-
+    sim_sst = gcmc.tot_sst
+    sim_sst.write_lammps(os.path.join(out_folder, str(l) + '.before_md.lmps'))
     sim = lmps.Simulation(sim_sst, log=os.path.join(out_folder, str(l) + '.md.log'),
                           print_to_screen=True, cutoff=14.0)
 
