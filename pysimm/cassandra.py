@@ -114,7 +114,8 @@ class GCMC(object):
             self.fxd_sst.zero_charge()         # 1) the sum of the charges should be 0
             self.fxd_sst.center_system()       # 2) the center of the box around the system should be at origin
             self.fxd_sst.name = 'matrix'
-            self.tot_sst.add(fxd_sst)
+            self.tot_sst.add(fxd_sst, change_dim=False)
+            self.tot_sst.dim = fxd_sst.dim
             self.fixed_syst_mcf_file = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fixed_syst_mcf_file, 1]
             fs_count = 1

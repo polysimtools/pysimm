@@ -43,7 +43,7 @@ while l < L_MAX:
     sim.add_custom('neighbor 1.0 nsq \nneigh_modify once no every 1 delay 0 check yes')
 
     # custom definition of md with rigid gas molecules
-    tmp_md = lmps.MolecularDynamics(ensemble='npt', timestep=time_steps[l - 1], length=10000, thermo=100,
+    tmp_md = lmps.MolecularDynamics(ensemble='npt', timestep=time_steps[l - 1], length=2000, thermo=100,
                                     temp=TMPR, dump=100, dump_name=os.path.join(out_folder, str(l) + '.md.dump'))
     tmp_md.write(sim)
     custom_inp = gcmc.get_grouped_md(tmp_md.input)
