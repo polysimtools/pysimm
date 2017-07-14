@@ -76,8 +76,8 @@ class Gaff(Forcefield):
         """
         all_types = set()
         s.pair_style = self.pair_style
+        s.add_particle_bonding()
         for p in s.particles:
-            p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
             p.bond_orders = [x.order for x in p.bonds]
             if None in p.bond_orders:
                 error_print('error: bond orders are not set')
@@ -285,8 +285,8 @@ class Gaff(Forcefield):
         """
         all_types = set()
         s.angle_style = self.angle_style
+        s.add_particle_bonding()
         for p in s.particles:
-            p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
             for p1 in p.bonded_to:
                 for p2 in p.bonded_to:
                     if p1 is not p2:
@@ -410,10 +410,11 @@ class Gaff(Forcefield):
                                                            p2_name, p3_name]), order=True)
                     if it:
                         all_types.add(it[0])
+                        bonded_to = p.bonded_to.get('all')
                         s.impropers.add(Improper(type_name=it[0].name,
-                                                 a=p, b=p.bonded_to[0],
-                                                 c=p.bonded_to[1],
-                                                 d=p.bonded_to[2]))
+                                                 a=p, b=bonded_to[0],
+                                                 c=bonded_to[1],
+                                                 d=bonded_to[2]))
                         break
 
         for it in all_types:
