@@ -26,11 +26,11 @@ Pair Coeffs
 
 Bond Coeffs
 
-   1	100000.0	1.160	# O,C
+   1	500.0	1.160	# O,C
 
 Angle Coeffs
 
-   1	100000.0	180.0	# O,C,O
+   1	200.0	180.0	# O,C,O
 
 Atoms
 

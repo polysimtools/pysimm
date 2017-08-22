@@ -74,7 +74,7 @@ class GCMC(object):
     def __init__(self, mc_sst=None, fxd_sst=None, **kwargs):
         global DATA_PATH
 
-        # Initializing text output stream, empty at the beginning
+        # Initializing CASSANDRA input stream, empty at the beginning
         self.input = ''
         self.tot_sst = system.System(ff_class='1')
         self.logger = logging.getLogger('GCMC')
@@ -106,9 +106,11 @@ class GCMC(object):
         # Molecule configuration files describing all species of the system.
         # They are **absolutely** needed to start calculation
         mol_files = OrderedDict()
-        fs_count = 0
+        sst_count = 0
         self.fxd_sst = fxd_sst
         self.fixed_syst_mcf_file = None
+        self.rigid_idxs = None
+        self.nonrigid_idxs = None
         if self.fxd_sst:
             # Check few things of the system in order for CASSANDRA not to raise an exception
             self.fxd_sst.zero_charge()         # 1) the sum of the charges should be 0
@@ -118,7 +120,7 @@ class GCMC(object):
             self.tot_sst.dim = fxd_sst.dim
             self.fixed_syst_mcf_file = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fixed_syst_mcf_file, 1]
-            fs_count = 1
+            sst_count = 1
 
         self.mc_sst = mc_sst
         if mc_sst:
@@ -138,7 +140,7 @@ class GCMC(object):
         self.props['Nbr_Species'] = InpSpec('Nbr_Species', n_spec, n_spec)
         self.props['Molecule_Files'] = InpSpec('Molecule_Files', mol_files, None, **{'new_line': True})
         self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info', mc_sst.chem_pot,
-                                                        def_dat['Chemical_Potential_Info'] * (n_spec - fs_count))
+                                                        def_dat['Chemical_Potential_Info'] * (n_spec - sst_count))
         self.props['Seed_Info'] = InpSpec('Seed_Info', kwargs.get('Seed_Info'),
                                           [random.randint(int(1e+7), int(1e+8 - 1)),
                                            random.randint(int(1e+7), int(1e+8 - 1))])
@@ -245,8 +247,10 @@ class GCMC(object):
                     inp.close()
                 self.mc_sst.make_system(all_coord_lines[offset:])
                 self.tot_sst.add(self.mc_sst.simul_sst, change_dim=False)
+                self.upd_rigid_idxs()
+
             except IndexError:
-                self.logger.error('')
+                self.logger.error('Cannot fit the molecules from the CASSANDRA file to the PySIMM system')
         else:
             self.logger.error('Cannot find the CASSANDRA checkpoint file to update simulation. '
                               'Probably it cannot be written by CASSANDRA to the place you specified')
@@ -277,44 +281,75 @@ class GCMC(object):
             tmp = [tmp] * 3
         self.tot_sst.dim = system.Dimension(center=True, dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
 
-    def get_grouped_md(self, str_input):
-        result = str_input
-        if isinstance(result, types.StringTypes):
-            tmp = 'group '
-            m_len = 0
-            if self.fxd_sst:
-               m_len = len(self.fxd_sst.particles)
-               tmp += 'matrix id 1:' + str(m_len) + '\n'
+    # def get_grouped_md(self, str_input):
+    #     result = str_input
+    #     if isinstance(result, types.StringTypes):
+    #         tmp = 'group '
+    #         m_len = 0
+    #         if self.fxd_sst:
+    #            m_len = len(self.fxd_sst.particles)
+    #            tmp += 'matrix id 1:' + str(m_len) + '\n'
+    #
+    #         # All gas molecules go in one group and all assumed to be fixed
+    #         tmp += 'group gas id ' + str(m_len + 1) + ':' + str(len(self.tot_sst.particles)) + '\n'
+    #         parts = result.split('thermo')
+    #         result = parts[0] + tmp + 'thermo' + parts[1]
+    #
+    #         tmp_parts = result.split('fix 1 all')
+    #         parts = list()
+    #
+    #         first = ''
+    #         last = result
+    #         if len(tmp_parts) > 1:
+    #             first = tmp_parts[0]
+    #             last = tmp_parts[1]
+    #         parts.append(first)
+    #         tmp_parts = last.split('\n', 1)
+    #         ensemble = tmp_parts[0].split()[0]
+    #         parts.append(tmp_parts[0].strip().strip(ensemble))
+    #         parts.append(tmp_parts[1])
+    #
+    #         tmp = ''
+    #         shift = 1
+    #         if self.fxd_sst:
+    #             tmp += 'fix 1 ' + self.fxd_sst.name + ' ' + ensemble + parts[1] + '\n'
+    #             shift = 2
+    #         tmp += 'fix ' + str(shift) + ' ' + self.mc_sst.name + \
+    #                ' rigid/' + ensemble + '/small molecule' + parts[1] + '\n'
+    #
+    #         result = parts[0] + tmp + parts[2]
+    #     return result
 
-            # All gas molecules go in one group and all assumed to be fixed
-            tmp += 'group gas id ' + str(m_len + 1) + ':' + str(len(self.tot_sst.particles)) + '\n'
-            parts = result.split('thermo')
-            result = parts[0] + tmp + 'thermo' + parts[1]
+    def upd_rigid_idxs(self):
+        tmp_rig = [[-1, -1]]
+        tmp_nonrig = [[-1, -1]]
+        for p in self.tot_sst.particles:
+            if p.is_rigid:
+                if tmp_rig[-1][0] > 0:
+                    if abs(p.tag - tmp_rig[-1][1]) > 1:
+                        tmp_rig.append([p.tag, p.tag])
+                    else:
+                        tmp_rig[-1][1] = p.tag
+                else:
+                    tmp_rig[-1] = [p.tag, p.tag]
+            else:
+                if tmp_nonrig[-1][0] > 0:
+                    if abs(p.tag - tmp_nonrig[-1][1]) > 1:
+                        tmp_nonrig.append([p.tag, p.tag])
+                    else:
+                        tmp_nonrig[-1][1] = p.tag
+                else:
+                    tmp_nonrig[-1] = [p.tag, p.tag]
+        self.rigid_idxs = ''
+        for t in tmp_rig:
+            if t[1] - t[0] > 1:
+                self.rigid_idxs += str(t[0]) + ':' + str(t[1]) + ' '
 
-            tmp_parts = result.split('fix 1 all')
-            parts = list()
+        self.nonrigid_idxs = ''
+        for t in tmp_nonrig:
+            self.nonrigid_idxs += str(t[0]) + ':' + str(t[1]) + ' '
 
-            first = ''
-            last = result
-            if len(tmp_parts) > 1:
-                first = tmp_parts[0]
-                last = tmp_parts[1]
-            parts.append(first)
-            tmp_parts = last.split('\n', 1)
-            ensemble = tmp_parts[0].split()[0]
-            parts.append(tmp_parts[0].strip().strip(ensemble))
-            parts.append(tmp_parts[1])
 
-            tmp = ''
-            shift = 1
-            if self.fxd_sst:
-                tmp += 'fix 1 ' + self.fxd_sst.name + ' ' + ensemble + parts[1] + '\n'
-                shift = 2
-            tmp += 'fix ' + str(shift) + ' ' + self.mc_sst.name + \
-                   ' rigid/' + ensemble + '/small molecule' + parts[1] + '\n'
-
-            result = parts[0] + tmp + parts[2]
-        return result
 
 
 class InpSpec(object):
@@ -394,6 +429,7 @@ class InpProbSpec(InpSpec):
 class McSystem(object):
     def __init__(self, s, chem_pot, **kwargs):
         self.logger = logging.getLogger('MC_SYSTEM')
+        self.name = 'gas'
         self.sst = self.__make_iterable__(s)
         for sst in self.sst:
             sst.zero_charge()
@@ -402,7 +438,7 @@ class McSystem(object):
 
         self.file_store = os.getcwd()
         self.max_ins = self.__make_iterable__(kwargs.get('max_ins') or 10000)
-        self.name = 'gas'
+        self.is_rigid = self.__make_iterable__(kwargs.get('is_rigid')) or [True] * len(self.sst)
         self.chem_pot = self.__make_iterable__(chem_pot)
         self.made_ins = [0] * len(self.sst)
         self.mcf_file = []
@@ -473,8 +509,8 @@ class McSystem(object):
             self.frag_file.append(fullfile)
 
     def make_system(self, text_output):
-        count = 0
-        sys_idx = 0
+        count = 0  # counter of the lines in the input file
+        sys_idx = 0  # counter of the gas molecules to lookup
         while count < len(text_output) - 1:
             tmp = self.sst[sys_idx].copy()
             dictn = text_output[count:(len(tmp.particles) + count)]
@@ -485,11 +521,14 @@ class McSystem(object):
                     p.x = float(vals[1])
                     p.y = float(vals[2])
                     p.z = float(vals[3])
-                    # Force velocities of the particle to be 0
+                    # Force velocities of the particles to be 0
                     p.vx = 0.0
                     p.vy = 0.0
                     p.vz = 0.0
                     p.molecule.syst_tag = 0
+                if self.is_rigid[sys_idx]:
+                    for p in tmp.particles:
+                        p.is_rigid = True
                 self.simul_sst.add(tmp)
                 self.made_ins[sys_idx] += 1
                 count += len(tmp.particles)

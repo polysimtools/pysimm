@@ -29,7 +29,7 @@
 
 import shlex
 import shutil
-from subprocess import call, Popen, PIPE
+from subprocess import call, check_call, Popen, PIPE
 from Queue import Queue, Empty
 from threading import Thread
 import os
@@ -207,10 +207,11 @@ class MolecularDynamics(object):
         self.input += 'timestep %s\n' % self.timestep
 
         if self.ensemble == 'nvt':
-            self.input += 'fix 1 all %s temp %s %s 100\n' % (self.ensemble, self.t_start, self.t_stop)
+            self.input += 'fix 1 all %s temp %s %s %s\n' % (self.ensemble, self.t_start, self.t_stop, int(100 * self.timestep))
         elif self.ensemble == 'npt':
-            self.input += ('fix 1 all %s temp %s %s 100 iso %s %s 1000\n'
-                           % (self.ensemble, self.t_start, self.t_stop, self.p_start, self.p_stop))
+            self.input += ('fix 1 all %s temp %s %s %s iso %s %s %s\n'
+                           % (self.ensemble, self.t_start, self.t_stop, int(100 * self.timestep),
+                              self.p_start, self.p_stop, int(1000 * self.timestep)))
         elif self.ensemble == 'nve' and self.limit:
             self.input += 'fix 1 all %s/limit %s\n' % (self.ensemble, self.limit)
         elif self.ensemble == 'nve':
@@ -218,7 +219,8 @@ class MolecularDynamics(object):
 
         if self.new_v:
             self.input += 'velocity all create %s %s\n' % (self.t_start, self.seed)
-        elif self.scale_v:
+
+        if self.scale_v:
             self.input += 'velocity all scale %s\n' % self.t_start
 
         if self.dump:
@@ -578,22 +580,25 @@ def call_lammps(simulation, np, nanohub):
         else:
             p = Popen(['mpiexec', LAMMPS_EXEC, '-e', 'both', '-l', 'none'],
                       stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        simulation.write_input()
-        p.stdin.write(simulation.input)
-        q = Queue()
-        t = Thread(target=enqueue_output, args=(p.stdout, q))
-        t.daemon = True
-        t.start()
 
-        while t.isAlive() or not q.empty():
-            try:
-                line = q.get_nowait()
-            except Empty:
-                pass
-            else:
-                if simulation.print_to_screen:
-                    sys.stdout.write(line)
-                    sys.stdout.flush()
+        simulation.write_input()
+        thr_out, thr_err = p.communicate(simulation.input)
+
+        # p.stdin.write(simulation.input)
+        # q = Queue()
+        # t = Thread(target=enqueue_output, args=(p.stdout, q))
+        # t.daemon = True
+        # t.start()
+        #
+        # while t.isAlive() or not q.empty():
+        #     try:
+        #         line = q.get_nowait()
+        #     except Empty:
+        #         pass
+        #     else:
+        #         if simulation.print_to_screen:
+        #             sys.stdout.write(line)
+        #             sys.stdout.flush()
                     
     simulation.system.read_lammps_dump('pysimm.dump.tmp')
 
