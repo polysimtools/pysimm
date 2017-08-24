@@ -1,11 +1,10 @@
-import re
-
 from pysimm import system, lmps, cassandra
 from collections import OrderedDict
 import os
+import re
 
 MAX_INS = [2000, 2000]
-CHEM_POT = [-33.15, -60.37]
+CHEM_POT = [-35.0266, -31.1447]
 TMPR = 300
 L_MAX = 11
 
@@ -21,10 +20,10 @@ fixed_sst.wrap()
 
 # Setting the one-molecule gas system
 co2 = system.read_lammps('co2.lmps')
-xylene = system.read_lammps('m-xylene.lmps')
+ch4 = system.read_lammps('ch4.lmps')
 
 # I Preliminary MC step (pure insertion)
-gas_mc = cassandra.McSystem([co2, xylene], chem_pot=CHEM_POT, max_ins=MAX_INS, is_rigid=[True, False])
+gas_mc = cassandra.McSystem([co2, ch4], chem_pot=CHEM_POT, max_ins=MAX_INS, is_rigid=[True, False])
 out_folder = 'gcmc_test_2'
 gcmcPropsRead['Run_Name'] = '1.gcmc'
 gcmc = cassandra.GCMC(gas_mc, fixed_sst, out_folder=out_folder, props_file='1.gcmc_props.inp', **gcmcPropsRead)
@@ -33,7 +32,7 @@ css.run()
 
 l = 1
 time_step = 0.5
-lngth = 2e+4
+lngth = 2e+3
 nonrig_group_name = 'nonrigid_b'
 rig_group_name = 'rigid_b'
 
@@ -49,8 +48,9 @@ while l < L_MAX:
 
     # adding group definitions to separate rigid and non-rigid bodies
     grp_tmpl = 'group {:} id {:}'
-    sim.add_custom(grp_tmpl.format(nonrig_group_name, gcmc.nonrigid_idxs))
-    sim.add_custom(grp_tmpl.format(rig_group_name, gcmc.rigid_idxs))
+    sim.add_custom(grp_tmpl.format('matrix', gcmc.group_by_id('matrix')[0]))
+    sim.add_custom(grp_tmpl.format(nonrig_group_name, gcmc.group_by_id('nonrigid')[0]))
+    sim.add_custom(grp_tmpl.format(rig_group_name, gcmc.group_by_id('rigid')[0]))
 
     # create the description of the molecular dynamics simulation
     tmp_md = lmps.MolecularDynamics(ensemble='npt', timestep=time_step, length=int(lngth), thermo=1000,
@@ -64,13 +64,13 @@ while l < L_MAX:
     old_line = re.search('(?<=(\nfix)).*', tmp_md.input).group(0)
     corr_fix = re.sub('all', nonrig_group_name, old_line) + ' dilate all\n'
 
-    corr_fix += 'fix' + re.sub('iso\s+\d+.\d+\s+\d+.\d+\s+\d+.\d+', '', old_line).\
+    corr_fix += 'fix' + re.sub('iso\s+\d+[.\d]*\s+\d+[.\d]*\s+\d+[.\d]*', '', old_line).\
                 replace('1', '2', 1). \
                 replace('all', rig_group_name). \
                 replace('npt', 'rigid/nvt/small molecule') + '\n'
 
     # adding the spring fix to the geometrical center of the system to avoid system creep
-    corr_fix += 'fix {:} {:} spring tether {:} {:} {:} {:} {:}\n'.format(3, nonrig_group_name, 30.0, 0.0, 0.0, 0.0, 0.0)
+    corr_fix += 'fix {:} {:} spring tether {:} {:} {:} {:} {:}\n'.format(3, 'matrix', 30.0, 0.0, 0.0, 0.0, 0.0)
 
     # saving all fixes to the input
     tmp_md.input = tmp_md.input.replace(old_line, corr_fix)
@@ -94,7 +94,7 @@ while l < L_MAX:
                                                ('species', [1] + [0] * len(gas_mc.chem_pot)),
                                                ('file_name', os.path.join(out_folder, new_xyz_file))])
 
-    gas_mc = cassandra.McSystem([co2, xylene], chem_pot=CHEM_POT, max_ins=MAX_INS)
+    gas_mc = cassandra.McSystem([co2, ch4], chem_pot=CHEM_POT, max_ins=MAX_INS, is_rigid=[True, False])
     gcmc = cassandra.GCMC(gas_mc, fixed_sst, out_folder=out_folder,
                           props_file=str(l + 1) + '.gcmc_props.inp', **gcmcPropsRead)
     # now we make new .xyz file to read start configuration from

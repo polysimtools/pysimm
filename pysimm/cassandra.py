@@ -109,8 +109,8 @@ class GCMC(object):
         sst_count = 0
         self.fxd_sst = fxd_sst
         self.fixed_syst_mcf_file = None
-        self.rigid_idxs = None
-        self.nonrigid_idxs = None
+        # self.rigid_idxs = None
+        # self.nonrigid_idxs = None
         if self.fxd_sst:
             # Check few things of the system in order for CASSANDRA not to raise an exception
             self.fxd_sst.zero_charge()         # 1) the sum of the charges should be 0
@@ -247,7 +247,6 @@ class GCMC(object):
                     inp.close()
                 self.mc_sst.make_system(all_coord_lines[offset:])
                 self.tot_sst.add(self.mc_sst.simul_sst, change_dim=False)
-                self.upd_rigid_idxs()
 
             except IndexError:
                 self.logger.error('Cannot fit the molecules from the CASSANDRA file to the PySIMM system')
@@ -281,75 +280,32 @@ class GCMC(object):
             tmp = [tmp] * 3
         self.tot_sst.dim = system.Dimension(center=True, dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
 
-    # def get_grouped_md(self, str_input):
-    #     result = str_input
-    #     if isinstance(result, types.StringTypes):
-    #         tmp = 'group '
-    #         m_len = 0
-    #         if self.fxd_sst:
-    #            m_len = len(self.fxd_sst.particles)
-    #            tmp += 'matrix id 1:' + str(m_len) + '\n'
-    #
-    #         # All gas molecules go in one group and all assumed to be fixed
-    #         tmp += 'group gas id ' + str(m_len + 1) + ':' + str(len(self.tot_sst.particles)) + '\n'
-    #         parts = result.split('thermo')
-    #         result = parts[0] + tmp + 'thermo' + parts[1]
-    #
-    #         tmp_parts = result.split('fix 1 all')
-    #         parts = list()
-    #
-    #         first = ''
-    #         last = result
-    #         if len(tmp_parts) > 1:
-    #             first = tmp_parts[0]
-    #             last = tmp_parts[1]
-    #         parts.append(first)
-    #         tmp_parts = last.split('\n', 1)
-    #         ensemble = tmp_parts[0].split()[0]
-    #         parts.append(tmp_parts[0].strip().strip(ensemble))
-    #         parts.append(tmp_parts[1])
-    #
-    #         tmp = ''
-    #         shift = 1
-    #         if self.fxd_sst:
-    #             tmp += 'fix 1 ' + self.fxd_sst.name + ' ' + ensemble + parts[1] + '\n'
-    #             shift = 2
-    #         tmp += 'fix ' + str(shift) + ' ' + self.mc_sst.name + \
-    #                ' rigid/' + ensemble + '/small molecule' + parts[1] + '\n'
-    #
-    #         result = parts[0] + tmp + parts[2]
-    #     return result
-
-    def upd_rigid_idxs(self):
-        tmp_rig = [[-1, -1]]
-        tmp_nonrig = [[-1, -1]]
+    # TODO: Write similar method returning molecule id-s
+    def group_by_id(self, group_key='matrix'):
+        fxd_sst_idxs = range(1, len(self.fxd_sst.particles) + 1)
+        # Behaviour depending on type of particles to check
+        check = lambda x: x
+        if group_key.lower() == 'nonrigid':
+            check = lambda x: not x.is_rigid
+        elif group_key.lower() == 'rigid':
+            check = lambda x: x.is_rigid
+        elif group_key.lower() == 'matrix':
+            check = lambda x: x.tag in fxd_sst_idxs
+        idx_array = [[-1, -1]]
         for p in self.tot_sst.particles:
-            if p.is_rigid:
-                if tmp_rig[-1][0] > 0:
-                    if abs(p.tag - tmp_rig[-1][1]) > 1:
-                        tmp_rig.append([p.tag, p.tag])
+            if check(p):
+                if idx_array[-1][0] > 0:
+                    if abs(p.tag - idx_array[-1][1]) > 1:
+                        idx_array.append([p.tag, p.tag])
                     else:
-                        tmp_rig[-1][1] = p.tag
+                        idx_array[-1][1] = p.tag
                 else:
-                    tmp_rig[-1] = [p.tag, p.tag]
-            else:
-                if tmp_nonrig[-1][0] > 0:
-                    if abs(p.tag - tmp_nonrig[-1][1]) > 1:
-                        tmp_nonrig.append([p.tag, p.tag])
-                    else:
-                        tmp_nonrig[-1][1] = p.tag
-                else:
-                    tmp_nonrig[-1] = [p.tag, p.tag]
-        self.rigid_idxs = ''
-        for t in tmp_rig:
+                    idx_array[-1] = [p.tag, p.tag]
+        idx_string = ''
+        for t in idx_array:
             if t[1] - t[0] > 1:
-                self.rigid_idxs += str(t[0]) + ':' + str(t[1]) + ' '
-
-        self.nonrigid_idxs = ''
-        for t in tmp_nonrig:
-            self.nonrigid_idxs += str(t[0]) + ':' + str(t[1]) + ' '
-
-
+                idx_string += str(t[0]) + ':' + str(t[1]) + ' '
+        return idx_string, idx_array
 
 
 class InpSpec(object):
@@ -976,15 +932,15 @@ class McfWriter(object):
         return idxs
 
 
-def replace_lmps_inp(lmmps_inp, comand_id, to_replace, to_erase):
-    result = lmmps_inp
-    if isinstance(lmmps_inp, types.StringTypes):
-        comand = comand_id.strip().split()
-        tmp = ''
-        if len(comand) == 2:
-            tmp = '\s+' + comand[1]
-
-        cmd_line_old = re.search('(?<=(' + comand[0] + tmp + ')).*', lmmps_inp).group(0)
-        cmd_line_new = re.sub(to_erase, to_replace, cmd_line_old)
-        result = re.sub(cmd_line_old, cmd_line_new, lmmps_inp)
-    return result
+# def replace_lmps_inp(lmmps_inp, comand_id, to_replace, to_erase):
+#     result = lmmps_inp
+#     if isinstance(lmmps_inp, types.StringTypes):
+#         comand = comand_id.strip().split()
+#         tmp = ''
+#         if len(comand) == 2:
+#             tmp = '\s+' + comand[1]
+#
+#         cmd_line_old = re.search('(?<=(' + comand[0] + tmp + ')).*', lmmps_inp).group(0)
+#         cmd_line_new = re.sub(to_erase, to_replace, cmd_line_old)
+#         result = re.sub(cmd_line_old, cmd_line_new, lmmps_inp)
+#     return result

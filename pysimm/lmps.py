@@ -207,7 +207,8 @@ class MolecularDynamics(object):
         self.input += 'timestep %s\n' % self.timestep
 
         if self.ensemble == 'nvt':
-            self.input += 'fix 1 all %s temp %s %s %s\n' % (self.ensemble, self.t_start, self.t_stop, int(100 * self.timestep))
+            self.input += 'fix 1 all %s temp %s %s %s\n' \
+                          % (self.ensemble, self.t_start, self.t_stop, int(100 * self.timestep))
         elif self.ensemble == 'npt':
             self.input += ('fix 1 all %s temp %s %s %s iso %s %s %s\n'
                            % (self.ensemble, self.t_start, self.t_stop, int(100 * self.timestep),
