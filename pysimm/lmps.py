@@ -648,20 +648,23 @@ def call_lammps(simulation, np, nanohub):
                       stdin=PIPE, stdout=PIPE, stderr=PIPE)
         simulation.write_input()
         p.stdin.write(simulation.input)
-        q = Queue()
-        t = Thread(target=enqueue_output, args=(p.stdout, q))
-        t.daemon = True
-        t.start()
-
-        while t.isAlive() or not q.empty():
-            try:
-                line = q.get_nowait()
-            except Empty:
-                pass
-            else:
-                if simulation.print_to_screen:
-                    sys.stdout.write(line)
-                    sys.stdout.flush()
+        if simulation.print_to_screen:
+            q = Queue()
+            t = Thread(target=enqueue_output, args=(p.stdout, q))
+            t.daemon = True
+            t.start()
+    
+            while t.isAlive() or not q.empty():
+                try:
+                    line = q.get_nowait()
+                except Empty:
+                    pass
+                else:
+                    if simulation.print_to_screen:
+                        sys.stdout.write(line)
+                        sys.stdout.flush()
+        else:
+            p.communicate()
                     
     simulation.system.read_lammps_dump('pysimm.dump.tmp')
 
