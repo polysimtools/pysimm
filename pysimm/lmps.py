@@ -234,7 +234,7 @@ class MolecularDynamics(object):
             if self.dump_append:
                 self.input += 'dump_modify pysimm_dump append yes\n'
 
-        self.input += 'run %s\n' % self.length
+        self.input += 'run %s\n' % int(self.length)
         self.input += 'unfix 1\n'
         if self.dump:
             self.input += 'undump pysimm_dump\n'
@@ -300,7 +300,7 @@ class SteeredMolecularDynamics(MolecularDynamics):
         self.input += 'group p2 id {}\n'.format(self.p2.tag)
         self.input += 'fix steer p1 smd cvel {} {} couple p2 auto auto auto {}\n'.format(self.k, self.v, self.d)
 
-        self.input += 'run %s\n' % self.length
+        self.input += 'run %s\n' % int(self.length)
         self.input += 'unfix 1\n'
         self.input += 'unfix steer\n'
         if self.dump:
@@ -874,7 +874,7 @@ def md(s, template=None, **kwargs):
                         % dump)
         if dump_append:
             command += 'dump_modify pysimm_dump append yes\n'
-    command += 'run %s\n' % length
+    command += 'run %s\n' % int(length)
     command += 'unfix 1\n'
     if write:
         command += 'write_data %s\n' % write
@@ -1254,7 +1254,7 @@ def relax(s, template=None, **kwargs):
         command += 'velocity all scale %s\n' % t_start
 
     command += 'fix 1 all nve/limit %s\n' % xmax
-    command += 'run %s\n' % length
+    command += 'run %s\n' % int(length)
     command += 'unfix 1\n'
 
     if write:
