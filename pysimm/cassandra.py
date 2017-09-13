@@ -26,8 +26,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-
-
+import glob
 from StringIO import StringIO
 import subprocess
 import os
@@ -227,6 +226,76 @@ class GCMC(object):
         out_stream.close()
         self.logger.info('File: "{:}" was created sucsessfully'.format(self.props_file))
 
+    def __write_chk__(self, out_file):
+        # Initializing output stream
+        if out_file == 'string':
+            out_stream = StringIO()
+        else:
+            out_stream = open(out_file, 'w+')
+        blk_separ = ' {:*^75}\n'
+
+        # Writing Translation/rotation/... info
+        out_stream.write(blk_separ.format('Translation,rotation, dihedral, angle distortion'))
+        tmplate = '{t[0]$$}{t[1]$$}{t[2]$$}{t[3]$$}{t[4]$$}\n'
+        molecules = self.props['Molecule_Files'].value
+        for m, i in zip(molecules, range(len(molecules))):
+            out_stream.write(tmplate.replace('$$', ':>6d').format(t=[i + 1, 0, 0, 0, 0]))
+            out_stream.write(tmplate.replace('$$', ':>6d').format(t=[i + 1, 0, 0, 0, 0]))
+            # TODO: There are some nonzeros in example .chk file for index 2; check where they come from
+            out_stream.write('{t[0]:>23.14E}{t[2]:>23.14E}{t[2]:>23.14E}\n'.format(t=[0, 0, 0]))
+            out_stream.write('{0:>12d}{0:>12d}\n'.format(0, 0))
+
+        # Small section with total # of MC trials -- it is 0 at the beggining
+        out_stream.write(blk_separ.format('# of MC steps'))
+        out_stream.write('{:>12d}\n'.format(0))
+
+        # Writing Box-info information
+        out_stream.write(blk_separ.format('Box info'))
+        tmp = self.props['Box_Info'].value['box_size']
+        x, y, z = 0, 0, 0
+        bx_type = None
+        if isinstance(tmp, types.ListType):
+            if len(tmp) > 3:
+                x, y, z = tmp[0], tmp[1], tmp[2]
+        elif isinstance(tmp, int) or isinstance(tmp, float):
+            x, y, z = tmp, tmp, tmp
+        else:
+            exit(0)
+
+        # First 0 here correspond to the # of trials
+        out_stream.write('{0:>12d}\n{1:<18.10f}\n{2:}\n'.format(0, x * y * z, self.props['Box_Info'].value['box_type']))
+
+        tmpl = '{t[0]&&}{t[1]&&}{t[2]&&}\n'
+        tmp = np.diag([x, y, z])
+        for lines in tmp:
+            out_stream.write((tmpl.replace('&&', ':^22.14f')).format(t=lines))
+
+        tmp = np.diag([1 / x, 1 / y, 1 / z])
+        for lines in tmp:
+            out_stream.write((tmpl.replace('&&', ':^22.8f')).format(t=lines))
+        out_stream.write('{:>18.12f}\n'.format(0))
+
+        # Creating seeds
+        out_stream.write(blk_separ.format('SEEDS'))
+        out_stream.write('{t[0]:>12d}{t[1]:>12d}{t[2]:>12d}\n{t[3]:>12d}{t[4]:>12d}\n'.format(
+            t=np.random.random_integers(int(1e+7), int(1e+8 - 1), 5)))
+
+        # Writing total number of molecules by species
+        out_stream.write(blk_separ.format('Info for total number of molecules'))
+        out_stream.write('{0:>11d}{1:>11d}\n'.format(1, 1))  # Currentely only one polymer "molecule" in the simulation
+        for i in range(1, len(molecules)):
+            out_stream.write('{0:>11d}{1:>11d}\n'.format(i + 1, 0))
+
+        out_stream.write(blk_separ.format('Writing coordinates of all boxes'))
+        # Writing coordinates of atoms in all boxes
+        line_template = '{l[0]:<5}{l[1]:<25.15f}{l[2]:<25.15f}{l[3]:<25.15f}{l[4]:>10d}\n'
+        for parts in self.tot_sst.particles:
+            try:
+                out_stream.write(line_template.format(l=[parts.type.name, parts.x, parts.y, parts.z, 1]))
+            except:
+                continue
+        out_stream.close()
+
     def upd_simulation(self):
         fname = '{:}{:}'.format(self.props['Run_Name'].value, '.chk')
         if os.path.isfile(fname):
@@ -282,7 +351,10 @@ class GCMC(object):
 
     # TODO: Write similar method returning molecule id-s
     def group_by_id(self, group_key='matrix'):
-        fxd_sst_idxs = range(1, len(self.fxd_sst.particles) + 1)
+        fxd_sst_idxs = []
+        if self.fxd_sst:
+            fxd_sst_idxs = range(1, len(self.fxd_sst.particles) + 1)
+
         # Behaviour depending on type of particles to check
         check = lambda x: x
         if group_key.lower() == 'nonrigid':
@@ -513,8 +585,8 @@ class McSystem(object):
         return flag
 
     def __mark_fixed__(self, sst):
-        max_k_bond = 3000
-        max_k_angle = 3000
+        max_k_bond = -1
+        max_k_angle = -1
         for bt in sst.bond_types:
             if bt.k > max_k_bond:
                 bt.is_fixed = True
@@ -586,74 +658,6 @@ class Cassandra(object):
             new_job.__check_params__()
             self.run_queue.append(new_job)
 
-    def __write_chk__(self, out_file):
-        # Initializing output stream
-        if out_file == 'string':
-            out_stream = StringIO()
-        else:
-            out_stream = open(out_file, 'w+')
-        sys = self.system  # alias of the System object
-
-        blkSepar = '{:*^75}\n'
-
-        # Writing Translation/rotation/... info
-        contNfo = self.props['# Molecule_Files']
-        out_stream.write(blkSepar.format('Translation,rotation, dihedral, angle distortion'))
-        tmplate = '{t[0]$$}{t[1]$$}{t[2]$$}{t[3]$$}{t[4]$$}\n'
-
-        for i in range(len(contNfo)):
-            out_stream.write(tmplate.replace('$$', ':>6d').format(t=map(int, np.insert(np.zeros(4), 0, i + 1))))
-            out_stream.write(tmplate.replace('$$', ':>6d').format(t=map(int, np.insert(np.zeros(4), 0, i + 1))))
-            # TODO There are some nonzeros in Tylangas .chk file for index 2; check where they come from
-            out_stream.write('{t[0]:>23.14E}{t[2]:>23.14E}{t[2]:>23.14E}\n'.format(t=np.zeros(3)))
-            out_stream.write('{0:>12d}{0:>12d}\n'.format(0, 0))
-
-        # Small section with total # of MC trials -- it is 0 at the beggining
-        out_stream.write(blkSepar.format('# of MC steps'))
-        out_stream.write('{:>12d}\n'.format(0))
-
-        # Writing Box-info stuff
-        out_stream.write(blkSepar.format('Box info'))
-        for box in self.boxes:
-            # First 0 in input correspond to the # of trials
-            out_stream.write('{0:>12d}\n{1:<18.10f}\n{2:}\n'.format(0, box.vol, box.bxType))
-            
-            tmpl = '{t[0]&&}{t[1]&&}{t[2]&&}\n'
-            tmp = np.diag( [box.x, box.y, box.z] )
-            for lines in tmp:
-                out_stream.write((tmpl.replace('&&', ':^22.14f')).format(t=lines))
-
-            tmp = np.diag( [1/box.x, 1/box.y, 1/box.z])
-            for lines in tmp:
-                out_stream.write((tmpl.replace('&&', ':^22.8f')).format(t = lines))
-            out_stream.write('{:>18.12f}\n'.format(0))  # TODO: Maximal volume displacement
-
-        # Writing SEEDS !!!111
-        out_stream.write(blkSepar.format('SEEDS'))
-        out_stream.write('{t[0]:>12d}{t[1]:>12d}{t[2]:>12d}\n{t[3]:>12d}{t[4]:>12d}\n'.format(
-                        t=np.random.random_integers(int(1e+7), int(1e+8 - 1), 5)))
-
-        # Writing total number of molecules by species
-        out_stream.write(blkSepar.format('Info for total number of molecules'))
-        out_stream.write('{0:>11d}{1:>11d}\n'.format(1, 1))  # Currentely one polymer molecule in the simulation
-        for i in range(1, len(contNfo)):
-            out_stream.write('{0:>11d}{1:>11d}\n'.format(i + 1, 0))
-
-        out_stream.write(blkSepar.format('Writing coordinates of all boxes'))
-        # Writing coordinates of atoms in all boxes
-        line_template = '{l[0]:>6} {l[1]:>13.8f} {l[2]:>13.8f} {l[3]:>13.8f}\n {l[4]:>12d} \n'
-        for parts in sys.particles:
-            line = ['',  0,  0,  0, 1]  # TODO: change the "1" to the actual box identifier
-            try:
-                line[0] = parts.type.name
-                line[1] = parts.x
-                line[2] = parts.y
-                line[3] = parts.z
-            except:
-                continue
-            out_stream.write(line_template.format(l=line))
-        out_stream.close()
-
     def read_input(self, inp_file):
         tmp_dict = {}
         if os.path.isfile(inp_file):
@@ -664,7 +668,9 @@ class Cassandra(object):
             raw_props = lines.split('#')
 
             for prop in raw_props:
-                tmp = prop.split()
+                line = re.sub('\n!.*', '', prop)  # Get rid of the CASSANDRA comments
+                line = re.sub('\n(e|E)(n|N)(d|D)', '', line)  # Get rid of the 'END in the end of the file
+                tmp = line.split()
                 if len(tmp) > 1:
                     tmp_dict[tmp[0]] = self.__parse_value__(tmp)
 
@@ -715,43 +721,43 @@ class Cassandra(object):
 
         elif title == 'prob_translation':
             vals = []
-            for i in range(2, len(cells) - 1):
+            for i in range(2, len(cells)):
                 vals.append(float(cells[i]))
             return OrderedDict([('tot_prob', float(cells[1])),
                                 ('limit_vals', vals)])
 
         elif title == 'prob_insertion':
             vals = []
-            for i in range(2, len(cells) - 1):
+            for i in range(2, len(cells)):
                 vals.append(cells[i])
             return OrderedDict([('tot_prob', float(cells[1])),
                                 ('types', vals)])
 
         elif title == 'prob_rotation':
             vals = []
-            for i in range(2, len(cells) - 1):
-                vals.append(cells[i])
+            for i in range(2, len(cells)):
+                vals.append(float(cells[i]))
             return OrderedDict([('tot_prob', float(cells[1])),
                                 ('limit_vals', vals)])
 
         elif (title == 'molecule_files') or (title == 'fragment_files'):
             tmp = OrderedDict()
-            for i in range(1, len(cells) - 2, 2):
-                tmp['file' + str(i)] = [cells[i], int(cells[i + 1])]
+            for i, c in zip(range(1, len(cells) - 1, 2), range(1, 1 + len(cells) / 2)):
+                tmp['file' + str(c)] = [cells[i], int(cells[i + 1])]
             return tmp
 
         elif title == 'start_type':
             if cells[1] == 'read_config':
                 specs = []
-                for i in range(2, len(cells) - 3):
+                for i in range(2, len(cells) - 1):
                     specs.append(int(cells[i]))
                 return OrderedDict([('start_type', 'read_config'),
                                     ('species', specs),
-                                    ('file_name', cells[len(cells) - 3])])
+                                    ('file_name', cells[-1])])
 
             if cells[1] == 'make_config':
                 specs = []
-                for i in range(2, len(cells) - 2):
+                for i in range(2, len(cells)):
                     specs.append(int(cells[i]))
                 return OrderedDict([('start_type', 'make_config'),
                                     ('species', specs),
@@ -767,7 +773,7 @@ class Cassandra(object):
         elif title == 'property_info':
             if int(cells[1]) == 1:
                 tmp = OrderedDict()
-                for i in range(2, len(cells) - 2):
+                for i in range(2, len(cells)):
                     tmp['prop' + str(i - 1)] = str.lower(cells[i])
                 return tmp
 
@@ -931,16 +937,22 @@ class McfWriter(object):
             idxs[self.mcf_tags.index('# Intra_Scaling')] = True
         return idxs
 
+class DataAnalyzer(object):
+    def __init__(self, **kwargs):
+        self.work_path = kwargs.get('path') or os.getcwd()
+        self.name_patterns = kwargs.get('mc_fname_mask') or '*.chk'
+        order_rule = kwargs.get('order_rule') or '\A\d+'
 
-# def replace_lmps_inp(lmmps_inp, comand_id, to_replace, to_erase):
-#     result = lmmps_inp
-#     if isinstance(lmmps_inp, types.StringTypes):
-#         comand = comand_id.strip().split()
-#         tmp = ''
-#         if len(comand) == 2:
-#             tmp = '\s+' + comand[1]
-#
-#         cmd_line_old = re.search('(?<=(' + comand[0] + tmp + ')).*', lmmps_inp).group(0)
-#         cmd_line_new = re.sub(to_erase, to_replace, cmd_line_old)
-#         result = re.sub(cmd_line_old, cmd_line_new, lmmps_inp)
-#     return result
+        tmp = self.__order_files__(glob.glob(os.path.join(self.work_path, self.name_patterns)), order_rule)
+        self.file_names = tmp[0]
+        self.iter_idxs = tmp[1]
+
+    @staticmethod
+    def __order_files__(fls, order_rule):
+        idxs = []
+        for f in fls:
+            idxs.append(int(re.search(order_rule, os.path.split(f)[1]).group()))
+        ordr = sorted(range(len(idxs)), key=lambda k: idxs[k])
+        return [fls[i] for i in ordr], ordr
+
+
