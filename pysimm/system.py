@@ -2920,6 +2920,35 @@ class System(object):
         if self.particles.count:
             self.cog = [c / self.particles.count for c in self.cog]
 
+    def center_system(self):
+        """pysimm.system.System.center_system
+
+        Shifts the center of the System box to the origin and updates box dimensions
+
+        Args:
+            None
+        Returns:
+            None
+        """
+        shiftx = self.dim.dx/2.0
+        shifty = self.dim.dy/2.0
+        shiftz = self.dim.dz/2.0
+        shiftvaluex = self.dim.xhi - shiftx
+        shiftvaluey = self.dim.yhi - shifty
+        shiftvaluez = self.dim.zhi - shiftz
+
+        for p in self.particles:
+            p.x -= shiftvaluex
+            p.y -= shiftvaluey
+            p.z -= shiftvaluez
+
+        self.dim.xhi = shiftx
+        self.dim.xlo = -shiftx
+        self.dim.yhi = shifty
+        self.dim.ylo = -shifty
+        self.dim.zhi = shiftz
+        self.dim.zlo = -shiftz
+
     def center_at_origin(self):
         """pysimm.system.System.center_at_origin
 
