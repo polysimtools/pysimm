@@ -40,5 +40,5 @@ def monomer():
     
 def polymer_chain(length):
     mon = monomer()
-    polym = random_walk(mon, length, forcefield=forcefield.Dreiding())
+    polym = random_walk(mon, length, forcefield=forcefield.Gaff2())
     return polym

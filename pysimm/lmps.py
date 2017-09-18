@@ -123,8 +123,8 @@ class Qeq(object):
         self.input += 'unfix 1\n'
         
         return self.input
-
-
+        
+    
 class MolecularDynamics(object):
     """pysimm.lmps.MolecularDynamics
 
@@ -162,7 +162,7 @@ class MolecularDynamics(object):
         self.dump = kwargs.get('dump') or False
         self.dump_name = kwargs.get('dump_name')
         self.dump_append = kwargs.get('dump_append')
-
+        
         if self.temp is None:
             self.t_start = kwargs.get('t_start')
             self.t_stop = kwargs.get('t_stop')
@@ -243,6 +243,74 @@ class MolecularDynamics(object):
             self.input += 'undump pysimm_dump\n'
 
         return self.input
+        
+        
+class SteeredMolecularDynamics(MolecularDynamics):
+    def __init__(self, **kwargs):
+        MolecularDynamics.__init__(self, **kwargs)
+        self.p1 = kwargs.get('p1')
+        self.p2 = kwargs.get('p2')
+        self.k = kwargs.get('k') if kwargs.has_key('k') else 20.0
+        self.v = kwargs.get('v') if kwargs.has_key('v') else 0.001
+        self.d = kwargs.get('d') if kwargs.has_key('d') else 3.0
+    
+    def write(self, sim):
+        """pysimm.lmps.SteeredMolecularDynamics.write
+
+        Create LAMMPS input for a steered molecular dynamics simulation.
+
+        Args:
+            sim: pysimm.lmps.Simulation object reference
+
+        Returns:
+            input string
+        """
+        self.input = ''
+        if self.thermo:
+            self.input += 'thermo %s\n' % int(self.thermo)
+        if self.thermo_style:
+            self.input += 'thermo_style %s\n' % self.thermo_style
+
+        self.input += 'timestep %s\n' % self.timestep
+
+        if self.ensemble == 'nvt':
+            self.input += 'fix 1 all %s temp %s %s 100\n' % (self.ensemble, self.t_start, self.t_stop)
+        elif self.ensemble == 'npt':
+            self.input += ('fix 1 all %s temp %s %s 100 iso %s %s 100\n'
+                           % (self.ensemble, self.t_start, self.t_stop, self.p_start, self.p_stop))
+        elif self.ensemble == 'nve':
+            self.input += 'fix 1 all %s\n' % self.ensemble
+
+        if self.new_v:
+            self.input += 'velocity all create %s %s\n' % (self.t_start, self.seed)
+        elif self.scale_v:
+            self.input += 'velocity all scale %s\n' % self.t_start
+
+        if self.dump:
+            if self.dump_name:
+                self.input += ('dump pysimm_dump all atom %s %s.lammpstrj\n'
+                               % (self.dump, self.dump_name))
+            elif sim.name:
+                self.input += ('dump pysimm_dump all atom %s %s.lammpstrj\n'
+                               % (self.dump, '_'.join(sim.name.split())))
+            else:
+                self.input += ('dump pysimm_dump all atom %s pysimm_dump.lammpstrj\n'
+                               % self.dump)
+            if self.dump_append:
+                self.input += 'dump_modify pysimm_dump append yes\n'
+                
+        self.input += 'group p1 id {}\n'.format(self.p1.tag)
+        self.input += 'group p2 id {}\n'.format(self.p2.tag)
+        self.input += 'fix steer p1 smd cvel {} {} couple p2 auto auto auto {}\n'.format(self.k, self.v, self.d)
+
+        self.input += 'run %s\n' % self.length
+        self.input += 'unfix 1\n'
+        self.input += 'unfix steer\n'
+        if self.dump:
+            self.input += 'undump pysimm_dump\n'
+
+        return self.input
+        
 
 
 class Minimization(object):
@@ -559,8 +627,12 @@ def call_lammps(simulation, np, nanohub):
         None
     """
     if nanohub:
+        with file('temp.in', 'w') as f:
+            f.write(simulation.input)
         if simulation.name:
             print('%s: sending %s simulation to computer cluster at nanoHUB' % (strftime('%H:%M:%S'), simulation.name))
+        else:
+            print('%s: sending simulation to computer cluster at nanoHUB' % strftime('%H:%M:%S'))
         sys.stdout.flush()
         cmd = ('submit -n %s -w %s -i temp.lmps -i temp.in '
                'lammps-09Dec14-parallel -e both -l none -i temp.in'

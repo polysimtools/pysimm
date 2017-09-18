@@ -173,7 +173,7 @@ def angle(p1, p2, p3, radians=False):
     p12 = distance(p1, p2)
     p23 = distance(p2, p3)
     p13 = distance(p1, p3)
-    theta = acos((pow(p12, 2)+pow(p23, 2)-pow(p13, 2))/(2*p13*p23))
+    theta = acos((pow(p12, 2)+pow(p23, 2)-pow(p13, 2))/(2*p12*p23))
     if not radians:
         theta = theta * 180 / pi
     return theta

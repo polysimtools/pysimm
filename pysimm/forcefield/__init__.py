@@ -29,7 +29,6 @@
 
 
 from forcefield import Forcefield
-from cgenff import Cgenff
 from dreiding import Dreiding
 from gaff import Gaff
 from gaff2 import Gaff2

@@ -141,7 +141,7 @@ class ItemContainer(Sequence):
                     found.append(item)
                     if first:
                         return found
-        return found
+        return sorted(found, key=lambda x: x.name.count('X'))
 
     def remove(self, index, update=True):
         if index == 'all':

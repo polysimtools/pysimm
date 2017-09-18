@@ -625,11 +625,6 @@ class System(object):
                                                   is not None) else True
         update_properties = kwargs.get('update_properties') if kwargs.get('update_properties') is not None else True
 
-        if self.ff_class is not None and self.ff_class != other.ff_class:
-            warning_print('warning: mixing forcefield classes is highly '
-                          'unadvised. only continue if you know what you '
-                          'are doing')
-
         for pt in other.particle_types:
             if unique_types:
                 if pt.name not in [x.name for x in self.particle_types]:
@@ -725,7 +720,7 @@ class System(object):
             del i.tag
             if unique_types and i.type not in self.improper_types:
                 it = self.improper_types.get(i.type.name)
-                if not it or len(it) > 1:
+                if not it:
                     error_print('ImproperType error')
                 else:
                     i.type = it[0]
@@ -800,7 +795,6 @@ class System(object):
         """
         self.dim.check()
         self.add_particle_bonding()
-        self.add_particle_bonding()
         next_to_unwrap = []
         for p in self.particles:
             p.unwrapped = False
@@ -845,15 +839,14 @@ class System(object):
         
     def unite_atoms(self):
         for p in self.particles:
+            p.implicit_h = 0
             if p.elem != 'C':
                 continue
             for b in p.bonds:
                 pb = b.a if b.b is p else b.b
                 if pb.elem =='H':
-                    if p.implicit_h is not None:
-                        p.implicit_h += 1
-                    else:
-                        p.implicit_h = 1
+                    p.implicit_h += 1
+                    p.charge += pb.charge
                     self.particles.remove(pb.tag, update=False)
         self.remove_spare_bonding()
 
@@ -1813,30 +1806,43 @@ class System(object):
         Returns:
             None
         """
+        
         self.add_particle_bonding()
+        
+        if p1.molecule is not p2.molecule:
+            if p1.molecule.particles.count < p2.molecule.particles.count:
+                old_molecule_tag = p1.molecule.tag
+                for p_ in p1.molecule.particles:
+                    p_.molecule = p2.molecule
+            else:
+                old_molecule_tag = p2.molecule.tag
+                for p_ in p2.molecule.particles:
+                    p_.molecule = p1.molecule
+            self.molecules.remove(old_molecule_tag)
+        
         self.add_bond(p1, p2, f)
         if angles or dihedrals or impropers:
             for p in p1.bonded_to:
                 if angles:
-                    self.add_angle(p, p1, p2, f)
+                    if p is not p2:
+                        self.add_angle(p, p1, p2, f)
                 if dihedrals:
                     for pb in p.bonded_to:
-                        if pb is not p1:
+                        if pb is not p1 and p is not p2:
                             self.add_dihedral(pb, p, p1, p2, f)
             for p in p2.bonded_to:
                 if angles:
-                    self.add_angle(p1, p2, p, f)
+                    if p is not p1:
+                        self.add_angle(p1, p2, p, f)
                 if dihedrals:
                     for pb in p.bonded_to:
-                        if pb is not p2:
+                        if pb is not p2 and p is not p1:
                             self.add_dihedral(p1, p2, p, pb, f)
             if dihedrals:
                 for pb1 in p1.bonded_to:
                     for pb2 in p2.bonded_to:
-                        self.add_dihedral(pb1, p1, p2, pb2, f)
-
-        p1.bonded_to.add(p2)
-        p2.bonded_to.add(p1)
+                        if pb1 is not p2 and pb2 is not p1:
+                            self.add_dihedral(pb1, p1, p2, pb2, f)
 
         if impropers:
             if self.ff_class == '2':
@@ -1876,6 +1882,8 @@ class System(object):
         Returns:
             None
         """
+        if a is b:
+            return
         a_name = a.type.eq_bond or a.type.name
         b_name = b.type.eq_bond or b.type.name
         btype = self.bond_types.get('%s,%s' % (a_name, b_name))
@@ -1914,22 +1922,36 @@ class System(object):
         Returns:
             None
         """
+        if a is c:
+            return
         a_name = a.type.eq_angle or a.type.name
         b_name = b.type.eq_angle or b.type.name
         c_name = c.type.eq_angle or c.type.name
-        atype = self.angle_types.get('%s,%s,%s'
-                                     % (a_name, b_name, c_name))
+        atype = self.angle_types.get(
+            '%s,%s,%s' % (a_name, b_name, c_name),
+            item_wildcard=None
+        )
         if not atype and f:
-            atype = f.angle_types.get('%s,%s,%s'
-                                      % (a_name, b_name, c_name))
+            atype = self.angle_types.get(
+                '%s,%s,%s' % (a_name, b_name, c_name)
+            )
+            atype.extend(
+                f.angle_types.get(
+                    '%s,%s,%s' % (a_name, b_name, c_name)
+                )
+            )
+            
+            atype = sorted(atype, key=lambda x: x.name.count('X'))
+            
             if atype:
-                at = atype[0].copy()
-                self.angle_types.add(at)
-            atype = self.angle_types.get('%s,%s,%s'
-                                         % (a_name, b_name,
-                                            c_name))
+                if not self.angle_types.get(atype[0].name, item_wildcard=None):
+                    atype = self.angle_types.add(atype[0].copy())
+                else:
+                    atype = self.angle_types.get(atype[0].name, item_wildcard=None)[0]
+        elif atype:
+            atype = atype[0]
         if atype:
-            self.angles.add(Angle(type=atype[0], a=a, b=b, c=c))
+            self.angles.add(Angle(type=atype, a=a, b=b, c=c))
         else:
             error_print('error: system does not contain angle type named '
                         '%s,%s,%s or could not find type in forcefield supplied'
@@ -1951,25 +1973,38 @@ class System(object):
         Returns:
             None
         """
+        if a is c or b is d:
+            return
         a_name = a.type.eq_dihedral or a.type.name
         b_name = b.type.eq_dihedral or b.type.name
         c_name = c.type.eq_dihedral or c.type.name
         d_name = d.type.eq_dihedral or d.type.name
-        dtype = self.dihedral_types.get('%s,%s,%s,%s'
-                                        % (a_name, b_name,
-                                           c_name, d_name))
+        dtype = self.dihedral_types.get(
+            '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name),
+            item_wildcard=None
+        )
         if not dtype and f:
-            dtype = f.dihedral_types.get('%s,%s,%s,%s'
-                                         % (a_name, b_name,
-                                            c_name, d_name))
+            dtype = self.dihedral_types.get(
+                '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name)
+            )
+            dtype.extend(
+                f.dihedral_types.get(
+                    '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name)
+                )
+            )
+            
+            dtype = sorted(dtype, key=lambda x: x.name.count('X'))
+            
             if dtype:
-                dt = dtype[0].copy()
-                self.dihedral_types.add(dt)
-            dtype = self.dihedral_types.get('%s,%s,%s,%s'
-                                            % (a_name, b_name,
-                                               c_name, d_name))
+                if not self.dihedral_types.get(dtype[0].name, item_wildcard=None):
+                    dtype = self.dihedral_types.add(dtype[0].copy())
+                else:
+                    dtype = self.dihedral_types.get(dtype[0].name, item_wildcard=None)[0]
+            
+        elif dtype:
+            dtype = dtype[0]
         if dtype:
-            self.dihedrals.add(Dihedral(type=dtype[0], a=a, b=b, c=c, d=d))
+            self.dihedrals.add(Dihedral(type=dtype, a=a, b=b, c=c, d=d))
         else:
             error_print('error: system does not contain dihedral type named '
                         '%s,%s,%s,%s or could not find type in forcefield '
@@ -1993,46 +2028,42 @@ class System(object):
         Returns:
             None
         """
+        if a is b or a is c or a is d:
+            return
         a_name = a.type.eq_improper or a.type.name
         b_name = b.type.eq_improper or b.type.name
         c_name = c.type.eq_improper or c.type.name
         d_name = d.type.eq_improper or d.type.name
-        if self.ff_class == '2' or self.improper_style == 'class2':
-            itype = self.improper_types.get('%s,%s,%s,%s'
-                                            % (b_name, a_name,
-                                               c_name, d_name),
-                                            improper_type=True)
-        else:
-            itype = self.improper_types.get('%s,%s,%s,%s'
-                                            % (a_name, b_name,
-                                               c_name, d_name),
-                                            improper_type=True)
+        itype = self.improper_types.get('%s,%s,%s,%s'
+                                        % (a_name, b_name,
+                                           c_name, d_name),
+                                        improper_type=True,
+                                        item_wildcard=None)
         if not itype and f:
-            if f.ff_class == '2':
-                itype = f.improper_types.get('%s,%s,%s,%s'
-                                             % (b_name, a_name,
-                                                c_name, d_name),
-                                             improper_type=True)
-            else:
-                itype = f.improper_types.get('%s,%s,%s,%s'
-                                             % (a_name, b_name,
-                                                c_name, d_name),
-                                             improper_type=True)
+            itype = self.improper_types.get(
+                '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name),
+                improper_type=True
+            )
+            itype.extend(
+                f.improper_types.get(
+                    '%s,%s,%s,%s' % (a_name, b_name, c_name, d_name),
+                    improper_type=True
+                )
+            )
+                
+            itype = sorted(itype, key=lambda x: x.name.count('X'))
+            
             if itype:
-                it = itype[0].copy()
-                self.improper_types.add(it)
-            if f.ff_class == '2':
-                itype = self.improper_types.get('%s,%s,%s,%s'
-                                                % (b_name, a_name,
-                                                   c_name, d_name),
-                                                improper_type=True)
-            else:
-                itype = self.improper_types.get('%s,%s,%s,%s'
-                                                % (a_name, b_name,
-                                                   c_name, d_name),
-                                                improper_type=True)
+                if not self.improper_types.get(itype[0].name, item_wildcard=None, improper_type=True):
+                    itype = self.improper_types.add(itype[0].copy())
+                else:
+                    itype = self.improper_types.get(itype[0].name, item_wildcard=None, improper_type=True)[0]
+            
+        elif itype:
+            itype = itype[0]
+                
         if itype:
-            self.impropers.add(Improper(type=itype[0], a=a, b=b, c=c, d=d))
+            self.impropers.add(Improper(type=itype, a=a, b=b, c=c, d=d))
         else:
             return
 
@@ -2096,7 +2127,7 @@ class System(object):
             f.assign_charges(self, charges=charges)
 
         if set_box:
-            self.set_box(box_padding)
+            self.set_box(box_padding, center=False)
 
     def apply_charges(self, f, charges='default'):
         """pysimm.system.System.apply_charges
@@ -2111,6 +2142,87 @@ class System(object):
             None
         """
         f.assign_charges(self, charges=charges)
+        
+    def write_lammps_mol(self, out_data):
+        """pysimm.system.System.write_lammps_mol
+
+        Write System data formatted as LAMMPS molecule template
+
+        Args:
+            out_data: where to write data, file name or 'string'
+
+        Returns:
+            None or string if data file if out_data='string'
+        """
+        if out_data == 'string':
+            out_file = StringIO()
+        else:
+            out_file = open(out_data, 'w+')
+            
+        self.set_mass()
+        self.set_cog()
+            
+        out_file.write('%s\n\n' % self.name)
+        out_file.write('%s atoms\n' % self.particles.count)
+        out_file.write('%s bonds\n' % self.bonds.count)
+        out_file.write('%s angles\n' % self.angles.count)
+        out_file.write('%s dihedrals\n' % self.dihedrals.count)
+        out_file.write('%s impropers\n' % self.impropers.count)
+        
+        if self.particles.count > 0:
+            out_file.write('Coords\n\n')
+            for p in self.particles:
+                out_file.write('{} {} {} {}\n'.format(p.tag, p.x, p.y, p.z))
+        
+        out_file.write('\n')
+        
+        if self.particles.count > 0:
+            out_file.write('Types\n\n')
+            for p in self.particles:
+                out_file.write('{} {}\n'.format(p.tag, p.type.tag))
+        
+        out_file.write('\n')
+        
+        if self.particles.count > 0:
+            out_file.write('Charges\n\n')
+            for p in self.particles:
+                out_file.write('{} {}\n'.format(p.tag, p.charge))
+        
+        out_file.write('\n')
+        
+        if self.bonds.count > 0:
+            out_file.write('Bonds\n\n')
+            for b in self.bonds:
+                out_file.write('{} {} {} {}\n'.format(b.tag, b.type.tag, b.a.tag, b.b.tag))
+        
+        out_file.write('\n')
+        
+        if self.angles.count > 0:
+            out_file.write('Angles\n\n')
+            for a in self.angles:
+                out_file.write('{} {} {} {} {}\n'.format(a.tag, a.type.tag, a.a.tag, a.b.tag, a.c.tag))
+        
+        out_file.write('\n')
+        
+        if self.dihedrals.count > 0:
+            out_file.write('Dihedrals\n\n')
+            for d in self.dihedrals:
+                out_file.write('{} {} {} {} {} {}\n'.format(d.tag, d.type.tag, d.a.tag, d.b.tag, d.c.tag, d.d.tag))
+        
+        out_file.write('\n')
+        
+        if self.impropers.count > 0:
+            out_file.write('Impropers\n\n')
+            for i in self.impropers:
+                out_file.write('{} {} {} {} {} {}\n'.format(i.tag, i.type.tag, i.a.tag, i.b.tag, i.c.tag, i.d.tag))
+                
+        if out_data == 'string':
+            s = out_file.getvalue()
+            out_file.close()
+            return s
+        else:
+            out_file.close()
+        
 
     def write_lammps(self, out_data, **kwargs):
         """pysimm.system.System.write_lammps
@@ -2121,7 +2233,7 @@ class System(object):
             out_data: where to write data, file name or 'string'
 
         Returns:
-            None or string of data file if out_data='string'
+            None or string if data file if out_data='string'
         """
         empty = kwargs.get('empty')
 
@@ -2257,8 +2369,8 @@ class System(object):
             for dt in self.dihedral_types:
                 if self.dihedral_style == 'fourier':
                     dt_str = '{:4d}\t{}'.format(dt.tag, dt.m)
-                    for k, d, n in zip(dt.k, dt.d, dt.n):
-                        dt_str += '\t{}\t{}\t{}'.format(k, d, n)
+                    for k, n, d in zip(dt.k, dt.n, dt.d):
+                        dt_str += '\t{}\t{}\t{}'.format(k, n, d)
                     dt_str += '\t# {}\n'.format(dt.name)
                     out_file.write(dt_str)
                 elif self.dihedral_style == 'harmonic' or self.ff_class == '1':
@@ -2681,17 +2793,24 @@ class System(object):
 
         out.write('{:<10}pdb written using pySIMM system module\n'
                   .format('HEADER'))
-        for p in self.particles:
-            if p.type:
-                out.write('{:<6}{:>5} {:>4} RES  {:4}   '
-                          '{: 8.4f}{: 8.4f}{: 8.4f}{:>22}{:>2}\n'
-                          .format('ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, p.molecule.tag,
-                                  p.x, p.y, p.z, '', p.type.elem))
-            elif p.elem:
-                out.write('{:<6}{:>5} {:>4} RES  {:4}   '
-                          '{: 8.4f}{: 8.4f}{: 8.4f}{:>22}{:>2}\n'
-                          .format('ATOM', p.tag, p.elem, p.molecule.tag,
-                                  p.x, p.y, p.z, '', p.elem))
+        for m in self.molecules:
+            for p in sorted(m.particles, key=lambda x: x.tag):
+                if p.type:
+                    out.write(
+                        '{:<6}{:>5} {:>4} RES  {:4}    {: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'.format(
+                            'ATOM', p.tag, p.type.name[0:4] if type_names else p.type.elem, 
+                            p.molecule.tag, p.x, p.y, p.z, '', p.type.elem
+                        )
+                    )
+                elif p.elem:
+                    out.write(
+                        '{:<6}{:>5} {:>4} RES  {:4}    {: 8.3f}{: 8.3f}{: 8.3f}{:>22}{:>2}\n'.format(
+                            'ATOM', p.tag, p.elem, p.molecule.tag, 
+                            p.x, p.y, p.z, '', p.elem
+                        )
+                    )
+            out.write('TER\n')
+        
         for p in self.particles:
             if p.bonds:
                 out.write('{:<6}{:>5}'
@@ -2836,6 +2955,12 @@ class System(object):
             p.x -= self.cog[0]
             p.y -= self.cog[1]
             p.z -= self.cog[2]
+        self.dim.xhi -= self.cog[0]
+        self.dim.xlo -= self.cog[0]
+        self.dim.yhi -= self.cog[1]
+        self.dim.ylo -= self.cog[1]
+        self.dim.zhi -= self.cog[2]
+        self.dim.zlo -= self.cog[2]
         self.set_cog()
 
     def set_mass(self):
@@ -2952,8 +3077,6 @@ class System(object):
         Returns:
             None
         """
-        if center:
-            self.center_at_origin()
         xmin = ymin = zmin = sys.float_info.max
         xmax = ymax = zmax = sys.float_info.min
         for p in self.particles:
@@ -2979,7 +3102,10 @@ class System(object):
         self.dim.dx = self.dim.xhi - self.dim.xlo
         self.dim.dy = self.dim.yhi - self.dim.ylo
         self.dim.dz = self.dim.zhi - self.dim.zlo
-
+        
+        if center:
+            self.center_at_origin()
+        
     def set_mm_dist(self, molecules=None):
         """pysimm.system.System.set_mm_dist
 
@@ -3071,7 +3197,7 @@ class System(object):
         os.remove(name_)
 
     def viz(self, **kwargs):
-        self.visualize(vis_exec='vmd', unwrap=False, format='xyz')
+        self.visualize(vis_exec='vmd', unwrap=False, format='xyz', **kwargs)
 
 
 class Molecule(System):
@@ -3690,12 +3816,12 @@ def read_lammps(data_file, **kwargs):
                     n=[]
                     for i in range(m):
                         k.append(data.pop(0))
-                        d.append(data.pop(0))
                         n.append(data.pop(0))
+                        d.append(data.pop(0))
                     s.dihedral_types.add(DihedralType(tag=tag, name=name,
                                                       m=m,
                                                       k=map(float, k),
-                                                      d=map(int, d),
+                                                      d=map(float, d),
                                                       n=map(int, n)))
                 elif not dihedral_style:
                     if not quiet and i == 0:
@@ -3722,16 +3848,16 @@ def read_lammps(data_file, **kwargs):
                         data = line[1:]
                         m = int(data.pop(0))
                         k=[]
-                        d=[]
                         n=[]
+                        d=[]
                         for i in range(m):
                             k.append(data.pop(0))
-                            d.append(data.pop(0))
                             n.append(data.pop(0))
+                            d.append(data.pop(0))
                         s.dihedral_types.add(DihedralType(tag=tag, name=name,
                                                           m=m,
                                                           k=map(float, k),
-                                                          d=map(int, d),
+                                                          d=map(float, d),
                                                           n=map(int, n)))
             if not quiet and dihedral_style:
                 verbose_print('read "%s" dihedral parameters '
@@ -3836,15 +3962,28 @@ def read_lammps(data_file, **kwargs):
                     s.improper_types.add(ImproperType(tag=tag, name=name,
                                                       k=float(line[1]),
                                                       x0=float(line[2])))
+                elif (improper_style and
+                      improper_style.lower().startswith('cvff')):
+                    s.improper_types.add(ImproperType(tag=tag, name=name,
+                                                      k=float(line[1]),
+                                                      d=int(line[2]),
+                                                      n=int(line[3])))
                 elif not improper_style:
                     if not quiet and i == 0:
                             warning_print('cannot guess improper_style '
                                           'from number of parameters - '
                                           'will try to determine style later '
                                           'based on other types')
-                    s.improper_types.add(ImproperType(tag=tag, name=name,
-                                                      k=float(line[1]),
-                                                      x0=float(line[2])))
+                    if len(line) == 3:
+                        s.improper_types.add(ImproperType(tag=tag, name=name,
+                                                          k=float(line[1]),
+                                                          x0=float(line[2])))
+                    elif len(line) == 4:
+                        improper_style = 'cvff'
+                        s.improper_types.add(ImproperType(tag=tag, name=name,
+                                                          k=float(line[1]),
+                                                          d=int(line[2]),
+                                                          n=int(line[3])))
 
             if not quiet and improper_style:
                 verbose_print('read "%s" improper parameters '
@@ -4056,7 +4195,7 @@ def read_lammps(data_file, **kwargs):
     return s
 
 
-def read_pubchem_smiles(smiles, type_with=None):
+def read_pubchem_smiles(smiles, quiet=False, type_with=None):
     """pysimm.system.read_pubchem_smiles
 
     Interface with pubchem restful API to create molecular system from SMILES format
@@ -4072,8 +4211,9 @@ def read_pubchem_smiles(smiles, type_with=None):
     req = ('https://pubchem.ncbi.nlm.nih.gov/'
            'rest/pug/compound/smiles/%s/SDF/?record_type=3d' % smiles)
            
-    print('making request to pubchem RESTful API:')
-    print(req)
+    if not quiet:
+        print('making request to pubchem RESTful API:')
+        print(req)
 
     try:
         resp = urlopen(req)
@@ -4356,14 +4496,13 @@ def read_ac(ac_file):
     return s
 
 
-def read_pdb(pdb_file, guess_bonds=False):
+def read_pdb(pdb_file):
     """pysimm.system.read_pdb
 
     Interprets pdb file and creates pysimm.system.System object
 
     Args:
         pdb_file: pdb file name
-        guess_bonds: if True, guess bonds default=False ** probably buggy ***
 
     Returns:
         pysimm.system.System object
@@ -4397,9 +4536,6 @@ def read_pdb(pdb_file, guess_bonds=False):
 
 
     f.close()
-
-    if guess_bonds:
-        s.guess_bonds()
 
     return s
 

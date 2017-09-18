@@ -151,12 +151,6 @@
 <dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
 <p>Angle between particles a, b, and c</p>
 <p>a&#8211;b&#8211;c</p>
-<div class="line-block">
-<div class="line-block">
-<div class="line">b</div>
-</div>
-<div class="line">/     | a   c</div>
-</div>
 <p>Objects inheriting from pysimm.utils.Item can contain arbitrary data.
 Keyword arguments are assigned as attributes.
 Attributes usually used are given below.</p>
@@ -1795,6 +1789,28 @@ Ensure particles are contained within simulation box.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ac_file</strong> &#8211; ac file name</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pysimm.system.System object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_chemdoodle_json">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_chemdoodle_json</code><span class="sig-paren">(</span><em>file_</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_chemdoodle_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_chemdoodle_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>pysimm.system.read_xyz</p>
+<p>Interprets xyz file and creates pysimm.system.System object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file</strong> &#8211; xyz file name</li>
+<li><strong>quiet</strong> (<em>optional</em>) &#8211; if False, print status</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">pysimm.system.System object</p>
+</td>
 </tr>
 </tbody>
 </table>

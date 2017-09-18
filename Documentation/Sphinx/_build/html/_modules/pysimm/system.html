@@ -382,10 +382,6 @@
 <span class="sd">    Angle between particles a, b, and c</span>
 <span class="sd">    </span>
 <span class="sd">    a--b--c</span>
-<span class="sd">    </span>
-<span class="sd">    |   b</span>
-<span class="sd">    |  / \</span>
-<span class="sd">    | a   c</span>
 
 <span class="sd">    Objects inheriting from pysimm.utils.Item can contain arbitrary data.</span>
 <span class="sd">    Keyword arguments are assigned as attributes.</span>
@@ -934,7 +930,6 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_particle_bonding</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_particle_bonding</span><span class="p">()</span>
         <span class="n">next_to_unwrap</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
@@ -3415,6 +3410,47 @@
 
     <span class="n">s</span><span class="o">.</span><span class="n">set_box</span><span class="p">(</span><span class="n">padding</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
+    <span class="k">return</span> <span class="n">s</span></div>
+    
+<div class="viewcode-block" id="read_chemdoodle_json"><a class="viewcode-back" href="../../pysimm.system.html#pysimm.system.read_chemdoodle_json">[docs]</a><span class="k">def</span> <span class="nf">read_chemdoodle_json</span><span class="p">(</span><span class="n">file_</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.system.read_xyz</span>
+
+<span class="sd">    Interprets xyz file and creates pysimm.system.System object</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_: xyz file name</span>
+<span class="sd">        quiet(optional): if False, print status</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pysimm.system.System object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">quiet</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;quiet&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_</span><span class="p">):</span>
+        <span class="n">debug_print</span><span class="p">(</span><span class="s1">&#39;reading file&#39;</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">file</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
+        <span class="n">debug_print</span><span class="p">(</span><span class="s1">&#39;reading string&#39;</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">file_</span><span class="p">)</span>
+        
+    <span class="n">s</span> <span class="o">=</span> <span class="n">System</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">):</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Particle</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">),</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">),</span>
+            <span class="n">z</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">),</span>
+            <span class="n">charge</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">),</span>
+            <span class="n">elem</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;l&#39;</span><span class="p">),</span>
+            <span class="n">type_name</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+        <span class="p">))</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">):</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">bonds</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Bond</span><span class="p">(</span>
+            <span class="n">a</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">b</span><span class="o">=</span><span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">order</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="p">))</span>
+        
     <span class="k">return</span> <span class="n">s</span></div>
 
 
