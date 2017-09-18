@@ -937,6 +937,7 @@ class McfWriter(object):
             idxs[self.mcf_tags.index('# Intra_Scaling')] = True
         return idxs
 
+
 class DataAnalyzer(object):
     def __init__(self, **kwargs):
         self.work_path = kwargs.get('path') or os.getcwd()
@@ -954,5 +955,4 @@ class DataAnalyzer(object):
             idxs.append(int(re.search(order_rule, os.path.split(f)[1]).group()))
         ordr = sorted(range(len(idxs)), key=lambda k: idxs[k])
         return [fls[i] for i in ordr], ordr
-
 
