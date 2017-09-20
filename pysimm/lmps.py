@@ -135,7 +135,9 @@ class MolecularDynamics(object):
         ensemble: 'nvt' or 'npt' or 'nve'
         limit: numerical value to use with nve when limiting particle displacement
         temp: temperature for use with 'nvt' and 'npt' or new_v
+        tdamp: damping parameter for thermostat (default=100*timestep)
         pressure: pressure for use with 'npt'
+        pdamp: damping parameter for barostat (default=1000*timestep)
         new_v: True to have LAMMPS generate new velocities
         seed: seed value for RNG (random by default)
         scale_v: True to scale velocities to given temperature default=False
