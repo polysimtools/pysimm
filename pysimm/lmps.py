@@ -460,7 +460,8 @@ class Simulation(object):
         self.nonbond_mixing = kwargs.get('nonbond_mixing') or 'arithmetic'
         self.cutoff = kwargs.get('cutoff') or 12.0
 
-        self.print_to_screen = kwargs.get('print_to_screen') if kwargs.get('print_to_screen') is not None else False
+        self.debug = kwargs.get('debug', False)
+        self.print_to_screen = kwargs.get('print_to_screen', False)
         self.name = kwargs.get('name') or False
         self.log = kwargs.get('log')
         self.write = kwargs.get('write') or False
@@ -591,7 +592,7 @@ class Simulation(object):
             raise PysimmError('There was a problem calling LAMMPS with mpiexec'), None, sys.exc_info()[2]
         except IOError as ioe:
             if check_lmps_exec():
-                raise PysimmError('There was a problem running LAMMPS. The process started but did not finish successfully. Check the log file, or rerun the simulation with print_to_screen=True to debug issue from LAMMPS output'), None, sys.exc_info()[2]
+                raise PysimmError('There was a problem running LAMMPS. The process started but did not finish successfully. Check the log file, or rerun the simulation with debug=True to debug issue from LAMMPS output'), None, sys.exc_info()[2]
             else:
                 raise PysimmError('There was a problem running LAMMPS. LAMMPS is not configured properly. Make sure the LAMMPS_EXEC environment variable is set to the correct LAMMPS executable path. The current path is set to:\n\n{}'.format(LAMMPS_EXEC)), None, sys.exc_info()[2]
 
@@ -648,7 +649,10 @@ def call_lammps(simulation, np, nanohub):
                       stdin=PIPE, stdout=PIPE, stderr=PIPE)
         simulation.write_input()
         p.stdin.write(simulation.input)
-        if simulation.print_to_screen:
+        if simulation.debug:
+            print(simulation.input)
+            warning_print('debug setting involves streaming output from LAMMPS process and can degrade performance')
+            warning_print('only use debug for debugging purposes, use print_to_screen to collect stdout after process finishes')
             q = Queue()
             t = Thread(target=enqueue_output, args=(p.stdout, q))
             t.daemon = True
@@ -660,11 +664,14 @@ def call_lammps(simulation, np, nanohub):
                 except Empty:
                     pass
                 else:
-                    if simulation.print_to_screen:
+                    if simulation.debug:
                         sys.stdout.write(line)
                         sys.stdout.flush()
         else:
-            p.communicate()
+            stdo, stde = p.communicate()
+            if simulation.print_to_screen:
+                print(stdo)
+                print(stde)
                     
     simulation.system.read_lammps_dump('pysimm.dump.tmp')
 
