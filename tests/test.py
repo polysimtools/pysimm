@@ -25,7 +25,7 @@ else:
     os.mkdir('tmp')
 os.chdir('tmp')
 
-print('testing imports...', end='')
+print('testing {:.<64}'.format('imports'), end='')
 import pysimm
 from pysimm import cli
 from pysimm import amber
@@ -45,7 +45,6 @@ from pysimm.models.monomers.gaff2 import *
 print('passed')
 
 example_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, os.pardir, 'Examples')
-print(example_dir)
 
 examples = glob(os.path.join(example_dir, '*'))
 
@@ -56,7 +55,7 @@ for example in examples:
 
 output = []
 for script in sorted(scripts, key=lambda x: x.split('Examples/')[1]):
-    print('testing Examples/{}...'.format(script.split('Examples/')[1]), end='')
+    print('testing Examples/{:.<55}'.format(script.split('Examples/')[1]), end='')
     foo = imp.load_source('create', script)
     with Capturing(output) as output:
         foo.run(test=True)
