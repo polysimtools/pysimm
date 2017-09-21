@@ -57,9 +57,12 @@ output = []
 for script in sorted(scripts, key=lambda x: x.split('Examples/')[1]):
     print('testing Examples/{:.<55}'.format(script.split('Examples/')[1]), end='')
     foo = imp.load_source('create', script)
-    with Capturing(output) as output:
-        foo.run(test=True)
-    print('passed')
+    try:
+        with Capturing(output) as output:
+            foo.run(test=True)
+        print('passed')
+    except:
+        print('FAILED')
     
 os.chdir('../')
 shutil.rmtree('tmp')
