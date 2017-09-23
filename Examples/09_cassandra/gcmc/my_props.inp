@@ -13,7 +13,7 @@ lj cut_tail 14.0
 lb
 
 # Charge_Style
-coul ewald 14.0 1E-5
+coul ewald 14.0 1e-5
 
 # Temperature_Info
 300
@@ -23,8 +23,8 @@ Equilibration 100
 
 # Simulation_Length_Info
 Units       Steps
-prop_freq   10000
-coord_freq  500
+prop_freq   500
+coord_freq  10000
 run         10000
 
 # Average_Info

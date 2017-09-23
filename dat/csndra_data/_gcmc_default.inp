@@ -40,8 +40,8 @@ lj cut_tail 12.0
 
 # Simulation_Length_Info
 units   steps
-prop_freq   5000
-coord_freq   5000
+prop_freq   500
+coord_freq   10000
 run   10000
 !^^^^^^^^^^^^^^^^^^^^
 

@@ -108,8 +108,6 @@ class GCMC(object):
         sst_count = 0
         self.fxd_sst = fxd_sst
         self.fixed_syst_mcf_file = None
-        # self.rigid_idxs = None
-        # self.nonrigid_idxs = None
         if self.fxd_sst:
             # Check few things of the system in order for CASSANDRA not to raise an exception
             self.fxd_sst.zero_charge()         # 1) the sum of the charges should be 0
