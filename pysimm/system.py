@@ -2919,6 +2919,39 @@ class System(object):
             self.cog[2] += p.z
         if self.particles.count:
             self.cog = [c / self.particles.count for c in self.cog]
+            
+    def shift_box(self, shiftx, shifty, shiftz):
+        self.dim.xhi += shiftx
+        self.dim.xlo += shiftx
+        self.dim.yhi += shifty
+        self.dim.ylo += shifty
+        self.dim.zhi += shiftz
+        self.dim.zlo += shiftz
+        self.dim.size()
+        
+    def shift_particles(self, shiftx, shifty, shiftz):
+        for p in self.particles:
+            p.x += shiftx
+            p.y += shifty
+            p.z += shiftz
+        self.set_cog()
+            
+    def center(self, what='particles', at=[0, 0, 0], move_both=True):
+        if what == 'particles':
+            self.set_cog()
+            move_vec = [at[n] - self.cog[n] for n in range(3)]
+            self.shift_particles(*move_vec)
+            if move_both:
+                self.shift_box(*move_vec)
+        elif what == 'box':
+            self.dim.size()
+            box_center = [self.dim.xlo+self.dim.dx/2, self.dim.ylo+self.dim.dy/2, self.dim.zlo+self.dim.dz/2]
+            move_vec = [at[n] - box_center[n] for n in range(3)]
+            self.shift_box(*move_vec)
+            if move_both:
+                self.shift_particles(*move_vec)
+        else:
+            error_print('can only choose to center "particles" or "box"')
 
     def center_system(self):
         """pysimm.system.System.center_system
