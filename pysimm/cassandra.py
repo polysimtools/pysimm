@@ -39,14 +39,14 @@ from collections import Iterable, OrderedDict
 from pysimm import system
 from string import ascii_uppercase
 
-DATA_PATH = os.path.relpath(os.path.join(os.path.dirname(system.__file__), '../dat/csndra_data'))
+DATA_PATH = os.path.relpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dat/csndra_data'))
 KCALMOL_2_K = 503.22271716452
 
 CASSANDRA_EXEC = os.environ.get('CASSANDRA_EXEC')
 
 # Creating a logger instance and send its output to console 'deafault'
 logging.basicConfig(level=logging.INFO, datefmt='%H:%M:%S',
-                    format='[%(levelname)s] %(asctime)s: %(message)s')
+                    format='%(asctime)s [%(levelname)s]: %(message)s')
 
 
 def check_cs_exec():
@@ -69,6 +69,21 @@ check_cs_exec()
 
 
 class GCMC(object):
+    """pysimm.cassandra.GCMC
+
+    Object containing the settings for the Grand-Canonical Monte-Carlo simulations povided
+    by the CASSANDRA software. The object includes also the simulation results
+
+    Attributes:
+        props: dictionary containing all simulation settings to be written to the CASSANDRA .inp file
+        input: text stream to be written to the CASSANDRA .inp file
+        mc_sst: wrapper around the list of pysimm.system.System objects representing single molecules (e.g. molecules
+        of different gaseous species) that will be used during MC simulations
+        fxd_sst: pysimm.system.System object that describes the optional fixed molecular system for MC
+        simulations (default: None)
+        tot_sst: the pysimm.system.System object containing results of CASSANDRA simulations
+        logger: logging.Logger object for verbose program execution
+    """
 
     def __init__(self, mc_sst=None, fxd_sst=None, **kwargs):
         global DATA_PATH
@@ -85,7 +100,7 @@ class GCMC(object):
         def_dat = Cassandra().read_input(os.path.join(DATA_PATH, '_gcmc_default.inp'))
 
         # Static (unchangeable) properties
-        self.props['Sim_Type'] = InpSpec('Sim_Type', 'gcmc', 'gcmc')
+        self.props['Sim_Type'] = InpSpec('Sim_Type', 'GCMC', 'GCMC')
 
         tmp = kwargs.get('out_folder')  # Folder for the results and intermediate files
         if tmp:
@@ -212,6 +227,11 @@ class GCMC(object):
         self.props['Fragment_Files'] = InpSpec('Fragment_Files', frag_files, None, **{'new_line': True})
 
     def write(self):
+        """pysimm.cassandra.GCMC
+
+        Iterates through the GCMC.props dictionary creating the text for correct CASSANDRA input
+        """
+
         for key in self.props.keys():
             if self.props[key].value is not None:
                 self.input += '{:}\n'.format(self.props[key].to_string())
@@ -225,6 +245,10 @@ class GCMC(object):
         self.logger.info('File: "{:}" was created sucsessfully'.format(self.props_file))
 
     def __write_chk__(self, out_file):
+        """pysimm.cassandra.__write_chk__
+
+        Creates the CASSANDRA checkpoint file basing on the information from the GCMC.tot_sst field
+        """
         # Initializing output stream
         if out_file == 'string':
             out_stream = StringIO()
@@ -295,6 +319,13 @@ class GCMC(object):
         out_stream.close()
 
     def upd_simulation(self):
+        """pysimm.cassandra.upd_simulation
+
+        Updates the GCMC.tot_sst field using the 'GCMC.props['Run_Name'].chk' file. Will try to parse the checkpoint
+        file and read the coordinates of the molecules inserted by CASSANDRA. If neither of the molecules from the
+        GCMC.mc_sst can be fit to the read text the method will raise an error. The fitting method:
+        pysimm.cassandra.McSystem.make_system assumes constant order of the atoms inside the molecule
+        """
         fname = '{:}{:}'.format(self.props['Run_Name'].value, '.chk')
         if os.path.isfile(fname):
             try:
@@ -322,6 +353,10 @@ class GCMC(object):
                               'Probably it cannot be written by CASSANDRA to the place you specified')
 
     def __check_params__(self):
+        """pysimm.cassandra.upd_simulation
+
+        Private method desighned for update the fields of the GCMC object to make them conformed with each other
+        """
         # Synchronizing the simulation box parameters
         if self.fxd_sst:
             dx = self.fxd_sst.dim.xhi - self.fxd_sst.dim.xlo
@@ -349,10 +384,27 @@ class GCMC(object):
 
     # TODO: Write similar method returning molecule id-s
     def group_by_id(self, group_key='matrix'):
+        """pysimm.cassandra.group_by_id
+
+        Method for listing the properties of the atoms in GCMC.tot_sst. Will iterate through all atoms in the system
+        and return indexes only of those that match the property. Currently supports 3 properties defined by the
+        input argument
+
+        Args:
+            group_key: text constant defines the property to match. Possible keywords are:
+             i) 'matrix' [default] indexes of the atoms in GCMC.fxd_sst
+             ii) 'rigid' indexes of all atoms that have rigid atomic bonds. It is assumed here that rigid and nonrigid
+             atoms can interact only through intermolecular forces
+             iii) 'nonrigid' opposite of previous -- indexes of all atoms that have nonrigid atomic bonds
+
+        Returns:
+            text string in format "a1:b1 a2:b2 ..." where all indexes inside [ak, bk] belongs to the selected group
+            array of the form [[a1, b1], [a2, b2], ...]
+
+        """
         fxd_sst_idxs = []
         if self.fxd_sst:
             fxd_sst_idxs = range(1, len(self.fxd_sst.particles) + 1)
-
         # Behaviour depending on type of particles to check
         check = lambda x: x
         if group_key.lower() == 'nonrigid':
