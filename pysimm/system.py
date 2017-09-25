@@ -2921,6 +2921,18 @@ class System(object):
             self.cog = [c / self.particles.count for c in self.cog]
             
     def shift_box(self, shiftx, shifty, shiftz):
+        """pysimm.system.System.shift_box
+
+        Shifts simulation box bounds by shiftx, shifty, shiftz. Recalculates dx, dy, dz.
+
+        Args:
+            shiftx: distance to shift simulation bounds in x direction
+            shifty: distance to shift simulation bounds in y direction
+            shiftz: distance to shift simulation bounds in z direction
+
+        Returns:
+            None
+        """
         self.dim.xhi += shiftx
         self.dim.xlo += shiftx
         self.dim.yhi += shifty
@@ -2930,6 +2942,18 @@ class System(object):
         self.dim.size()
         
     def shift_particles(self, shiftx, shifty, shiftz):
+        """pysimm.system.System.shift_particles
+
+        Shifts all particles by shiftx, shifty, shiftz. Recalculates cog.
+
+        Args:
+            shiftx: distance to shift particles in x direction
+            shifty: distance to shift particles in y direction
+            shiftz: distance to shift particles in z direction
+
+        Returns:
+            None
+        """
         for p in self.particles:
             p.x += shiftx
             p.y += shifty
@@ -2937,6 +2961,18 @@ class System(object):
         self.set_cog()
             
     def center(self, what='particles', at=[0, 0, 0], move_both=True):
+        """pysimm.system.System.center
+
+        Centers particles center of geometry or simulation box at given coordinate. A vector is defined based on the current coordinate for the center of either the particles or the simulation box and the "at" parameter. This shift vector is applied to the entity defined by the "what" parameter. Optionally, both the particles and the box can be shifted by the same vector.
+
+        Args:
+            what: what is being centered: "particles" or "box"
+            at: new coordinate for center of particles or box
+            move_both: if True, determines vector for shift defined by "what" and "at" parameters, and applies shift to both particles and box. If false, only shift what is defined by "what" parameter.
+
+        Returns:
+            None
+        """
         if what == 'particles':
             self.set_cog()
             move_vec = [at[n] - self.cog[n] for n in range(3)]
