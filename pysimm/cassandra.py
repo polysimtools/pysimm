@@ -97,7 +97,7 @@ class GCMC(object):
         self.props = OrderedDict()
 
         # Reading default properties of the GCMC simulations
-        def_dat = Cassandra().read_input(os.path.join(DATA_PATH, '_gcmc_default.inp'))
+        def_dat = Cassandra(fxd_sst).read_input(os.path.join(DATA_PATH, '_gcmc_default.inp'))
 
         # Static (unchangeable) properties
         self.props['Sim_Type'] = InpSpec('Sim_Type', 'GCMC', 'GCMC')
@@ -123,7 +123,7 @@ class GCMC(object):
         sst_count = 0
         self.fxd_sst = fxd_sst
         self.fixed_syst_mcf_file = None
-        if self.fxd_sst:
+        if self.fxd_sst.particles.count > 0:
             # Check few things of the system in order for CASSANDRA not to raise an exception
             self.fxd_sst.zero_charge()         # 1) the sum of the charges should be 0
             self.fxd_sst.center_system()       # 2) the center of the box around the system should be at origin
@@ -180,20 +180,20 @@ class GCMC(object):
 
         # Order of the next three items is IMPORTANT! Check the CASSANDRA spec file for further info
         limits = [0.3] * n_spec
-        if fxd_sst:
+        if self.fxd_sst.particles.count:
             limits[0] = 0
         self.props['Prob_Translation'] = InpProbSpec('Prob_Translation', kwargs.get('Prob_Translation'),
                                                      OrderedDict([('tot_prob', 0.25),
                                                                   ('limit_vals', limits)]),
                                                      **{'new_line': True, 'indicator': 'start'})
         tps = ['cbmc'] * n_spec
-        if fxd_sst:
+        if self.fxd_sst.particles.count:
             tps[0] = 'none'
         self.props['Prob_Insertion'] = InpProbSpec('Prob_Insertion', kwargs.get('Prob_Insertion'),
                                                    OrderedDict([('tot_prob', 0.25), ('types', tps)]),
                                                    **{'new_line': True})
         max_ang = [180] * n_spec
-        if fxd_sst:
+        if self.fxd_sst.particles.count:
             max_ang[0] = 0
         self.props['Prob_Rotation'] = InpProbSpec('Prob_Rotation', kwargs.get('Prob_Rotation'),
                                                   OrderedDict([('tot_prob', 0.25), ('limit_vals', max_ang)]),
@@ -206,7 +206,7 @@ class GCMC(object):
         self.fxd_sst_xyz = ''
         pops_list = [0] * n_spec
         start_type = 'make_config'
-        if fxd_sst:
+        if self.fxd_sst.particles.count:
             pops_list[0] = 1
             self.fxd_sst_xyz = os.path.join(self.out_folder, 'fixed_syst.xyz')
             start_type = 'read_config'
@@ -516,7 +516,7 @@ class McSystem(object):
 
         self.file_store = os.getcwd()
         self.max_ins = self.__make_iterable__(kwargs.get('max_ins') or 10000)
-        self.is_rigid = self.__make_iterable__(kwargs.get('is_rigid')) or [True] * len(self.sst)
+        self.is_rigid = self.__make_iterable__(kwargs.get('is_rigid') or [True] * len(self.sst))
         self.chem_pot = self.__make_iterable__(chem_pot)
         self.made_ins = [0] * len(self.sst)
         self.mcf_file = []
@@ -653,8 +653,9 @@ class Cassandra(object):
 
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, frame_sst, **kwargs):
         self.logger = logging.getLogger('CSNDRA')
+        self.frame_sst = frame_sst
         self.run_queue = []
 
     def run(self, is_replace=False):
@@ -663,7 +664,7 @@ class Cassandra(object):
             # Write .inp file
             task.write()
             # Write .xyz of the fixed system if provided
-            if task.fxd_sst:
+            if task.fxd_sst.particles.count > 0:
                 if task.fixed_syst_mcf_file is not None:
                     McfWriter(task.fxd_sst, task.fixed_syst_mcf_file).write('atoms')
                 task.fxd_sst.write_xyz(task.fxd_sst_xyz)
@@ -692,16 +693,21 @@ class Cassandra(object):
                                       '\n\n{}\n\n'.format(CASSANDRA_EXEC))
                     exit(1)
 
-    def add_gcmc(self, obj1=None, obj2=None, **kwargs):
+    def add_gcmc(self, obj1=None, **kwargs):
         new_job = None
         if isinstance(obj1, GCMC):
             new_job = obj1
-        elif isinstance(obj1, system.System) or isinstance(obj1, McSystem):
-            new_job = GCMC(obj1, obj2, **kwargs)
         else:
-            self.logger.error('Unknown GCMC initialization. Please provide either '
-                              'correct GCMC parameters or GCMC simulation object')
-            exit(1)
+            specs = kwargs.get('species')
+            if specs:
+                mc_sst = McSystem(specs, kwargs.get('chem_pot'),
+                                  max_ins=kwargs.get('max_ins'),
+                                  is_rigid=kwargs.get('is_rigid'))
+                new_job = GCMC(mc_sst, self.frame_sst, **kwargs)
+            else:
+                self.logger.error('Unknown GCMC initialization. Please provide either '
+                                  'correct GCMC parameters or GCMC simulation object')
+                exit(1)
         if kwargs.get('is_new'):
             self.run_queue[:] = []
         if new_job:

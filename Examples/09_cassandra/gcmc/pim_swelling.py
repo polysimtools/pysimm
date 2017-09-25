@@ -1,7 +1,9 @@
 from pysimm.apps import mc_md
-from pysimm import cassandra
+from pysimm import system, cassandra
 
-cs = cassandra.Cassandra()
+polymer = system.read_lammps('pim.lmps')
+
+cs = cassandra.Cassandra(polymer)
 my_mc_props = cs.read_input('my_props.inp')
 my_mc_props.update({'rigid_type': [True, False],
                     'max_ins': [2000, 1500],
@@ -16,7 +18,10 @@ my_md_props = {'ensemble': 'npt',
                'print_to_screen': False,
                'cutoff': 14.0}
 
-mc_md.mc_md(['co2.lmps', 'ch4.lmps'], 'pim.lmps',
+gas1 = system.read_lammps('co2.lmps')
+gas2 = system.read_lammps('ch4.lmps')
+
+mc_md.mc_md([gas1, gas2], polymer,
             mcmd_niter=21,
             sim_folder='results',
             mc_props=my_mc_props,

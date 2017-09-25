@@ -2,22 +2,27 @@ from pysimm import system, cassandra
 from collections import OrderedDict
 
 # In order to run CASSANDRA GCMC one need to create the CASSANDRA object
-css = cassandra.Cassandra()
+sst = system.System()
+sst.dim = system.Dimension(dx=45, dy=45, dz=45, center=[0, 0, 0])
+css = cassandra.Cassandra(sst)
 
 # Read the CASSANDRA .inp parameters file -- common way to setup simulations.
 # Any of the read properties can be modified here afterwards
-gcmcPropsRead = css.read_input('my_props.inp')
-gcmcPropsRead['Box_Info'] = OrderedDict([('box_count', 1), ('box_size', 45)])
+my_gcmc_props = css.read_input('my_props.inp')
 
 # The prefix for the all files that will be created by this run
-gcmcPropsRead['Run_Name'] = 'pure_co2'
+my_gcmc_props['Run_Name'] = 'gas_adsorb'
 
 # Set the gas (gas system) to be purged in a box
-gas_sst = cassandra.McSystem(system.read_lammps('co2.lmps'), max_ins=2000, chem_pot=-27.34)
+specie1 = system.read_lammps('co2.lmps')
+specie2 = system.read_lammps('ch4.lmps')
+specie3 = system.read_lammps('m-xylene.lmps')
 
-job = cassandra.GCMC(gas_sst, out_folder='gcmc_test_1', **gcmcPropsRead)
-css.add_gcmc(job)
+css.add_gcmc(species=[specie1, specie2, specie3],
+             max_ins=[2000, 1000, 500],
+             chem_pot=[-27.34, -29.34, -24.59],
+             out_folder='gas_adsorb_results', **my_gcmc_props)
 css.run()
 
-job.tot_sst.write_lammps('bxwth_gas.lmps')
-job.tot_sst.system.visualize()
+# job.tot_sst.write_lammps('gas_adsorb.lmps')
+# job.tot_sst.system.visualize()
