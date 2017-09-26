@@ -24,8 +24,8 @@ Equilibration 100
 # Simulation_Length_Info
 Units       Steps
 prop_freq   500
-coord_freq  10000
-run         10000
+coord_freq  50000
+run         50000
 
 # Average_Info
 1
