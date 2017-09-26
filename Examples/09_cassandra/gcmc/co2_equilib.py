@@ -24,5 +24,5 @@ css.add_gcmc(species=[specie1, specie2, specie3],
              out_folder='gas_adsorb_results', **my_gcmc_props)
 css.run()
 
-# job.tot_sst.write_lammps('gas_adsorb.lmps')
-# job.tot_sst.system.visualize()
+css.final_sst.write_lammps('gas_adsorb.lmps')
+# css.final_sst.visualize()

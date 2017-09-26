@@ -327,6 +327,7 @@ class GCMC(object):
         pysimm.cassandra.McSystem.make_system assumes constant order of the atoms inside the molecule
         """
         fname = '{:}{:}'.format(self.props['Run_Name'].value, '.chk')
+        self.logger.info('Updating MC system from the CASSANDRA {:} file...'.format(fname))
         if os.path.isfile(fname):
             try:
                 with open(fname, 'r') as inp:
@@ -343,8 +344,8 @@ class GCMC(object):
                     start_ind = lines.find('coordinates for all the boxes')
                     all_coord_lines = lines[start_ind:-1].split('\n')
                     inp.close()
-                self.mc_sst.make_system(all_coord_lines[offset:])
-                self.tot_sst.add(self.mc_sst.simul_sst, change_dim=False)
+                self.tot_sst.add(self.mc_sst.make_system(all_coord_lines[offset:]), change_dim=False)
+                self.logger.info('Simulation system successfully updated')
 
             except IndexError:
                 self.logger.error('Cannot fit the molecules from the CASSANDRA file to the PySIMM system')
@@ -511,8 +512,25 @@ class McSystem(object):
         self.sst = self.__make_iterable__(s)
         for sst in self.sst:
             sst.zero_charge()
-            self.__check_ff_class__(sst)
-            self.__mark_fixed__(sst)
+            # Checking that the force-field of the input system is of the class-1 as it is direct CASSANDRA restriction
+            if isinstance(sst, system.System):
+                if sst.ff_class:
+                    if not (sst.ff_class == '1'):
+                        self.logger.error('Currently cassandra supports only with **Type-I** force fields. '
+                                          'The PYSIMM systems you provided are of the different types'
+                                          'Exiting...')
+                        exit(1)
+                else:
+                    self.logger.info('The Force-Field type of the system is not defined. '
+                                     'Assuming it is **Type-1** force field')
+
+                    sst.ff_class = '1'
+            # Decorating the system with bonds_fixed flag and angle_fixed flag
+            for bt in sst.bond_types:
+                bt.is_fixed = True
+            for at in sst.angle_types:
+                if at.k > 0:
+                    at.is_fixed = True
 
         self.file_store = os.getcwd()
         self.max_ins = self.__make_iterable__(kwargs.get('max_ins') or 10000)
@@ -522,7 +540,6 @@ class McSystem(object):
         self.mcf_file = []
         self.frag_file = []
         self.temperature = None
-        self.simul_sst = system.System(ff_class='1')
 
     def update_props(self, props):
         self.generate_mcf()
@@ -549,20 +566,6 @@ class McSystem(object):
             McfWriter(sstm, fullfile).write()
             self.mcf_file.append(fullfile)
 
-    def __check_ff_class__(self, sst):
-        if isinstance(sst, system.System):
-            if sst.ff_class:
-                if not (sst.ff_class == '1'):
-                    self.logger.error('Currently cassandra supports only with **Type-I** force fields. '
-                                      'The PYSIMM systems you provided are of the different types'
-                                      'Exiting...')
-                    exit(1)
-            else:
-                self.logger.info('The Force-Field type of the system is not defined. '
-                                 'Assuming it is **Type-1** force field')
-
-                sst.ff_class = '1'
-
     # Force our fields be iterable (wrap in a list if it contains of only one item)
     def __make_iterable__(self, obj):
         it_obj = obj
@@ -587,6 +590,7 @@ class McSystem(object):
             self.frag_file.append(fullfile)
 
     def make_system(self, text_output):
+        sstm = system.System(ff_class='1')
         count = 0  # counter of the lines in the input file
         sys_idx = 0  # counter of the gas molecules to lookup
         while count < len(text_output) - 1:
@@ -596,18 +600,14 @@ class McSystem(object):
                 for p in tmp.particles:
                     vals = dictn[p.tag - 1].split()
                     # Read the coordinates from the text output of the CASSANDRA simulation
-                    p.x = float(vals[1])
-                    p.y = float(vals[2])
-                    p.z = float(vals[3])
+                    p.x, p.y, p.z = map(float, vals[1:4])
                     # Force velocities of the particles to be 0
-                    p.vx = 0.0
-                    p.vy = 0.0
-                    p.vz = 0.0
+                    p.vx, p.vy, p.vz = 0.0, 0.0, 0.0
                     p.molecule.syst_tag = 0
                 if self.is_rigid[sys_idx]:
                     for p in tmp.particles:
                         p.is_rigid = True
-                self.simul_sst.add(tmp)
+                sstm.add(tmp)
                 self.made_ins[sys_idx] += 1
                 count += len(tmp.particles)
                 sys_idx = 0
@@ -618,8 +618,9 @@ class McSystem(object):
                                       'Please check either MC-simulation provided to PySIMM or the CASSANDRA '
                                       'checkpoint file ')
                     exit(1)
-        self.simul_sst.update_tags()
-        self.simul_sst.objectify()
+        sstm.update_tags()
+        sstm.objectify()
+        return sstm
 
     def __fit_atoms__(self, molec, text_lines):
         flag = True
@@ -634,16 +635,6 @@ class McSystem(object):
                 return False
         return flag
 
-    def __mark_fixed__(self, sst):
-        max_k_bond = -1
-        max_k_angle = -1
-        for bt in sst.bond_types:
-            if bt.k > max_k_bond:
-                bt.is_fixed = True
-        for at in sst.angle_types:
-            if at.k > max_k_angle:
-                at.is_fixed = True
-
 
 class Cassandra(object):
     """
@@ -653,9 +644,10 @@ class Cassandra(object):
 
     """
 
-    def __init__(self, frame_sst, **kwargs):
+    def __init__(self, init_sst, **kwargs):
         self.logger = logging.getLogger('CSNDRA')
-        self.frame_sst = frame_sst
+        self.init_sst = init_sst
+        self.final_sst = None
         self.run_queue = []
 
     def run(self, is_replace=False):
@@ -669,15 +661,11 @@ class Cassandra(object):
                     McfWriter(task.fxd_sst, task.fixed_syst_mcf_file).write('atoms')
                 task.fxd_sst.write_xyz(task.fxd_sst_xyz)
             try:
-                self.logger.info('Starting the GCMC simulations with CASSANDRA...')
+                self.logger.info('Starting the GCMC simulations with CASSANDRA')
                 print('{:.^60}'.format(''))
                 subprocess.call([CASSANDRA_EXEC, task.props_file])
-                self.logger.info('Updating MC system from the CASSANDRA files')
                 task.upd_simulation()
-
-                # fileName = task.props['Run_Name'].value + '.xyz'
-                # self.logger.info('Updating CASSANDRA system from the file "{:}"...'.format(fileName))
-                # self.system = pysimm.system.read_xyz(fileName)
+                self.final_sst = task.tot_sst
 
             except OSError as ose:
                 self.logger.error('There was a problem calling CASSANDRA executable')
@@ -703,7 +691,7 @@ class Cassandra(object):
                 mc_sst = McSystem(specs, kwargs.get('chem_pot'),
                                   max_ins=kwargs.get('max_ins'),
                                   is_rigid=kwargs.get('is_rigid'))
-                new_job = GCMC(mc_sst, self.frame_sst, **kwargs)
+                new_job = GCMC(mc_sst, self.init_sst, **kwargs)
             else:
                 self.logger.error('Unknown GCMC initialization. Please provide either '
                                   'correct GCMC parameters or GCMC simulation object')

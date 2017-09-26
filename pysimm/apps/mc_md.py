@@ -58,7 +58,7 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
               'MC-MD simulations\nExiting...')
         exit(1)
 
-    css = cassandra.Cassandra()
+    css = cassandra.Cassandra(fixed_sst)
     # Set the Monte-Carlo properties:
     mcp = kwargs.get('mc_props')
     if mcp:
@@ -79,16 +79,15 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
 
     while l < n_iter:
         mcp['Run_Name'] = str(l) + '.gcmc'
-        gas_mc = cassandra.McSystem(gases,
-                                    chem_pot=CHEM_POT,
-                                    max_ins=mcp.get('max_ins') or [6000] * len(CHEM_POT),
-                                    is_rigid=mcp.get('rigid_type') or [False] * len(CHEM_POT))
-        gcmc = cassandra.GCMC(gas_mc, fs, out_folder=sim_folder, props_file=str(l) + '.gcmc_props.inp', **mcp)
-        css.add_gcmc(gcmc,  is_new=True)
+
+        css.add_gcmc(species=gases, is_new=True, chem_pot=CHEM_POT,
+                     max_ins=mcp.get('max_ins') or [6000] * len(CHEM_POT),
+                     is_rigid=mcp.get('rigid_type') or [False] * len(gases),
+                     out_folder=sim_folder, props_file=str(l) + '.gcmc_props.inp')
         css.run()
 
         # >>> 2N: MD (LAMMPS) step:
-        sim_sst = gcmc.tot_sst
+        sim_sst = css.final_sst
         sim_sst.write_lammps(os.path.join(sim_folder, str(l) + '.before_md.lmps'))
         sim = lmps.Simulation(sim_sst,
                               log=os.path.join(sim_folder, str(l) + '.md.log'),
@@ -100,9 +99,9 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
 
         # adding group definitions to separate rigid and non-rigid bodies
         grp_tmpl = 'group {:} id {:}'
-        sim.add_custom(grp_tmpl.format('matrix', gcmc.group_by_id('matrix')[0]))
-        sim.add_custom(grp_tmpl.format(nonrig_group_name, gcmc.group_by_id('nonrigid')[0]))
-        rigid_mols = gcmc.group_by_id('rigid')[0]
+        sim.add_custom(grp_tmpl.format('matrix', css.run_queue[0].group_by_id('matrix')[0]))
+        sim.add_custom(grp_tmpl.format(nonrig_group_name, css.run_queue[0].group_by_id('nonrigid')[0]))
+        rigid_mols = css.run_queue[0].group_by_id('rigid')[0]
         if rigid_mols:
             sim.add_custom(grp_tmpl.format(rig_group_name, rigid_mols))
 
@@ -145,7 +144,7 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
         sim.run(np=8)
 
         # Updating the size of the fixed system from the MD simulations and saving the coordinates for the next MC
-        fs.dim = sim.system.dim
+        css.init_sst.dim = sim.system.dim
         sim.system.write_xyz(xyz_fname.format(l))
         mcp['Start_Type']['file_name'] = xyz_fname.format(l)
         mcp['Start_Type']['species'] = [1] + [0] * len(CHEM_POT)
