@@ -145,6 +145,11 @@ class Particle(Item):
             for i in s.impropers:
                 if self is i.a or self is i.b or self is i.c or self is i.d:
                     s.impropers.remove(i.tag)
+                    
+    def translate(self, dx, dy, dz):
+        self.x += dx
+        self.y += dy
+        self.z += dz
 
     def __sub__(self, other):
         """pysimm.system.Particle.__sub__
@@ -439,6 +444,14 @@ class Dimension(Item):
         self.dy = self.yhi - self.ylo
         self.dz = self.zhi - self.zlo
         return (self.dx, self.dy, self.dz)
+        
+    def translate(self, x, y, z):
+        self.xlo += x
+        self.xhi += x
+        self.ylo += y
+        self.yhi += y
+        self.zlo += z
+        self.zhi += z
 
 
 class System(object):
@@ -2933,12 +2946,7 @@ class System(object):
         Returns:
             None
         """
-        self.dim.xhi += shiftx
-        self.dim.xlo += shiftx
-        self.dim.yhi += shifty
-        self.dim.ylo += shifty
-        self.dim.zhi += shiftz
-        self.dim.zlo += shiftz
+        self.dim.translate(shiftx, shifty, shiftz)
         self.dim.size()
         
     def shift_particles(self, shiftx, shifty, shiftz):
@@ -2955,9 +2963,7 @@ class System(object):
             None
         """
         for p in self.particles:
-            p.x += shiftx
-            p.y += shifty
-            p.z += shiftz
+            p.translate(shiftx, shifty, shiftz)
         self.set_cog()
             
     def center(self, what='particles', at=[0, 0, 0], move_both=True):
