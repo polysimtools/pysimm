@@ -147,6 +147,18 @@ class Particle(Item):
                     s.impropers.remove(i.tag)
                     
     def translate(self, dx, dy, dz):
+        """pysimm.system.Particle.translate
+        
+        Shifts Particle position by dx, dy, dz.
+        
+        Args:
+            dx: distance to shift Particle in x direction
+            dy: distance to shift Particle in y direction
+            dz: distance to shift Particle in z direction
+        
+        Returns:
+            None
+        """
         self.x += dx
         self.y += dy
         self.z += dz
@@ -446,6 +458,18 @@ class Dimension(Item):
         return (self.dx, self.dy, self.dz)
         
     def translate(self, x, y, z):
+        """pysimm.system.Dimension.translate
+        
+        Shifts box bounds by x, y, z.
+        
+        Args:
+            x: distance to shift box bounds in x direction
+            y: distance to shift box bounds in y direction
+            z: distance to shift box bounds in z direction
+        
+        Returns:
+            None
+        """
         self.xlo += x
         self.xhi += x
         self.ylo += y
@@ -2932,22 +2956,6 @@ class System(object):
             self.cog[2] += p.z
         if self.particles.count:
             self.cog = [c / self.particles.count for c in self.cog]
-            
-    def shift_box(self, shiftx, shifty, shiftz):
-        """pysimm.system.System.shift_box
-
-        Shifts simulation box bounds by shiftx, shifty, shiftz. Recalculates dx, dy, dz.
-
-        Args:
-            shiftx: distance to shift simulation bounds in x direction
-            shifty: distance to shift simulation bounds in y direction
-            shiftz: distance to shift simulation bounds in z direction
-
-        Returns:
-            None
-        """
-        self.dim.translate(shiftx, shifty, shiftz)
-        self.dim.size()
         
     def shift_particles(self, shiftx, shifty, shiftz):
         """pysimm.system.System.shift_particles
@@ -2984,12 +2992,12 @@ class System(object):
             move_vec = [at[n] - self.cog[n] for n in range(3)]
             self.shift_particles(*move_vec)
             if move_both:
-                self.shift_box(*move_vec)
+                self.dim.translate(*move_vec)
         elif what == 'box':
             self.dim.size()
             box_center = [self.dim.xlo+self.dim.dx/2, self.dim.ylo+self.dim.dy/2, self.dim.zlo+self.dim.dz/2]
             move_vec = [at[n] - box_center[n] for n in range(3)]
-            self.shift_box(*move_vec)
+            self.dim.translate(*move_vec)
             if move_both:
                 self.shift_particles(*move_vec)
         else:
@@ -2998,36 +3006,20 @@ class System(object):
     def center_system(self):
         """pysimm.system.System.center_system
 
-        Shifts the center of the System box to the origin and updates box dimensions
+        DEPRECATED: Use System.center('box', [0, 0, 0], True) instead
 
         Args:
             None
         Returns:
             None
         """
-        shiftx = self.dim.dx/2.0
-        shifty = self.dim.dy/2.0
-        shiftz = self.dim.dz/2.0
-        shiftvaluex = self.dim.xhi - shiftx
-        shiftvaluey = self.dim.yhi - shifty
-        shiftvaluez = self.dim.zhi - shiftz
-
-        for p in self.particles:
-            p.x -= shiftvaluex
-            p.y -= shiftvaluey
-            p.z -= shiftvaluez
-
-        self.dim.xhi = shiftx
-        self.dim.xlo = -shiftx
-        self.dim.yhi = shifty
-        self.dim.ylo = -shifty
-        self.dim.zhi = shiftz
-        self.dim.zlo = -shiftz
+        warning_print("DEPRECATED: Use System.center('box', [0, 0, 0], True) instead of System.center_system())")
+        self.center('box', [0, 0, 0], True)
 
     def center_at_origin(self):
         """pysimm.system.System.center_at_origin
 
-        Moves particles in system such that new center of gravity is 0, 0, 0
+        DEPRECATED: Use System.center('particles', [0, 0, 0], True) instead
 
         Args:
             None
@@ -3035,18 +3027,8 @@ class System(object):
         Returns:
             None
         """
-        self.set_cog()
-        for p in self.particles:
-            p.x -= self.cog[0]
-            p.y -= self.cog[1]
-            p.z -= self.cog[2]
-        self.dim.xhi -= self.cog[0]
-        self.dim.xlo -= self.cog[0]
-        self.dim.yhi -= self.cog[1]
-        self.dim.ylo -= self.cog[1]
-        self.dim.zhi -= self.cog[2]
-        self.dim.zlo -= self.cog[2]
-        self.set_cog()
+        warning_print("DEPRECATED: Use System.center('particles', [0, 0, 0], True) instead of System.center_at_origin())")
+        self.center('particles', [0, 0, 0], True)
 
     def set_mass(self):
         """pysimm.system.System.set_mass
