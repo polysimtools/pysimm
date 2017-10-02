@@ -444,10 +444,11 @@ class Simulation(object):
         special_bonds: LAMMPS special bonds input
         nonbond_mixing: type of mixing rule for nonbonded interactions default=arithmetic
         cutoff: cutoff for nonbonded interactions default=12
-        print_to_screen: True to have LAMMPS output printed to stdout
         name: name id for simulations
         log: prefix for LAMMPS log file
         write: file name to write final LAMMPS data file default=None
+        print_to_screen: True to have LAMMPS output printed to stdout after simulation ends
+        debug: True to have LAMMPS output streamed to stdout during simulation (WARNING: this may degrade performance)
     """
     def __init__(self, s, **kwargs):
 
