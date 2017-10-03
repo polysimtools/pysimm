@@ -44,3 +44,4 @@ debug_print = lambda *a, **k: print('(debug) PySIMM:', *a) if debug else lambda 
 
 class PysimmError(Exception):
     pass
+
