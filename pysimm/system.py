@@ -145,6 +145,23 @@ class Particle(Item):
             for i in s.impropers:
                 if self is i.a or self is i.b or self is i.c or self is i.d:
                     s.impropers.remove(i.tag)
+                    
+    def translate(self, dx, dy, dz):
+        """pysimm.system.Particle.translate
+        
+        Shifts Particle position by dx, dy, dz.
+        
+        Args:
+            dx: distance to shift Particle in x direction
+            dy: distance to shift Particle in y direction
+            dz: distance to shift Particle in z direction
+        
+        Returns:
+            None
+        """
+        self.x += dx
+        self.y += dy
+        self.z += dz
 
     def __sub__(self, other):
         """pysimm.system.Particle.__sub__
@@ -439,6 +456,26 @@ class Dimension(Item):
         self.dy = self.yhi - self.ylo
         self.dz = self.zhi - self.zlo
         return (self.dx, self.dy, self.dz)
+        
+    def translate(self, x, y, z):
+        """pysimm.system.Dimension.translate
+        
+        Shifts box bounds by x, y, z.
+        
+        Args:
+            x: distance to shift box bounds in x direction
+            y: distance to shift box bounds in y direction
+            z: distance to shift box bounds in z direction
+        
+        Returns:
+            None
+        """
+        self.xlo += x
+        self.xhi += x
+        self.ylo += y
+        self.yhi += y
+        self.zlo += z
+        self.zhi += z
 
 
 class System(object):
@@ -2919,11 +2956,70 @@ class System(object):
             self.cog[2] += p.z
         if self.particles.count:
             self.cog = [c / self.particles.count for c in self.cog]
+        
+    def shift_particles(self, shiftx, shifty, shiftz):
+        """pysimm.system.System.shift_particles
+
+        Shifts all particles by shiftx, shifty, shiftz. Recalculates cog.
+
+        Args:
+            shiftx: distance to shift particles in x direction
+            shifty: distance to shift particles in y direction
+            shiftz: distance to shift particles in z direction
+
+        Returns:
+            None
+        """
+        for p in self.particles:
+            p.translate(shiftx, shifty, shiftz)
+        self.set_cog()
+            
+    def center(self, what='particles', at=[0, 0, 0], move_both=True):
+        """pysimm.system.System.center
+
+        Centers particles center of geometry or simulation box at given coordinate. A vector is defined based on the current coordinate for the center of either the particles or the simulation box and the "at" parameter. This shift vector is applied to the entity defined by the "what" parameter. Optionally, both the particles and the box can be shifted by the same vector.
+
+        Args:
+            what: what is being centered: "particles" or "box"
+            at: new coordinate for center of particles or box
+            move_both: if True, determines vector for shift defined by "what" and "at" parameters, and applies shift to both particles and box. If false, only shift what is defined by "what" parameter.
+
+        Returns:
+            None
+        """
+        if what == 'particles':
+            self.set_cog()
+            move_vec = [at[n] - self.cog[n] for n in range(3)]
+            self.shift_particles(*move_vec)
+            if move_both:
+                self.dim.translate(*move_vec)
+        elif what == 'box':
+            self.dim.size()
+            box_center = [self.dim.xlo+self.dim.dx/2, self.dim.ylo+self.dim.dy/2, self.dim.zlo+self.dim.dz/2]
+            move_vec = [at[n] - box_center[n] for n in range(3)]
+            self.dim.translate(*move_vec)
+            if move_both:
+                self.shift_particles(*move_vec)
+        else:
+            error_print('can only choose to center "particles" or "box"')
+
+    def center_system(self):
+        """pysimm.system.System.center_system
+
+        DEPRECATED: Use System.center('box', [0, 0, 0], True) instead
+
+        Args:
+            None
+        Returns:
+            None
+        """
+        warning_print("DEPRECATED: Use System.center('box', [0, 0, 0], True) instead of System.center_system())")
+        self.center('box', [0, 0, 0], True)
 
     def center_at_origin(self):
         """pysimm.system.System.center_at_origin
 
-        Moves particles in system such that new center of gravity is 0, 0, 0
+        DEPRECATED: Use System.center('particles', [0, 0, 0], True) instead
 
         Args:
             None
@@ -2931,18 +3027,8 @@ class System(object):
         Returns:
             None
         """
-        self.set_cog()
-        for p in self.particles:
-            p.x -= self.cog[0]
-            p.y -= self.cog[1]
-            p.z -= self.cog[2]
-        self.dim.xhi -= self.cog[0]
-        self.dim.xlo -= self.cog[0]
-        self.dim.yhi -= self.cog[1]
-        self.dim.ylo -= self.cog[1]
-        self.dim.zhi -= self.cog[2]
-        self.dim.zlo -= self.cog[2]
-        self.set_cog()
+        warning_print("DEPRECATED: Use System.center('particles', [0, 0, 0], True) instead of System.center_at_origin())")
+        self.center('particles', [0, 0, 0], True)
 
     def set_mass(self):
         """pysimm.system.System.set_mass
