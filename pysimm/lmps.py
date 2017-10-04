@@ -135,7 +135,9 @@ class MolecularDynamics(object):
         ensemble: 'nvt' or 'npt' or 'nve'
         limit: numerical value to use with nve when limiting particle displacement
         temp: temperature for use with 'nvt' and 'npt' or new_v
+        tdamp: damping parameter for thermostat (default=100*timestep)
         pressure: pressure for use with 'npt'
+        pdamp: damping parameter for barostat (default=1000*timestep)
         new_v: True to have LAMMPS generate new velocities
         seed: seed value for RNG (random by default)
         scale_v: True to scale velocities to given temperature default=False
@@ -152,7 +154,9 @@ class MolecularDynamics(object):
         self.ensemble = kwargs.get('ensemble') or 'nvt'
         self.limit = kwargs.get('limit')
         self.temp = kwargs.get('temp')
+        self.tdamp = kwargs.get('tdamp', int(100*self.timestep))
         self.pressure = kwargs.get('pressure') or 1.
+        self.pdamp = kwargs.get('pdamp', int(1000*self.timestep))
         self.new_v = kwargs.get('new_v')
         self.seed = kwargs.get('seed') or randint(10000, 99999)
         self.scale_v = kwargs.get('scale_v')
@@ -207,10 +211,10 @@ class MolecularDynamics(object):
         self.input += 'timestep %s\n' % self.timestep
 
         if self.ensemble == 'nvt':
-            self.input += 'fix 1 all %s temp %s %s 100\n' % (self.ensemble, self.t_start, self.t_stop)
+            self.input += 'fix 1 all %s temp %s %s %s\n' % (self.ensemble, self.t_start, self.t_stop, self.tdamp)
         elif self.ensemble == 'npt':
-            self.input += ('fix 1 all %s temp %s %s 100 iso %s %s 100\n'
-                           % (self.ensemble, self.t_start, self.t_stop, self.p_start, self.p_stop))
+            self.input += ('fix 1 all %s temp %s %s %s iso %s %s %s\n'
+                           % (self.ensemble, self.t_start, self.t_stop, self.tdamp, self.p_start, self.p_stop, self.pdamp))
         elif self.ensemble == 'nve' and self.limit:
             self.input += 'fix 1 all %s/limit %s\n' % (self.ensemble, self.limit)
         elif self.ensemble == 'nve':
@@ -271,10 +275,10 @@ class SteeredMolecularDynamics(MolecularDynamics):
         self.input += 'timestep %s\n' % self.timestep
 
         if self.ensemble == 'nvt':
-            self.input += 'fix 1 all %s temp %s %s 100\n' % (self.ensemble, self.t_start, self.t_stop)
+            self.input += 'fix 1 all %s temp %s %s %s\n' % (self.ensemble, self.t_start, self.t_stop, self.tdamp)
         elif self.ensemble == 'npt':
-            self.input += ('fix 1 all %s temp %s %s 100 iso %s %s 100\n'
-                           % (self.ensemble, self.t_start, self.t_stop, self.p_start, self.p_stop))
+            self.input += ('fix 1 all %s temp %s %s %s iso %s %s %s\n'
+                           % (self.ensemble, self.t_start, self.t_stop, self.tdamp, self.p_start, self.p_stop, self.pdamp))
         elif self.ensemble == 'nve':
             self.input += 'fix 1 all %s\n' % self.ensemble
 
