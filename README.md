@@ -37,7 +37,14 @@ pysimm can integrate seamlessly with parts of the LAMMPS simulation software pac
 
 ```echo "export LAMMPS_EXEC=/usr/bin/lmp_mpi" >> ~/.bashrc```
 
-If the LAMMPS_EXEC environment variable is not set, you will see a warning when importing the lmps module. Once configured, try the examples in the repository which highlight some of the features of pysimm.
+Correct configuration can be checked by using the following code:
+
+```
+from pysimm import lmps
+lmps.check_lmps_exec()
+```
+
+If the LAMMPS_EXEC environment variable is not set, you will see a warning. Once configured, try the examples in the repository which highlight some of the features of pysimm.
 
 Complete Installation (pysimm and LAMMPS)
 =========================================
