@@ -1171,7 +1171,8 @@ class System(object):
                     t_frame += 1
                 elif len(line.split()) > 1 and line.split()[1] == 'NUMBER':
                     nparticles = int(f.readline())
-                elif len(line.split()) > 1 and line.split()[1] == 'BOX':
+                elif (len(line.split()) > 1 and line.split()[1] == 'BOX' and
+                      t_frame == frame):
                     self.dim.xlo, self.dim.xhi = map(float,
                                                      f.readline().split())
                     self.dim.ylo, self.dim.yhi = map(float,
