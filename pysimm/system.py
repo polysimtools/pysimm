@@ -503,7 +503,7 @@ class System(object):
 
         self.objectified = False
 
-        self.name = kwargs.get('name') or 'pySIMM System Object'
+        self.name = kwargs.get('name', 'pySIMM System Object')
         self.ff_class = kwargs.get('ff_class')
         self.ff_name = kwargs.get('ff_name')
         self.dim = Dimension(xlo=kwargs.get('xlo'), xhi=kwargs.get('xhi'),
@@ -512,19 +512,19 @@ class System(object):
                              dx=kwargs.get('dx'), dy=kwargs.get('dy'),
                              dz=kwargs.get('dz'), center=kwargs.get('center'))
         self.dim_check = self.dim.check()
-        self.mass = kwargs.get('mass') or 0.0
-        self.particle_types = kwargs.get('particle_types') or ItemContainer()
-        self.bond_types = kwargs.get('bond_types') or ItemContainer()
-        self.angle_types = kwargs.get('angle_types') or ItemContainer()
-        self.dihedral_types = kwargs.get('dihedral_types') or ItemContainer()
-        self.improper_types = kwargs.get('improper_types') or ItemContainer()
-        self.molecule_types = kwargs.get('molecule_types') or ItemContainer()
-        self.particles = kwargs.get('particles') or ItemContainer()
-        self.bonds = kwargs.get('bonds') or ItemContainer()
-        self.angles = kwargs.get('angles') or ItemContainer()
-        self.dihedrals = kwargs.get('dihedrals') or ItemContainer()
-        self.impropers = kwargs.get('impropers') or ItemContainer()
-        self.molecules = kwargs.get('molecules') or ItemContainer()
+        self.mass = kwargs.get('mass', 0.0)
+        self.particle_types = kwargs.get('particle_types', ItemContainer())
+        self.bond_types = kwargs.get('bond_types', ItemContainer())
+        self.angle_types = kwargs.get('angle_types', ItemContainer())
+        self.dihedral_types = kwargs.get('dihedral_types', ItemContainer())
+        self.improper_types = kwargs.get('improper_types', ItemContainer())
+        self.molecule_types = kwargs.get('molecule_types', ItemContainer())
+        self.particles = kwargs.get('particles', ItemContainer())
+        self.bonds = kwargs.get('bonds', ItemContainer())
+        self.angles = kwargs.get('angles', ItemContainer())
+        self.dihedrals = kwargs.get('dihedrals', ItemContainer())
+        self.impropers = kwargs.get('impropers', ItemContainer())
+        self.molecules = kwargs.get('molecules', ItemContainer())
 
         self.set_mass()
         self.set_volume()
@@ -656,11 +656,9 @@ class System(object):
             update_properties (optional): Update system-wide mass, volume, density, center of gravity, and velocity
                                           properties (True)
         """
-        unique_types = kwargs.get('unique_types') if (kwargs.get('unique_types')
-                                                      is not None) else True
-        change_dim = kwargs.get('change_dim') if (kwargs.get('change_dim')
-                                                  is not None) else True
-        update_properties = kwargs.get('update_properties') if kwargs.get('update_properties') is not None else True
+        unique_types = kwargs.get('unique_types', True)
+        change_dim = kwargs.get('change_dim', True)
+        update_properties = kwargs.get('update_properties', True)
 
         for pt in other.particle_types:
             if unique_types:
@@ -2670,7 +2668,7 @@ class System(object):
         Returns:
             None or string of data file if out_data='string'
         """
-        elem = kwargs.get('elem') if kwargs.get('elem') is not None else True
+        elem = kwargs.get('elem', True)
         append = kwargs.get('append')
         if outfile == 'string':
             out = StringIO()
@@ -3244,7 +3242,7 @@ class System(object):
             raise PysimmError('pysimm.system.System.visualize function requires subprocess.call')
 
         unwrap = kwargs.get('unwrap')
-        format = kwargs.get('format') or 'xyz'
+        format = kwargs.get('format', 'xyz')
 
         verbose_print(self.dim.dx, self.dim.xlo, self.dim.xhi)
         verbose_print(self.dim.dy, self.dim.ylo, self.dim.yhi)
@@ -3562,7 +3560,7 @@ def read_lammps(data_file, **kwargs):
     angle_style = kwargs.get('angle_style')
     dihedral_style = kwargs.get('dihedral_style')
     improper_style = kwargs.get('improper_style')
-    set_types = kwargs.get('set_types') if kwargs.has_key('set_types') else True
+    set_types = kwargs.get('set_types', True)
     name = kwargs.get('name')
 
     quiet = kwargs.get('quiet')
