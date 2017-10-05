@@ -70,7 +70,6 @@ def check_lmps_exec():
             print 'LAMMPS is not configured properly for one reason or another'
             return False
             
-check_lmps_exec()
 
 class Qeq(object):
     """pysimm.lmps.MolecularDynamics
