@@ -45,8 +45,8 @@ def find_last_backbone_vector(s, m):
     Finds vector between backbone atoms in terminal monomer. Requires current system s, and reference monomer m.
 
     Args:
-        s: pysimm.system.System object
-        m:pysimm.system.System object
+        s: :class:`~pysimm.system.System` object
+        m: :class:`~pysimm.system.System` object
     Returns:
         list of vector components
     """
@@ -66,20 +66,20 @@ def copolymer(m, nmon, s_=None, **kwargs):
     Builds copolymer using random walk methodology using pattern
 
     Args:
-        m: list of reference monomer systems
+        m: list of reference monomer :class:`~pysimm.system.System`s
         nmon: total number of monomers to add to chain
-        s_: system in which to build polymer chain (None)
+        s_: :class:`~pysimm.system.System` in which to build polymer chain (None)
         settings: dictionary of simulation settings
         density: density at which to build polymer (0.3)
-        forcefield: pysimm.forcefield.Forcefield object to acquire new force field parameters
+        forcefield: :class:`~pysimm.forcefield.Forcefield` object to acquire new force field parameters
         capped: True/False if monomers are capped
         unwrap: True to unwrap final system
         traj: True to build xyz trajectory of polymer growth (True)
         pattern: list of pattern for monomer repeat units, should match length of m ([1 for _ in range(len(m))])
         limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)
-        sim: pysimm.lmps.Simulation object for relaxation between polymer growth
+        sim: :class:`~pysimm.lmps.Simulation` object for relaxation between polymer growth
     Returns:
-        new copolymer pysimm.system.System
+        new copolymer :class:`~pysimm.system.System`
     """
     m = [x.copy() for x in m]
 
@@ -250,20 +250,20 @@ def random_walk(m, nmon, s_=None, **kwargs):
     Builds homopolymer using random walk methodology
 
     Args:
-        m: reference monomer system
+        m: reference monomer :class:`~pysimm.system.System`
         nmon: total number of monomers to add to chain
-        s_: system in which to build polymer chain (None)
+        s_: :class:`~pysimm.system.System` in which to build polymer chain (None)
         extra_bonds: EXPERMINTAL, True if making ladder backbone polymer
         settings: dictionary of simulation settings
         density: density at which to build polymer (0.3)
-        forcefield: pysimm.forcefield.Forcefield object to acquire new force field parameters
+        forcefield: :class:`~pysimm.forcefield.Forcefield` object to acquire new force field parameters
         capped: True/False if monomers are capped
         unwrap: True to unwrap final system
         traj: True to build xyz trajectory of polymer growth (True)
         limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)
-        sim: pysimm.lmps.Simulation object for relaxation between polymer growth
+        sim: :class:`~pysimm.lmps.Simulation` object for relaxation between polymer growth
     Returns:
-        new polymer pysimm.system.System
+        new polymer :class:`~pysimm.system.System`
     """
     m = m.copy()
 

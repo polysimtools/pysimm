@@ -46,7 +46,7 @@ def equil(s, **kwargs):
     Runs a 21-step compression/decompression equilibration algorithm
 
     Args:
-        s: pysimm.system.System object
+        s: :class:`~pysimm.system.System` object
         tmax: maximum temperature during equilibration
         pmax: maximum pressure during equilibration
         tfinal: desired final temperature of final system

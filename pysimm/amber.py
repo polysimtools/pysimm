@@ -96,12 +96,12 @@ def calc_charges(s, charge_method='bcc', cleanup=True):
 def get_forcefield_types(s, types='gaff', f=None):
     """pysimm.amber.get_forcefield_types
 
-    Uses antechamber to determine atom types. Defaults to GAFF atom types. Retrieves ParticleType objects from force field is provided 
+    Uses antechamber to determine atom types. Defaults to GAFF atom types. Retrieves :class:`~pysimm.system.ParticleType` objects from force field is provided 
 
     Args:
-        s: System for which to type
+        s: :class:`~pysimm.system.System` for which to type
         types: name of atom types to use (default: gaff)
-        f: forcefield object to retrieve ParticleType objects from if not present in s (default: None)
+        f: forcefield object to retrieve :class:`~pysimm.system.ParticleType` objects from if not present in s (default: None)
 
     Returns:
         None

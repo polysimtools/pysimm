@@ -92,7 +92,7 @@ def run(settings):
         settings: object containing Polymatic settings
 
     Returns:
-        (True/False, pysimm.system.System)
+        (True/False, :class:`~pysimm.system.System`)
     """
     if rappture:
         Rappture.Utils.progress(0, 'Initializing Polymatic...')
@@ -226,12 +226,12 @@ def lmps_min(s, name, settings):
     Runs LAMMPS minimization for the Polymatic algorithm.
 
     Args:
-        s: pysimm.system.System to minimize
+        s: :class:`~pysimm.system.System` to minimize
         name: name of simulation
         settings: object containing Polymatic settings
 
     Returns:
-        result from lmps.minimize
+        result from :func:`~pysimm.lmps.minimize`
     """
     if settings.polym.min.cluster:
         nanohub = {'cores': int(settings.polym.min.nanohub_cores),
@@ -272,13 +272,13 @@ def lmps_step_md(s, bonds, attempt, settings):
     Runs LAMMPS step md for the Polymatic algorithm.
 
     Args:
-        s: pysimm.system.System to minimize
+        s: :class:`~pysimm.system.System` to minimize
         bonds: number of bond to be made
         attempt: number of bonding attempt
         settings: object containing Polymatic settings
 
     Returns:
-        result from lmps.md
+        result from :func:`~pysimm.lmps.md`
     """
     if settings.polym.step.cluster:
         nanohub = {'cores': int(settings.polym.step.nanohub_cores),
@@ -315,12 +315,12 @@ def lmps_cycle_nvt_md(s, bonds, settings):
     Runs LAMMPS nvt cycle md for the Polymatic algorithm.
 
     Args:
-        s: pysimm.system.System to minimize
+        s: :class:`~pysimm.system.System` to minimize
         bonds: number of bond to be made
         settings: object containing Polymatic settings
 
     Returns:
-        result from lmps.md
+        result from :func:`~pysimm.lmps.md`
     """
     if settings.polym.cycle_nvt.cluster:
         nanohub = {'cores': int(settings.polym.cycle_nvt.nanohub_cores),
@@ -357,7 +357,7 @@ def lmps_cycle_npt_md(s, bonds, settings):
     Runs LAMMPS npt cycle md for the Polymatic algorithm.
 
     Args:
-        s: pysimm.system.System to minimize
+        s: :class:`~pysimm.system.System` to minimize
         bonds: number of bond to be made
         settings: object containing Polymatic settings
 

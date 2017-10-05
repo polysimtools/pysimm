@@ -67,13 +67,13 @@ class Gaff2(Forcefield):
         """pysimm.forcefield.Gaff2.assign_ptypes
 
         Gaff2 specific particle typing rules.
-        Requires System object Particle objects have Particle.bonds defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds defined.
         *** use System.add_particle_bonding() to ensure this ***
 
         *** Not entirely inclusive - some atom types not used ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -242,12 +242,11 @@ class Gaff2(Forcefield):
         """pysimm.forcefield.Gaff2.assign_btypes
 
         Gaff2 specific bond typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -277,12 +276,11 @@ class Gaff2(Forcefield):
         """pysimm.forcefield.Gaff2.assign_atypes
 
         Gaff2 specific angle typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -327,12 +325,11 @@ class Gaff2(Forcefield):
         """pysimm.forcefield.Gaff2.assign_dtypes
 
         Gaff2 specific dihedral typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -396,7 +393,7 @@ class Gaff2(Forcefield):
         Gaff2 specific improper typing rules.
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -435,7 +432,7 @@ class Gaff2(Forcefield):
         Charge assignment. Gasteiger is default for now.
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
             charges: gasteiger
 
         Returns:

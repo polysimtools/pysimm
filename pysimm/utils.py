@@ -51,7 +51,7 @@ class Container(object):
 class ItemContainer(Sequence):
     """pysimm.utils.ItemContainer
 
-    Container object intended to organize Item objects. Arbitrary attributes can be set using keyword arguments. Underlying data structure is a dictionary where the key is referred to as a tag, and the value should be an Item object. Item.tag should equal the key for the object in the dictionary.
+    Container object intended to organize :class:`~pysimm.utils.Item` objects. Arbitrary attributes can be set using keyword arguments. Underlying data structure is a dictionary where the key is referred to as a tag, and the value should be an :class:`~pysimm.utils.Item` object. :class:`~pysimm.utils.Item`.tag should equal the key for the object in the dictionary.
     """
     def __init__(self, _dict=None, **kwargs):
         self._dict = _dict or {}
