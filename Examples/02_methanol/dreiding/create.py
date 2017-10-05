@@ -6,7 +6,7 @@ def run(test=False):
         s = system.read_pubchem_smiles('CO')
     except:
         import os
-        s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'co.mol'))
+        s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'CO.mol'))
     
     # the resulting system has sufficient information to type with a forcefield, here we will use the Dreiding force field
     s.apply_forcefield(forcefield.Dreiding())
