@@ -83,14 +83,14 @@ def copolymer(m, nmon, s_=None, **kwargs):
     """
     m = [x.copy() for x in m]
 
-    settings = kwargs.get('settings') if kwargs.get('settings') is not None else {}
-    density = kwargs.get('density') or 0.3
+    settings = kwargs.get('settings', {})
+    density = kwargs.get('density', 0.3)
     f = kwargs.get('forcefield')
     capped = kwargs.get('capped')
     unwrap = kwargs.get('unwrap')
-    traj = kwargs.get('traj') if kwargs.get('traj') is not None else True
-    pattern = kwargs.get('pattern') or [1 for _ in range(len(m))]
-    limit = kwargs.get('limit') if kwargs.get('limit') is not None else 0.1
+    traj = kwargs.get('traj', True)
+    pattern = kwargs.get('pattern', [1 for _ in range(len(m))])
+    limit = kwargs.get('limit', 0.1)
     sim = kwargs.get('sim')
 
     for m_ in m:
@@ -267,15 +267,15 @@ def random_walk(m, nmon, s_=None, **kwargs):
     """
     m = m.copy()
 
-    extra_bonds = kwargs.get('extra_bonds') if kwargs.get('extra_bonds') is not None else False
+    extra_bonds = kwargs.get('extra_bonds', False)
 
-    settings = kwargs.get('settings') if kwargs.get('settings') is not None else {}
-    density = kwargs.get('density') or 0.3
+    settings = kwargs.get('settings', {})
+    density = kwargs.get('density', 0.3)
     f = kwargs.get('forcefield')
     capped = kwargs.get('capped')
     unwrap = kwargs.get('unwrap')
-    traj = kwargs.get('traj') if kwargs.get('traj') is not None else True
-    limit = kwargs.get('limit') if kwargs.get('limit') is not None else 0.1
+    traj = kwargs.get('traj', True)
+    limit = kwargs.get('limit', 0.1)
     sim = kwargs.get('sim')
 
     m.add_particle_bonding()

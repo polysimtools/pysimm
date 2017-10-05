@@ -83,9 +83,9 @@ class Qeq(object):
         qfile: file with qeq parameters (leave undefined for defaults)
     """
     def __init__(self, **kwargs):
-        self.cutoff = kwargs.get('cutoff') if kwargs.has_key('cutoff') else 10
-        self.tol = kwargs.get('tol') if kwargs.has_key('tol') else 1.0e-6
-        self.max_iter = kwargs.get('max_iter') if kwargs.has_key('max_iter') else 200
+        self.cutoff = kwargs.get('cutoff', 10)
+        self.tol = kwargs.get('tol', 1.0e-6)
+        self.max_iter = kwargs.get('max_iter', 200)
         self.qfile = kwargs.get('qfile')
         
         self.input = ''
@@ -149,20 +149,20 @@ class MolecularDynamics(object):
     """
     def __init__(self, **kwargs):
 
-        self.timestep = kwargs.get('timestep') or 1
-        self.ensemble = kwargs.get('ensemble') or 'nvt'
+        self.timestep = kwargs.get('timestep', 1)
+        self.ensemble = kwargs.get('ensemble', 'nvt')
         self.limit = kwargs.get('limit')
         self.temp = kwargs.get('temp')
         self.tdamp = kwargs.get('tdamp', int(100*self.timestep))
-        self.pressure = kwargs.get('pressure') or 1.
+        self.pressure = kwargs.get('pressure', 1.)
         self.pdamp = kwargs.get('pdamp', int(1000*self.timestep))
         self.new_v = kwargs.get('new_v')
-        self.seed = kwargs.get('seed') or randint(10000, 99999)
+        self.seed = kwargs.get('seed', randint(10000, 99999))
         self.scale_v = kwargs.get('scale_v')
-        self.length = kwargs.get('length') if kwargs.has_key('length') else 2000
-        self.thermo = kwargs.get('thermo') or 1000
+        self.length = kwargs.get('length', 2000)
+        self.thermo = kwargs.get('thermo', 1000)
         self.thermo_style = kwargs.get('thermo_style')
-        self.dump = kwargs.get('dump') or False
+        self.dump = kwargs.get('dump', False)
         self.dump_name = kwargs.get('dump_name')
         self.dump_append = kwargs.get('dump_append')
         
@@ -250,9 +250,9 @@ class SteeredMolecularDynamics(MolecularDynamics):
         MolecularDynamics.__init__(self, **kwargs)
         self.p1 = kwargs.get('p1')
         self.p2 = kwargs.get('p2')
-        self.k = kwargs.get('k') if kwargs.has_key('k') else 20.0
-        self.v = kwargs.get('v') if kwargs.has_key('v') else 0.001
-        self.d = kwargs.get('d') if kwargs.has_key('d') else 3.0
+        self.k = kwargs.get('k', 20.0)
+        self.v = kwargs.get('v', 0.001)
+        self.d = kwargs.get('d', 3.0)
     
     def write(self, sim):
         """pysimm.lmps.SteeredMolecularDynamics.write
@@ -332,15 +332,15 @@ class Minimization(object):
     """
     def __init__(self, **kwargs):
 
-        self.min_style = kwargs.get('min_style') or 'fire'
+        self.min_style = kwargs.get('min_style', 'fire')
         self.dmax = kwargs.get('dmax')
-        self.etol = kwargs.get('etol') or 1.0e-3
-        self.ftol = kwargs.get('ftol') or 1.0e-3
-        self.maxiter = kwargs.get('maxiter') or 10000
-        self.maxeval = kwargs.get('maxeval') or 100000
-        self.thermo = kwargs.get('thermo') or 1000
+        self.etol = kwargs.get('etol', 1.0e-3)
+        self.ftol = kwargs.get('ftol', 1.0e-3)
+        self.maxiter = kwargs.get('maxiter', 10000)
+        self.maxeval = kwargs.get('maxeval', 100000)
+        self.thermo = kwargs.get('thermo', 1000)
         self.thermo_style = kwargs.get('thermo_style')
-        self.dump = kwargs.get('dump') or False
+        self.dump = kwargs.get('dump', False)
         self.dump_name = kwargs.get('dump_name')
         self.dump_append = kwargs.get('dump_append')
         
@@ -456,22 +456,22 @@ class Simulation(object):
 
         self.system = s
 
-        self.atom_style = kwargs.get('atom_style') or 'full'
-        self.kspace_style = kwargs.get('kspace_style') or 'pppm 1e-4'
-        self.units = kwargs.get('units') or 'real'
+        self.atom_style = kwargs.get('atom_style', 'full')
+        self.kspace_style = kwargs.get('kspace_style', 'pppm 1e-4')
+        self.units = kwargs.get('units', 'real')
         self.special_bonds = kwargs.get('special_bonds')
-        self.nonbond_mixing = kwargs.get('nonbond_mixing') or 'arithmetic'
-        self.cutoff = kwargs.get('cutoff') or 12.0
+        self.nonbond_mixing = kwargs.get('nonbond_mixing', 'arithmetic')
+        self.cutoff = kwargs.get('cutoff', 12.0)
 
-        self.print_to_screen = kwargs.get('print_to_screen') if kwargs.get('print_to_screen') is not None else False
-        self.name = kwargs.get('name') or False
+        self.print_to_screen = kwargs.get('print_to_screen', False)
+        self.name = kwargs.get('name', False)
         self.log = kwargs.get('log')
-        self.write = kwargs.get('write') or False
+        self.write = kwargs.get('write', False)
 
         self.input = ''
         self.custom = kwargs.get('custom')
 
-        self.sim = kwargs.get('sim') if kwargs.get('sim') is not None else []
+        self.sim = kwargs.get('sim', [])
         
     def add_qeq(self, template=None, **kwargs):
         """pysimm.lmps.Simulation.add_qeq
@@ -1380,12 +1380,12 @@ def write_init(l, **kwargs):
             nonbond_mixing: type of mixing rule for nonbonded interactions default=arithmetic
             nb_cut: cutoff for nonbonded interactions default=12
     """
-    atom_style = kwargs.get('atom_style') or 'full'
-    kspace_style = kwargs.get('kspace_style') or 'pppm 1e-4'
-    units = kwargs.get('units') or 'real'
-    nb_cut = kwargs.get('nb_cut') or 12.0
+    atom_style = kwargs.get('atom_style', 'full')
+    kspace_style = kwargs.get('kspace_style', 'pppm 1e-4')
+    units = kwargs.get('units', 'real')
+    nb_cut = kwargs.get('nb_cut', 12.0)
     special_bonds = kwargs.get('special_bonds')
-    nonbond_mixing = kwargs.get('nonbond_mixing') or 'arithmetic'
+    nonbond_mixing = kwargs.get('nonbond_mixing', 'arithmetic')
 
     output = ''
 
