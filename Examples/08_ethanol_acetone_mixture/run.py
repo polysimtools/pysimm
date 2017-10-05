@@ -2,8 +2,16 @@ from pysimm import system, lmps, forcefield
 # from pysimm import amber
 
 def run(test=False):
-    ethanol = system.read_pubchem_smiles('CCO')
-    acetone = system.read_pubchem_smiles('CC(=O)C')
+    try:
+        ethanol = system.read_pubchem_smiles('CCO')
+    except:
+        import os
+        s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'CCO.mol'))
+    try:
+        acetone = system.read_pubchem_smiles('CC(=O)C')
+    except:
+        import os
+        s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'CC(=O)C.mol'))
     
     f = forcefield.Gaff2()
     

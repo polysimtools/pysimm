@@ -2,7 +2,12 @@ from pysimm import system, lmps, forcefield
 
 def run(test=False):
   # use a smiles string to query the pubchem search database and read the mol file returned from the http request
-  s = system.read_pubchem_smiles('c1=cc=cc=c1')
+  # if cannot get to internet, read local cached response from pubchem
+  try:
+    s = system.read_pubchem_smiles('c1=cc=cc=c1')
+  except:
+      import os
+      s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'c1=cc=cc=c1.mol'))
   
   # the resulting system (benzene) has alternating double bonds
   # we want pysimm to recognize the ring as aromatic, so we define each bond in the ring to be bond order 'A'
