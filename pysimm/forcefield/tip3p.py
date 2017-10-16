@@ -59,11 +59,11 @@ class Tip3p(Forcefield):
         """pysimm.forcefield.Tip3p.assign_ptypes
 
         Tip3p specific particle typing rules.
-        Requires System object Particle objects have Particle.bonds defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds defined.
         *** use System.add_particle_bonding() to ensure this ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -106,11 +106,11 @@ class Tip3p(Forcefield):
         """pysimm.forcefield.Tip3p.assign_btypes
 
         Tip3p specific bond typing rules.
-        Requires System object Particle objects have Particle.type and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -139,12 +139,11 @@ class Tip3p(Forcefield):
         """pysimm.forcefield.Tip3p.assign_atypes
 
         Tip3p specific angle typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -191,7 +190,7 @@ class Tip3p(Forcefield):
         There are none.
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -205,7 +204,7 @@ class Tip3p(Forcefield):
         There are none.
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -219,7 +218,7 @@ class Tip3p(Forcefield):
         There are none.
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
             charges: default
 
         Returns:

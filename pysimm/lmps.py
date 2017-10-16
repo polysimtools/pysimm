@@ -29,7 +29,7 @@
 
 import shlex
 import shutil
-from subprocess import call, check_call, Popen, PIPE
+from subprocess import call, Popen, PIPE
 from Queue import Queue, Empty
 from threading import Thread
 import os
@@ -69,8 +69,7 @@ def check_lmps_exec():
         except OSError:
             print 'LAMMPS is not configured properly for one reason or another'
             return False
-            
-check_lmps_exec()
+
 
 class Qeq(object):
     """pysimm.lmps.MolecularDynamics
@@ -84,9 +83,9 @@ class Qeq(object):
         qfile: file with qeq parameters (leave undefined for defaults)
     """
     def __init__(self, **kwargs):
-        self.cutoff = kwargs.get('cutoff') if kwargs.has_key('cutoff') else 10
-        self.tol = kwargs.get('tol') if kwargs.has_key('tol') else 1.0e-6
-        self.max_iter = kwargs.get('max_iter') if kwargs.has_key('max_iter') else 200
+        self.cutoff = kwargs.get('cutoff', 10)
+        self.tol = kwargs.get('tol', 1.0e-6)
+        self.max_iter = kwargs.get('max_iter', 200)
         self.qfile = kwargs.get('qfile')
         
         self.input = ''
@@ -97,7 +96,7 @@ class Qeq(object):
         Create LAMMPS input for a charge equilibration calculation
 
         Args:
-            sim: pysimm.lmps.Simulation object reference
+            sim: :class:`~pysimm.lmps.Simulation` object reference
 
         Returns:
             input string
@@ -135,7 +134,9 @@ class MolecularDynamics(object):
         ensemble: 'nvt' or 'npt' or 'nve'
         limit: numerical value to use with nve when limiting particle displacement
         temp: temperature for use with 'nvt' and 'npt' or new_v
+        tdamp: damping parameter for thermostat (default=100*timestep)
         pressure: pressure for use with 'npt'
+        pdamp: damping parameter for barostat (default=1000*timestep)
         new_v: True to have LAMMPS generate new velocities
         seed: seed value for RNG (random by default)
         scale_v: True to scale velocities to given temperature default=False
@@ -148,18 +149,20 @@ class MolecularDynamics(object):
     """
     def __init__(self, **kwargs):
 
-        self.timestep = kwargs.get('timestep') or 1
-        self.ensemble = kwargs.get('ensemble') or 'nvt'
+        self.timestep = kwargs.get('timestep', 1)
+        self.ensemble = kwargs.get('ensemble', 'nvt')
         self.limit = kwargs.get('limit')
         self.temp = kwargs.get('temp')
-        self.pressure = kwargs.get('pressure') or 1.
+        self.tdamp = kwargs.get('tdamp', int(100*self.timestep))
+        self.pressure = kwargs.get('pressure', 1.)
+        self.pdamp = kwargs.get('pdamp', int(1000*self.timestep))
         self.new_v = kwargs.get('new_v')
-        self.seed = kwargs.get('seed') or randint(10000, 99999)
+        self.seed = kwargs.get('seed', randint(10000, 99999))
         self.scale_v = kwargs.get('scale_v')
-        self.length = kwargs.get('length') if kwargs.has_key('length') else 2000
-        self.thermo = kwargs.get('thermo') or 1000
+        self.length = kwargs.get('length', 2000)
+        self.thermo = kwargs.get('thermo', 1000)
         self.thermo_style = kwargs.get('thermo_style')
-        self.dump = kwargs.get('dump') or False
+        self.dump = kwargs.get('dump', False)
         self.dump_name = kwargs.get('dump_name')
         self.dump_append = kwargs.get('dump_append')
         
@@ -193,7 +196,7 @@ class MolecularDynamics(object):
         Create LAMMPS input for a molecular dynamics simulation.
 
         Args:
-            sim: pysimm.lmps.Simulation object reference
+            sim: :class:`~pysimm.lmps.Simulation` object reference
 
         Returns:
             input string
@@ -207,12 +210,10 @@ class MolecularDynamics(object):
         self.input += 'timestep %s\n' % self.timestep
 
         if self.ensemble == 'nvt':
-            self.input += 'fix 1 all %s temp %s %s %s\n' \
-                          % (self.ensemble, self.t_start, self.t_stop, int(100 * self.timestep))
+            self.input += 'fix 1 all %s temp %s %s %s\n' % (self.ensemble, self.t_start, self.t_stop, self.tdamp)
         elif self.ensemble == 'npt':
             self.input += ('fix 1 all %s temp %s %s %s iso %s %s %s\n'
-                           % (self.ensemble, self.t_start, self.t_stop, int(100 * self.timestep),
-                              self.p_start, self.p_stop, int(1000 * self.timestep)))
+                           % (self.ensemble, self.t_start, self.t_stop, self.tdamp, self.p_start, self.p_stop, self.pdamp))
         elif self.ensemble == 'nve' and self.limit:
             self.input += 'fix 1 all %s/limit %s\n' % (self.ensemble, self.limit)
         elif self.ensemble == 'nve':
@@ -237,7 +238,7 @@ class MolecularDynamics(object):
             if self.dump_append:
                 self.input += 'dump_modify pysimm_dump append yes\n'
 
-        self.input += 'run %s\n' % self.length
+        self.input += 'run %s\n' % int(self.length)
         self.input += 'unfix 1\n'
         if self.dump:
             self.input += 'undump pysimm_dump\n'
@@ -250,9 +251,9 @@ class SteeredMolecularDynamics(MolecularDynamics):
         MolecularDynamics.__init__(self, **kwargs)
         self.p1 = kwargs.get('p1')
         self.p2 = kwargs.get('p2')
-        self.k = kwargs.get('k') if kwargs.has_key('k') else 20.0
-        self.v = kwargs.get('v') if kwargs.has_key('v') else 0.001
-        self.d = kwargs.get('d') if kwargs.has_key('d') else 3.0
+        self.k = kwargs.get('k', 20.0)
+        self.v = kwargs.get('v', 0.001)
+        self.d = kwargs.get('d', 3.0)
     
     def write(self, sim):
         """pysimm.lmps.SteeredMolecularDynamics.write
@@ -260,7 +261,7 @@ class SteeredMolecularDynamics(MolecularDynamics):
         Create LAMMPS input for a steered molecular dynamics simulation.
 
         Args:
-            sim: pysimm.lmps.Simulation object reference
+            sim: :class:`~pysimm.lmps.Simulation` object reference
 
         Returns:
             input string
@@ -466,8 +467,7 @@ class Simulation(object):
         self.print_to_screen = kwargs.get('print_to_screen') if kwargs.get('print_to_screen') is not None else False
         self.name = kwargs.get('name') or False
         self.log = kwargs.get('log')
-        self.write = kwargs.get('write') or False
-        self.dump_unwraped = kwargs.get('dump_unwraped') or False
+        self.write = kwargs.get('write', False)
 
         self.input = ''
         self.custom = kwargs.get('custom')
@@ -562,11 +562,8 @@ class Simulation(object):
 
         for template in self.sim:
             self.input += template.write(self)
-
-        line = 'write_dump all custom pysimm.dump.tmp id q x y z vx vy vz\n'
-        if self.dump_unwraped:
-            line = line.replace('x y z', 'xu yu zu')
-        self.input += line
+            
+        self.input += 'write_dump all custom pysimm.dump.tmp id q x y z vx vy vz\n'
 
         self.input += 'quit\n'
 
@@ -653,25 +650,22 @@ def call_lammps(simulation, np, nanohub):
         else:
             p = Popen(['mpiexec', LAMMPS_EXEC, '-e', 'both', '-l', 'none'],
                       stdin=PIPE, stdout=PIPE, stderr=PIPE)
-
         simulation.write_input()
-        thr_out, thr_err = p.communicate(simulation.input)
+        p.stdin.write(simulation.input)
+        q = Queue()
+        t = Thread(target=enqueue_output, args=(p.stdout, q))
+        t.daemon = True
+        t.start()
 
-        # p.stdin.write(simulation.input)
-        # q = Queue()
-        # t = Thread(target=enqueue_output, args=(p.stdout, q))
-        # t.daemon = True
-        # t.start()
-        #
-        # while t.isAlive() or not q.empty():
-        #     try:
-        #         line = q.get_nowait()
-        #     except Empty:
-        #         pass
-        #     else:
-        #         if simulation.print_to_screen:
-        #             sys.stdout.write(line)
-        #             sys.stdout.flush()
+        while t.isAlive() or not q.empty():
+            try:
+                line = q.get_nowait()
+            except Empty:
+                pass
+            else:
+                if simulation.print_to_screen:
+                    sys.stdout.write(line)
+                    sys.stdout.flush()
                     
     simulation.system.read_lammps_dump('pysimm.dump.tmp')
 
@@ -865,7 +859,7 @@ def md(s, template=None, **kwargs):
     if ensemble == 'nvt':
         command += 'fix 1 all %s temp %s %s 100\n' % (ensemble, t_start, t_stop)
     elif ensemble == 'npt':
-        command += ('fix 1 all %s temp %s %s 100 iso %s %s 1000\n'
+        command += ('fix 1 all %s temp %s %s 100 iso %s %s 100\n'
                     % (ensemble, t_start, t_stop, pressure, pressure))
     if new_v:
         command += 'velocity all create %s %s\n' % (t_start, seed)

@@ -58,11 +58,11 @@ class Forcefield(object):
     Attributes:
         ff_class: force field class (1 or 2)
         ff_name: force field name
-        particle_types: pysimm.utils.ItemContainer for particle_types
-        bond_types: pysimm.utils.ItemContainer for bond_types
-        angle_types: pysimm.utils.ItemContainer for angle_types
-        dihedral_types: pysimm.utils.ItemContainer for dihedral_types
-        improper_types: pysimm.utils.ItemContainer for improper_types
+        particle_types: :class:`~pysimm.utils.ItemContainer` for particle_types
+        bond_types: :class:`~pysimm.utils.ItemContainer` for bond_types
+        angle_types: :class:`~pysimm.utils.ItemContainer` for angle_types
+        dihedral_types: :class:`~pysimm.utils.ItemContainer` for dihedral_types
+        improper_types: :class:`~pysimm.utils.ItemContainer` for improper_types
     """
     def __init__(self, file_=None, format=None):
         self.ff_class = 0

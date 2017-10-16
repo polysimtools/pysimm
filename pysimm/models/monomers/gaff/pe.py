@@ -2,7 +2,11 @@ from pysimm import system, lmps, forcefield
 from pysimm.apps.random_walk import random_walk
 
 def monomer():
-    s = system.read_pubchem_smiles('CC')
+    try:
+        s = system.read_pubchem_smiles('CC')
+    except:
+        import os
+        s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'CC.mol'))
     f = forcefield.Gaff()
     s.apply_forcefield(f)
     

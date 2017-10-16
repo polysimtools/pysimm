@@ -46,7 +46,7 @@ def equil(s, **kwargs):
     Runs a 21-step compression/decompression equilibration algorithm
 
     Args:
-        s: pysimm.system.System object
+        s: :class:`~pysimm.system.System` object
         tmax: maximum temperature during equilibration
         pmax: maximum pressure during equilibration
         tfinal: desired final temperature of final system
@@ -58,11 +58,11 @@ def equil(s, **kwargs):
     Returns:
         None
     """
-    nb_cutoff = kwargs.get('nb_cutoff') or 12.0
-    tmax = kwargs.get('tmax') or 1000
-    pmax = kwargs.get('pmax') or 50000
-    tfinal = kwargs.get('tfinal') or 300
-    pfinal = kwargs.get('pfinal') or 1
+    nb_cutoff = kwargs.get('nb_cutoff', 12.0)
+    tmax = kwargs.get('tmax', 1000)
+    pmax = kwargs.get('pmax', 50000)
+    tfinal = kwargs.get('tfinal', 300)
+    pfinal = kwargs.get('pfinal', 1)
 
     nanohub = kwargs.get('nanohub')
     np = kwargs.get('np')

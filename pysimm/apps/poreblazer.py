@@ -62,17 +62,17 @@ def psd(s, **kwargs):
     Returns:
         None
     """
-    atoms = kwargs.get('atoms') or 'ff.atoms'
-    data = kwargs.get('data') or "'data.xyz'"
-    angles = kwargs.get('angles') or '90.0 90.0 90.0'
-    insertions = kwargs.get('insertions') or 500
-    min_probe = kwargs.get('min_probe') or 1.0
-    probe_dr = kwargs.get('probe_dr') or 0.2
-    max_probe = kwargs.get('max_probe') or 25
-    psd_save = kwargs.get('psd_save') or 'F'
-    psd_range = kwargs.get('psd_range') or '2.5,3.8'
+    atoms = kwargs.get('atoms', 'ff.atoms')
+    data = kwargs.get('data', "'data.xyz'")
+    angles = kwargs.get('angles', '90.0 90.0 90.0')
+    insertions = kwargs.get('insertions', 500)
+    min_probe = kwargs.get('min_probe', 1.0)
+    probe_dr = kwargs.get('probe_dr', 0.2)
+    max_probe = kwargs.get('max_probe', 25)
+    psd_save = kwargs.get('psd_save', 'F')
+    psd_range = kwargs.get('psd_range', '2.5,3.8')
 
-    exec_path = kwargs.get('exec_path') or 'psd.exe'
+    exec_path = kwargs.get('exec_path', 'psd.exe')
     nanohub = kwargs.get('nanohub')
 
     gen_files = kwargs.get('gen_files')
@@ -137,15 +137,15 @@ def surface(s, **kwargs):
     Returns:
         None
     """
-    atoms = kwargs.get('atoms') or 'ff.atoms'
-    data = kwargs.get('data') or "'data.xyz'"
-    angles = kwargs.get('angles') or '90.0 90.0 90.0'
-    insertions = kwargs.get('insertions') or 1000
-    probe = kwargs.get('probe') or '3.681'
-    probe_type = kwargs.get('probe_type') or 'hs'
+    atoms = kwargs.get('atoms', 'ff.atoms')
+    data = kwargs.get('data', "'data.xyz'")
+    angles = kwargs.get('angles', '90.0 90.0 90.0')
+    insertions = kwargs.get('insertions', 1000)
+    probe = kwargs.get('probe', '3.681')
+    probe_type = kwargs.get('probe_type', 'hs')
     vis = kwargs.get('vis') or 'F'
 
-    exec_path = kwargs.get('exec_path') or 'surface.exe'
+    exec_path = kwargs.get('exec_path', 'surface.exe')
 
     with open('surf_area.in', 'w+') as f:
         f.write('%s\n' % atoms)
@@ -199,14 +199,14 @@ def pore(s, **kwargs):
     """
     boltzmann_kcal = 0.001987204
 
-    atoms = kwargs.get('atoms') or 'ff.atoms'
-    data = kwargs.get('data') or "'data.xyz'"
-    angles = kwargs.get('angles') or '90.0 90.0 90.0'
-    insertions = kwargs.get('insertions') or 1000
-    temp = kwargs.get('temp') or 300
-    pore_probe = kwargs.get('pore_probe') or '2.58 10.22 12.8'
+    atoms = kwargs.get('atoms', 'ff.atoms')
+    data = kwargs.get('data', "'data.xyz'")
+    angles = kwargs.get('angles', '90.0 90.0 90.0')
+    insertions = kwargs.get('insertions', 1000)
+    temp = kwargs.get('temp', 300)
+    pore_probe = kwargs.get('pore_probe', '2.58 10.22 12.8')
 
-    exec_path = kwargs.get('exec_path') or 'pore_he.exe'
+    exec_path = kwargs.get('exec_path', 'pore_he.exe')
 
     with open('pore_volume.in', 'w+') as f:
         f.write('%s\n' % atoms)
@@ -260,14 +260,14 @@ def void(s, **kwargs):
     """
     boltzmann_kcal = 0.001987204
 
-    atoms = kwargs.get('atoms') or 'ff.atoms'
-    data = kwargs.get('data') or "'data.xyz'"
-    angles = kwargs.get('angles') or '90.0 90.0 90.0'
-    insertions = kwargs.get('insertions') or 1000
-    temp = kwargs.get('temp') or 300
-    pore_probe = kwargs.get('pore_probe') or '0.0 10.22 12.8'
+    atoms = kwargs.get('atoms', 'ff.atoms')
+    data = kwargs.get('data', "'data.xyz'")
+    angles = kwargs.get('angles', '90.0 90.0 90.0')
+    insertions = kwargs.get('insertions', 1000)
+    temp = kwargs.get('temp', 300)
+    pore_probe = kwargs.get('pore_probe', '0.0 10.22 12.8')
 
-    exec_path = kwargs.get('exec_path') or 'pore_he.exe'
+    exec_path = kwargs.get('exec_path', 'pore_he.exe')
 
     with open('void_volume.in', 'w+') as f:
         f.write('%s\n' % atoms)
