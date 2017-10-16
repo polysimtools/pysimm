@@ -123,7 +123,7 @@ class GCMC(object):
         # Setting the simulation box generating system
 
         self.fxd_sst = fxd_sst
-        self.fxd_sst.center_system()  # the center of the box around the system should be at origin
+        self.fxd_sst.center('box', [0, 0, 0], True)  # the center of the box around the system should be at origin
         self.fxd_sst.name = 'matrix'
         self.fixed_syst_mcf_file = None
         if self.fxd_sst.particles.count > 0:
@@ -133,7 +133,7 @@ class GCMC(object):
             mol_files['file1'] = [self.fixed_syst_mcf_file, 1]
             sst_count = 1
 
-        self.tot_sst = fxd_sst
+        self.tot_sst = self.fxd_sst
         # self.tot_sst.add(fxd_sst, change_dim=False)
         # self.tot_sst.dim = fxd_sst.dim
         self.mc_sst = mc_sst

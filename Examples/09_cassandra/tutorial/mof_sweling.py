@@ -23,7 +23,7 @@ mc_props = {'rigid_type': False,
 md_props = {'ensemble': 'npt',
             'temp': 300,
             'pressure': 15,
-            'timestep': 0.25,
+            'timestep': 0.3,
             'cutoff': 9.0,
             'length': 100000,
             'thermo': 2500,
@@ -32,4 +32,4 @@ md_props = {'ensemble': 'npt',
 
 sim_result = mc_md.mc_md(gas1, polymer, mcmd_niter=3, sim_folder='results', mc_props=mc_props, md_props=md_props)
 sim_result.write_lammps('MOFplusME.lmps')
-sim_result.visualize()
+
