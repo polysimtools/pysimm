@@ -47,8 +47,8 @@ run   10000
 
 # CBMC_Info
 kappa_ins   12
-kappa_dih   0
-rcut_cbmc   12.0
+kappa_dih   10
+rcut_cbmc   5.0
 !^^^^^^^^^^^^^^^^^^^^
 
 # Box_Info
@@ -58,6 +58,8 @@ cubic
 !^^^^^^^^^^^^^^^^^^^^
 
 # Property_Info 1
+energy_total
+density
 nmols
 pressure
 !^^^^^^^^^^^^^^^^^^^^

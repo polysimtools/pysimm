@@ -43,7 +43,7 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
 
     # Set the one-molecule gas systems
     gases = []
-    for g in gas_sst:
+    for g in cassandra.make_iterable(gas_sst):
         if isinstance(g, str):
             try:
                 gases.append(system.read_lammps(g))
@@ -62,7 +62,7 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
     # Set the Monte-Carlo properties:
     mcp = kwargs.get('mc_props')
     if mcp:
-        CHEM_POT = mcp.get('Chemical_Potential_Info')
+        CHEM_POT = cassandra.make_iterable(mcp.get('Chemical_Potential_Info'))
         if not CHEM_POT:
             print('Missing chemical potential info\nExiting...')
             exit(1)
@@ -141,7 +141,7 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
 
         # The input for correct simulations is set, starting LAMMPS:
         sim.add_custom(tmp_md.input)
-        sim.run(np=8)
+        sim.run(np=1)
 
         # Updating the size of the fixed system from the MD simulations and saving the coordinates for the next MC
         css.init_sst.dim = sim.system.dim

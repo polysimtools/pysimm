@@ -523,7 +523,7 @@ class McSystem(object):
     def __init__(self, s, chem_pot, **kwargs):
         self.logger = logging.getLogger('MC_SYSTEM')
         self.name = 'gas'
-        self.sst = self.__make_iterable__(s)
+        self.sst = make_iterable(s)
         for sst in self.sst:
             sst.zero_charge()
             # Checking that the force-field of the input system is of the class-1 as it is direct CASSANDRA restriction
@@ -547,9 +547,9 @@ class McSystem(object):
                     at.is_fixed = True
 
         self.file_store = os.getcwd()
-        self.max_ins = self.__make_iterable__(kwargs.get('max_ins') or 5000)
-        self.is_rigid = self.__make_iterable__(kwargs.get('is_rigid') or [True] * len(self.sst))
-        self.chem_pot = self.__make_iterable__(chem_pot)
+        self.max_ins = make_iterable(kwargs.get('max_ins') or 5000)
+        self.is_rigid = make_iterable(kwargs.get('is_rigid') or [True] * len(self.sst))
+        self.chem_pot = make_iterable(chem_pot)
         self.made_ins = [0] * len(self.sst)
         self.mcf_file = []
         self.frag_file = []
@@ -579,13 +579,6 @@ class McSystem(object):
                 al_ind += 1
             McfWriter(sstm, fullfile).write()
             self.mcf_file.append(fullfile)
-
-    # Force our fields be iterable (wrap in a list if it contains of only one item)
-    def __make_iterable__(self, obj):
-        it_obj = obj
-        if not isinstance(obj, Iterable):
-            it_obj = [obj]
-        return it_obj
 
     # Now is private because it is works only for single-configuration (rigid) fragment file
     def __generate_frag_file__(self):
@@ -1013,4 +1006,12 @@ class DataAnalyzer(object):
             idxs.append(int(re.search(order_rule, os.path.split(f)[1]).group()))
         ordr = sorted(range(len(idxs)), key=lambda k: idxs[k])
         return [fls[i] for i in ordr], ordr
+
+
+# Force our fields be iterable (wrap in a list if it contains of only one item)
+def make_iterable(obj):
+    it_obj = obj
+    if not isinstance(obj, Iterable):
+        it_obj = [obj]
+    return it_obj
 
