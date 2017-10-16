@@ -77,13 +77,12 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
         print('Missing the MD Simulation settings\nExiting...')
         exit(1)
 
-    while l < n_iter:
+    while l < n_iter + 1:
         mcp['Run_Name'] = str(l) + '.gcmc'
 
         css.add_gcmc(species=gases, is_new=True, chem_pot=CHEM_POT,
-                     max_ins=mcp.get('max_ins') or [6000] * len(CHEM_POT),
                      is_rigid=mcp.get('rigid_type') or [False] * len(gases),
-                     out_folder=sim_folder, props_file=str(l) + '.gcmc_props.inp')
+                     out_folder=sim_folder, props_file=str(l) + '.gcmc_props.inp', **mcp)
         css.run()
 
         # >>> 2N: MD (LAMMPS) step:
@@ -107,10 +106,11 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
 
         # create the description of the molecular dynamics simulation
         tmp_md = lmps.MolecularDynamics(ensemble=mdp.get('ensemble'),
-                                        timestep=mdp.get('time_step'),
+                                        timestep=mdp.get('timestep'),
                                         length=int(mdp.get('length')),
                                         thermo=mdp.get('thermo'),
                                         temp=mdp.get('temp'),
+                                        pressure=mdp.get('pressure'),
                                         dump=int(mdp.get('dump')),
                                         dump_name=os.path.join(sim_folder, str(l) + '.md.dump'),
                                         scale_v=True)
@@ -149,3 +149,5 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
         mcp['Start_Type']['file_name'] = xyz_fname.format(l)
         mcp['Start_Type']['species'] = [1] + [0] * len(CHEM_POT)
         l += 1
+
+    return sim.system

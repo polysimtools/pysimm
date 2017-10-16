@@ -71,16 +71,14 @@ check_cs_exec()
 class GCMC(object):
     """pysimm.cassandra.GCMC
 
-    Object containing the settings for the Grand-Canonical Monte-Carlo simulations povided
-    by the CASSANDRA software. The object includes also the simulation results
+    Object containing the settings for the Grand-Canonical Monte-Carlo simulations provided by the CASSANDRA software.
+    The object includes also the simulation results
 
     Attributes:
         props: dictionary containing all simulation settings to be written to the CASSANDRA .inp file
         input: text stream to be written to the CASSANDRA .inp file
-        mc_sst: wrapper around the list of pysimm.system.System objects representing single molecules (e.g. molecules
-        of different gaseous species) that will be used during MC simulations
-        fxd_sst: pysimm.system.System object that describes the optional fixed molecular system for MC
-        simulations (default: None)
+        mc_sst: wrapper around the list of pysimm.system.System objects representing single molecules (e.g. molecules of different gaseous species) that will be used during MC simulations
+        fxd_sst: pysimm.system.System object that describes the optional fixed molecular system for MC simulations (default: None)
         tot_sst: the pysimm.system.System object containing results of CASSANDRA simulations
         logger: logging.Logger object for verbose program execution
     """
@@ -121,19 +119,23 @@ class GCMC(object):
         # They are **absolutely** needed to start calculation
         mol_files = OrderedDict()
         sst_count = 0
+
+        # Setting the simulation box generating system
+
         self.fxd_sst = fxd_sst
+        self.fxd_sst.center_system()  # the center of the box around the system should be at origin
+        self.fxd_sst.name = 'matrix'
         self.fixed_syst_mcf_file = None
         if self.fxd_sst.particles.count > 0:
             # Check few things of the system in order for CASSANDRA not to raise an exception
             self.fxd_sst.zero_charge()         # 1) the sum of the charges should be 0
-            self.fxd_sst.center_system()       # 2) the center of the box around the system should be at origin
-            self.fxd_sst.name = 'matrix'
-            self.tot_sst.add(fxd_sst, change_dim=False)
-            self.tot_sst.dim = fxd_sst.dim
             self.fixed_syst_mcf_file = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fixed_syst_mcf_file, 1]
             sst_count = 1
 
+        self.tot_sst = fxd_sst
+        # self.tot_sst.add(fxd_sst, change_dim=False)
+        # self.tot_sst.dim = fxd_sst.dim
         self.mc_sst = mc_sst
         if mc_sst:
             mc_sst.file_store = self.out_folder
@@ -432,6 +434,18 @@ class GCMC(object):
 
 
 class InpSpec(object):
+    """pysimm.cassandra.InpSpec
+
+     Represents the most common object used for carrying one logical unit of the CASSANDRA simulation options
+
+     Attributes:
+         key: the keyword of the simulation option (literally the string that goes after the # sign in CASSANDRA .inp file)
+         value: numerical (text) values of the particular simulation option structured in a certain way
+
+         write_headers: if the value is Dictionary defines whether the dictionary keys should be written.
+         is_new_line: if the value is iterable defines whether each new element will be written to the new line
+    """
+
     def __init__(self, key, value, default, **kwargs):
         self.key = key
         self.write_headers = kwargs.get('write_headers')
@@ -533,7 +547,7 @@ class McSystem(object):
                     at.is_fixed = True
 
         self.file_store = os.getcwd()
-        self.max_ins = self.__make_iterable__(kwargs.get('max_ins') or 10000)
+        self.max_ins = self.__make_iterable__(kwargs.get('max_ins') or 5000)
         self.is_rigid = self.__make_iterable__(kwargs.get('is_rigid') or [True] * len(self.sst))
         self.chem_pot = self.__make_iterable__(chem_pot)
         self.made_ins = [0] * len(self.sst)
