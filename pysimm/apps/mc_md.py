@@ -120,7 +120,12 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
 
         # replace single default fix with two separate fixes for rigid and nonrigid bodies separately
         old_line = re.search('(?<=(\nfix)).*', tmp_md.input).group(0)
-        corr_fix = re.sub('all', nonrig_group_name, old_line) + ' dilate all\n'
+        corr_fix = re.sub('all', nonrig_group_name, old_line)
+
+        if rigid_mols:
+            corr_fix += ' dilate all\n'
+        else:
+            corr_fix += '\n'
 
         if rigid_mols:
             corr_fix += 'fix' + re.sub('iso\s+\d+[.\d]*\s+\d+[.\d]*\s+\d+[.\d]*', '', old_line).\

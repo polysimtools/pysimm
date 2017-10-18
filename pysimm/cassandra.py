@@ -88,7 +88,6 @@ class GCMC(object):
 
         # Initializing CASSANDRA input stream, empty at the beginning
         self.input = ''
-        self.tot_sst = system.System(ff_class='1')
         self.logger = logging.getLogger('GCMC')
 
         # Initializing dictionary that contains records that directly will be sent to the .inp file
@@ -134,6 +133,13 @@ class GCMC(object):
             sst_count = 1
 
         self.tot_sst = self.fxd_sst
+        if not self.tot_sst.ff_class:
+            self.tot_sst.ff_class = '1'
+        else:
+            if self.tot_sst.ff_class is not '1':
+                print('CASSANDRA supports only 1-st class force fields')
+                exit(1)
+
         # self.tot_sst.add(fxd_sst, change_dim=False)
         # self.tot_sst.dim = fxd_sst.dim
         self.mc_sst = mc_sst
