@@ -8,7 +8,7 @@ css = cassandra.Cassandra(sst)
 
 # Read the CASSANDRA .inp parameters file -- common way to setup simulations.
 # Any of the read properties can be modified here afterwards
-my_gcmc_props = css.read_input('my_props.inp')
+my_gcmc_props = css.read_input('props.inp')
 
 # The prefix for the all files that will be created by this run
 my_gcmc_props['Run_Name'] = 'gas_adsorb'
