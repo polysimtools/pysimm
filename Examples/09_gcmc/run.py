@@ -24,5 +24,9 @@ css.add_gcmc(species=[specie1, specie2, specie3],
              out_folder='gas_adsorb_results', **my_gcmc_props)
 css.run()
 
+
+for pt in css.final_sst.particle_types:
+    pt.elem = pt.real_elem
+
 css.final_sst.write_lammps('gas_adsorb.lmps')
-# css.final_sst.visualize()
+css.final_sst.write_xyz('gas_adsorb.xyz')

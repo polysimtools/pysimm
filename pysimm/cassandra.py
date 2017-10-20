@@ -77,10 +77,10 @@ class GCMC(object):
     Attributes:
         props: dictionary containing all simulation settings to be written to the CASSANDRA .inp file
         input: text stream to be written to the CASSANDRA .inp file
-        mc_sst: wrapper around the list of pysimm.system.System objects representing single molecules (e.g. molecules of different gaseous species) that will be used during MC simulations
-        fxd_sst: pysimm.system.System object that describes the optional fixed molecular system for MC simulations (default: None)
-        tot_sst: the pysimm.system.System object containing results of CASSANDRA simulations
-        logger: logging.Logger object for verbose program execution
+        mc_sst: `~pysimm.cassandra.McSystem` object containing all molecules to be inserted by CASSANDRA
+        fxd_sst: :class:`~pysimm.system.System` object that describes the optional fixed molecular system for MC simulations (default: None)
+        tot_sst: the :class:`~pysimm.system.System` object containing results of CASSANDRA simulations
+        logger: :class:`~logging.Logger` object for multi-level verbose program execution
     """
 
     def __init__(self, mc_sst=None, fxd_sst=None, **kwargs):
@@ -237,7 +237,7 @@ class GCMC(object):
     def write(self):
         """pysimm.cassandra.GCMC
 
-        Iterates through the GCMC.props dictionary creating the text for correct CASSANDRA input
+        Iterates through the `~GCMC.props` dictionary creating the text for correct CASSANDRA input
         """
 
         for key in self.props.keys():
@@ -255,7 +255,7 @@ class GCMC(object):
     def __write_chk__(self, out_file):
         """pysimm.cassandra.__write_chk__
 
-        Creates the CASSANDRA checkpoint file basing on the information from the GCMC.tot_sst field
+        Creates the CASSANDRA checkpoint file basing on the information from the `~GCMC.tot_sst` field
         """
         # Initializing output stream
         if out_file == 'string':
@@ -329,10 +329,10 @@ class GCMC(object):
     def upd_simulation(self):
         """pysimm.cassandra.upd_simulation
 
-        Updates the GCMC.tot_sst field using the 'GCMC.props['Run_Name'].chk' file. Will try to parse the checkpoint
+        Updates the `~GCMC.tot_sst` field using the 'GCMC.props['Run_Name'].chk' file. Will try to parse the checkpoint
         file and read the coordinates of the molecules inserted by CASSANDRA. If neither of the molecules from the
-        GCMC.mc_sst can be fit to the read text the method will raise an error. The fitting method:
-        pysimm.cassandra.McSystem.make_system assumes constant order of the atoms inside the molecule
+        `~GCMC.mc_sst` can be fit to the read text the method will raise an exception. The fitting method:
+        `~pysimm.cassandra.McSystem.make_system` assumes that different molecules inserted by CASSANDRA have the same order of the atoms
         """
         fname = '{:}{:}'.format(self.props['Run_Name'].value, '.chk')
         self.logger.info('Updating MC system from the CASSANDRA {:} file...'.format(fname))
@@ -364,7 +364,7 @@ class GCMC(object):
     def __check_params__(self):
         """pysimm.cassandra.upd_simulation
 
-        Private method desighned for update the fields of the GCMC object to make them conformed with each other
+        Private method designed for update the fields of the GCMC object to make them conformed with each other
         """
         # Synchronizing the simulation box parameters
         if self.fxd_sst:
@@ -526,9 +526,24 @@ class InpProbSpec(InpSpec):
 
 
 class McSystem(object):
+    """pysimm.cassandra.McSystem
+
+    Wrapper around the list of :class:`~pysimm.system.System` objects representing single molecules (e.g. molecules of
+    different gaseous species) that will be used during MC simulations. Additionally is responsible for i) creating .dat
+    and .mcf files needed for the simulation ii) reading back the CASSANDRA simulation results.
+
+    Attributes:
+        sst: list of `~pysimm.system.System` objects with items representing single moleculules of different species to be inserted by CASSANDRA
+        max_ins:
+        is_rigid:
+        chem_pot:
+        made_ins:
+        mcf_file:
+        frag_file:
+
+    """
     def __init__(self, s, chem_pot, **kwargs):
         self.logger = logging.getLogger('MC_SYSTEM')
-        self.name = 'gas'
         self.sst = make_iterable(s)
         for sst in self.sst:
             sst.zero_charge()

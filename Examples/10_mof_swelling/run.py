@@ -1,7 +1,7 @@
 from pysimm.apps import mc_md
 from pysimm import system
 
-polymer = system.read_lammps('irmof1_drei.lmps', dihedral_style='fourier')
+frame = system.read_lammps('irmof1_drei.lmps')
 gas1 = system.read_lammps('ch4.lmps')
 
 mc_props = {'rigid_type': False,
@@ -28,5 +28,6 @@ md_props = {'ensemble': 'npt',
             'dump': 2500,
             'print_to_screen': False}
 
-sim_result = mc_md.mc_md(gas1, polymer, mcmd_niter=3, sim_folder='results', mc_props=mc_props, md_props=md_props)
+sim_result = mc_md.mc_md(gas1, frame, mcmd_niter=3, sim_folder='results', mc_props=mc_props, md_props=md_props)
 sim_result.write_lammps('MOFplusME.lmps')
+sim_result.write_xyz('MOFplusME.xyz')
