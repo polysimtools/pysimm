@@ -447,10 +447,11 @@ class Simulation(object):
         special_bonds: LAMMPS special bonds input
         nonbond_mixing: type of mixing rule for nonbonded interactions default=arithmetic
         cutoff: cutoff for nonbonded interactions default=12
-        print_to_screen: True to have LAMMPS output printed to stdout
         name: name id for simulations
         log: prefix for LAMMPS log file
         write: file name to write final LAMMPS data file default=None
+        print_to_screen: True to have LAMMPS output printed to stdout after simulation ends
+        debug: True to have LAMMPS output streamed to stdout during simulation (WARNING: this may degrade performance)
     """
     def __init__(self, s, **kwargs):
 
@@ -463,8 +464,9 @@ class Simulation(object):
         self.nonbond_mixing = kwargs.get('nonbond_mixing', 'arithmetic')
         self.cutoff = kwargs.get('cutoff', 12.0)
 
+        self.debug = kwargs.get('debug', False)
         self.print_to_screen = kwargs.get('print_to_screen', False)
-        self.name = kwargs.get('name', False)
+        self.name = kwargs.get('name') or False
         self.log = kwargs.get('log')
         self.write = kwargs.get('write', False)
 
@@ -593,7 +595,7 @@ class Simulation(object):
             raise PysimmError('There was a problem calling LAMMPS with mpiexec'), None, sys.exc_info()[2]
         except IOError as ioe:
             if check_lmps_exec():
-                raise PysimmError('There was a problem running LAMMPS. The process started but did not finish successfully. Check the log file, or rerun the simulation with print_to_screen=True to debug issue from LAMMPS output'), None, sys.exc_info()[2]
+                raise PysimmError('There was a problem running LAMMPS. The process started but did not finish successfully. Check the log file, or rerun the simulation with debug=True to debug issue from LAMMPS output'), None, sys.exc_info()[2]
             else:
                 raise PysimmError('There was a problem running LAMMPS. LAMMPS is not configured properly. Make sure the LAMMPS_EXEC environment variable is set to the correct LAMMPS executable path. The current path is set to:\n\n{}'.format(LAMMPS_EXEC)), None, sys.exc_info()[2]
 
@@ -650,20 +652,29 @@ def call_lammps(simulation, np, nanohub):
                       stdin=PIPE, stdout=PIPE, stderr=PIPE)
         simulation.write_input()
         p.stdin.write(simulation.input)
-        q = Queue()
-        t = Thread(target=enqueue_output, args=(p.stdout, q))
-        t.daemon = True
-        t.start()
-
-        while t.isAlive() or not q.empty():
-            try:
-                line = q.get_nowait()
-            except Empty:
-                pass
-            else:
-                if simulation.print_to_screen:
-                    sys.stdout.write(line)
-                    sys.stdout.flush()
+        if simulation.debug:
+            print(simulation.input)
+            warning_print('debug setting involves streaming output from LAMMPS process and can degrade performance')
+            warning_print('only use debug for debugging purposes, use print_to_screen to collect stdout after process finishes')
+            q = Queue()
+            t = Thread(target=enqueue_output, args=(p.stdout, q))
+            t.daemon = True
+            t.start()
+    
+            while t.isAlive() or not q.empty():
+                try:
+                    line = q.get_nowait()
+                except Empty:
+                    pass
+                else:
+                    if simulation.debug:
+                        sys.stdout.write(line)
+                        sys.stdout.flush()
+        else:
+            stdo, stde = p.communicate()
+            if simulation.print_to_screen:
+                print(stdo)
+                print(stde)
                     
     simulation.system.read_lammps_dump('pysimm.dump.tmp')
 
