@@ -456,17 +456,30 @@ class Simulation(object):
     def __init__(self, s, **kwargs):
 
         self.system = s
+        
+        self.forcefield = kwargs.get('forcefield')
+        self.special_bonds = None
+        self.nonbond_mixing = None
+        if self.forcefield is None and s and s.forcefield is not None:
+            self.forcefield = s.forcefield
+
+        if self.forcefield is not None:
+            self.ff_settings(self.forcefield)
 
         self.atom_style = kwargs.get('atom_style', 'full')
         self.kspace_style = kwargs.get('kspace_style', 'pppm 1e-4')
         self.units = kwargs.get('units', 'real')
-        self.special_bonds = kwargs.get('special_bonds')
-        self.nonbond_mixing = kwargs.get('nonbond_mixing', 'arithmetic')
+        if kwargs.get('special_bonds'):
+            self.special_bonds = kwargs.get('special_bonds')
+        if kwargs.get('nonbond_mixing'):
+            self.nonbond_mixing = kwargs.get('nonbond_mixing')
+        self.lj_shift = kwargs.get('lj_shift')
+        self.lj_tail = kwargs.get('lj_tail')
         self.cutoff = kwargs.get('cutoff', 12.0)
 
         self.debug = kwargs.get('debug', False)
         self.print_to_screen = kwargs.get('print_to_screen', False)
-        self.name = kwargs.get('name') or False
+        self.name = kwargs.get('name', False)
         self.log = kwargs.get('log')
         self.write = kwargs.get('write', False)
 
@@ -474,6 +487,23 @@ class Simulation(object):
         self.custom = kwargs.get('custom')
 
         self.sim = kwargs.get('sim', [])
+
+    def ff_settings(self, f):
+        if f.lower() in ['dreiding']:
+            self.special_bonds = 'dreiding'
+            self.nonbond_mixing = 'arithmetic'
+        elif f.lower() in ['amber', 'gaff', 'gaff2']:
+            self.special_bonds = 'amber'
+            self.nonbond_mixing = 'arithmetic'
+        elif f.lower() in ['pcff']:
+            self.special_bonds = 'lj/coul 0 0 1'
+            self.nonbond_mixing = 'sixthpower'
+        elif f.lower() in ['opls']:
+            self.special_bonds = 'lj/coul 0 0 0.5'
+            self.nonbond_mixing = 'geometric'
+        elif f.lower() in ['charmm', 'cgen', 'cgenff']:
+            self.special_bonds = 'lj/coul 0 0 0'
+            self.nonbond_mixing = 'arithmetic'
         
     def add_qeq(self, template=None, **kwargs):
         """pysimm.lmps.Simulation.add_qeq
@@ -1396,7 +1426,9 @@ def write_init(l, **kwargs):
     units = kwargs.get('units', 'real')
     nb_cut = kwargs.get('nb_cut', 12.0)
     special_bonds = kwargs.get('special_bonds')
-    nonbond_mixing = kwargs.get('nonbond_mixing', 'arithmetic')
+    nonbond_mixing = kwargs.get('nonbond_mixing')
+    lj_shift = kwargs.get('lj_shift')
+    lj_tail = kwargs.get('lj_tail')
 
     output = ''
 
@@ -1464,14 +1496,15 @@ def write_init(l, **kwargs):
         output += 'kspace_style %s\n' % kspace_style
 
     if not pair_style.startswith('buck'):
-        if nonbond_mixing == 'arithmetic':
-            output += 'pair_modify shift yes mix arithmetic\n'
-        elif nonbond_mixing == 'geometric':
-            output += 'pair_modify shift yes mix geometric\n'
-        else:
-            output += 'pair_modify shift yes mix arithmetic\n'
-            print('%s mixing rule not supported; defaulting to arithmetic'
-                  % nonbond_mixing)
+        if nonbond_mixing or lj_shift or lj_tail:
+            output += 'pair_modify '
+            if lj_tail:
+                output += 'tail {} '.format(lj_tail)
+            if lj_shift:
+                output += 'shift {} '.format(lj_shift)
+            if nonbond_mixing:
+                output += 'mix {} '.format(nonbond_mixing)
+            output += '\n'
 
     if l.bond_style:
         output += 'bond_style %s\n' % l.bond_style
@@ -1510,8 +1543,6 @@ def write_init(l, **kwargs):
 
     if special_bonds:
         output += 'special_bonds %s\n' % special_bonds
-    else:
-        output += 'special_bonds amber\n'
 
     l.write_lammps('temp.lmps')
     output += 'read_data temp.lmps\n'
