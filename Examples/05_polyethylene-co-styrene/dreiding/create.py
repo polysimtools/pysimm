@@ -16,8 +16,8 @@ def run(test=False):
     ps.apply_charges(f, charges='gasteiger')
     
     # the buckingham potential isn't great at small distances, and therefore we use the LJ potential while growing the polymer
-    pe.pair_style = 'lj'
-    ps.pair_style = 'lj'
+    pe.pair_style = 'buck'
+    ps.pair_style = 'buck'
     
     # run the copolymer random walk method with 10 total repeat units, using an alternating pattern
     polymer = copolymer([pe, ps], 10, pattern=[1, 1], forcefield=f)

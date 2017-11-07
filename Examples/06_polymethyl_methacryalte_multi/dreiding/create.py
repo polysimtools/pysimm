@@ -9,7 +9,7 @@ def run(test=False):
     # we'll instantiate a Dreiding forcefield object for use later
     f = forcefield.Dreiding()
     
-    pmma.pair_style = 'lj'
+    pmma.pair_style = 'buck'
     
     # we're going to make 4 chains, each of 5 repeat units
     # the first system we make will be used as the initial system and then replicated to form 4 chains

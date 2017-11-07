@@ -12,6 +12,7 @@ def run(test=False):
     # retrieve GAFF2 parameters
     print('Example progress: Retrieving Dreiding force field parameters...')
     f = forcefield.Gaff2()
+    s.forcefield = f.name
     
     # get a copy of the c3 particle type object from GAFF
     # get method returns a list, we need the first element

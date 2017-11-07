@@ -43,8 +43,10 @@ def run(test=False):
         'name': 'nvt_md',
         'print_to_screen': True,
         'ensemble': 'nvt',
-        't_start': 100,
-        't_stop': 300,
+        'temperature': {
+            'start': 100,
+            'stop': 300
+        },
         'new_v': True,
         'length': 10000
     }
@@ -53,10 +55,12 @@ def run(test=False):
         'name': 'npt_md',
         'print_to_screen': True,
         'ensemble': 'npt',
-        'temp': 300,
+        'temperature': 300,
         'new_v': True,
-        'p_start': 1000,
-        'p_stop': 1,
+        'pressure': {
+            'start': 1000,
+            'stop': 1
+        },
         'length': 100000,
         'thermo_style': 'custom step temp press density'
     }
