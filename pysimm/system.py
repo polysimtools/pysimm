@@ -505,7 +505,7 @@ class System(object):
 
         self.name = kwargs.get('name', 'pySIMM System Object')
         self.ff_class = kwargs.get('ff_class')
-        self.ff_name = kwargs.get('ff_name')
+        self.forcefield = kwargs.get('forcefield')
         self.dim = Dimension(xlo=kwargs.get('xlo'), xhi=kwargs.get('xhi'),
                              ylo=kwargs.get('ylo'), yhi=kwargs.get('yhi'),
                              zlo=kwargs.get('zlo'), zhi=kwargs.get('zhi'),
@@ -551,7 +551,7 @@ class System(object):
         new = System()
 
         new.ff_class = self.ff_class
-        new.ff_name = self.ff_name
+        new.forcefield = self.forcefield
         new.pair_style = self.pair_style
         new.bond_style = self.bond_style
         new.angle_style = self.angle_style
@@ -2128,7 +2128,7 @@ class System(object):
         """
 
         self.ff_class = f.ff_class
-        self.ff_name = f.ff_name
+        self.forcefield = f.name
         if update_ptypes:
             self.update_particle_types_from_forcefield(f)
             skip_ptypes = True
@@ -4460,7 +4460,7 @@ def read_mol(mol_file, type_with=None, version='V2000'):
             s.apply_forcefield(type_with)
         except Exception:
             print('forcefield typing with forcefield %s unsuccessful'
-                  % type_with.ff_name)
+                  % type_with.name)
 
     return s
     
@@ -4743,6 +4743,7 @@ def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True)
     if s_ is None:
         s_ = System()
     s_.ff_class = ref[0].ff_class
+    s_.forcefield = ref[0].forcefield
     s_.pair_style = ref[0].pair_style
     s_.bond_style = ref[0].bond_style
     s_.angle_style = ref[0].angle_style
