@@ -51,7 +51,7 @@ class Dreiding(Forcefield):
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                    os.pardir, os.pardir, 'dat', 'forcefields', 'dreiding.xml')
         Forcefield.__init__(self, db_file)
-        self.ff_name = 'dreiding'
+        self.name = 'dreiding'
         self.pair_style = 'buck'
         self.bond_style = 'harmonic'
         self.angle_style = 'harmonic'
