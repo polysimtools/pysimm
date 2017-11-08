@@ -1019,3 +1019,26 @@ def energy(s, all=False, np=None, **kwargs):
                }
     else:
         return etotal
+        
+
+class LogFile(object):
+    def __init__(self, fname):
+        self.filename = fname
+        self.data = pd.DataFrame()
+        self._read(self.filename)
+
+    def _read(self, fname):
+        with open(fname) as fr:
+            copy = False
+            for line in fr:
+                if line.startswith('Step'):
+                    strio = StringIO()
+                    copy = True
+                    names = line.strip().split()
+                elif line.startswith('Loop'):
+                    copy = False
+                    strio.seek(0)
+                    self.data = self.data.append(pd.read_table(strio, sep='\s+', names=names, index_col='Step'))
+                elif copy:
+                    strio.write(line)
+
