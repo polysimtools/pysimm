@@ -123,7 +123,7 @@ def check_lmps_exec():
         except OSError:
             print 'LAMMPS is not configured properly for one reason or another'
             return False
-
+            
 
 class Init(object):
     def __init__(self, **kwargs):
@@ -447,6 +447,7 @@ class MolecularDynamics(object):
         self.run = kwargs.get('run', kwargs.get('length', 2000))
         self.unfix = kwargs.get('unfix', True)
         self.rigid = kwargs.get('rigid')
+        self.extra_keywords = kwargs.get('extra_keywords', {})
         
         if kwargs.get('temp') is not None:
             print('temp keyword argument is deprecated for MolecularDynamics, please use temperature instead')
@@ -502,6 +503,10 @@ class MolecularDynamics(object):
             self.input += 'temp {} {} {} '.format(self.temperature.get('start', 300.), self.temperature.get('stop', self.temperature.get('start', 300.)), self.temperature.get('damp', 100*self.timestep))
         if 'p' in self.ensemble:
             self.input += '{} {} {} {} '.format(self.pressure.get('iso', 'aniso'), self.pressure.get('start', 1.), self.pressure.get('stop', self.pressure.get('start', 1.)), self.pressure.get('damp', 1000*self.timestep))
+        
+        for k, v in self.extra_keywords.items():
+            self.input += '{} {} '.format(k, v)
+        
         self.input += '\n'
 
         if self.run:
