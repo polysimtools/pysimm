@@ -318,7 +318,7 @@ class OutputSettings(object):
             self.dump['name'] = self.dump.get('name', 'pysimm_dump')
             self.dump['style'] = self.dump.get('style', 'custom')
             self.dump['filename'] = self.dump.get('filename', 'dump.*')
-            self.dump['args'] = self.dump.get('args', ['id', 'type', 'x', 'y', 'z', 'vx', 'vy', 'vz'])
+            self.dump['args'] = self.dump.get('args', ['id', 'type', 'mol', 'x', 'y', 'z', 'vx', 'vy', 'vz'])
             self.dump['modify'] = self.dump.get('modify')
         
         if isinstance(self.dump, dict) and isinstance(self.dump['group'], basestring):
