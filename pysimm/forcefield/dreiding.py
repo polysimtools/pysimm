@@ -259,8 +259,11 @@ class Dreiding(Forcefield):
                             (d.a == p2 and d.b == b.b and
                                 d.c == b.a and d.d == p1)):
                             unique = False
-                    if (unique and (b.a.type.name[2] != '1' and
-                                    b.b.type.name[2] != '1')):
+                    if unique:
+                        if len(b.a.type.name) > 2 and b.a.type.name[2] == '1':
+                            continue
+                        if len(b.b.type.name) > 2 and b.b.type.name[2] == '1':
+                            continue
                         p1_name = p1.type.name
                         a_name = b.a.type.name
                         b_name = b.b.type.name
