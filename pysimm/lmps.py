@@ -172,7 +172,8 @@ class Init(object):
                 if p.charge:
                     self.charge = True
                     break
-            self.charge=False
+            if self.charge is None:
+                self.charge=False
 
         lammps_input = ''
         lammps_input += '\n' + '#'*80 + '\n'
@@ -196,6 +197,9 @@ class Init(object):
             if self.charge and self.cutoff.get('coul'):
                 lammps_input += ' {} '.format(self.cutoff['coul'])
         lammps_input += '\n'
+        
+        if self.charge:
+            lammps_input += '{:<15} {}\n'.format('kspace_style', self.kspace_style)
         
         if self.bond_style is None and s and s.bonds.count > 0:
             if self.forcefield:
@@ -269,8 +273,8 @@ class Velocity(Item):
         Item.__init__(self, group=group, style=style, args=args, **kwargs)
         if self.seed is None:
             self.seed = randint(10000, 99999)
-        if self.temp is None:
-            self.temp = 300.0
+        if self.temperature is None:
+            self.temperature = 300.0
         if args:
             self.from_args = True
         
@@ -283,7 +287,7 @@ class Velocity(Item):
             for a in self.args:
                 inp += '{} '.format(a)
         elif self.style == 'create' or self.style == 'scale':
-            inp += '{temp} '.format(temp=self.temp)
+            inp += '{temp} '.format(temp=self.temperature)
             if self.style == 'create':
                 inp += '{seed} '.format(seed=self.seed)
         for k in ['dist', 'sum', 'mom', 'rot', 'bias', 'loop', 'rigid', 'units']:
@@ -303,7 +307,7 @@ class OutputSettings(object):
         if isinstance(self.thermo, dict):
             self.thermo['freq'] = self.thermo.get('freq', 1000)
             self.thermo['style'] = self.thermo.get('style', 'custom')
-            self.thermo['args'] = self.thermo.get('args', ['step', 'time', 'etotal', 'epair', 'emol', 'temp', 'vol', 'press', 'density'])
+            self.thermo['args'] = self.thermo.get('args', ['step', 'time', 'temp', 'vol', 'press', 'etotal', 'epair', 'emol', 'density'])
             self.thermo['modify'] = self.thermo.get('modify')
             
         if isinstance(self.dump, int):
@@ -688,11 +692,12 @@ class Simulation(object):
 
         self.sim = kwargs.get('sim', [])
         
-    def add(self, item):
-        if isinstance(item, basestring):
-            self.sim.append(CustomInput(item))
-        else:
-            self.sim.append(item)
+    def add(self, *args):
+        for item in args:
+            if isinstance(item, basestring):
+                self.sim.append(CustomInput(item))
+            else:
+                self.sim.append(item)
         return item
         
     def add_qeq(self, template=None, **kwargs):
@@ -910,13 +915,13 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
             print('%s: %s simulation using LAMMPS successful'
                   % (strftime('%H:%M:%S'), simulation.name))
         else:
-            print('%s: molecular dynamics using LAMMPS successful'
+            print('%s: simulation using LAMMPS successful'
                   % (strftime('%H:%M:%S')))
     except OSError as e:
         if simulation.name:
             raise PysimmError('%s simulation using LAMMPS UNsuccessful' % simulation.name)
         else:
-            raise PysimmError('molecular dynamics using LAMMPS UNsuccessful')
+            raise PysimmError('simulation using LAMMPS UNsuccessful')
 
 
 def qeq(s, np=None, nanohub=None, **kwargs):
