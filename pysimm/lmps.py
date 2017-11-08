@@ -126,6 +126,26 @@ def check_lmps_exec():
             
 
 class Init(object):
+    """pysimm.lmps.Init
+
+    Template object to contain LAMMPS initialization settings
+
+    Attributes:
+        forcefield: name of a supported force field; simulation settings will be chosen based on the force field name
+        units: LAMMPS set of units to use during simulation; default=real
+        atom_style: LAMMPS aomt_style to use during simulation; default=full
+        charge: option to define if any particles in system a non-zero charge
+        kspace_style: LAMMPS kspace_style to use during simulation if system has charges; default=pppm 1e-4
+        cutoff: dictionary of cutoff distances for nonbonded interactions; default={'lj': 12.0, 'coul': 12.0, 'inner_lj': 10.0}
+        pair_style: LAMMPS pair_style to use during simulation
+        bond_style: LAMMPS bond_style to use during simulation
+        angle_style: LAMMPS angle_style to use during simulation
+        dihedral_style: LAMMPS dihedral_style to use during simulation
+        improper_style: LAMMPS improper_style to use during simulation
+        special_bonds: LAMMPS special_bonds to use during simulation
+        pair_modify: LAMMPS pair_modify to use during simulation
+        read_data: name of data file to read instead of using :class:`~pysimm.system.System` object
+    """
     def __init__(self, **kwargs):
         self.forcefield = kwargs.get('forcefield')
         self.units = kwargs.get('units', 'real')
@@ -156,6 +176,16 @@ class Init(object):
             self.cutoff = {'lj': 12.0, 'coul': 12.0, 'inner_lj': 10.0}
 
     def write(self, sim):
+        """pysimm.lmps.Init.write
+
+        Prepare LAMMPS input with initialization settings
+
+        Args:
+            sim: :class:`~pysimm.lmps.Simulation` object reference
+
+        Returns:
+            string of LAMMPS input
+        """
         s = sim.system
         
         if self.forcefield is None and s.forcefield is not None:
@@ -255,6 +285,15 @@ class Init(object):
         
 
 class Group(Item):
+    """pysimm.lmps.Group
+
+    Template object to define a group in a LAMMPS simulation. See LAMMPS documentation for further information
+
+    Attributes:
+        name: name for the group
+        style: style for the group
+        *args: arguments for the given style
+    """
     def __init__(self, name='all', style='id', *args, **kwargs):
         Item.__init__(self, name=name, style=style, args=args, **kwargs)
         
@@ -269,6 +308,15 @@ class Group(Item):
         
 
 class Velocity(Item):
+    """pysimm.lmps.Velocity
+
+    Template object to define velocity initialization in a LAMMPS simulation. See LAMMPS documentation for further information
+
+    Attributes:
+        group: group for velocity command
+        style: style for the velocity command
+        *args: arguments for the given style
+    """
     def __init__(self, group=Group('all'), style='create', *args, **kwargs):
         Item.__init__(self, group=group, style=style, args=args, **kwargs)
         if self.seed is None:
@@ -298,6 +346,14 @@ class Velocity(Item):
 
 
 class OutputSettings(object):
+    """pysimm.lmps.OutputSettings
+
+    Template object to define thermo and dump output settings in a LAMMPS simulation. See LAMMPS documentation for further information
+
+    Attributes:
+        thermo: dictionary of settings for thermo output
+        dump: dictionary of settings for dump output
+    """
     def __init__(self, **kwargs):
         self.thermo = kwargs.get('thermo')
         self.dump = kwargs.get('dump', kwargs.get('trajectory'))
@@ -415,22 +471,17 @@ class MolecularDynamics(object):
     Template object to contain LAMMPS MD settings
 
     Attributes:
+        name: name to identify MD
+        group: :class:`~pysimm.lmps.Group` object for integrator
         timestep: timestep value to use during MD
-        ensemble: 'nvt' or 'npt' or 'nve'
+        ensemble: 'nvt' or 'npt' or 'nve'; default=nve
         limit: numerical value to use with nve when limiting particle displacement
-        temp: temperature for use with 'nvt' and 'npt' or new_v
-        tdamp: damping parameter for thermostat (default=100*timestep)
-        pressure: pressure for use with 'npt'
-        pdamp: damping parameter for barostat (default=1000*timestep)
-        new_v: True to have LAMMPS generate new velocities
-        seed: seed value for RNG (random by default)
-        scale_v: True to scale velocities to given temperature default=False
-        length: length of MD simulation in number of timesteps
-        thermo: frequency to print thermodynamic data default=1000
-        thermo_style: LAMMPS formatted input for thermo_style
-        dump: frequency to dump trajectory
-        dump_name: prefix of trajectory dump file
-        dump_append: True to append to previous dump file is it exists
+        temperature: dictionary of settings for temperature (start, stop, damp)
+        pressure: dictionary of settings for pressure (start, stop, damp)
+        run: length of MD simulation in number of timesteps or False to omit run command
+        unfix: True to include command to unfix integrator after run
+        rigid: dictionary of settings for a rigid simulation
+        extra_keywords: dictionary of extra keywords to append at the end of the LAMMPS fix integrator
     """
     def __init__(self, **kwargs):
 
@@ -441,9 +492,6 @@ class MolecularDynamics(object):
         self.limit = kwargs.get('limit')
         self.temperature = kwargs.get('temperature', kwargs.get('temp', 300.))
         self.pressure = kwargs.get('pressure', 1.)
-        self.new_v = kwargs.get('new_v')
-        self.seed = kwargs.get('seed', randint(10000, 99999))
-        self.scale_v = kwargs.get('scale_v')
         self.run = kwargs.get('run', kwargs.get('length', 2000))
         self.unfix = kwargs.get('unfix', True)
         self.rigid = kwargs.get('rigid')
@@ -511,7 +559,7 @@ class MolecularDynamics(object):
 
         if self.run:
             self.input += '{:<15} {}\n'.format('run', int(self.run))
-        if self.unfix:
+        if self.run and self.unfix:
             self.input += 'unfix {}\n'.format(self.name)
 
         return self.input
@@ -592,15 +640,11 @@ class Minimization(object):
 
     Attributes:
         min_style: LAMMPS minimization style default='sd'
+        dmax: how far any atom can move in a single line search in any dimension
         etol: energy tolerance default=1e-3
         ftol: force tolerance default=1e-3
         maxiter: maximum iterations default=10000
         max eval: maximum force evaluations default=100000
-        thermo: frequency to print thermodynamic data default=1000
-        thermo_style: LAMMPS formatted input for thermo_style
-        dump: frequency to dump trajectory
-        dump_name: prefix of trajectory dump file
-        dump_append: True to append to previous dump file is it exists
     """
     def __init__(self, **kwargs):
 
@@ -667,14 +711,9 @@ class Simulation(object):
     :class:`~pysimm.lmps.MolecularDynamics`, :class:`~pysimm.lmps.Minimization`, and/or :class:`~pysimm.lmps.CustomInput` object.
 
     Attributes:
-        atom_style: LAMMPS atom_style default=full
-        kspace_style: LAMMPS kspace style default='pppm 1e-4'
-        units: LAMMPS set of units to use default=real
-        special_bonds: LAMMPS special bonds input
-        nonbond_mixing: type of mixing rule for nonbonded interactions default=arithmetic
-        cutoff: cutoff for nonbonded interactions default=12
-        name: name id for simulations
-        log: prefix for LAMMPS log file
+        forcefield: name of force field for simulation settings
+        name: name for simulation
+        log: LAMMPS log filename
         write: file name to write final LAMMPS data file default=None
         print_to_screen: True to have LAMMPS output printed to stdout after simulation ends
         debug: True to have LAMMPS output streamed to stdout during simulation (WARNING: this may degrade performance)
@@ -804,8 +843,9 @@ class Simulation(object):
         Args:
             np: number of threads to use (serial by default) default=None
             nanohub: dictionary containing nanohub resource information default=None
-            rewrite: True to rewrite input before running default=True
             init: True to write initialization part of LAMMPS input script (set to False if using complete custom input)
+            save_input: True to save input as pysimm.sim.in
+            prefix: prefix for running LAMMPS (i.e. - mpiexec)
         """
         self.write_input(init=init)
         if isinstance(save_input, str):
@@ -844,6 +884,7 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
         simulation: :class:`~pysimm.lmps.Simulation` object reference
         np: number of threads to use
         nanohub: dictionary containing nanohub resource information default=None
+        prefix: prefix for running LAMMPS (i.e. - mpiexec)
 
     Returns:
         None
@@ -1027,6 +1068,14 @@ def energy(s, all=False, np=None, **kwargs):
         
 
 class LogFile(object):
+    """pysimm.lmps.LogFile
+
+    Class to read LAMMPS log file into Pandas DataFrame stored in LogFile.data
+
+    Attributes:
+        fname: filename of log file
+        data: resulting DataFrame with log file data
+    """
     def __init__(self, fname):
         self.filename = fname
         self.data = pd.DataFrame()
