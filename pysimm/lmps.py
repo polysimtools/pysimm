@@ -717,6 +717,7 @@ class Simulation(object):
         write: file name to write final LAMMPS data file default=None
         print_to_screen: True to have LAMMPS output printed to stdout after simulation ends
         debug: True to have LAMMPS output streamed to stdout during simulation (WARNING: this may degrade performance)
+        custom: option to flag simulation as purley custom input to skip prepaing initialization
     """
     def __init__(self, s, **kwargs):
 
@@ -731,6 +732,7 @@ class Simulation(object):
         self.name = kwargs.get('name', False)
         self.log = kwargs.get('log')
         self.write = kwargs.get('write', False)
+        self.custom = kwargs.get('custom')
 
         self._input = ''
 
@@ -825,7 +827,7 @@ class Simulation(object):
             if isinstance(task, Init):
                 init = False
 
-        if init:
+        if init and not self.custom:
             self.sim.insert(0, Init(forcefield=self.forcefield))
 
         for template in self.sim:
@@ -835,7 +837,7 @@ class Simulation(object):
 
         self._input += 'quit\n'
 
-    def run(self, np=None, nanohub=None, init=True, save_input=True, prefix='mpiexec'):
+    def run(self, np=None, nanohub=None, save_input=True, prefix='mpiexec'):
         """pysimm.lmps.Simulation.run
 
         Begin LAMMPS simulation.
@@ -847,7 +849,6 @@ class Simulation(object):
             save_input: True to save input as pysimm.sim.in
             prefix: prefix for running LAMMPS (i.e. - mpiexec)
         """
-        self.write_input(init=init)
         if isinstance(save_input, str):
             with file(save_input, 'w') as f:
                 f.write(self.input)
