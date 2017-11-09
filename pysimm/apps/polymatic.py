@@ -248,7 +248,7 @@ def lmps_min(s, name, settings):
         sim.run(np=settings.np, nanohub=nanohub)
     else:
         sim = lmps.Simulation(s, name='initial optimization',
-            print_to_screen=True, nanohub=nanohub,
+            print_to_screen=False, nanohub=nanohub,
             log=log_name
         )
         sim.add(lmps.Init(cutoff=settings.polym.min.nb_cutoff, forcefield=settings.forcefield))
