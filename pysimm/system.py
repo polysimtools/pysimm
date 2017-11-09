@@ -525,6 +525,7 @@ class System(object):
         self.dihedrals = kwargs.get('dihedrals', ItemContainer())
         self.impropers = kwargs.get('impropers', ItemContainer())
         self.molecules = kwargs.get('molecules', ItemContainer())
+        self.write_coeffs = kwargs.get('write_coeffs', True)
 
         self.set_mass()
         self.set_volume()
@@ -2303,7 +2304,7 @@ class System(object):
                 out_file.write('%4d\t%s\t# %s\n' % (pt.tag, pt.mass, pt.name))
             out_file.write('\n')
 
-        if self.particle_types.count > 0:
+        if self.write_coeffs and self.particle_types.count > 0:
             out_file.write('Pair Coeffs\n\n')
             for pt in self.particle_types:
                 if (self.pair_style and (self.pair_style.startswith('lj') or
@@ -2326,7 +2327,7 @@ class System(object):
                     return
             out_file.write('\n')
 
-        if self.bond_types.count > 0:
+        if self.write_coeffs and self.bond_types.count > 0:
             out_file.write('Bond Coeffs\n\n')
             for b in self.bond_types:
                 if self.bond_style == 'harmonic' or self.ff_class == '1':
@@ -2339,7 +2340,7 @@ class System(object):
                     error_print('error: cannot understand your bond style')
             out_file.write('\n')
 
-        if self.angle_types.count > 0:
+        if self.write_coeffs and self.angle_types.count > 0:
             out_file.write('Angle Coeffs\n\n')
             for a in self.angle_types:
                 if self.angle_style == 'harmonic' or self.ff_class == '1':
@@ -2354,7 +2355,7 @@ class System(object):
                                       a.k2, a.k3, a.k4, a.name))
             out_file.write('\n')
 
-        if (self.angle_types.count > 0 and (self.ff_class == '2' or
+        if self.write_coeffs and (self.angle_types.count > 0 and (self.ff_class == '2' or
                                             self.angle_style == 'class2')):
             out_file.write('BondBond Coeffs\n\n')
             for a in self.angle_types:
@@ -2381,7 +2382,7 @@ class System(object):
                                % (a.tag, a.n1, a.n2, a.r1, a.r2, a.name))
             out_file.write('\n')
 
-        if self.dihedral_types.count > 0:
+        if self.write_coeffs and self.dihedral_types.count > 0:
             out_file.write('Dihedral Coeffs\n\n')
             for dt in self.dihedral_types:
                 if self.dihedral_style == 'fourier':
@@ -2399,7 +2400,7 @@ class System(object):
                                       dt.phi3, dt.name))
             out_file.write('\n')
 
-        if self.dihedral_types.count > 0 and (self.ff_class == '2' or
+        if self.write_coeffs and self.dihedral_types.count > 0 and (self.ff_class == '2' or
                                         self.dihedral_style == 'class2'):
             out_file.write('MiddleBondTorsion Coeffs\n\n')
             for d in self.dihedral_types:
@@ -2537,7 +2538,7 @@ class System(object):
                                   d.name))
             out_file.write('\n')
 
-        if self.improper_types.count > 0:
+        if self.write_coeffs and self.improper_types.count > 0:
             out_file.write('Improper Coeffs\n\n')
             for i in self.improper_types:
                 if self.improper_style == 'harmonic' or self.improper_style =='class2':
@@ -2552,7 +2553,7 @@ class System(object):
                                    % (i.tag, i.k, i.d, i.n, i.name))
             out_file.write('\n')
 
-        if self.improper_types.count > 0 and (self.ff_class == '2' or
+        if self.write_coeffs and self.improper_types.count > 0 and (self.ff_class == '2' or
                                               self.improper_style == 'class2'):
             out_file.write('AngleAngle Coeffs\n\n')
             for i in self.improper_types:
