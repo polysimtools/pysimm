@@ -290,6 +290,16 @@ class Init(object):
         
         
 class Region(Item):
+    """pysimm.lmps.Region
+
+    Template object to create a region in a LAMMPS simulation. See LAMMPS documentation for further information
+
+    Attributes:
+        name: name id for region
+        style: LAMMPS region style 
+        *args: args for given style
+        **kwargs: optional kwargs for region command
+    """
     def __init__(self, name='all', style='block', *args, **kwargs):
         Item.__init__(self, name=name, style=style, args=args, kwargs=kwargs)
         
@@ -307,6 +317,15 @@ class Region(Item):
         
         
 class CreateBox(Item):
+    """pysimm.lmps.CreateBox
+
+    Template object to create a box in a LAMMPS simulation. See LAMMPS documentation for further information
+
+    Attributes:
+        n: number of atom types
+        region: :class:`~pysimm.lmps.Region` object
+        **kwargs: optional kwargs for create_box command (replace / with _)
+    """
     def __init__(self, n=1, region=Region(), *args, **kwargs):
         Item.__init__(self, n=n, region=region, args=args, kwargs=kwargs)
         
