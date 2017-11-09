@@ -37,6 +37,8 @@ import sys
 import json
 from random import randint
 from time import strftime
+import pandas as pd
+from StringIO import StringIO
 
 from pysimm.system import read_lammps
 from pysimm.system import System
@@ -190,7 +192,12 @@ class Init(object):
         s = sim.system
         
         if self.forcefield is None and s.forcefield is not None:
-            self.forcefield = s.forcefield
+            if s.forcefield in ['gaff', 'gaff2']:
+                self.forcefield = 'amber'
+            elif s.forcefield in ['cgenff']:
+                self.forcefield = 'charmm'
+            else:
+                self.forcefield = s.forcefield
             
         if self.special_bonds is None and self.forcefield is not None:
             self.special_bonds = FF_SETTINGS[self.forcefield]['special_bonds']
