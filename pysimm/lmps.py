@@ -160,6 +160,7 @@ class Init(object):
         self.improper_style = kwargs.get('improper_style')
         self.special_bonds = kwargs.get('special_bonds')
         self.pair_modify = kwargs.get('pair_modify', {})
+        self.create_box = kwargs.get('create_box')
         self.read_data = kwargs.get('read_data')
         
         if self.forcefield and self.forcefield not in ['amber', 'dreiding', 'pcff', 'opls', 'charmm']:
@@ -211,6 +212,10 @@ class Init(object):
         lammps_input += '#'*80 + '\n'
         lammps_input += '{:<15} {}\n'.format('units', self.units)
         lammps_input += '{:<15} {}\n'.format('atom_style', self.atom_style)
+        
+        if self.create_box and self.create_box.region and type(self.create_box.region) is Region:
+            lammps_input += self.create_box.region.write(None)
+            lammps_input += self.create_box.write(None)
 
         if self.pair_style:
             lammps_input += '{:<15} {}'.format('pair_style', self.pair_style)
@@ -283,6 +288,34 @@ class Init(object):
         
         return lammps_input
         
+        
+class Region(Item):
+    def __init__(self, name='all', style='block', *args, **kwargs):
+        Item.__init__(self, name=name, style=style, args=args, kwargs=kwargs)
+        
+    def write(self, sim):
+        inp = '{:<15} {name} {style} '.format('region', name=self.name, style=self.style)
+        for a in self.args:
+            inp += '{} '.format(a)
+        if not self.args:
+            for _ in range(6):
+                inp += 'EDGE '
+        for k, v in self.kwargs.items():
+            inp += '{} {} '.format(k, v)
+        inp += '\n'
+        return inp
+        
+        
+class CreateBox(Item):
+    def __init__(self, n=1, region=Region(), *args, **kwargs):
+        Item.__init__(self, n=n, region=region, args=args, kwargs=kwargs)
+        
+    def write(self, sim):
+        inp = '{:<15} {n} {region.name} '.format('create_box', **vars(self))
+        for k, v in self.kwargs.items():
+            inp += '{} {} '.format(k.replace('_', '/'), v)
+        inp += '\n'
+        return inp
 
 class Group(Item):
     """pysimm.lmps.Group
