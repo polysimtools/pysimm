@@ -107,6 +107,16 @@ FF_SETTINGS = {
             'improper_style':   'harmonic',
             'pair_mix':         'arithmetic',
             'special_bonds':    'charmm'
+        },
+    'trappe/amber':
+        {
+            'pair_style':       'lj/cut',
+            'bond_style':       'harmonic',
+            'angle_style':      'harmonic',
+            'dihedral_style':   'fourier',
+            'improper_style':   'cvff',
+            'pair_mix':         'arithmetic',
+            'special_bonds':    'lj/coul 0 0 0.5'
         }
 }
 
