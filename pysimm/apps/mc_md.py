@@ -8,18 +8,25 @@ import random
 def mc_md(gas_sst, fixed_sst=None, **kwargs):
     """pysimm.apps.mc_md
 
-    Performs the iterative hybrid Monte-Carlo/Molecular Dynamics (MC-MD) simulations using pysimm.lmps for MD and
-    pysimm.cassandra for MD
+    Performs the iterative hybrid Monte-Carlo/Molecular Dynamics (MC-MD) simulations using :class:`~pysimm.lmps` for
+    MD and :class:`~pysimm.cassandra` for MD
 
     Args:
-        gas_sst: list of pysimm.system.System objects each of which describes a different molecule to be inserted by MC
-        fixed_sst: fixed during th MC steps group of atoms (default: None)
-        mcmd_niter: number of MC-MD iteradions (default: 10)
-        sim_folder: relative path to the folder with all simulation files (default: 'results')
-        mc_props: dictionary describing all MC properties needed for simulations (see pysimm.cassandra.GCMC and
-        pysimm.cassandra.GCMC.props for details)
-        md_props: dictionary containing all Molecular Dynamics settings needed for simulations (see
-        pysimm.lmps.Simulation and pysimm.lmps.MolecularDynamics for details)
+        gas_sst (list of :class:`~pysimm.system.System`) : list items describe a different molecule to be inserted by MC
+        fixed_sst (:class:`~pysimm.system.System`) : fixed during th MC steps group of atoms (default: None)
+
+
+    Keyword Args:
+        mcmd_niter (int) : number of MC-MD iterations (default: 10)
+        sim_folder (str): relative path to the folder with all simulation files (default: 'results')
+        mc_props (dictionary) : description of  all MC properties needed for simulations (see
+            :class:`~pysimm.cassandra.GCMC` and :class:`~pysimm.cassandra.GCMC.props` for details)
+        md_props (dictionary):  description of all Molecular Dynamics settings needed for simulations (see
+            :class:`~pysimm.lmps.Simulation` and :class:`~pysimm.lmps.MolecularDynamics` for details)
+
+    Returns:
+        :class:`~pysimm.system.System`:
+            Final state of the simulated system
     """
 
     nonrig_group_name = 'nonrigid_b'

@@ -26,7 +26,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-import glob
+
 from StringIO import StringIO
 import subprocess
 import os
@@ -40,6 +40,7 @@ from pysimm import system
 from string import ascii_uppercase
 
 DATA_PATH = os.path.relpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dat/csndra_data'))
+
 KCALMOL_2_K = 503.22271716452
 
 CASSANDRA_EXEC = os.environ.get('CASSANDRA_EXEC')
@@ -49,38 +50,34 @@ logging.basicConfig(level=logging.INFO, datefmt='%H:%M:%S',
                     format='%(asctime)s [%(levelname)s]: %(message)s')
 
 
-def check_cs_exec():
-    global CASSANDRA_EXEC
-    if CASSANDRA_EXEC is None:
-        print('Please specify the OS environment variable ''CASSANDRA_EXEC'' that points to '
-              'CASSANDRA compiled binary file, which is by default cassandra_{compiler-name}[_openMP].exe ')
-        return False
-    # else:
-    #     try:
-    #         stdout, stderr = Popen('CASSANDRA_EXEC', stdin=PIPE, stdout=PIPE, stderr=PIPE).communicate()
-    #         return True
-    #     except OSError:
-    #         print('Seems the environment variable ''CASSANDRA_EXEC'' is not configured properely. '
-    #               'Please check the OS environment variable ''CASSANDRA_EXEC'' it should point '
-    #               'to CASSANDRA compiled binary file ( cassandra_{compiler-name}[_openMP].exe ) ')
-    #         return False
-
-check_cs_exec()
-
-
 class GCMC(object):
     """pysimm.cassandra.GCMC
 
-    Object containing the settings for the Grand-Canonical Monte-Carlo simulations provided by the CASSANDRA software.
-    The object includes also the simulation results
+    Object containing the settings and the logic necessary to set-up the Grand-Canonical Monte-Carlo (GCMC) simulations
+    provided by the CASSANDRA software. The object also will include the simulation results once the simulations are
+    finished.
 
     Attributes:
-        props: dictionary containing all simulation settings to be written to the CASSANDRA .inp file
-        input: text stream to be written to the CASSANDRA .inp file
-        mc_sst: `~pysimm.cassandra.McSystem` object containing all molecules to be inserted by CASSANDRA
-        fxd_sst: :class:`~pysimm.system.System` object that describes the optional fixed molecular system for MC simulations (default: None)
-        tot_sst: the :class:`~pysimm.system.System` object containing results of CASSANDRA simulations
-        logger: :class:`~logging.Logger` object for multi-level verbose program execution
+        mc_sst (:class:`~pysimm.cassandra.McSystem`) : describes all molecules to be inserted by CASSANDRA
+        fxd_sst (:class:`~pysimm.system.System`) : describes the optional fixed molecular system for MC simulations
+            (default: None)
+
+    Keyword Args:
+        out_folder (str) : the relative path of the simulation results (all .dat, .mcf, as well as .chk, ... files will
+            go there). If the folder does not exist it will be created with 0755 permissions.
+        props_file (str) : the name of the  .inp file.
+
+    Note:
+        Other keyword arguments that are accepted are the GCMC simulation settings. The keywords of the settings
+        are the same as they are described in CASSANDRA specification but without # symbol.
+
+        **For example**: the keyword argument `Run_Name='my_simulation'` will set `#Run_Name` setting in CASSANDRA
+        input file to `my_simulation` value
+
+    Parameters:
+        props (dictionary) : include all simulation settings to be written to the CASSANDRA .inp file
+        input (str) : text stream that will be written to the CASSANDRA .inp file
+        tot_sst (:class:`~pysimm.system.System`) : object containing the results of CASSANDRA simulations
     """
 
     def __init__(self, mc_sst=None, fxd_sst=None, **kwargs):
@@ -235,9 +232,9 @@ class GCMC(object):
         self.props['Fragment_Files'] = InpSpec('Fragment_Files', frag_files, None, **{'new_line': True})
 
     def write(self):
-        """pysimm.cassandra.GCMC
+        """pysimm.cassandra.GCMC.write
 
-        Iterates through the `~GCMC.props` dictionary creating the text for correct CASSANDRA input
+        Iterates through the :class:`~GCMC.props` dictionary creating the text for correct CASSANDRA input
         """
 
         for key in self.props.keys():
@@ -253,7 +250,7 @@ class GCMC(object):
         self.logger.info('File: "{:}" was created sucsessfully'.format(self.props_file))
 
     def __write_chk__(self, out_file):
-        """pysimm.cassandra.__write_chk__
+        """pysimm.cassandra.GCMC.__write_chk__
 
         Creates the CASSANDRA checkpoint file basing on the information from the `~GCMC.tot_sst` field
         """
@@ -271,11 +268,10 @@ class GCMC(object):
         for m, i in zip(molecules, range(len(molecules))):
             out_stream.write(tmplate.replace('$$', ':>6d').format(t=[i + 1, 0, 0, 0, 0]))
             out_stream.write(tmplate.replace('$$', ':>6d').format(t=[i + 1, 0, 0, 0, 0]))
-            # TODO: There are some nonzeros in example .chk file for index 2; check where they come from
             out_stream.write('{t[0]:>23.14E}{t[2]:>23.14E}{t[2]:>23.14E}\n'.format(t=[0, 0, 0]))
             out_stream.write('{0:>12d}{0:>12d}\n'.format(0, 0))
 
-        # Small section with total # of MC trials -- it is 0 at the beggining
+        # Small section with total # of MC trials -- it is 0 at the beginning
         out_stream.write(blk_separ.format('# of MC steps'))
         out_stream.write('{:>12d}\n'.format(0))
 
@@ -327,12 +323,13 @@ class GCMC(object):
         out_stream.close()
 
     def upd_simulation(self):
-        """pysimm.cassandra.upd_simulation
+        """pysimm.cassandra.GCMC.upd_simulation
 
-        Updates the `~GCMC.tot_sst` field using the 'GCMC.props['Run_Name'].chk' file. Will try to parse the checkpoint
-        file and read the coordinates of the molecules inserted by CASSANDRA. If neither of the molecules from the
-        `~GCMC.mc_sst` can be fit to the read text the method will raise an exception. The fitting method:
-        `~pysimm.cassandra.McSystem.make_system` assumes that different molecules inserted by CASSANDRA have the same order of the atoms
+        Updates the :class:`~GCMC.tot_sst` field using the `GCMC.props['Run_Name'].chk` file. Will try to parse the
+        checkpoint file and read the coordinates of the molecules inserted by CASSANDRA. If neither of the molecules
+        from the :class:`~GCMC.mc_sst` can be fit to the text that was read the method will raise an exception. The
+        fitting method: :class:`~McSystem.make_system` assumes that different molecules inserted by CASSANDRA have
+        the same order of the atoms.
         """
         fname = '{:}{:}'.format(self.props['Run_Name'].value, '.chk')
         self.logger.info('Updating MC system from the CASSANDRA {:} file...'.format(fname))
@@ -362,7 +359,7 @@ class GCMC(object):
                               'Probably it cannot be written by CASSANDRA to the place you specified')
 
     def __check_params__(self):
-        """pysimm.cassandra.upd_simulation
+        """pysimm.cassandra.GCMC.__check_params__
 
         Private method designed for update the fields of the GCMC object to make them conformed with each other
         """
@@ -391,25 +388,27 @@ class GCMC(object):
             tmp = [tmp] * 3
         self.tot_sst.dim = system.Dimension(center=True, dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
 
-    # TODO: Write similar method returning molecule id-s
     def group_by_id(self, group_key='matrix'):
-        """pysimm.cassandra.group_by_id
+        """pysimm.cassandra.GCMC.group_by_id
 
-        Method for listing the properties of the atoms in GCMC.tot_sst. Will iterate through all atoms in the system
-        and return indexes only of those that match the property. Currently supports 3 properties defined by the
-        input argument
+        Method for grouping the atoms of the system :class:`~GCMC.tot_sst` by a certain property. Will iterate through
+        all atoms in the system and return indexes of only those atoms that match the property. Currently supports 3
+        properties defined by the input keyword argument argument.
 
-        Args:
-            group_key: text constant defines the property to match. Possible keywords are:
-             i) 'matrix' [default] indexes of the atoms in GCMC.fxd_sst
-             ii) 'rigid' indexes of all atoms that have rigid atomic bonds. It is assumed here that rigid and nonrigid
-             atoms can interact only through intermolecular forces
-             iii) 'nonrigid' opposite of previous -- indexes of all atoms that have nonrigid atomic bonds
+        Keyword Args:
+            group_key (str): text constant defines the property to match. Possible keywords are:
+
+                (1) `matrix` -- (default) indexes of the atoms in :obj:`~GCMC.fxd_sst`
+
+                (2) `rigid` -- indexes of all atoms that have rigid atomic bonds. It is assumed here that rigid and
+                    nonrigid atoms can interact only through intermolecular forces
+
+                (3) `nonrigid` -- opposite of previous, indexes of all atoms that have nonrigid atomic bonds
 
         Returns:
-            text string in format "a1:b1 a2:b2 ..." where all indexes inside [ak, bk] belongs to the selected group
-            array of the form [[a1, b1], [a2, b2], ...]
-
+            str:
+                string in format `a1:b1 a2:b2 ...` where all indexes inside `[ak, bk]` belongs to the selected group
+                and array of the form `[[a1, b1], [a2, b2], ...]`
         """
         fxd_sst_idxs = []
         if self.fxd_sst:
@@ -444,12 +443,18 @@ class InpSpec(object):
 
      Represents the most common object used for carrying one logical unit of the CASSANDRA simulation options
 
-     Attributes:
-         key: the keyword of the simulation option (literally the string that goes after the # sign in CASSANDRA .inp file)
-         value: numerical (text) values of the particular simulation option structured in a certain way
+     Parameters:
+         key (str) : the keyword of the simulation option (literally the string that goes after the # sign in
+            CASSANDRA .inp file)
+         value (object) : numerical or text values of the particular simulation option structured in a certain way.
+            Here goes only the values that are wished to be changed (it might be just one field of a big dictionary)
+         default (object) : the most complete default description of the simulation option
 
-         write_headers: if the value is Dictionary defines whether the dictionary keys should be written.
-         is_new_line: if the value is iterable defines whether each new element will be written to the new line
+     Keyword Args:
+         write_headers (boolean): if the :obj:`~value` is dictionary defines whether the dictionary keys should be
+            written to the output
+         new_line (boolean): if the :obj:`~value` is iterable defines whether each new element will be written to
+            the new line
     """
 
     def __init__(self, key, value, default, **kwargs):
@@ -473,6 +478,14 @@ class InpSpec(object):
             self.value = default
 
     def to_string(self):
+        """pysimm.cassandra.InpSpec.to_string
+
+        Creates the proper text representation of the property stored in the :obj:`~value` field
+
+        Returns:
+            str:
+                formatted text string
+        """
         if self.value is not None:
             result = '# {:}\n'.format(self.key)
             # Strings
@@ -513,6 +526,11 @@ class InpSpec(object):
 
 
 class InpProbSpec(InpSpec):
+    """pysimm.cassandra.InpSpec
+
+    Extension of the :class:`~InpSpec` class that takes into account special representation of the movement
+    probabilities in the CASSANDRA input file.
+    """
     def __init__(self, key, value, default, **kwargs):
         super(InpProbSpec, self).__init__(key, value, default, **kwargs)
 
@@ -528,23 +546,33 @@ class InpProbSpec(InpSpec):
 class McSystem(object):
     """pysimm.cassandra.McSystem
 
-    Wrapper around the list of :class:`~pysimm.system.System` objects representing single molecules (e.g. molecules of
-    different gaseous species) that will be used during MC simulations. Additionally is responsible for i) creating .dat
-    and .mcf files needed for the simulation ii) reading back the CASSANDRA simulation results.
+    Wrapper around the list of :class:`~pysimm.system.System` objects. Each element in the list represents single
+    molecule of a different specie that will be used during MC simulations. Additionally, the object is responsible for
+    creating .dat and .mcf files needed for the simulation and reading back the CASSANDRA simulation results.
 
     Attributes:
-        sst: list of `~pysimm.system.System` objects with items representing single moleculules of different species to be inserted by CASSANDRA
-        max_ins:
-        is_rigid:
-        chem_pot:
-        made_ins:
-        mcf_file:
-        frag_file:
+        sst (list of :class:`~pysimm.system.System`) : items representing single molecules of different species to be
+            inserted by CASSANDRA. If the sst is a list (not a single value) it is assumed that all of the following
+            properties are synchronized with it by indexes.
+        chem_pot (list of int) : chemical potential for each specie [Joule/mol]
 
+    Keyword Args:
+        max_ins (list of int) : defines the highest possible number of molecules of corresponding specie.
+            Basing on these values CASSANDRA allocates memory for simulations. (default: 5000).
+        is_rigid (list of boolean): defines whether the atoms in the particular molecule should be marked as rigid
+            or not. **Important!** In current implementation the module doesn't support flexible molecule angles, so
+            the `is_rigid=False` is designed to be used exclusively for **single bead** molecules.
+
+    Parameters:
+        made_ins (list of int) : number of particles of each specie inserted by CASSANDRA.
+        mcf_file (list of str) : defines full relative names of molecule configuration files **(.mcf)** required by
+            CASSANDRA. Files will be created automatically.
+        frag_file (list of str) : defines full relative names of possible relative configuration files **(.dat)**
+            required by CASSANDRA. Files will be created automatically.
     """
-    def __init__(self, s, chem_pot, **kwargs):
+    def __init__(self, sst, chem_pot, **kwargs):
         self.logger = logging.getLogger('MC_SYSTEM')
-        self.sst = make_iterable(s)
+        self.sst = make_iterable(sst)
         for sst in self.sst:
             sst.zero_charge()
             # Checking that the force-field of the input system is of the class-1 as it is direct CASSANDRA restriction
@@ -577,19 +605,18 @@ class McSystem(object):
         self.temperature = None
 
     def update_props(self, props):
-        self.generate_mcf()
-        offset = len(props)
-        for (mcf, ins, count) in zip(self.mcf_file, self.max_ins, range(1 + offset, len(self.mcf_file) + 1 + offset)):
-            props['file' + str(count)] = [mcf, ins]
-        return props
+        """pysimm.cassandra.McSystem.update_props
 
-    def update_frag_record(self, frag_record):
-        self.__generate_frag_file__()
-        for (frags, count) in zip(self.frag_file, range(1, len(self.frag_file) + 1)):
-            frag_record['file' + str(count)] = [frags, count]
-        return frag_record
+        For each specie in the system creates the .mcf file required for CASSANDRA simulation.
 
-    def generate_mcf(self):
+        Args:
+            props (dictionary) : contains the .mcf file names and maximally allowed number of molecules insertions.
+                The dictionary is to be assigned to 'Molecule_Files' property of the MC simulation
+
+        Returns:
+            props: updated input dictionary
+       """
+        # Generate correct .mcf files
         al_ind = 0
         for (sstm, count) in zip(self.sst, range(len(self.sst))):
             fullfile = os.path.join(self.file_store, '{:}{:}{:}'.format('particle', str(count + 1), '.mcf'))
@@ -600,9 +627,26 @@ class McSystem(object):
                 al_ind += 1
             McfWriter(sstm, fullfile).write()
             self.mcf_file.append(fullfile)
+        # Make the files list to be returned
+        offset = len(props)
+        for (mcf, ins, count) in zip(self.mcf_file, self.max_ins, range(1 + offset, len(self.mcf_file) + 1 + offset)):
+            props['file' + str(count)] = [mcf, ins]
+        return props
 
-    # Now is private because it is works only for single-configuration (rigid) fragment file
-    def __generate_frag_file__(self):
+    def update_frag_record(self, frag_record):
+        """pysimm.cassandra.McSystem.update_frag_record
+
+        For each specie in the system creates the single configuration .dat file required for CASSANDRA simulation.
+
+        Args:
+            frag_record: dictionary containing the .dat file names and their ids. The dictionary is to be assigned to
+            'Molecule_Files' property of the MC simulation
+
+        Returns:
+            dictionary:
+                updated dictionary
+        """
+        # Generating the structure files
         if self.temperature is None:
             self.temperature = 300
 
@@ -616,8 +660,32 @@ class McSystem(object):
                 for prt in sstm.particles:
                     out.write(tmplte.format(prt.type.name, prt.x, prt.y, prt.z))
             self.frag_file.append(fullfile)
+        # Generating the files list
+        for (frags, count) in zip(self.frag_file, range(1, len(self.frag_file) + 1)):
+            frag_record['file' + str(count)] = [frags, count]
+        return frag_record
 
     def make_system(self, text_output):
+        """pysimm.cassandra.McSystem.make_system
+
+        Parses the checkpoint (.chk) file made by CASSANDRA and creates new molecules basing on the new coordinates
+        information. Assumes that all atoms of a certain molecule are listed in .chk file together (molecule
+        identifiers are not mixed).
+
+        Note:
+            The logic of comparison of the xyz-like text record from the .chk file with the
+            :class:`~pysimm.system.System` object is most straightforward: It is the consecutive comparison of particle
+            names and first letters (before the white space) in the text record. In this implementation order matters!
+            For example, for CO2, if in the system atoms are ordered as C-O-O and in the text they are ordered as
+            O-C-O fit will fail.
+
+        Args:
+            text_output (str): text stream from the CASSANDRA .chk file containing the coordinates of newly inserted
+                molecules
+
+        Returns:
+            :class:`~pysimm.system.System` : object containing all newly inserted molecules
+        """
         sstm = system.System(ff_class='1')
         count = 0  # counter of the lines in the input file
         sys_idx = 0  # counter of the gas molecules to lookup
@@ -651,6 +719,16 @@ class McSystem(object):
         return sstm
 
     def __fit_atoms__(self, molec, text_lines):
+        """pysimm.cassandra.McSystem.__fit_atoms__
+
+        Implements simple logic of comparison of the xyz-like text record with the :class:`~pysimm.system.System`
+        object. The comparison is based on the consecutive comparison of particle names and first letters (before the
+        white space) in the text. In this implementation order matters!  E.g. for CO2, if in the system atoms are
+        ordered as C-O-O and in the text they are ordered like O-C-O fit will return False.
+
+        Returns:
+            boolean: flag whether the text record fit the molecule or not
+        """
         flag = True
         # Cannot map anything if number of molecules is different from number of data lines
         if len(molec.particles) != len(text_lines):
@@ -665,54 +743,83 @@ class McSystem(object):
 
 
 class Cassandra(object):
-    """
-    pysimm.cassandra.Cassandra
-    Organizational object for CASSANDRA simulations that is able to run
-    e.g. Gibbs Canonical Monte-Carlo (GCMC) simulations (see the GCMC class)
+    """pysimm.cassandra.Cassandra
 
+    Organizational object for running CASSANDRA simulation tasks. In current implementation it is able to run Gibbs
+    Canonical Monte-Carlo (GCMC :class:`~GCMC`) simulations.
+
+    Attributes:
+        init_sst: :class:`~pysimm.system.System` molecular system before the simulations
+
+    Parameters:
+        :class:`~pysimm.system.System` : molecular system after the simulations
+        list : the list of scheduled tasks
     """
 
-    def __init__(self, init_sst, **kwargs):
+    def __init__(self, init_sst):
         self.logger = logging.getLogger('CSNDRA')
         self.init_sst = init_sst
         self.final_sst = None
         self.run_queue = []
 
-    def run(self, is_replace=False):
+    def run(self):
+        """pysimm.cassandra.Cassandra.run
+
+        Method that triggers the simulations. Does two consecutive steps: **(1)** tries to write all files necessary
+        for simulation (.dat, .inp, .mcf): **(2)** tries to invoke the CASSANDRA executable.
+
+        """
         global CASSANDRA_EXEC
-        for task in self.run_queue:
-            # Write .inp file
-            task.write()
-            # Write .xyz of the fixed system if provided
-            if task.fxd_sst.particles.count > 0:
-                if task.fixed_syst_mcf_file is not None:
-                    McfWriter(task.fxd_sst, task.fixed_syst_mcf_file).write('atoms')
-                task.fxd_sst.write_xyz(task.fxd_sst_xyz)
-            try:
-                self.logger.info('Starting the GCMC simulations with CASSANDRA')
-                print('{:.^60}'.format(''))
-                subprocess.call([CASSANDRA_EXEC, task.props_file])
-                task.upd_simulation()
-                self.final_sst = task.tot_sst
 
-            except OSError as ose:
-                self.logger.error('There was a problem calling CASSANDRA executable')
-                exit(1)
-            except IOError as ioe:
-                if check_cs_exec():
-                    self.logger.error('There was a problem running CASSANDRA. The process started but did not finish')
-                    exit(1)
-                else:
-                    self.logger.error('There was a problem running CASSANDRA: seems it is not configured properly.\n'
-                                      'Please, be sure the CSNDRA_EXEC environment variable is set to the correct '
-                                      'CASSANDRA executable path. The current path is set to:'
-                                      '\n\n{}\n\n'.format(CASSANDRA_EXEC))
-                    exit(1)
+        if check_cs_exec():
+            for task in self.run_queue:
+                # Write .inp file
+                task.write()
+                # Write .xyz of the fixed system if provided
+                if task.fxd_sst.particles.count > 0:
+                    if task.fixed_syst_mcf_file is not None:
+                        McfWriter(task.fxd_sst, task.fixed_syst_mcf_file).write('atoms')
+                    task.fxd_sst.write_xyz(task.fxd_sst_xyz)
+                try:
+                    self.logger.info('Starting the GCMC simulations with CASSANDRA')
+                    print('{:.^60}'.format(''))
+                    subprocess.call([CASSANDRA_EXEC, task.props_file])
+                    task.upd_simulation()
+                    self.final_sst = task.tot_sst
 
-    def add_gcmc(self, obj1=None, **kwargs):
+                except OSError as ose:
+                    self.logger.error('There was a problem calling CASSANDRA executable')
+                    exit(1)
+                except IOError as ioe:
+                    if check_cs_exec():
+                        self.logger.error('There was a problem running CASSANDRA. The process started but did not finish')
+                        exit(1)
+        else:
+            self.logger.error('There was a problem running CASSANDRA: seems it is not configured properly.\n'
+                              'Please, be sure the CSNDRA_EXEC environment variable is set to the correct '
+                              'CASSANDRA executable path. The current path is set to:\n\n{}\n\n'.format(CASSANDRA_EXEC))
+            exit(1)
+
+    def add_gcmc(self, obj=None, **kwargs):
+        """pysimm.cassandra.Cassandra.add_gcmc
+
+        Method for adding new GCMC simulation to the run queue.
+
+        Args:
+            obj: the entity that should be added. Will be ignored if it is not of a type  :class:`~GCMC`
+
+        Keyword Args:
+            is_new (boolean) : defines whether all previous simulations should be erased or not
+            species (list of :class:`~pysimm.system.System`) : systems that describe molecules and will be passed to
+                :class:`~McSystem` constructor.
+
+        Note:
+            Other keyword arguments of this method will be redirected to the :class:`~McSystem` and :class:`~GCMC`
+            constructors. See their descriptions for the possible keyword options.
+        """
         new_job = None
-        if isinstance(obj1, GCMC):
-            new_job = obj1
+        if isinstance(obj, GCMC):
+            new_job = obj
         else:
             specs = kwargs.get('species')
             if specs:
@@ -722,7 +829,7 @@ class Cassandra(object):
                 new_job = GCMC(mc_sst, self.init_sst, **kwargs)
             else:
                 self.logger.error('Unknown GCMC initialization. Please provide either '
-                                  'correct GCMC parameters or GCMC simulation object')
+                                  'the dictionary with GCMC parameters or GCMC simulation object')
                 exit(1)
         if kwargs.get('is_new'):
             self.run_queue[:] = []
@@ -731,7 +838,18 @@ class Cassandra(object):
             self.run_queue.append(new_job)
 
     def read_input(self, inp_file):
-        tmp_dict = {}
+        """pysimm.cassandra.Cassandra.read_input
+
+        The method parses the CASSANDRA instructions file (.inp) split it into separate instructions and analyses each
+        one according to the instruction name.
+
+        Args:
+            inp_file (str) : the full relative path of the file to be read
+
+        Returns:
+            dictionary : read CASSANDRA properties in the format required by :class:`~GCMC`
+        """
+        result = {}
         if os.path.isfile(inp_file):
             self.logger.info('Reading simulation parameters from {:} file'.format(inp_file))
             # Reading the cassandra .inp file as one long string
@@ -744,14 +862,14 @@ class Cassandra(object):
                 line = re.sub('\n(e|E)(n|N)(d|D)', '', line)  # Get rid of the 'END in the end of the file
                 tmp = line.split()
                 if len(tmp) > 1:
-                    tmp_dict[tmp[0]] = self.__parse_value__(tmp)
+                    result[tmp[0]] = self.__parse_value__(tmp)
 
             # File seems fine let's close the stream and return true in the flag
             inp_stream.close()
             self.logger.info('Reading finished sucsessfully')
         else:
             self.logger.error('Cannot find specified file: ""{:}""'.format(inp_file))
-        return tmp_dict
+        return result
 
     def __parse_value__(self, cells):
         title = cells[0].lower()
@@ -864,17 +982,32 @@ class Cassandra(object):
 
 
 class McfWriter(object):
-    # Static section names in MCF file
+    """pysimm.cassandra.McfWriter
+
+    Object responsible for creating the CASSANDRA Molecular Configuration file (.mcf).
+
+    Attributes:
+        syst (:class:`~pysimm.system.System`) :represents the molecule to be described
+        file_ref (str) : full relative path to the file that will be created
+    """
+    # Section names in any .mcf file
     mcf_tags = ['# Atom_Info', '# Bond_Info', '# Angle_Info', '# Dihedral_Info',
                 '# Improper_Info', '# Intra_Scaling', '# Fragment_Info', '# Fragment_Connectivity']
+    empty_line = '0'
 
-    def __init__(self, psm_syst, file_ref, **kwargs):
-        self.out_stream = None
-        self.empty_line = '0'
-        self.syst = psm_syst
+    def __init__(self, syst, file_ref):
+        self.syst = syst
         self.file_ref = file_ref
 
     def write(self, typing='all'):
+        """pysimm.cassandra.McfWriter.write
+
+        Method creates the .mcf file writing only those sections of it that are marked to be written
+
+        Args:
+            typing (list) : the list of sections to be written or the text keyword. List items should be as they are
+                defined in :class:`~pysimm.cassandra.McfWriter.mcf_tags` field); default 'all'
+        """
         # Initializing output stream
         with open(self.file_ref, 'w') as out_stream:
             for (name, is_write) in zip(self.mcf_tags, self.__to_tags__(typing)):
@@ -987,7 +1120,6 @@ class McfWriter(object):
         self.__write_empty__(out, text_tag)
 
     def __write_fragment_info__(self, out):
-        # TODO: Temporary implementation for one fragment
         # writing section header
         out.write('{:}\n'.format('# Fragment_Info'))
         # writing indexing
@@ -1010,27 +1142,26 @@ class McfWriter(object):
         return idxs
 
 
-class DataAnalyzer(object):
-    def __init__(self, **kwargs):
-        self.work_path = kwargs.get('path') or os.getcwd()
-        self.name_patterns = kwargs.get('mc_fname_mask') or '*.chk'
-        order_rule = kwargs.get('order_rule') or '\A\d+'
+def check_cs_exec():
+    """pysimm.cassandra.check_cs_exec
 
-        tmp = self.__order_files__(glob.glob(os.path.join(self.work_path, self.name_patterns)), order_rule)
-        self.file_names = tmp[0]
-        self.iter_idxs = tmp[1]
-
-    @staticmethod
-    def __order_files__(fls, order_rule):
-        idxs = []
-        for f in fls:
-            idxs.append(int(re.search(order_rule, os.path.split(f)[1]).group()))
-        ordr = sorted(range(len(idxs)), key=lambda k: idxs[k])
-        return [fls[i] for i in ordr], ordr
+    Validates that the absolute path to the CASSANDRA executable is set in the `CASSANDRA_EXEC` environmental variable
+    of the OS. The validation is called once inside the :class:`~Cassandra.run` method.
+    """
+    global CASSANDRA_EXEC
+    flag = True
+    if CASSANDRA_EXEC is None:
+        print('Please specify the OS environment variable ''CASSANDRA_EXEC'' that points to '
+              'CASSANDRA compiled binary file, which is by default cassandra_{compiler-name}[_openMP].exe ')
+        flag = False
+    return flag
 
 
-# Force our fields be iterable (wrap in a list if it contains of only one item)
 def make_iterable(obj):
+    """pysimm.cassandra.make_iterable
+
+    Utility method that forces the attributes be iterable (wrap in a list if it contains of only one item)
+    """
     it_obj = obj
     if not isinstance(obj, Iterable):
         it_obj = [obj]

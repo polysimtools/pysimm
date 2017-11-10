@@ -17,21 +17,21 @@ def run(test=False):
     # replicates a defined number of times(4), and inserts the new replication randomly(rand=True) at the specified density(0.022) 
     
     print('Building polymer chain 1...')
-    polymer = random_walk(pmma , nmon=5, forcefield=f)
+    polymer = random_walk(pmma, nmon=5, forcefield=f)
     print('Replicating polymer chain...')
-    uniform_polymer = system.replicate(polymer, 4, density = 0.022, rand=True)
+    uniform_polymer = system.replicate(polymer, 4, density=0.022, rand=True)
     
     # next we're going to make 4 chains, with lengths of 2, 4, 6, and 8 monomer units
     # the first system we make will be used as the initial system for the subsequent random walk calls
     
     print('Building polymer chain 1...')
-    nonuniform_polymer = random_walk(pmma , nmon=2, forcefield=f, density=0.3/4)
+    nonuniform_polymer = random_walk(pmma, nmon=2, forcefield=f, density=0.3/4)
     print('Building polymer chain 2...')
-    nonuniform_polymer = random_walk(pmma , nmon=4, s_=nonuniform_polymer, forcefield=f)
+    nonuniform_polymer = random_walk(pmma, nmon=4, s_=nonuniform_polymer, forcefield=f)
     print('Building polymer chain 3...')
-    nonuniform_polymer = random_walk(pmma , nmon=6, s_=nonuniform_polymer, forcefield=f)
+    nonuniform_polymer = random_walk(pmma, nmon=6, s_=nonuniform_polymer, forcefield=f)
     print('Building polymer chain 4...')
-    nonuniform_polymer = random_walk(pmma , nmon=8, s_=nonuniform_polymer, forcefield=f)
+    nonuniform_polymer = random_walk(pmma, nmon=8, s_=nonuniform_polymer, forcefield=f)
     
     # now that we have our two polymer systems, let's calculate their molecular weight dispersity
     uniform_polymer.set_mm_dist()
