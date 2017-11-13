@@ -926,25 +926,6 @@ class System(object):
         self.dim.ylo -= self.dim.ylo
         self.dim.zlo -= self.dim.zlo
 
-    def center_system(self):
-        shiftx = (self.dim.xhi - self.dim.xlo) / 2.0
-        shifty = (self.dim.yhi - self.dim.ylo) / 2.0
-        shiftz = (self.dim.zhi - self.dim.zlo) / 2.0
-        shiftvaluex = self.dim.xhi - shiftx
-        shiftvaluey = self.dim.yhi - shifty
-        shiftvaluez = self.dim.zhi - shiftz
-        for p in self.particles:
-                p.x -= shiftvaluex
-                p.y -= shiftvaluey
-                p.z -= shiftvaluez
-
-        self.dim.xhi = shiftx
-        self.dim.xlo = -shiftx
-        self.dim.yhi = shifty
-        self.dim.ylo = -shifty
-        self.dim.zhi = shiftz
-        self.dim.zlo = -shiftz
-
     def set_charge(self):
         """pysimm.system.System.set_charge
 
