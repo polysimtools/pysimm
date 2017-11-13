@@ -3171,7 +3171,7 @@ class System(object):
         self.dim.dz = self.dim.zhi - self.dim.zlo
         
         if center:
-            self..center('particles', [0, 0, 0], True)
+            self.center('particles', [0, 0, 0], True)
         
     def set_mm_dist(self, molecules=None):
         """pysimm.system.System.set_mm_dist
@@ -4753,7 +4753,7 @@ def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True)
 
     for r in ref:
         r.set_mass()
-        r..center('particles', [0, 0, 0], True)
+        r.center('particles', [0, 0, 0], True)
         r.r = 0
         for p in r.particles:
             r.r = max(r.r, distance_to_origin(p))

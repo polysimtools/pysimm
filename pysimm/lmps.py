@@ -68,6 +68,16 @@ FF_SETTINGS = {
             'pair_mix':         'arithmetic',
             'special_bonds':    'dreiding'
         },
+    'dreiding-lj':
+        {
+            'pair_style':       'lj/cut',
+            'bond_style':       'harmonic',
+            'angle_style':      'harmonic',
+            'dihedral_style':   'harmonic',
+            'improper_style':   'harmonic',
+            'pair_mix':         'arithmetic',
+            'special_bonds':    'dreiding'
+        },
     'amber':
         {
             'pair_style':       'lj/cut',
@@ -987,7 +997,7 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
                        LAMMPS_EXEC, '-e', 'both', '-l', log_name],
                       stdin=PIPE, stdout=PIPE, stderr=PIPE)
         else:
-            p = Popen([prefix, LAMMPS_EXEC, '-e', 'both', '-l', log_name],
+            p = Popen([LAMMPS_EXEC, '-e', 'both', '-l', log_name],
                       stdin=PIPE, stdout=PIPE, stderr=PIPE)
         simulation.write_input()
         if simulation.debug:
