@@ -277,8 +277,8 @@ class SteeredMolecularDynamics(MolecularDynamics):
         if self.ensemble == 'nvt':
             self.input += 'fix 1 all %s temp %s %s %s\n' % (self.ensemble, self.t_start, self.t_stop, self.tdamp)
         elif self.ensemble == 'npt':
-            self.input += ('fix 1 all %s temp %s %s %s iso %s %s 100\n'
-                           % (self.ensemble, self.t_start, self.t_stop, self.p_start, self.p_stop, self.pdamp))
+            self.input += ('fix 1 all %s temp %s %s %s iso %s %s %s\n'
+                           % (self.ensemble, self.t_start, self.t_stop, self.tdamp, self.p_start, self.p_stop, self.pdamp))
         elif self.ensemble == 'nve':
             self.input += 'fix 1 all %s\n' % self.ensemble
 
@@ -304,7 +304,7 @@ class SteeredMolecularDynamics(MolecularDynamics):
         self.input += 'group p2 id {}\n'.format(self.p2.tag)
         self.input += 'fix steer p1 smd cvel {} {} couple p2 auto auto auto {}\n'.format(self.k, self.v, self.d)
 
-        self.input += 'run %s\n' % self.length
+        self.input += 'run %s\n' % int(self.length)
         self.input += 'unfix 1\n'
         self.input += 'unfix steer\n'
         if self.dump:
@@ -333,15 +333,15 @@ class Minimization(object):
     """
     def __init__(self, **kwargs):
 
-        self.min_style = kwargs.get('min_style') or 'fire'
+        self.min_style = kwargs.get('min_style', 'fire')
         self.dmax = kwargs.get('dmax')
-        self.etol = kwargs.get('etol') or 1.0e-3
-        self.ftol = kwargs.get('ftol') or 1.0e-3
-        self.maxiter = kwargs.get('maxiter') or 10000
-        self.maxeval = kwargs.get('maxeval') or 100000
-        self.thermo = kwargs.get('thermo') or 1000
+        self.etol = kwargs.get('etol', 1.0e-3)
+        self.ftol = kwargs.get('ftol', 1.0e-3)
+        self.maxiter = kwargs.get('maxiter', 10000)
+        self.maxeval = kwargs.get('maxeval', 100000)
+        self.thermo = kwargs.get('thermo', 1000)
         self.thermo_style = kwargs.get('thermo_style')
-        self.dump = kwargs.get('dump') or False
+        self.dump = kwargs.get('dump', False)
         self.dump_name = kwargs.get('dump_name')
         self.dump_append = kwargs.get('dump_append')
         
@@ -370,7 +370,7 @@ class Minimization(object):
         Create LAMMPS input for an energy minimization simulation.
 
         Args:
-            sim: pysimm.lmps.Simulation object reference
+            sim: :class:`~pysimm.lmps.Simulation` object reference
 
         Returns:
             input string
@@ -439,7 +439,7 @@ class Simulation(object):
     """pysimm.lmps.Simulation
 
     Organizational object for LAMMPS simulation. Should contain combination of
-    pysimm.lmps.MolecularDynamics, pysimm.lmps.Minimization, and/or pysimm.lmps.CustomInput object.
+    :class:`~pysimm.lmps.MolecularDynamics`, :class:`~pysimm.lmps.Minimization`, and/or :class:`~pysimm.lmps.CustomInput` object.
 
     Attributes:
         atom_style: LAMMPS atom_style default=full
@@ -457,31 +457,31 @@ class Simulation(object):
 
         self.system = s
 
-        self.atom_style = kwargs.get('atom_style') or 'full'
-        self.kspace_style = kwargs.get('kspace_style') or 'pppm 1e-4'
-        self.units = kwargs.get('units') or 'real'
+        self.atom_style = kwargs.get('atom_style', 'full')
+        self.kspace_style = kwargs.get('kspace_style', 'pppm 1e-4')
+        self.units = kwargs.get('units', 'real')
         self.special_bonds = kwargs.get('special_bonds')
-        self.nonbond_mixing = kwargs.get('nonbond_mixing') or 'arithmetic'
-        self.cutoff = kwargs.get('cutoff') or 12.0
+        self.nonbond_mixing = kwargs.get('nonbond_mixing', 'arithmetic')
+        self.cutoff = kwargs.get('cutoff', 12.0)
 
-        self.print_to_screen = kwargs.get('print_to_screen') if kwargs.get('print_to_screen') is not None else False
-        self.name = kwargs.get('name') or False
+        self.print_to_screen = kwargs.get('print_to_screen', False)
+        self.name = kwargs.get('name', False)
         self.log = kwargs.get('log')
         self.write = kwargs.get('write', False)
 
         self.input = ''
         self.custom = kwargs.get('custom')
 
-        self.sim = kwargs.get('sim') if kwargs.get('sim') is not None else []
+        self.sim = kwargs.get('sim', [])
         
     def add_qeq(self, template=None, **kwargs):
         """pysimm.lmps.Simulation.add_qeq
 
-        Add pysimm.lmps.Qeq template to simulation
+        Add :class:`~pysimm.lmps.Qeq` template to simulation
 
         Args:
-            template: pysimm.lmps.Qeq object reference
-            **kwargs: if template is None these are passed to pysimm.lmps.Qeq constructor to create new template
+            template: :class:`~pysimm.lmps.Qeq` object reference
+            **kwargs: if template is None these are passed to :class:`~pysimm.lmps.Qeq` constructor to create new template
         """
         if template is None:
             self.sim.append(Qeq(**kwargs))
@@ -493,12 +493,11 @@ class Simulation(object):
     def add_md(self, template=None, **kwargs):
         """pysimm.lmps.Simulation.add_md
 
-        Add pysimm.lmps.MolecularDyanmics template to simulation
+        Add :class:`~pysimm.lmps.MolecularDyanmics` template to simulation
 
         Args:
-            template: pysimm.lmps.MolecularDynamics object reference
-            **kwargs: if template is None these are passed to
-            pysimm.lmps.MolecularDynamics constructor to create new template
+            template: :class:`~pysimm.lmps.MolecularDynamics` object reference
+            **kwargs: if template is None these are passed to :class:`~pysimm.lmps.MolecularDynamics` constructor to create new template
         """
         if template is None:
             self.sim.append(MolecularDynamics(**kwargs))
@@ -510,12 +509,11 @@ class Simulation(object):
     def add_min(self, template=None, **kwargs):
         """pysimm.lmps.Simulation.add_min
 
-        Add pysimm.lmps.Minimization template to simulation
+        Add :class:`~pysimm.lmps.Minimization` template to simulation
 
         Args:
-            template: pysimm.lmps.Minimization object reference
-            **kwargs: if template is None these are passed to
-            pysimm.lmps.Minimization constructor to create new template
+            template: :class:`~pysimm.lmps.Minimization` object reference
+            **kwargs: if template is None these are passed to :class:`~pysimm.lmps.Minimization` constructor to create new template
         """
         if template is None:
             self.sim.append(Minimization(**kwargs))
@@ -616,7 +614,7 @@ def call_lammps(simulation, np, nanohub):
     Wrapper to call LAMMPS using executable name defined in pysimm.lmps module.
 
     Args:
-        simulation: pysimm.lmps.Simulation object reference
+        simulation: :class:`~pysimm.lmps.Simulation` object reference
         np: number of threads to use
         nanohub: dictionary containing nanohub resource information default=None
 
@@ -695,7 +693,7 @@ def call_lammps(simulation, np, nanohub):
 def qeq(s, np=None, nanohub=None, **kwargs):
     """pysimm.lmps.qeq
 
-    Convenience function to call a qeq calculation. kwargs are passed to Qeq constructor
+    Convenience function to call a qeq calculation. kwargs are passed to :class:`~pysimm.lmps.Qeq` constructor
 
     Args:
         s: system to perform simulation on
@@ -749,7 +747,7 @@ def quick_min(s, np=None, nanohub=None, **kwargs):
 def energy(s, all=False, np=None, **kwargs):
     """pysimm.lmps.energy
 
-    Convenience function to calculate energy of a given System object.
+    Convenience function to calculate energy of a given :class:`~pysimm.system.System` object.
 
     Args:
         s: system to calculate energy
