@@ -275,10 +275,10 @@ class SteeredMolecularDynamics(MolecularDynamics):
         self.input += 'timestep %s\n' % self.timestep
 
         if self.ensemble == 'nvt':
-            self.input += 'fix 1 all %s temp %s %s 100\n' % (self.ensemble, self.t_start, self.t_stop)
+            self.input += 'fix 1 all %s temp %s %s %s\n' % (self.ensemble, self.t_start, self.t_stop, self.tdamp)
         elif self.ensemble == 'npt':
-            self.input += ('fix 1 all %s temp %s %s 100 iso %s %s 100\n'
-                           % (self.ensemble, self.t_start, self.t_stop, self.p_start, self.p_stop))
+            self.input += ('fix 1 all %s temp %s %s %s iso %s %s 100\n'
+                           % (self.ensemble, self.t_start, self.t_stop, self.p_start, self.p_stop, self.pdamp))
         elif self.ensemble == 'nve':
             self.input += 'fix 1 all %s\n' % self.ensemble
 
