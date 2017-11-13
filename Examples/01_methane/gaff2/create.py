@@ -54,7 +54,7 @@ def run(test=False):
     
     # we'll perform energy minimization using the fire algorithm in LAMMPS
     print('Example progress: Optimizing structure using LAMMPS...')
-    lmps.quick_min(s, min_style='fire', name='fire_min', etol=1e-6, ftol=1e-8)
+    lmps.quick_min(s, min_style='fire', name='fire_min', etol=1e-10, ftol=1e-10)
     
     # write xyz, YAML, LAMMPS data, and chemdoodle json files
     print('Example progress: Saving structure to files...')
