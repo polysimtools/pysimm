@@ -661,7 +661,7 @@ class MolecularDynamics(object):
         
         self.input += '\n'
 
-        if self.run:
+        if self.run is not False:
             self.input += '{:<15} {}\n'.format('run', int(self.run))
         if self.run and self.unfix:
             self.input += 'unfix {}\n'.format(self.name)
@@ -1143,33 +1143,21 @@ def energy(s, all=False, np=None, **kwargs):
         total energy or disctionary of energy components
     """
     sim = Simulation(s, log='pysimm_calc.tmp.log', **kwargs)
-    sim.add_md(length=0, thermo=1, thermo_style='custom step etotal epair emol evdwl ecoul ebond eangle edihed eimp', **kwargs)
+    sim.add(OutputSettings(thermo={
+        'freq': 1,
+        'style': 'custom step etotal epair emol evdwl ecoul ebond eangle edihed eimp'
+    }))
+    sim.add_md(length=0, **kwargs)
     sim.run(np)
-    with file('pysimm_calc.tmp.log') as f:
-        line = f.next()
-        while line.split()[0] != 'Step':
-            line = f.next()
-        line = f.next()
-        step, etotal, epair, emol, evdwl, ecoul, ebond, eangle, edihed, eimp = map(float, line.split())
+    log = LogFile('pysimm_calc.tmp.log')
     try:
         os.remove('pysimm_calc.tmp.log')
     except:
         error_print('error likely occurred during simulation')
     if all:
-        return {
-                'step': int(step),
-                'etotal': etotal,
-                'epair': epair,
-                'emol': emol,
-                'evdwl': evdwl,
-                'ecoul': ecoul,
-                'ebond': ebond,
-                'eangle': eangle,
-                'edihed': edihed,
-                'eimp': eimp
-               }
+        return log.data.loc[0]
     else:
-        return etotal
+        return log.data.loc[0].TotEng
         
 
 class LogFile(object):
