@@ -63,6 +63,9 @@ def equil(s, **kwargs):
     pmax = kwargs.get('pmax', 50000)
     tfinal = kwargs.get('tfinal', 300)
     pfinal = kwargs.get('pfinal', 1)
+    
+    init = kwargs.get('init')
+    output_settings = kwargs.get('output_settings')
 
     nanohub = kwargs.get('nanohub')
     np = kwargs.get('np')
@@ -77,14 +80,11 @@ def equil(s, **kwargs):
     if not length_list:
         length_list = [100000, 100000, 100000, 100000, 100000, 100000, 100000]
 
-    dump = kwargs.get('dump') or 1000
-    dump_append = kwargs.get('dump_append') if kwargs.get('dump_append') is not None else True
-
-    scale_v = kwargs.get('scale_v') if kwargs.get('scale_v') is not None else True
-
-    settings = {'dump': dump, 'cutoff': nb_cutoff, 'dump_append': dump_append, 'scale_v': scale_v}
-
     sim = lmps.Simulation(s, name='equil')
+    if init:
+        sim.add(init)
+    if output_settings:
+        sim.add(output_settings)
     sim.add_min(nanohub=nanohub, cutoff=nb_cutoff, np=np)
     sim.add_md(new_v=True, temp=tfinal, nanohub=nanohub, cutoff=nb_cutoff, np=np)
 
