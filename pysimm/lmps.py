@@ -65,7 +65,9 @@ FF_SETTINGS = {
             'angle_style':      'harmonic',
             'dihedral_style':   'harmonic',
             'improper_style':   'harmonic',
-            'pair_mix':         'arithmetic',
+            'pair_modify':      {
+                'mix': 'arithmetic'
+            },
             'special_bonds':    'dreiding'
         },
     'dreiding-lj':
@@ -75,7 +77,9 @@ FF_SETTINGS = {
             'angle_style':      'harmonic',
             'dihedral_style':   'harmonic',
             'improper_style':   'harmonic',
-            'pair_mix':         'arithmetic',
+            'pair_modify':      {
+                'mix': 'arithmetic'
+            },
             'special_bonds':    'dreiding'
         },
     'amber':
@@ -85,7 +89,9 @@ FF_SETTINGS = {
             'angle_style':      'harmonic',
             'dihedral_style':   'fourier',
             'improper_style':   'cvff',
-            'pair_mix':         'arithmetic',
+            'pair_modify':      {
+                'mix': 'arithmetic'
+            },
             'special_bonds':    'amber'
         },
     'pcff':
@@ -95,7 +101,9 @@ FF_SETTINGS = {
             'angle_style':      'class2',
             'dihedral_style':   'class2',
             'improper_style':   'class2',
-            'pair_mix':         'sixthpower',
+            'pair_modify':      {
+                'mix': 'sixthpower'
+            },
             'special_bonds':    'lj/coul 0 0 1'
         },
     'opls':
@@ -105,7 +113,9 @@ FF_SETTINGS = {
             'angle_style':      'harmonic',
             'dihedral_style':   'opls',
             'improper_style':   'cvff',
-            'pair_mix':         'geometric',
+            'pair_modify':      {
+                'mix': 'geometric'
+            },
             'special_bonds':    'lj/coul 0 0 0.5'
         },
     'charmm':
@@ -115,7 +125,9 @@ FF_SETTINGS = {
             'angle_style':      'charmm',
             'dihedral_style':   'charmm',
             'improper_style':   'harmonic',
-            'pair_mix':         'arithmetic',
+            'pair_modify':      {
+                'mix': 'arithmetic'
+            },
             'special_bonds':    'charmm'
         },
     'trappe/amber':
@@ -125,8 +137,10 @@ FF_SETTINGS = {
             'angle_style':      'harmonic',
             'dihedral_style':   'fourier',
             'improper_style':   'cvff',
-            'pair_mix':         'arithmetic',
-            'special_bonds':    'lj/coul 0 0 0.5'
+            'pair_modify':      {
+                'mix': 'arithmetic'
+            },
+            'special_bonds':    'amber'
         }
 }
 
@@ -185,7 +199,7 @@ class Init(object):
         self.create_box = kwargs.get('create_box')
         self.read_data = kwargs.get('read_data')
         
-        if self.forcefield and self.forcefield not in ['amber', 'dreiding', 'pcff', 'opls', 'charmm']:
+        if self.forcefield and self.forcefield not in ['amber', 'trappe/amber', 'dreiding', 'pcff', 'opls', 'charmm']:
             if self.forcefield.lower() in ['gaff', 'gaff2']:
                 self.forcefield = 'amber'
             elif self.forcefield.lower() in ['cgenff']:
@@ -198,7 +212,7 @@ class Init(object):
         if self.cutoff is None:
             self.cutoff = {'lj': 12.0, 'coul': 12.0, 'inner_lj': 10.0}
 
-    def write(self, sim):
+    def write(self, sim=None):
         """pysimm.lmps.Init.write
 
         Prepare LAMMPS input with initialization settings
@@ -209,21 +223,29 @@ class Init(object):
         Returns:
             string of LAMMPS input
         """
-        s = sim.system
+        if sim:
+            s = sim.system
+        else:
+            s = None
         
-        if self.forcefield is None and s.forcefield is not None:
+        if self.forcefield is None and s and s.forcefield is not None:
             if s.forcefield in ['gaff', 'gaff2']:
                 self.forcefield = 'amber'
             elif s.forcefield in ['cgenff']:
                 self.forcefield = 'charmm'
             else:
                 self.forcefield = s.forcefield
+        elif self.forcefield is None and sim and sim.forcefield is not None:
+            self.forcefield = sim.forcefield
             
         if self.special_bonds is None and self.forcefield is not None:
             self.special_bonds = FF_SETTINGS[self.forcefield]['special_bonds']
-            
-        if self.pair_modify.get('mix') is None and self.forcefield is not None:
-            self.pair_modify['mix'] = FF_SETTINGS[self.forcefield]['pair_mix']
+        
+        if self.forcefield is not None:
+            pair_modify = FF_SETTINGS[self.forcefield]['pair_modify']
+            if self.pair_modify:
+                pair_modify.update(self.pair_modify)
+            self.pair_modify = pair_modify
 
         if self.charge is None and s is not None:
             for p in s.particles:
@@ -252,6 +274,9 @@ class Init(object):
             if self.charge:
                 lammps_input += '/coul/long'
                 self.pair_style += '/coul/long'
+        else:
+            raise PysimmError('A pair_style must be defined during initialization'), None, sys.exc_info()[2]
+            
         if self.cutoff:
             if self.forcefield == ['charmm'] and self.cutoff.get('inner_lj'):
                 lammps_input += ' {} '.format(self.cutoff['inner_lj'])
@@ -330,7 +355,7 @@ class Region(Item):
     def __init__(self, name='all', style='block', *args, **kwargs):
         Item.__init__(self, name=name, style=style, args=args, kwargs=kwargs)
         
-    def write(self, sim):
+    def write(self, sim=None):
         inp = '{:<15} {name} {style} '.format('region', name=self.name, style=self.style)
         for a in self.args:
             inp += '{} '.format(a)
@@ -356,7 +381,7 @@ class CreateBox(Item):
     def __init__(self, n=1, region=Region(), *args, **kwargs):
         Item.__init__(self, n=n, region=region, args=args, kwargs=kwargs)
         
-    def write(self, sim):
+    def write(self, sim=None):
         inp = '{:<15} {n} {region.name} '.format('create_box', **vars(self))
         for k, v in self.kwargs.items():
             inp += '{} {} '.format(k.replace('_', '/'), v)
@@ -376,7 +401,7 @@ class Group(Item):
     def __init__(self, name='all', style='id', *args, **kwargs):
         Item.__init__(self, name=name, style=style, args=args, **kwargs)
         
-    def write(self, sim):
+    def write(self, sim=None):
         inp = '{:<15} {name} {style} '.format('group', name=self.name, style=self.style)
         for a in self.args:
             inp += '{} '.format(a)
@@ -405,7 +430,7 @@ class Velocity(Item):
         if args:
             self.from_args = True
         
-    def write(self, sim):
+    def write(self, sim=None):
         if isinstance(self.group, Group):
             inp = '{:<15} {group.name} {style} '.format('velocity', group=self.group, style=self.style)
         else:
@@ -459,7 +484,7 @@ class OutputSettings(object):
         if isinstance(self.dump, dict) and isinstance(self.dump['group'], basestring):
             self.dump['group'] = Group(name=self.dump['group'])
             
-    def write(self, sim):
+    def write(self, sim=None):
         lammps_input = ''
             
         if isinstance(self.thermo, dict):
@@ -510,7 +535,7 @@ class Qeq(object):
         
         self.input = ''
         
-    def write(self, sim):
+    def write(self, sim=None):
         """pysimm.lmps.Qeq.write
 
         Create LAMMPS input for a charge equilibration calculation
@@ -595,7 +620,7 @@ class MolecularDynamics(object):
 
         self.input = ''
 
-    def write(self, sim):
+    def write(self, sim=None):
         """pysimm.lmps.MolecularDynamics.write
 
         Create LAMMPS input for a molecular dynamics simulation.
@@ -653,7 +678,7 @@ class SteeredMolecularDynamics(MolecularDynamics):
         self.v = kwargs.get('v', 0.001)
         self.d = kwargs.get('d', 3.0)
     
-    def write(self, sim):
+    def write(self, sim=None):
         """pysimm.lmps.SteeredMolecularDynamics.write
 
         Create LAMMPS input for a steered molecular dynamics simulation.
@@ -736,7 +761,7 @@ class Minimization(object):
 
         self.input = ''
 
-    def write(self, sim):
+    def write(self, sim=None):
         """pysimm.lmps.Minimization.write
 
         Create LAMMPS input for an energy minimization simulation.
@@ -769,7 +794,7 @@ class CustomInput(object):
     def __init__(self, custom_input):
         self.input = '{}\n'.format(custom_input)
 
-    def write(self, sim):
+    def write(self, sim=None):
         """pysimm.lmps.CustomInput.write
 
         Create LAMMPS input for a custom simulation.
