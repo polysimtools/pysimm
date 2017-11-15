@@ -927,6 +927,9 @@ class Simulation(object):
         """
         self._input = ''
         
+        if self.log:
+            self._input += 'log {} append\n\n'.format(self.log)
+        
         for task in self.sim:
             if isinstance(task, Init):
                 init = False
