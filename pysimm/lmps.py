@@ -37,8 +37,12 @@ import sys
 import json
 from random import randint
 from time import strftime
-import pandas as pd
 from StringIO import StringIO
+
+try:
+    import import pandas as pd
+except ImportError:
+    pd = None
 
 from pysimm.system import read_lammps
 from pysimm.system import System
@@ -1169,6 +1173,8 @@ class LogFile(object):
         fname: filename of log file
         data: resulting DataFrame with log file data
     """
+    if not pd:
+        raise PysimmError('pysimm.lmps.LogFile function requires pandas')
     def __init__(self, fname):
         self.filename = fname
         self.data = pd.DataFrame()
