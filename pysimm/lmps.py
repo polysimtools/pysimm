@@ -1022,10 +1022,10 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
                   % strftime('%H:%M:%S'))
         if np:
             p = Popen([prefix, '-np', str(np),
-                       LAMMPS_EXEC, '-e', 'both', '-l', log_name],
+                       LAMMPS_EXEC, '-e', 'both'],
                       stdin=PIPE, stdout=PIPE, stderr=PIPE)
         else:
-            p = Popen([LAMMPS_EXEC, '-e', 'both', '-l', log_name],
+            p = Popen([LAMMPS_EXEC, '-e', 'both'],
                       stdin=PIPE, stdout=PIPE, stderr=PIPE)
         simulation.write_input()
         if simulation.debug:
