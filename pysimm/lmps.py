@@ -204,8 +204,6 @@ class Init(object):
                 self.forcefield = 'amber'
             elif self.forcefield.lower() in ['cgenff']:
                 self.forcefield = 'charmm'
-            else:
-                warning_print('{} forcefield not supported yet'.format(self.forcefield))
 
         if isinstance(self.cutoff, int) or isinstance(self.cutoff, float):
             self.cutoff = {'lj': self.cutoff, 'coul': self.cutoff, 'inner_lj': self.cutoff-2.0}
