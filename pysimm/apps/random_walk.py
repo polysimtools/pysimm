@@ -199,7 +199,7 @@ def copolymer(m, nmon, s_=None, **kwargs):
                 s.unwrap()
                 
             if sim is None:
-                sim = lmps.Simulation(s, name='relax_%03d' % (temp_nmon), log='relax.log', **settings)
+                sim = lmps.Simulation(s, name='relax_%03d' % (temp_nmon), log='relax_%03d.log', **settings)
                 sim.add_md(ensemble='nve', limit=limit, **settings)
                 sim.add_min(**settings)
             if isinstance(sim, lmps.Simulation):
