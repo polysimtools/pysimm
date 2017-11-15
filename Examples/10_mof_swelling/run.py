@@ -2,6 +2,7 @@ from pysimm.apps import mc_md
 from pysimm import system
 
 frame = system.read_lammps('irmof1_drei.lmps')
+frame.forcefield = 'dreiding-lj'
 gas1 = system.read_lammps('ch4.lmps')
 
 mc_props = {'rigid_type': False,

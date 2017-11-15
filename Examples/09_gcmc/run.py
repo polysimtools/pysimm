@@ -3,6 +3,7 @@ from collections import OrderedDict
 
 # In order to run CASSANDRA GCMC one need to create the CASSANDRA object
 sst = system.System()
+sst.forcefield = 'trappe/amber'
 sst.dim = system.Dimension(dx=45, dy=45, dz=45, center=[0, 0, 0])
 css = cassandra.Cassandra(sst)
 

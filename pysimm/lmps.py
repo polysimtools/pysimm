@@ -40,7 +40,7 @@ from time import strftime
 from StringIO import StringIO
 
 try:
-    import import pandas as pd
+    import pandas as pd
 except ImportError:
     pd = None
 
@@ -1173,9 +1173,9 @@ class LogFile(object):
         fname: filename of log file
         data: resulting DataFrame with log file data
     """
-    if not pd:
-        raise PysimmError('pysimm.lmps.LogFile function requires pandas')
     def __init__(self, fname):
+        if not pd:
+            raise PysimmError('pysimm.lmps.LogFile function requires pandas')
         self.filename = fname
         self.data = pd.DataFrame()
         self._read(self.filename)
