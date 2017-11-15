@@ -205,6 +205,7 @@ def copolymer(m, nmon, s_=None, **kwargs):
             if isinstance(sim, lmps.Simulation):
                 sim.system = s
                 sim.name = 'relax_%03d' % (temp_nmon)
+                sim.log = 'relax_%03d.log' % (temp_nmon)
                 sim.run(np=settings.get('np'))
 
             if unwrap:
@@ -366,6 +367,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
         if isinstance(sim, lmps.Simulation):
             sim.system = s
             sim.name = 'relax_%03d' % (insertion+2)
+            sim.log = 'relax_%03d.log' % (insertion+2)
             sim.run(np=settings.get('np'))
 
         if unwrap:
