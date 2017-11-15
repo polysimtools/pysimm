@@ -55,7 +55,7 @@ class Gaff2(Forcefield):
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                    os.pardir, os.pardir, 'dat', 'forcefields', 'gaff2.json')
         Forcefield.__init__(self, db_file)
-        self.ff_name = 'gaff2'
+        self.name = 'gaff2'
         self.pair_style = 'lj'
         self.bond_style = 'harmonic'
         self.angle_style = 'harmonic'

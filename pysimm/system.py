@@ -505,7 +505,7 @@ class System(object):
 
         self.name = kwargs.get('name', 'pySIMM System Object')
         self.ff_class = kwargs.get('ff_class')
-        self.ff_name = kwargs.get('ff_name')
+        self.forcefield = kwargs.get('forcefield')
         self.dim = Dimension(xlo=kwargs.get('xlo'), xhi=kwargs.get('xhi'),
                              ylo=kwargs.get('ylo'), yhi=kwargs.get('yhi'),
                              zlo=kwargs.get('zlo'), zhi=kwargs.get('zhi'),
@@ -525,6 +525,7 @@ class System(object):
         self.dihedrals = kwargs.get('dihedrals', ItemContainer())
         self.impropers = kwargs.get('impropers', ItemContainer())
         self.molecules = kwargs.get('molecules', ItemContainer())
+        self.write_coeffs = kwargs.get('write_coeffs', True)
 
         self.set_mass()
         self.set_volume()
@@ -551,7 +552,7 @@ class System(object):
         new = System()
 
         new.ff_class = self.ff_class
-        new.ff_name = self.ff_name
+        new.forcefield = self.forcefield
         new.pair_style = self.pair_style
         new.bond_style = self.bond_style
         new.angle_style = self.angle_style
@@ -2128,7 +2129,7 @@ class System(object):
         """
 
         self.ff_class = f.ff_class
-        self.ff_name = f.ff_name
+        self.forcefield = f.name
         if update_ptypes:
             self.update_particle_types_from_forcefield(f)
             skip_ptypes = True
@@ -2303,7 +2304,7 @@ class System(object):
                 out_file.write('%4d\t%s\t# %s\n' % (pt.tag, pt.mass, pt.name))
             out_file.write('\n')
 
-        if self.particle_types.count > 0:
+        if self.write_coeffs and self.particle_types.count > 0:
             out_file.write('Pair Coeffs\n\n')
             for pt in self.particle_types:
                 if (self.pair_style and (self.pair_style.startswith('lj') or
@@ -2326,7 +2327,7 @@ class System(object):
                     return
             out_file.write('\n')
 
-        if self.bond_types.count > 0:
+        if self.write_coeffs and self.bond_types.count > 0:
             out_file.write('Bond Coeffs\n\n')
             for b in self.bond_types:
                 if self.bond_style == 'harmonic' or self.ff_class == '1':
@@ -2339,7 +2340,7 @@ class System(object):
                     error_print('error: cannot understand your bond style')
             out_file.write('\n')
 
-        if self.angle_types.count > 0:
+        if self.write_coeffs and self.angle_types.count > 0:
             out_file.write('Angle Coeffs\n\n')
             for a in self.angle_types:
                 if self.angle_style == 'harmonic' or self.ff_class == '1':
@@ -2354,7 +2355,7 @@ class System(object):
                                       a.k2, a.k3, a.k4, a.name))
             out_file.write('\n')
 
-        if (self.angle_types.count > 0 and (self.ff_class == '2' or
+        if self.write_coeffs and (self.angle_types.count > 0 and (self.ff_class == '2' or
                                             self.angle_style == 'class2')):
             out_file.write('BondBond Coeffs\n\n')
             for a in self.angle_types:
@@ -2381,7 +2382,7 @@ class System(object):
                                % (a.tag, a.n1, a.n2, a.r1, a.r2, a.name))
             out_file.write('\n')
 
-        if self.dihedral_types.count > 0:
+        if self.write_coeffs and self.dihedral_types.count > 0:
             out_file.write('Dihedral Coeffs\n\n')
             for dt in self.dihedral_types:
                 if self.dihedral_style == 'fourier':
@@ -2399,7 +2400,7 @@ class System(object):
                                       dt.phi3, dt.name))
             out_file.write('\n')
 
-        if self.dihedral_types.count > 0 and (self.ff_class == '2' or
+        if self.write_coeffs and self.dihedral_types.count > 0 and (self.ff_class == '2' or
                                         self.dihedral_style == 'class2'):
             out_file.write('MiddleBondTorsion Coeffs\n\n')
             for d in self.dihedral_types:
@@ -2537,7 +2538,7 @@ class System(object):
                                   d.name))
             out_file.write('\n')
 
-        if self.improper_types.count > 0:
+        if self.write_coeffs and self.improper_types.count > 0:
             out_file.write('Improper Coeffs\n\n')
             for i in self.improper_types:
                 if self.improper_style == 'harmonic' or self.improper_style =='class2':
@@ -2552,7 +2553,7 @@ class System(object):
                                    % (i.tag, i.k, i.d, i.n, i.name))
             out_file.write('\n')
 
-        if self.improper_types.count > 0 and (self.ff_class == '2' or
+        if self.write_coeffs and self.improper_types.count > 0 and (self.ff_class == '2' or
                                               self.improper_style == 'class2'):
             out_file.write('AngleAngle Coeffs\n\n')
             for i in self.improper_types:
@@ -3170,7 +3171,7 @@ class System(object):
         self.dim.dz = self.dim.zhi - self.dim.zlo
         
         if center:
-            self.center_at_origin()
+            self.center('particles', [0, 0, 0], True)
         
     def set_mm_dist(self, molecules=None):
         """pysimm.system.System.set_mm_dist
@@ -4461,7 +4462,7 @@ def read_mol(mol_file, type_with=None, version='V2000'):
             s.apply_forcefield(type_with)
         except Exception:
             print('forcefield typing with forcefield %s unsuccessful'
-                  % type_with.ff_name)
+                  % type_with.name)
 
     return s
     
@@ -4744,6 +4745,7 @@ def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True)
     if s_ is None:
         s_ = System()
     s_.ff_class = ref[0].ff_class
+    s_.forcefield = ref[0].forcefield
     s_.pair_style = ref[0].pair_style
     s_.bond_style = ref[0].bond_style
     s_.angle_style = ref[0].angle_style
@@ -4752,7 +4754,7 @@ def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True)
 
     for r in ref:
         r.set_mass()
-        r.center_at_origin()
+        r.center('particles', [0, 0, 0], True)
         r.r = 0
         for p in r.particles:
             r.r = max(r.r, distance_to_origin(p))
