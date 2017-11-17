@@ -390,6 +390,7 @@ class CreateBox(Item):
         inp += '\n'
         return inp
 
+
 class Group(Item):
     """pysimm.lmps.Group
 

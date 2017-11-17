@@ -4,6 +4,7 @@ from pysimm import system
 frame = system.read_lammps('irmof1_drei.lmps')
 frame.forcefield = 'dreiding-lj'
 gas1 = system.read_lammps('ch4.lmps')
+gas1.forcefield = 'trappe/amber'
 
 mc_props = {'rigid_type': False,
             'max_ins': 1000,
@@ -19,9 +20,9 @@ mc_props = {'rigid_type': False,
             'Property_Info': {'prop1': 'energy_total',
                               'prop2': 'pressure'}}
 
-md_props = {'ensemble': 'npt',
-            'temp': 300,
-            'pressure': 15,
+md_props = {'temp': 300,
+            'pressure': {'start': 15,
+                         'iso': 'iso'},
             'timestep': 0.25,
             'cutoff': 9.0,
             'length': 10000,

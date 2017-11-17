@@ -3,25 +3,27 @@ from collections import OrderedDict
 import os
 import re
 import random
+import types
 
 
-def mc_md(gas_sst, fixed_sst=None, **kwargs):
+def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=None, md_props=None, **kwargs):
     """pysimm.apps.mc_md
 
     Performs the iterative hybrid Monte-Carlo/Molecular Dynamics (MC-MD) simulations using :class:`~pysimm.lmps` for
     MD and :class:`~pysimm.cassandra` for MD
 
     Args:
-        gas_sst (list of :class:`~pysimm.system.System`) : list items describe a different molecule to be inserted by MC
-        fixed_sst (:class:`~pysimm.system.System`) : fixed during th MC steps group of atoms (default: None)
+        :param gas_sst: (list of :class:`~pysimm.system.System`) : list items describe a different molecule to be
+            inserted by MC
+        :param fixed_sst: (:class:`~pysimm.system.System`) : fixed during th MC steps group of atoms (default: None)
 
 
     Keyword Args:
-        mcmd_niter (int) : number of MC-MD iterations (default: 10)
-        sim_folder (str): relative path to the folder with all simulation files (default: 'results')
-        mc_props (dictionary) : description of  all MC properties needed for simulations (see
+        :param mcmd_niter: (int) : number of MC-MD iterations (default: 10)
+        :param sim_folder: (str): relative path to the folder with all simulation files (default: 'results')
+        :param mc_props: (dictionary) : description of  all MC properties needed for simulations (see
             :class:`~pysimm.cassandra.GCMC` and :class:`~pysimm.cassandra.GCMC.props` for details)
-        md_props (dictionary):  description of all Molecular Dynamics settings needed for simulations (see
+        :param md_props: (dictionary):  description of all Molecular Dynamics settings needed for simulations (see
             :class:`~pysimm.lmps.Simulation` and :class:`~pysimm.lmps.MolecularDynamics` for details)
 
     Returns:
@@ -31,18 +33,15 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
 
     nonrig_group_name = 'nonrigid_b'
     rig_group_name = 'rigid_b'
-    n_iter = kwargs.get('mcmd_niter') or 10
-    sim_folder = kwargs.get('sim_folder') or 'results'
+    n_iter = mcmd_niter or 10
+    sim_folder = sim_folder or 'results'
     xyz_fname = os.path.join(sim_folder, 'MD{:}_out.xyz')
     l = 1
 
     # Creating fixed polymer system
     fs = None
     if fixed_sst:
-        if isinstance(fixed_sst, str):
-            fs = system.read_lammps(fixed_sst)
-            fs.wrap()
-        elif isinstance(fixed_sst, system.System):
+        if isinstance(fixed_sst, system.System):
             fs = fixed_sst
             fs.wrap()
         else:
@@ -50,15 +49,13 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
 
     # Set the one-molecule gas systems
     gases = []
-    for g in cassandra.make_iterable(gas_sst):
-        if isinstance(g, str):
-            try:
-                gases.append(system.read_lammps(g))
-            except IOError:
-                print('Cannot read file: {}\nExiting...'.format(g))
-                exit(1)
-        if isinstance(g, system.System):
-            gases.append(g)
+    if gas_sst:
+        if isinstance(gas_sst, system.System):
+            gases = [gas_sst]
+        elif isinstance(gas_sst, types.ListType):
+            for g in cassandra.make_iterable(gas_sst):
+                if isinstance(g, system.System):
+                    gases.append(g)
 
     if not gases:
         print('There are no gas molecules were specified correctely\nThe gas molecules are needed to start the '
@@ -67,7 +64,7 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
 
     css = cassandra.Cassandra(fixed_sst)
     # Set the Monte-Carlo properties:
-    mcp = kwargs.get('mc_props')
+    mcp = mc_props
     if mcp:
         CHEM_POT = cassandra.make_iterable(mcp.get('Chemical_Potential_Info'))
         if not CHEM_POT:
@@ -79,7 +76,8 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
     mcp['Start_Type'] = OrderedDict([('species', [1] + [0] * len(CHEM_POT))])
 
     # Set the Molecular-Dynamics properties:
-    mdp = kwargs.get('md_props')
+    sim = None
+    mdp = md_props
     if not mdp:
         print('Missing the MD Simulation settings\nExiting...')
         exit(1)
@@ -97,63 +95,56 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
         sim_sst.write_lammps(os.path.join(sim_folder, str(l) + '.before_md.lmps'))
         sim = lmps.Simulation(sim_sst,
                               log=os.path.join(sim_folder, str(l) + '.md.log'),
-                              print_to_screen=mdp.get('print_to_screen'),
-                              cutoff=mdp.get('cutoff'))
+                              print_to_screen=mdp.get('print_to_screen'))
+
+        sim.add(lmps.Init(cutoff=mdp.get('cutoff')))
 
         # custom definitions for the neighbour list updates
         sim.add_custom('neighbor 1.0 nsq \nneigh_modify once no every 1 delay 0 check yes')
 
         # adding group definitions to separate rigid and non-rigid bodies
-        grp_tmpl = 'group {:} id {:}'
-        sim.add_custom(grp_tmpl.format('matrix', css.run_queue[0].group_by_id('matrix')[0]))
-        sim.add_custom(grp_tmpl.format(nonrig_group_name, css.run_queue[0].group_by_id('nonrigid')[0]))
+        sim.add(lmps.Group('matrix', 'id', css.run_queue[0].group_by_id('matrix')[0]))
+        sim.add(lmps.Group(nonrig_group_name, 'id', css.run_queue[0].group_by_id('nonrigid')[0]))
         rigid_mols = css.run_queue[0].group_by_id('rigid')[0]
         if rigid_mols:
-            sim.add_custom(grp_tmpl.format(rig_group_name, rigid_mols))
+            sim.add(lmps.Group(rig_group_name, 'id', rigid_mols))
+
+        # adding "run 0" line before velocities rescale for correct temperature init of the system with rigid molecules
+        sim.add(lmps.Velocity(style='create'))
+        sim.add_custom('run 0')
+        sim.add(lmps.Velocity(style='scale'))
 
         # create the description of the molecular dynamics simulation
-        tmp_md = lmps.MolecularDynamics(ensemble=mdp.get('ensemble'),
-                                        timestep=mdp.get('timestep'),
-                                        length=int(mdp.get('length')),
-                                        thermo=mdp.get('thermo'),
-                                        temp=mdp.get('temp'),
-                                        pressure=mdp.get('pressure'),
-                                        dump=int(mdp.get('dump')),
-                                        dump_name=os.path.join(sim_folder, str(l) + '.md.dump'),
-                                        scale_v=True)
+        sim.add_md(lmps.MolecularDynamics(name='main_fix',
+                                          group=nonrig_group_name if rigid_mols else 'all',
+                                          ensemble='npt',
+                                          timestep=mdp.get('timestep'),
+                                          temperature=mdp.get('temp'),
+                                          pressure=mdp.get('pressure'),
+                                          run=False,
+                                          extra_keywords={'dilate': 'all'} if rigid_mols else {}))
 
-        # obtain the simulation (LAMMPS) input in order to customly modify it later
-        tmp_md.write(sim)
-
-        # replace single default fix with two separate fixes for rigid and nonrigid bodies separately
-        old_line = re.search('(?<=(\nfix)).*', tmp_md.input).group(0)
-        corr_fix = re.sub('all', nonrig_group_name, old_line)
-
+        # create the second NVT fix for rigid molecules that cannot be put in NPT fix
         if rigid_mols:
-            corr_fix += ' dilate all\n'
-        else:
-            corr_fix += '\n'
+            sim.add(lmps.MolecularDynamics(name='rig_fix',
+                                           ensemble='rigid/nvt/small molecule',
+                                           timestep=mdp.get('timestep'),
+                                           length=mdp.get('length'),
+                                           group=rig_group_name,
+                                           temperature=mdp.get('temp'),
+                                           pressure=mdp.get('pressure'),
+                                           run=False))
 
-        if rigid_mols:
-            corr_fix += 'fix' + re.sub('iso\s+\d+[.\d]*\s+\d+[.\d]*\s+\d+[.\d]*', '', old_line).\
-                        replace('1', '2', 1). \
-                        replace('all', rig_group_name). \
-                        replace('npt', 'rigid/nvt/small molecule') + '\n'
+        # add the "spring tether" fix to the geometrical center of the system to avoid system creep
+        sim.add_custom('fix tether_fix matrix spring tether 30.0 0.0 0.0 0.0 0.0')
+        sim.add_custom('run {:}\n'.format(mdp.get('length')))
 
-        # adding the spring fix to the geometrical center of the system to avoid system creep
-        corr_fix += 'fix {:} {:} spring tether {:} {:} {:} {:} {:}\n'.format(3, 'matrix', 30.0, 0.0, 0.0, 0.0, 0.0)
-
-        # saving all fixes to the input
-        tmp_md.input = tmp_md.input.replace(old_line, corr_fix)
-
-        # adding "run 0" line for correct temperature scaling of the system with rigid molecules
-        tmp_md.input = tmp_md.input.replace('velocity all scale',
-                                            'velocity all create {:} {:}\nrun 0\nvelocity all scale'
-                                            .format(mdp.get('temp'), random.randint(int(1e+5), int(1e+6) - 1)))
+        sim.add(lmps.OutputSettings(thermo=mdp.get('thermo'),
+                                    dump=int(mdp.get('dump')),
+                                    dump_name=os.path.join(sim_folder, str(l) + '.md.dump')))
 
         # The input for correct simulations is set, starting LAMMPS:
-        sim.add_custom(tmp_md.input)
-        sim.run(np=1)
+        sim.run()
 
         # Updating the size of the fixed system from the MD simulations and saving the coordinates for the next MC
         css.init_sst.dim = sim.system.dim
@@ -162,4 +153,4 @@ def mc_md(gas_sst, fixed_sst=None, **kwargs):
         mcp['Start_Type']['species'] = [1] + [0] * len(CHEM_POT)
         l += 1
 
-    return sim.system
+    return sim.system if sim else None
