@@ -9,21 +9,21 @@ import types
 def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=None, md_props=None, **kwargs):
     """pysimm.apps.mc_md
 
-    Performs the iterative hybrid Monte-Carlo/Molecular Dynamics (MC-MD) simulations using :class:`~pysimm.lmps` for
-    MD and :class:`~pysimm.cassandra` for MD
+    Performs the iterative hybrid Monte-Carlo/Molecular Dynamics (MC/MD) simulations using :class:`~pysimm.lmps` for
+    MD and :class:`~pysimm.cassandra` for MC
 
     Args:
-        :param gas_sst: (list of :class:`~pysimm.system.System`) : list items describe a different molecule to be
+        gas_sst (list of :class:`~pysimm.system.System`) : list items describe a different molecule to be
             inserted by MC
-        :param fixed_sst: (:class:`~pysimm.system.System`) : fixed during th MC steps group of atoms (default: None)
+        fixed_sst (:class:`~pysimm.system.System`) : fixed during th MC steps group of atoms (default: None)
 
 
     Keyword Args:
-        :param mcmd_niter: (int) : number of MC-MD iterations (default: 10)
-        :param sim_folder: (str): relative path to the folder with all simulation files (default: 'results')
-        :param mc_props: (dictionary) : description of  all MC properties needed for simulations (see
+        mcmd_niter (int) : number of MC-MD iterations (default: 10)
+        sim_folder (str): relative path to the folder with all simulation files (default: 'results')
+        mc_props (dictionary) : description of  all MC properties needed for simulations (see
             :class:`~pysimm.cassandra.GCMC` and :class:`~pysimm.cassandra.GCMC.props` for details)
-        :param md_props: (dictionary):  description of all Molecular Dynamics settings needed for simulations (see
+        md_props (dictionary):  description of all Molecular Dynamics settings needed for simulations (see
             :class:`~pysimm.lmps.Simulation` and :class:`~pysimm.lmps.MolecularDynamics` for details)
 
     Returns:
