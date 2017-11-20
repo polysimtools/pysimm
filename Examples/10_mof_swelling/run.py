@@ -2,7 +2,7 @@ import os
 from pysimm.apps import mc_md
 from pysimm import system
 
-def run(False):
+def run(test=False):
     frame = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'irmof1_drei.lmps'))
     frame.forcefield = 'dreiding-lj'
     gas1 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ch4.lmps'))
