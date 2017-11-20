@@ -749,11 +749,11 @@ class Cassandra(object):
     Canonical Monte-Carlo (GCMC :class:`~GCMC`) simulations.
 
     Attributes:
-        init_sst: :class:`~pysimm.system.System` molecular system before the simulations
+        init_sst (:class:`~pysimm.system.System`) : molecular system before the simulations
 
     Parameters:
-        :class:`~pysimm.system.System` : molecular system after the simulations
-        list : the list of scheduled tasks
+        final_sst (:class:`~pysimm.system.System`) : molecular system after the simulations
+        run_queue (list) : the list of scheduled tasks
     """
 
     def __init__(self, init_sst):

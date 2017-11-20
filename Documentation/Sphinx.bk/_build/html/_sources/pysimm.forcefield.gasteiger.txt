@@ -1,7 +1,0 @@
-pysimm.forcefield.gasteiger module
-==================================
-
-.. automodule:: pysimm.forcefield.gasteiger
-    :members:
-    :undoc-members:
-    :show-inheritance:
