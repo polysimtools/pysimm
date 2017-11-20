@@ -368,10 +368,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
             sim.name = 'relax_%03d' % (insertion+2)
             sim.run(np=settings.get('np'))
 
-        if unwrap:
-            if not s.unwrap():
-                error_print('something went wrong')
-                return s
+        s.unwrap()
 
         if traj:
             s.write_xyz('random_walk.xyz', append=True)
