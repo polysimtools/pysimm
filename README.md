@@ -1,4 +1,4 @@
-pysimm
+﻿pysimm
 ======
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
@@ -45,6 +45,25 @@ lmps.check_lmps_exec()
 ```
 
 If the LAMMPS_EXEC environment variable is not set, you will see a warning. Once configured, try the examples in the repository which highlight some of the features of pysimm.
+
+
+Integration with Cassandra
+==========================
+
+Cassandra is a versatile software for the Monte-Carlo simulations suitable for the variety of the molecular systems. For more details please refer the [web-page](https://cassandra.nd.edu/) of the Cassandra project. This explains how to integrate already installed Cassandra software to the pysimm. The integration is done through the environment variable CASSANDRA_EXEC. It defines the path to the Cassandra executable (it might be either serial or the parallel Cassandra compilation). If, for example, the Cassandra executable was installed to */usr/lib/cassandra/*, then the following should be set:
+
+```export CASSANDRA_EXEC=/usr/lib/cassandra/Src/cs_omp_gfort.exe```
+
+You might want to add this line to your *~/.bashrc* file to have the  environment variable permanently.
+
+The cassandra module of the pysimm will check whether the CASSANDRA_EXEC is set right before the running a simulation. Additionally, in the same way as in the lammps module, the setting can be checked using the code:
+
+```
+from pysimm import cassandra
+cassandra.check_cs_exec()
+```
+<i>NOTE: The parallel Cassandra version uses OpenMP, so the number of parallel tasks (number of threads) is normally controlled through OMP_NUM_THREADS environment variable. Set it to required value if you want to use specific number of parallel threads.</i>
+
 
 Complete Installation (pysimm and LAMMPS)
 =========================================
