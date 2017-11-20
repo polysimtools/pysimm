@@ -1,0 +1,19 @@
+pysimm\.models\.monomers\.dreiding package
+==========================================
+
+Submodules
+----------
+
+.. toctree::
+
+   pysimm.models.monomers.dreiding.pe
+   pysimm.models.monomers.dreiding.pmma
+   pysimm.models.monomers.dreiding.ps
+
+Module contents
+---------------
+
+.. automodule:: pysimm.models.monomers.dreiding
+    :members:
+    :undoc-members:
+    :show-inheritance:

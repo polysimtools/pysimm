@@ -1,7 +1,0 @@
-pysimm.models.monomers.gaff2.pmma module
-========================================
-
-.. automodule:: pysimm.models.monomers.gaff2.pmma
-    :members:
-    :undoc-members:
-    :show-inheritance:

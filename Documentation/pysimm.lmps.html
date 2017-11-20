@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pysimm.lmps module &mdash; pysimm 0.1 documentation</title>
+  <title>pysimm.lmps module &mdash; pysimm 0.2 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="pysimm 0.1 documentation" href="index.html"/>
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pysimm 0.2 documentation" href="index.html"/>
         <link rel="up" title="pysimm package" href="pysimm.html"/>
         <link rel="next" title="pysimm.system module" href="pysimm.system.html"/>
         <link rel="prev" title="pysimm.cli module" href="pysimm.cli.html"/> 
@@ -42,6 +47,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -61,7 +67,7 @@
             
             
               <div class="version">
-                0.1
+                0.2
               </div>
             
           
@@ -82,7 +88,10 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="pysimm.html">pysimm package</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pysimm.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="pysimm.html#submodules">Submodules</a><ul class="current">
@@ -90,7 +99,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pysimm.calc.html">pysimm.calc module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.cassandra.html">pysimm.cassandra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.cli.html">pysimm.cli module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">pysimm.lmps module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pysimm.lmps module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.system.html">pysimm.system module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.utils.html">pysimm.utils module</a></li>
 </ul>
@@ -110,8 +119,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">pysimm</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pysimm</a>
+        
       </nav>
 
 
@@ -120,25 +131,42 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
           <li><a href="pysimm.html">pysimm package</a> &raquo;</li>
-      
-    <li>pysimm.lmps module</li>
+        
+      <li>pysimm.lmps module</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/pysimm.lmps.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/pysimm.lmps.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -195,7 +223,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> &#8211; pysimm.lmps.Simulation object reference</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> – pysimm.lmps.Simulation object reference</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">input string</td>
 </tr>
@@ -273,7 +301,7 @@
 <dl class="attribute">
 <dt id="pysimm.lmps.Init.cutoff">
 <code class="descname">cutoff</code><a class="headerlink" href="#pysimm.lmps.Init.cutoff" title="Permalink to this definition">¶</a></dt>
-<dd><p>dictionary of cutoff distances for nonbonded interactions; default={&#8216;lj&#8217;: 12.0, &#8216;coul&#8217;: 12.0, &#8216;inner_lj&#8217;: 10.0}</p>
+<dd><p>dictionary of cutoff distances for nonbonded interactions; default={‘lj’: 12.0, ‘coul’: 12.0, ‘inner_lj’: 10.0}</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -332,7 +360,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> &#8211; <a class="reference internal" href="#pysimm.lmps.Simulation" title="pysimm.lmps.Simulation"><code class="xref py py-class docutils literal"><span class="pre">Simulation</span></code></a> object reference</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> – <a class="reference internal" href="#pysimm.lmps.Simulation" title="pysimm.lmps.Simulation"><code class="xref py py-class docutils literal"><span class="pre">Simulation</span></code></a> object reference</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">string of LAMMPS input</td>
 </tr>
@@ -369,7 +397,7 @@
 <dl class="attribute">
 <dt id="pysimm.lmps.Minimization.min_style">
 <code class="descname">min_style</code><a class="headerlink" href="#pysimm.lmps.Minimization.min_style" title="Permalink to this definition">¶</a></dt>
-<dd><p>LAMMPS minimization style default=&#8217;sd&#8217;</p>
+<dd><p>LAMMPS minimization style default=’sd’</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -410,7 +438,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> &#8211; <a class="reference internal" href="#pysimm.lmps.Simulation" title="pysimm.lmps.Simulation"><code class="xref py py-class docutils literal"><span class="pre">Simulation</span></code></a> object reference</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> – <a class="reference internal" href="#pysimm.lmps.Simulation" title="pysimm.lmps.Simulation"><code class="xref py py-class docutils literal"><span class="pre">Simulation</span></code></a> object reference</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">input string</td>
 </tr>
@@ -446,7 +474,7 @@
 <dl class="attribute">
 <dt id="pysimm.lmps.MolecularDynamics.ensemble">
 <code class="descname">ensemble</code><a class="headerlink" href="#pysimm.lmps.MolecularDynamics.ensemble" title="Permalink to this definition">¶</a></dt>
-<dd><p>&#8216;nvt&#8217; or &#8216;npt&#8217; or &#8216;nve&#8217;; default=nve</p>
+<dd><p>‘nvt’ or ‘npt’ or ‘nve’; default=nve</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -499,7 +527,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> &#8211; pysimm.lmps.Simulation object reference</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> – pysimm.lmps.Simulation object reference</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">input string</td>
 </tr>
@@ -571,7 +599,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> &#8211; <a class="reference internal" href="#pysimm.lmps.Simulation" title="pysimm.lmps.Simulation"><code class="xref py py-class docutils literal"><span class="pre">Simulation</span></code></a> object reference</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> – <a class="reference internal" href="#pysimm.lmps.Simulation" title="pysimm.lmps.Simulation"><code class="xref py py-class docutils literal"><span class="pre">Simulation</span></code></a> object reference</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">input string</td>
 </tr>
@@ -678,7 +706,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>custom</strong> &#8211; custom LAMMPS input string to add to Simulation</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>custom</strong> – custom LAMMPS input string to add to Simulation</td>
 </tr>
 </tbody>
 </table>
@@ -693,8 +721,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>template</strong> &#8211; <a class="reference internal" href="#pysimm.lmps.MolecularDynamics" title="pysimm.lmps.MolecularDynamics"><code class="xref py py-class docutils literal"><span class="pre">MolecularDynamics</span></code></a> object reference</li>
-<li><strong>**kwargs</strong> &#8211; if template is None these are passed to <a class="reference internal" href="#pysimm.lmps.MolecularDynamics" title="pysimm.lmps.MolecularDynamics"><code class="xref py py-class docutils literal"><span class="pre">MolecularDynamics</span></code></a> constructor to create new template</li>
+<li><strong>template</strong> – <a class="reference internal" href="#pysimm.lmps.MolecularDynamics" title="pysimm.lmps.MolecularDynamics"><code class="xref py py-class docutils literal"><span class="pre">MolecularDynamics</span></code></a> object reference</li>
+<li><strong>**kwargs</strong> – if template is None these are passed to <a class="reference internal" href="#pysimm.lmps.MolecularDynamics" title="pysimm.lmps.MolecularDynamics"><code class="xref py py-class docutils literal"><span class="pre">MolecularDynamics</span></code></a> constructor to create new template</li>
 </ul>
 </td>
 </tr>
@@ -711,8 +739,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>template</strong> &#8211; <a class="reference internal" href="#pysimm.lmps.Minimization" title="pysimm.lmps.Minimization"><code class="xref py py-class docutils literal"><span class="pre">Minimization</span></code></a> object reference</li>
-<li><strong>**kwargs</strong> &#8211; if template is None these are passed to <a class="reference internal" href="#pysimm.lmps.Minimization" title="pysimm.lmps.Minimization"><code class="xref py py-class docutils literal"><span class="pre">Minimization</span></code></a> constructor to create new template</li>
+<li><strong>template</strong> – <a class="reference internal" href="#pysimm.lmps.Minimization" title="pysimm.lmps.Minimization"><code class="xref py py-class docutils literal"><span class="pre">Minimization</span></code></a> object reference</li>
+<li><strong>**kwargs</strong> – if template is None these are passed to <a class="reference internal" href="#pysimm.lmps.Minimization" title="pysimm.lmps.Minimization"><code class="xref py py-class docutils literal"><span class="pre">Minimization</span></code></a> constructor to create new template</li>
 </ul>
 </td>
 </tr>
@@ -729,8 +757,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>template</strong> &#8211; <a class="reference internal" href="#pysimm.lmps.Qeq" title="pysimm.lmps.Qeq"><code class="xref py py-class docutils literal"><span class="pre">Qeq</span></code></a> object reference</li>
-<li><strong>**kwargs</strong> &#8211; if template is None these are passed to <a class="reference internal" href="#pysimm.lmps.Qeq" title="pysimm.lmps.Qeq"><code class="xref py py-class docutils literal"><span class="pre">Qeq</span></code></a> constructor to create new template</li>
+<li><strong>template</strong> – <a class="reference internal" href="#pysimm.lmps.Qeq" title="pysimm.lmps.Qeq"><code class="xref py py-class docutils literal"><span class="pre">Qeq</span></code></a> object reference</li>
+<li><strong>**kwargs</strong> – if template is None these are passed to <a class="reference internal" href="#pysimm.lmps.Qeq" title="pysimm.lmps.Qeq"><code class="xref py py-class docutils literal"><span class="pre">Qeq</span></code></a> constructor to create new template</li>
 </ul>
 </td>
 </tr>
@@ -752,11 +780,11 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>np</strong> &#8211; number of threads to use (serial by default) default=None</li>
-<li><strong>nanohub</strong> &#8211; dictionary containing nanohub resource information default=None</li>
-<li><strong>init</strong> &#8211; True to write initialization part of LAMMPS input script (set to False if using complete custom input)</li>
-<li><strong>save_input</strong> &#8211; True to save input as pysimm.sim.in</li>
-<li><strong>prefix</strong> &#8211; prefix for running LAMMPS (i.e. - mpiexec)</li>
+<li><strong>np</strong> – number of threads to use (serial by default) default=None</li>
+<li><strong>nanohub</strong> – dictionary containing nanohub resource information default=None</li>
+<li><strong>init</strong> – True to write initialization part of LAMMPS input script (set to False if using complete custom input)</li>
+<li><strong>save_input</strong> – True to save input as pysimm.sim.in</li>
+<li><strong>prefix</strong> – prefix for running LAMMPS (i.e. - mpiexec)</li>
 </ul>
 </td>
 </tr>
@@ -772,7 +800,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -794,7 +822,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> &#8211; <a class="reference internal" href="#pysimm.lmps.Simulation" title="pysimm.lmps.Simulation"><code class="xref py py-class docutils literal"><span class="pre">Simulation</span></code></a> object reference</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sim</strong> – <a class="reference internal" href="#pysimm.lmps.Simulation" title="pysimm.lmps.Simulation"><code class="xref py py-class docutils literal"><span class="pre">Simulation</span></code></a> object reference</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">input string</td>
 </tr>
@@ -843,10 +871,10 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>simulation</strong> &#8211; <a class="reference internal" href="#pysimm.lmps.Simulation" title="pysimm.lmps.Simulation"><code class="xref py py-class docutils literal"><span class="pre">Simulation</span></code></a> object reference</li>
-<li><strong>np</strong> &#8211; number of threads to use</li>
-<li><strong>nanohub</strong> &#8211; dictionary containing nanohub resource information default=None</li>
-<li><strong>prefix</strong> &#8211; prefix for running LAMMPS (i.e. - mpiexec)</li>
+<li><strong>simulation</strong> – <a class="reference internal" href="#pysimm.lmps.Simulation" title="pysimm.lmps.Simulation"><code class="xref py py-class docutils literal"><span class="pre">Simulation</span></code></a> object reference</li>
+<li><strong>np</strong> – number of threads to use</li>
+<li><strong>nanohub</strong> – dictionary containing nanohub resource information default=None</li>
+<li><strong>prefix</strong> – prefix for running LAMMPS (i.e. - mpiexec)</li>
 </ul>
 </td>
 </tr>
@@ -871,9 +899,9 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>s</strong> &#8211; system to calculate energy</li>
-<li><strong>all</strong> &#8211; returns decomposition of energy if True (default: False)</li>
-<li><strong>np</strong> &#8211; number of threads to use for simulation</li>
+<li><strong>s</strong> – system to calculate energy</li>
+<li><strong>all</strong> – returns decomposition of energy if True (default: False)</li>
+<li><strong>np</strong> – number of threads to use for simulation</li>
 </ul>
 </td>
 </tr>
@@ -899,9 +927,9 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>s</strong> &#8211; system to perform simulation on</li>
-<li><strong>np</strong> &#8211; number of threads to use</li>
-<li><strong>nanohub</strong> &#8211; dictionary containing nanohub resource information default=None</li>
+<li><strong>s</strong> – system to perform simulation on</li>
+<li><strong>np</strong> – number of threads to use</li>
+<li><strong>nanohub</strong> – dictionary containing nanohub resource information default=None</li>
 </ul>
 </td>
 </tr>
@@ -921,9 +949,9 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>s</strong> &#8211; system to perform simulation on</li>
-<li><strong>np</strong> &#8211; number of threads to use</li>
-<li><strong>nanohub</strong> &#8211; dictionary containing nanohub resource information default=None</li>
+<li><strong>s</strong> – system to perform simulation on</li>
+<li><strong>np</strong> – number of threads to use</li>
+<li><strong>nanohub</strong> – dictionary containing nanohub resource information default=None</li>
 </ul>
 </td>
 </tr>
@@ -943,9 +971,9 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>s</strong> &#8211; system to perform simulation on</li>
-<li><strong>np</strong> &#8211; number of threads to use</li>
-<li><strong>nanohub</strong> &#8211; dictionary containing nanohub resource information default=None</li>
+<li><strong>s</strong> – system to perform simulation on</li>
+<li><strong>np</strong> – number of threads to use</li>
+<li><strong>nanohub</strong> – dictionary containing nanohub resource information default=None</li>
 </ul>
 </td>
 </tr>
@@ -960,15 +988,18 @@
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="pysimm.system.html" class="btn btn-neutral float-right" title="pysimm.system module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pysimm.system.html" class="btn btn-neutral float-right" title="pysimm.system module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pysimm.cli.html" class="btn btn-neutral" title="pysimm.cli module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pysimm.cli.html" class="btn btn-neutral" title="pysimm.cli module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -999,10 +1030,11 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1',
+            VERSION:'0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

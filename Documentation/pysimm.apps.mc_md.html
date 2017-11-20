@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pysimm.apps.mc_md module &mdash; pysimm 0.1 documentation</title>
+  <title>pysimm.apps.mc_md module &mdash; pysimm 0.2 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="pysimm 0.1 documentation" href="index.html"/>
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pysimm 0.2 documentation" href="index.html"/>
         <link rel="up" title="pysimm.apps package" href="pysimm.apps.html"/>
         <link rel="next" title="pysimm.apps.polymatic module" href="pysimm.apps.polymatic.html"/>
         <link rel="prev" title="pysimm.apps.equilibrate module" href="pysimm.apps.equilibrate.html"/> 
@@ -42,6 +47,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -61,7 +67,7 @@
             
             
               <div class="version">
-                0.1
+                0.2
               </div>
             
           
@@ -82,7 +88,10 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="pysimm.html">pysimm package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="pysimm.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="pysimm.apps.html">pysimm.apps package</a><ul class="current">
@@ -110,8 +119,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">pysimm</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pysimm</a>
+        
       </nav>
 
 
@@ -120,27 +131,44 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
           <li><a href="pysimm.html">pysimm package</a> &raquo;</li>
-      
+        
           <li><a href="pysimm.apps.html">pysimm.apps package</a> &raquo;</li>
-      
-    <li>pysimm.apps.mc_md module</li>
+        
+      <li>pysimm.apps.mc_md module</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/pysimm.apps.mc_md.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/pysimm.apps.mc_md.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -158,19 +186,19 @@ MD and <a class="reference internal" href="pysimm.cassandra.html#module-pysimm.c
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>gas_sst</strong> (list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) &#8211; list items describe a different molecule to be
+<li><strong>gas_sst</strong> (list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) – list items describe a different molecule to be
 inserted by MC</li>
-<li><strong>fixed_sst</strong> (<a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) &#8211; fixed during th MC steps group of atoms (default: None)</li>
+<li><strong>fixed_sst</strong> (<a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) – fixed during th MC steps group of atoms (default: None)</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><strong>mcmd_niter</strong> (<em>int</em>) &#8211; number of MC-MD iterations (default: 10)</li>
-<li><strong>sim_folder</strong> (<em>str</em>) &#8211; relative path to the folder with all simulation files (default: &#8216;results&#8217;)</li>
-<li><strong>mc_props</strong> (<em>dictionary</em>) &#8211; description of  all MC properties needed for simulations (see
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>mcmd_niter</strong> (<em>int</em>) – number of MC-MD iterations (default: 10)</li>
+<li><strong>sim_folder</strong> (<em>str</em>) – relative path to the folder with all simulation files (default: ‘results’)</li>
+<li><strong>mc_props</strong> (<em>dictionary</em>) – description of  all MC properties needed for simulations (see
 <a class="reference internal" href="pysimm.cassandra.html#pysimm.cassandra.GCMC" title="pysimm.cassandra.GCMC"><code class="xref py py-class docutils literal"><span class="pre">GCMC</span></code></a> and <code class="xref py py-class docutils literal"><span class="pre">props</span></code> for details)</li>
-<li><strong>md_props</strong> (<em>dictionary</em>) &#8211; description of all Molecular Dynamics settings needed for simulations (see
+<li><strong>md_props</strong> (<em>dictionary</em>) – description of all Molecular Dynamics settings needed for simulations (see
 <a class="reference internal" href="pysimm.lmps.html#pysimm.lmps.Simulation" title="pysimm.lmps.Simulation"><code class="xref py py-class docutils literal"><span class="pre">Simulation</span></code></a> and <a class="reference internal" href="pysimm.lmps.html#pysimm.lmps.MolecularDynamics" title="pysimm.lmps.MolecularDynamics"><code class="xref py py-class docutils literal"><span class="pre">MolecularDynamics</span></code></a> for details)</li>
 </ul>
 </td>
@@ -189,15 +217,18 @@ inserted by MC</li>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="pysimm.apps.polymatic.html" class="btn btn-neutral float-right" title="pysimm.apps.polymatic module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pysimm.apps.polymatic.html" class="btn btn-neutral float-right" title="pysimm.apps.polymatic module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pysimm.apps.equilibrate.html" class="btn btn-neutral" title="pysimm.apps.equilibrate module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pysimm.apps.equilibrate.html" class="btn btn-neutral" title="pysimm.apps.equilibrate module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -228,10 +259,11 @@ inserted by MC</li>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1',
+            VERSION:'0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

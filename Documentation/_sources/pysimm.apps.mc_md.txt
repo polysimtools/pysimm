@@ -1,7 +1,0 @@
-pysimm.apps.mc_md module
-========================
-
-.. automodule:: pysimm.apps.mc_md
-    :members:
-    :undoc-members:
-    :show-inheritance:

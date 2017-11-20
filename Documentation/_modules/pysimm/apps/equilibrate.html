@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pysimm.apps.equilibrate &mdash; pysimm 0.1 documentation</title>
+  <title>pysimm.apps.equilibrate &mdash; pysimm 0.2 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="pysimm 0.1 documentation" href="../../../index.html"/>
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="pysimm 0.2 documentation" href="../../../index.html"/>
         <link rel="up" title="pysimm" href="../../pysimm.html"/> 
 
   
@@ -40,6 +45,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -59,7 +65,7 @@
             
             
               <div class="version">
-                0.1
+                0.2
               </div>
             
           
@@ -80,7 +86,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../pysimm.html">pysimm package</a></li>
 </ul>
 
@@ -94,8 +103,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">pysimm</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pysimm</a>
+        
       </nav>
 
 
@@ -108,21 +119,38 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-      
+        
           <li><a href="../../pysimm.html">pysimm</a> &raquo;</li>
-      
-    <li>pysimm.apps.equilibrate</li>
+        
+      <li>pysimm.apps.equilibrate</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -160,15 +188,15 @@
 <span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
 <span class="c1"># THE SOFTWARE.</span>
 
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">izip</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">izip</span>
 
-<span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">system</span><span class="p">,</span> <span class="n">lmps</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">system</span><span class="p">,</span> <span class="n">lmps</span>
 
-<span class="n">rappture</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">rappture</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">Rappture</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">rappture</span> <span class="o">=</span> <span class="bp">False</span>
+    <span class="n">rappture</span> <span class="o">=</span> <span class="kc">False</span>
 
 
 <div class="viewcode-block" id="equil"><a class="viewcode-back" href="../../../pysimm.apps.equilibrate.html#pysimm.apps.equilibrate.equil">[docs]</a><span class="k">def</span> <span class="nf">equil</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -227,6 +255,9 @@
 </pre></div>
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -257,10 +288,11 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'0.1',
+            VERSION:'0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>
