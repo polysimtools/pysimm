@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pysimm.apps.poreblazer &mdash; pysimm 0.1 documentation</title>
+  <title>pysimm.apps.poreblazer &mdash; pysimm 0.2 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="pysimm 0.1 documentation" href="../../../index.html"/>
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="pysimm 0.2 documentation" href="../../../index.html"/>
         <link rel="up" title="pysimm" href="../../pysimm.html"/> 
 
   
@@ -40,6 +45,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -59,7 +65,7 @@
             
             
               <div class="version">
-                0.1
+                0.2
               </div>
             
           
@@ -80,7 +86,10 @@
           
             
             
-                <ul>
+              
+            
+            
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../pysimm.html">pysimm package</a></li>
 </ul>
 
@@ -94,8 +103,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">pysimm</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pysimm</a>
+        
       </nav>
 
 
@@ -108,21 +119,38 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-      
+        
           <li><a href="../../pysimm.html">pysimm</a> &raquo;</li>
-      
-    <li>pysimm.apps.poreblazer</li>
+        
+      <li>pysimm.apps.poreblazer</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -161,13 +189,13 @@
 <span class="c1"># THE SOFTWARE.</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">call</span><span class="p">,</span> <span class="n">PIPE</span>
-<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">randint</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">strftime</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">call</span><span class="p">,</span> <span class="n">PIPE</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">randint</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="k">import</span> <span class="n">strftime</span>
 <span class="kn">import</span> <span class="nn">shlex</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">Rappture.tools</span> <span class="kn">import</span> <span class="n">getCommandOutput</span> <span class="k">as</span> <span class="n">RapptureExec</span>
+    <span class="kn">from</span> <span class="nn">Rappture.tools</span> <span class="k">import</span> <span class="n">getCommandOutput</span> <span class="k">as</span> <span class="n">RapptureExec</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="k">pass</span>
 
@@ -226,27 +254,27 @@
         <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particle_types</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="se">\t</span><span class="si">%f</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">sigma</span><span class="p">))</span>
 
-    <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">gen_files</span><span class="p">:</span>
         <span class="k">return</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting pore size distribution simulation using poreblazer&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting pore size distribution simulation using poreblazer&#39;</span>
           <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">nanohub</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: sending pore size distribution simulation to computer cluster&#39;</span> <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: sending pore size distribution simulation to computer cluster&#39;</span> <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;submit -n 1 -w </span><span class="si">%s</span><span class="s1"> -i psd.in -i ff.atoms -i data.xyz &#39;</span>
                <span class="s1">&#39;poreblazer-2.0.0_psd &lt; psd.in&#39;</span>
                <span class="o">%</span> <span class="p">(</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="p">))</span>
-        <span class="n">stdo</span><span class="p">,</span> <span class="n">stde</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+        <span class="n">stdo</span><span class="p">,</span> <span class="n">stde</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">stdin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;psd.in&#39;</span><span class="p">)</span>
         <span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;psd.out&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
-        <span class="n">call</span><span class="p">(</span><span class="n">exec_path</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">call</span><span class="p">(</span><span class="n">exec_path</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">stdin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">stdout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: pore size distribution simulation using poreblazer successful&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: pore size distribution simulation using poreblazer successful&#39;</span>
           <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span></div>
 
 
@@ -294,16 +322,16 @@
         <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particle_types</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="se">\t</span><span class="si">%f</span><span class="se">\t</span><span class="si">%f</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">mass</span><span class="p">))</span>
 
-    <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting surface area simulation using poreblazer&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting surface area simulation using poreblazer&#39;</span>
           <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
     <span class="n">stdin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;surf_area.in&#39;</span><span class="p">)</span>
     <span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;surf_area.out&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
-    <span class="n">call</span><span class="p">(</span><span class="n">exec_path</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">call</span><span class="p">(</span><span class="n">exec_path</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">stdin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">stdout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: surface area simulation using poreblazer successful&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: surface area simulation using poreblazer successful&#39;</span>
           <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
 
     <span class="n">s</span><span class="o">.</span><span class="n">surf_area</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;surf_area.out&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -355,16 +383,16 @@
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="se">\t</span><span class="si">%f</span><span class="se">\t</span><span class="si">%f</span><span class="se">\t</span><span class="si">%f</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span>
                                           <span class="n">pt</span><span class="o">.</span><span class="n">epsilon</span><span class="o">/</span><span class="n">boltzmann_kcal</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">mass</span><span class="p">))</span>
 
-    <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting pore volume simulation using poreblazer&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting pore volume simulation using poreblazer&#39;</span>
           <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
     <span class="n">stdin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;pore_volume.in&#39;</span><span class="p">)</span>
     <span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;pore_volume.out&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
-    <span class="n">call</span><span class="p">(</span><span class="n">exec_path</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">call</span><span class="p">(</span><span class="n">exec_path</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">stdin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">stdout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: pore volume simulation using poreblazer successful&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: pore volume simulation using poreblazer successful&#39;</span>
           <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
 
     <span class="n">s</span><span class="o">.</span><span class="n">pore_volume</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;pore_volume.out&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -416,16 +444,16 @@
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="se">\t</span><span class="si">%f</span><span class="se">\t</span><span class="si">%f</span><span class="se">\t</span><span class="si">%f</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span>
                                           <span class="n">pt</span><span class="o">.</span><span class="n">epsilon</span><span class="o">/</span><span class="n">boltzmann_kcal</span><span class="p">,</span> <span class="n">pt</span><span class="o">.</span><span class="n">mass</span><span class="p">))</span>
 
-    <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting void volume simulation using poreblazer&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: starting void volume simulation using poreblazer&#39;</span>
           <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
     <span class="n">stdin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;void_volume.in&#39;</span><span class="p">)</span>
     <span class="n">stdout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;void_volume.out&#39;</span><span class="p">,</span> <span class="s1">&#39;w+&#39;</span><span class="p">)</span>
-    <span class="n">call</span><span class="p">(</span><span class="n">exec_path</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">call</span><span class="p">(</span><span class="n">exec_path</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">stdout</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">stdin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">stdout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: void volume simulation using poreblazer successful&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: void volume simulation using poreblazer successful&#39;</span>
           <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
 
     <span class="n">s</span><span class="o">.</span><span class="n">void_volume</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;void_volume.out&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
@@ -435,6 +463,9 @@
     <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">void_volume</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">frac_free_volume</span></div>
 </pre></div>
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -466,10 +497,11 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'0.1',
+            VERSION:'0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

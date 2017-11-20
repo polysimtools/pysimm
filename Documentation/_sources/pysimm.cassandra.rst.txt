@@ -1,0 +1,7 @@
+pysimm\.cassandra module
+========================
+
+.. automodule:: pysimm.cassandra
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pysimm.apps.poreblazer module &mdash; pysimm 0.1 documentation</title>
+  <title>pysimm.apps.poreblazer module &mdash; pysimm 0.2 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="pysimm 0.1 documentation" href="index.html"/>
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pysimm 0.2 documentation" href="index.html"/>
         <link rel="up" title="pysimm.apps package" href="pysimm.apps.html"/>
         <link rel="next" title="pysimm.apps.random_walk module" href="pysimm.apps.random_walk.html"/>
         <link rel="prev" title="pysimm.apps.polymatic module" href="pysimm.apps.polymatic.html"/> 
@@ -42,6 +47,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -61,7 +67,7 @@
             
             
               <div class="version">
-                0.1
+                0.2
               </div>
             
           
@@ -82,7 +88,10 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="pysimm.html">pysimm package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="pysimm.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="pysimm.apps.html">pysimm.apps package</a><ul class="current">
@@ -110,8 +119,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">pysimm</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pysimm</a>
+        
       </nav>
 
 
@@ -120,27 +131,44 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
           <li><a href="pysimm.html">pysimm package</a> &raquo;</li>
-      
+        
           <li><a href="pysimm.apps.html">pysimm.apps package</a> &raquo;</li>
-      
-    <li>pysimm.apps.poreblazer module</li>
+        
+      <li>pysimm.apps.poreblazer module</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/pysimm.apps.poreblazer.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/pysimm.apps.poreblazer.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -157,13 +185,13 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>atoms</strong> &#8211; file name to contain ff parameters (ff.atoms)</li>
-<li><strong>data</strong> &#8211; file name to write xyz file (data.xyz)</li>
-<li><strong>angles</strong> &#8211; angles of simlation box (90.0 90.0 90.0)</li>
-<li><strong>insertions</strong> &#8211; number of insertions for calculation (1000)</li>
-<li><strong>temp</strong> &#8211; temperature at which to perform simulation (300)</li>
-<li><strong>pore_probe</strong> &#8211; sigma, epsilon, cutoff parameters for probe (2.58, 10.22, 12.8)</li>
-<li><strong>exec_path</strong> &#8211; path to poreblazer pore executable (pore_he.exe)</li>
+<li><strong>atoms</strong> – file name to contain ff parameters (ff.atoms)</li>
+<li><strong>data</strong> – file name to write xyz file (data.xyz)</li>
+<li><strong>angles</strong> – angles of simlation box (90.0 90.0 90.0)</li>
+<li><strong>insertions</strong> – number of insertions for calculation (1000)</li>
+<li><strong>temp</strong> – temperature at which to perform simulation (300)</li>
+<li><strong>pore_probe</strong> – sigma, epsilon, cutoff parameters for probe (2.58, 10.22, 12.8)</li>
+<li><strong>exec_path</strong> – path to poreblazer pore executable (pore_he.exe)</li>
 </ul>
 </td>
 </tr>
@@ -183,17 +211,17 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>atoms</strong> &#8211; file name to contain ff parameters (ff.atoms)</li>
-<li><strong>data</strong> &#8211; file name to write xyz file (data.xyz)</li>
-<li><strong>angles</strong> &#8211; angles of simlation box (90.0 90.0 90.0)</li>
-<li><strong>insertions</strong> &#8211; number of insertions for calculation (500)</li>
-<li><strong>min_probe</strong> &#8211; minimum probe size (1.0)</li>
-<li><strong>probe_dr</strong> &#8211; step size to increase probe size (0.2)</li>
-<li><strong>max_probe</strong> &#8211; maximum probe size: 25</li>
-<li><strong>psd_save</strong> &#8211; T/F to save psd points (F)</li>
-<li><strong>psd_range</strong> &#8211; range in which to save psd points (2.5,3.8)</li>
-<li><strong>exec_path</strong> &#8211; path to poreblazer psd executable (psd.exe)</li>
-<li><strong>gen_files</strong> &#8211; if True, only generate input do not execute (None)</li>
+<li><strong>atoms</strong> – file name to contain ff parameters (ff.atoms)</li>
+<li><strong>data</strong> – file name to write xyz file (data.xyz)</li>
+<li><strong>angles</strong> – angles of simlation box (90.0 90.0 90.0)</li>
+<li><strong>insertions</strong> – number of insertions for calculation (500)</li>
+<li><strong>min_probe</strong> – minimum probe size (1.0)</li>
+<li><strong>probe_dr</strong> – step size to increase probe size (0.2)</li>
+<li><strong>max_probe</strong> – maximum probe size: 25</li>
+<li><strong>psd_save</strong> – T/F to save psd points (F)</li>
+<li><strong>psd_range</strong> – range in which to save psd points (2.5,3.8)</li>
+<li><strong>exec_path</strong> – path to poreblazer psd executable (psd.exe)</li>
+<li><strong>gen_files</strong> – if True, only generate input do not execute (None)</li>
 </ul>
 </td>
 </tr>
@@ -213,14 +241,14 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>atoms</strong> &#8211; file name to contain ff parameters (ff.atoms)</li>
-<li><strong>data</strong> &#8211; file name to write xyz file (data.xyz)</li>
-<li><strong>angles</strong> &#8211; angles of simlation box (90.0 90.0 90.0)</li>
-<li><strong>insertions</strong> &#8211; number of insertions for calculation (1000)</li>
-<li><strong>probe</strong> &#8211; probe size (3.681)</li>
-<li><strong>probe_type</strong> &#8211; type of probe (hs)</li>
-<li><strong>vis</strong> &#8211; True to save visual (F)</li>
-<li><strong>exec_path</strong> &#8211; path to poreblazer surface executable (surface.exe)</li>
+<li><strong>atoms</strong> – file name to contain ff parameters (ff.atoms)</li>
+<li><strong>data</strong> – file name to write xyz file (data.xyz)</li>
+<li><strong>angles</strong> – angles of simlation box (90.0 90.0 90.0)</li>
+<li><strong>insertions</strong> – number of insertions for calculation (1000)</li>
+<li><strong>probe</strong> – probe size (3.681)</li>
+<li><strong>probe_type</strong> – type of probe (hs)</li>
+<li><strong>vis</strong> – True to save visual (F)</li>
+<li><strong>exec_path</strong> – path to poreblazer surface executable (surface.exe)</li>
 </ul>
 </td>
 </tr>
@@ -240,13 +268,13 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>atoms</strong> &#8211; file name to contain ff parameters (ff.atoms)</li>
-<li><strong>data</strong> &#8211; file name to write xyz file (data.xyz)</li>
-<li><strong>angles</strong> &#8211; angles of simlation box (90.0 90.0 90.0)</li>
-<li><strong>insertions</strong> &#8211; number of insertions for calculation (1000)</li>
-<li><strong>temp</strong> &#8211; temperature at which to perform simulation (300)</li>
-<li><strong>pore_probe</strong> &#8211; sigma, epsilon, cutoff parameters for probe (0.00, 10.22, 12.8)</li>
-<li><strong>exec_path</strong> &#8211; path to poreblazer pore executable (pore_he.exe)</li>
+<li><strong>atoms</strong> – file name to contain ff parameters (ff.atoms)</li>
+<li><strong>data</strong> – file name to write xyz file (data.xyz)</li>
+<li><strong>angles</strong> – angles of simlation box (90.0 90.0 90.0)</li>
+<li><strong>insertions</strong> – number of insertions for calculation (1000)</li>
+<li><strong>temp</strong> – temperature at which to perform simulation (300)</li>
+<li><strong>pore_probe</strong> – sigma, epsilon, cutoff parameters for probe (0.00, 10.22, 12.8)</li>
+<li><strong>exec_path</strong> – path to poreblazer pore executable (pore_he.exe)</li>
 </ul>
 </td>
 </tr>
@@ -261,15 +289,18 @@
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="pysimm.apps.random_walk.html" class="btn btn-neutral float-right" title="pysimm.apps.random_walk module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pysimm.apps.random_walk.html" class="btn btn-neutral float-right" title="pysimm.apps.random_walk module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pysimm.apps.polymatic.html" class="btn btn-neutral" title="pysimm.apps.polymatic module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pysimm.apps.polymatic.html" class="btn btn-neutral" title="pysimm.apps.polymatic module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -300,10 +331,11 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1',
+            VERSION:'0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

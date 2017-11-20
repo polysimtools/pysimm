@@ -8,9 +8,11 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pysimm.cassandra module &mdash; pysimm 0.1 documentation</title>
+  <title>pysimm.cassandra module &mdash; pysimm 0.2 documentation</title>
   
 
+  
+  
   
   
 
@@ -30,7 +32,10 @@
   
 
   
-    <link rel="top" title="pysimm 0.1 documentation" href="index.html"/>
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pysimm 0.2 documentation" href="index.html"/>
         <link rel="up" title="pysimm package" href="pysimm.html"/>
         <link rel="next" title="pysimm.cli module" href="pysimm.cli.html"/>
         <link rel="prev" title="pysimm.calc module" href="pysimm.calc.html"/> 
@@ -42,6 +47,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -61,7 +67,7 @@
             
             
               <div class="version">
-                0.1
+                0.2
               </div>
             
           
@@ -82,13 +88,16 @@
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="pysimm.html">pysimm package</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pysimm.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="pysimm.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="pysimm.amber.html">pysimm.amber module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.calc.html">pysimm.calc module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">pysimm.cassandra module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pysimm.cassandra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.cli.html">pysimm.cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.lmps.html">pysimm.lmps module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.system.html">pysimm.system module</a></li>
@@ -110,8 +119,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">pysimm</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pysimm</a>
+        
       </nav>
 
 
@@ -120,25 +131,42 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
           <li><a href="pysimm.html">pysimm package</a> &raquo;</li>
-      
-    <li>pysimm.cassandra module</li>
+        
+      <li>pysimm.cassandra module</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="_sources/pysimm.cassandra.txt" rel="nofollow"> View page source</a>
+            
+            <a href="_sources/pysimm.cassandra.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -155,7 +183,7 @@ Canonical Monte-Carlo (GCMC <a class="reference internal" href="#pysimm.cassandr
 <dl class="attribute">
 <dt id="pysimm.cassandra.Cassandra.init_sst">
 <code class="descname">init_sst</code><a class="headerlink" href="#pysimm.cassandra.Cassandra.init_sst" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> &#8211; molecular system before the simulations</p>
+<dd><p><a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> – molecular system before the simulations</p>
 </dd></dl>
 
 <table class="docutils field-list" frame="void" rules="none">
@@ -163,8 +191,8 @@ Canonical Monte-Carlo (GCMC <a class="reference internal" href="#pysimm.cassandr
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>final_sst</strong> (<a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) &#8211; molecular system after the simulations</li>
-<li><strong>run_queue</strong> (<em>list</em>) &#8211; the list of scheduled tasks</li>
+<li><strong>final_sst</strong> (<a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) – molecular system after the simulations</li>
+<li><strong>run_queue</strong> (<em>list</em>) – the list of scheduled tasks</li>
 </ul>
 </td>
 </tr>
@@ -178,13 +206,13 @@ Canonical Monte-Carlo (GCMC <a class="reference internal" href="#pysimm.cassandr
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>obj</strong> &#8211; the entity that should be added. Will be ignored if it is not of a type  <a class="reference internal" href="#pysimm.cassandra.GCMC" title="pysimm.cassandra.GCMC"><code class="xref py py-class docutils literal"><span class="pre">GCMC</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>obj</strong> – the entity that should be added. Will be ignored if it is not of a type  <a class="reference internal" href="#pysimm.cassandra.GCMC" title="pysimm.cassandra.GCMC"><code class="xref py py-class docutils literal"><span class="pre">GCMC</span></code></a></p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
-<li><strong>is_new</strong> (<em>boolean</em>) &#8211; defines whether all previous simulations should be erased or not</li>
-<li><strong>species</strong> (list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) &#8211; systems that describe molecules and will be passed to
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>is_new</strong> (<em>boolean</em>) – defines whether all previous simulations should be erased or not</li>
+<li><strong>species</strong> (list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) – systems that describe molecules and will be passed to
 <a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a> constructor.</li>
 </ul>
 </td>
@@ -207,7 +235,7 @@ one according to the instruction name.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>inp_file</strong> (<em>str</em>) &#8211; the full relative path of the file to be read</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>inp_file</strong> (<em>str</em>) – the full relative path of the file to be read</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">read CASSANDRA properties in the format required by <a class="reference internal" href="#pysimm.cassandra.GCMC" title="pysimm.cassandra.GCMC"><code class="xref py py-class docutils literal"><span class="pre">GCMC</span></code></a></td>
 </tr>
@@ -236,13 +264,13 @@ finished.</p>
 <dl class="attribute">
 <dt id="pysimm.cassandra.GCMC.mc_sst">
 <code class="descname">mc_sst</code><a class="headerlink" href="#pysimm.cassandra.GCMC.mc_sst" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a> &#8211; describes all molecules to be inserted by CASSANDRA</p>
+<dd><p><a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a> – describes all molecules to be inserted by CASSANDRA</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pysimm.cassandra.GCMC.fxd_sst">
 <code class="descname">fxd_sst</code><a class="headerlink" href="#pysimm.cassandra.GCMC.fxd_sst" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> &#8211; describes the optional fixed molecular system for MC simulations
+<dd><p><a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> – describes the optional fixed molecular system for MC simulations
 (default: None)</p>
 </dd></dl>
 
@@ -251,10 +279,10 @@ finished.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
-<li><strong>out_folder</strong> (<em>str</em>) &#8211; the relative path of the simulation results (all .dat, .mcf, as well as .chk, ... files will
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>out_folder</strong> (<em>str</em>) – the relative path of the simulation results (all .dat, .mcf, as well as .chk, … files will
 go there). If the folder does not exist it will be created with 0755 permissions.</li>
-<li><strong>props_file</strong> (<em>str</em>) &#8211; the name of the  .inp file.</li>
+<li><strong>props_file</strong> (<em>str</em>) – the name of the  .inp file.</li>
 </ul>
 </td>
 </tr>
@@ -264,7 +292,7 @@ go there). If the folder does not exist it will be created with 0755 permissions
 <p class="first admonition-title">Note</p>
 <p>Other keyword arguments that are accepted are the GCMC simulation settings. The keywords of the settings
 are the same as they are described in CASSANDRA specification but without # symbol.</p>
-<p class="last"><strong>For example</strong>: the keyword argument <cite>Run_Name=&#8217;my_simulation&#8217;</cite> will set <cite>#Run_Name</cite> setting in CASSANDRA
+<p class="last"><strong>For example</strong>: the keyword argument <cite>Run_Name=’my_simulation’</cite> will set <cite>#Run_Name</cite> setting in CASSANDRA
 input file to <cite>my_simulation</cite> value</p>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
@@ -272,9 +300,9 @@ input file to <cite>my_simulation</cite> value</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>props</strong> (<em>dictionary</em>) &#8211; include all simulation settings to be written to the CASSANDRA .inp file</li>
-<li><strong>input</strong> (<em>str</em>) &#8211; text stream that will be written to the CASSANDRA .inp file</li>
-<li><strong>tot_sst</strong> (<a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) &#8211; object containing the results of CASSANDRA simulations</li>
+<li><strong>props</strong> (<em>dictionary</em>) – include all simulation settings to be written to the CASSANDRA .inp file</li>
+<li><strong>input</strong> (<em>str</em>) – text stream that will be written to the CASSANDRA .inp file</li>
+<li><strong>tot_sst</strong> (<a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) – object containing the results of CASSANDRA simulations</li>
 </ul>
 </td>
 </tr>
@@ -291,17 +319,17 @@ properties defined by the input keyword argument argument.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><strong>group_key</strong> (<em>str</em>) &#8211; <p>text constant defines the property to match. Possible keywords are:</p>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><strong>group_key</strong> (<em>str</em>) – <p>text constant defines the property to match. Possible keywords are:</p>
 <ol class="arabic simple">
-<li><cite>matrix</cite> &#8211; (default) indexes of the atoms in <a class="reference internal" href="#pysimm.cassandra.GCMC.fxd_sst" title="pysimm.cassandra.GCMC.fxd_sst"><code class="xref py py-obj docutils literal"><span class="pre">fxd_sst</span></code></a></li>
-<li><cite>rigid</cite> &#8211; indexes of all atoms that have rigid atomic bonds. It is assumed here that rigid and
+<li><cite>matrix</cite> – (default) indexes of the atoms in <a class="reference internal" href="#pysimm.cassandra.GCMC.fxd_sst" title="pysimm.cassandra.GCMC.fxd_sst"><code class="xref py py-obj docutils literal"><span class="pre">fxd_sst</span></code></a></li>
+<li><cite>rigid</cite> – indexes of all atoms that have rigid atomic bonds. It is assumed here that rigid and
 nonrigid atoms can interact only through intermolecular forces</li>
-<li><cite>nonrigid</cite> &#8211; opposite of previous, indexes of all atoms that have nonrigid atomic bonds</li>
+<li><cite>nonrigid</cite> – opposite of previous, indexes of all atoms that have nonrigid atomic bonds</li>
 </ol>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">string in format <cite>a1:b1 a2:b2 ...</cite> where all indexes inside <cite>[ak, bk]</cite> belongs to the selected group
-and array of the form <cite>[[a1, b1], [a2, b2], ...]</cite></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">string in format <cite>a1:b1 a2:b2 …</cite> where all indexes inside <cite>[ak, bk]</cite> belongs to the selected group
+and array of the form <cite>[[a1, b1], [a2, b2], …]</cite></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
 </tr>
@@ -312,7 +340,7 @@ and array of the form <cite>[[a1, b1], [a2, b2], ...]</cite></td>
 <dl class="method">
 <dt id="pysimm.cassandra.GCMC.upd_simulation">
 <code class="descname">upd_simulation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#GCMC.upd_simulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.GCMC.upd_simulation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the <code class="xref py py-class docutils literal"><span class="pre">tot_sst</span></code> field using the <cite>GCMC.props[&#8216;Run_Name&#8217;].chk</cite> file. Will try to parse the
+<dd><p>Updates the <code class="xref py py-class docutils literal"><span class="pre">tot_sst</span></code> field using the <cite>GCMC.props[‘Run_Name’].chk</cite> file. Will try to parse the
 checkpoint file and read the coordinates of the molecules inserted by CASSANDRA. If neither of the molecules
 from the <a class="reference internal" href="#pysimm.cassandra.GCMC.mc_sst" title="pysimm.cassandra.GCMC.mc_sst"><code class="xref py py-class docutils literal"><span class="pre">mc_sst</span></code></a> can be fit to the text that was read the method will raise an exception. The
 fitting method: <a class="reference internal" href="#pysimm.cassandra.McSystem.make_system" title="pysimm.cassandra.McSystem.make_system"><code class="xref py py-class docutils literal"><span class="pre">make_system</span></code></a> assumes that different molecules inserted by CASSANDRA have
@@ -350,19 +378,19 @@ probabilities in the CASSANDRA input file.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>key</strong> (<em>str</em>) &#8211; the keyword of the simulation option (literally the string that goes after the # sign in
+<li><strong>key</strong> (<em>str</em>) – the keyword of the simulation option (literally the string that goes after the # sign in
 CASSANDRA .inp file)</li>
-<li><strong>value</strong> (<em>object</em>) &#8211; numerical or text values of the particular simulation option structured in a certain way.
+<li><strong>value</strong> (<em>object</em>) – numerical or text values of the particular simulation option structured in a certain way.
 Here goes only the values that are wished to be changed (it might be just one field of a big dictionary)</li>
-<li><strong>default</strong> (<em>object</em>) &#8211; the most complete default description of the simulation option</li>
+<li><strong>default</strong> (<em>object</em>) – the most complete default description of the simulation option</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
-<li><strong>write_headers</strong> (<em>boolean</em>) &#8211; if the <code class="xref py py-obj docutils literal"><span class="pre">value</span></code> is dictionary defines whether the dictionary keys should be
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>write_headers</strong> (<em>boolean</em>) – if the <code class="xref py py-obj docutils literal"><span class="pre">value</span></code> is dictionary defines whether the dictionary keys should be
 written to the output</li>
-<li><strong>new_line</strong> (<em>boolean</em>) &#8211; if the <code class="xref py py-obj docutils literal"><span class="pre">value</span></code> is iterable defines whether each new element will be written to
+<li><strong>new_line</strong> (<em>boolean</em>) – if the <code class="xref py py-obj docutils literal"><span class="pre">value</span></code> is iterable defines whether each new element will be written to
 the new line</li>
 </ul>
 </td>
@@ -397,7 +425,7 @@ creating .dat and .mcf files needed for the simulation and reading back the CASS
 <dl class="attribute">
 <dt id="pysimm.cassandra.McSystem.sst">
 <code class="descname">sst</code><a class="headerlink" href="#pysimm.cassandra.McSystem.sst" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> &#8211; items representing single molecules of different species to be
+<dd><p>list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> – items representing single molecules of different species to be
 inserted by CASSANDRA. If the sst is a list (not a single value) it is assumed that all of the following
 properties are synchronized with it by indexes.</p>
 </dd></dl>
@@ -405,7 +433,7 @@ properties are synchronized with it by indexes.</p>
 <dl class="attribute">
 <dt id="pysimm.cassandra.McSystem.chem_pot">
 <code class="descname">chem_pot</code><a class="headerlink" href="#pysimm.cassandra.McSystem.chem_pot" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>list of int</em> &#8211; chemical potential for each specie [Joule/mol]</p>
+<dd><p><em>list of int</em> – chemical potential for each specie [Joule/mol]</p>
 </dd></dl>
 
 <table class="docutils field-list" frame="void" rules="none">
@@ -413,20 +441,20 @@ properties are synchronized with it by indexes.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><strong>max_ins</strong> (<em>list of int</em>) &#8211; defines the highest possible number of molecules of corresponding specie.
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><strong>max_ins</strong> (<em>list of int</em>) – defines the highest possible number of molecules of corresponding specie.
 Basing on these values CASSANDRA allocates memory for simulations. (default: 5000).</li>
-<li><strong>is_rigid</strong> (<em>list of boolean</em>) &#8211; defines whether the atoms in the particular molecule should be marked as rigid
-or not. <strong>Important!</strong> In current implementation the module doesn&#8217;t support flexible molecule angles, so
+<li><strong>is_rigid</strong> (<em>list of boolean</em>) – defines whether the atoms in the particular molecule should be marked as rigid
+or not. <strong>Important!</strong> In current implementation the module doesn’t support flexible molecule angles, so
 the <cite>is_rigid=False</cite> is designed to be used exclusively for <strong>single bead</strong> molecules.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>made_ins</strong> (<em>list of int</em>) &#8211; number of particles of each specie inserted by CASSANDRA.</li>
-<li><strong>mcf_file</strong> (<em>list of str</em>) &#8211; defines full relative names of molecule configuration files <strong>(.mcf)</strong> required by
+<li><strong>made_ins</strong> (<em>list of int</em>) – number of particles of each specie inserted by CASSANDRA.</li>
+<li><strong>mcf_file</strong> (<em>list of str</em>) – defines full relative names of molecule configuration files <strong>(.mcf)</strong> required by
 CASSANDRA. Files will be created automatically.</li>
-<li><strong>frag_file</strong> (<em>list of str</em>) &#8211; defines full relative names of possible relative configuration files <strong>(.dat)</strong>
+<li><strong>frag_file</strong> (<em>list of str</em>) – defines full relative names of possible relative configuration files <strong>(.dat)</strong>
 required by CASSANDRA. Files will be created automatically.</li>
 </ul>
 </td>
@@ -451,7 +479,7 @@ O-C-O fit will fail.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text_output</strong> (<em>str</em>) &#8211; text stream from the CASSANDRA .chk file containing the coordinates of newly inserted
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text_output</strong> (<em>str</em>) – text stream from the CASSANDRA .chk file containing the coordinates of newly inserted
 molecules</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">object containing all newly inserted molecules</td>
@@ -471,8 +499,8 @@ molecules</td>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>frag_record</strong> &#8211; dictionary containing the .dat file names and their ids. The dictionary is to be assigned to</li>
-<li><strong>property of the MC simulation</strong> (<em>'Molecule_Files'</em>) &#8211; </li>
+<li><strong>frag_record</strong> – dictionary containing the .dat file names and their ids. The dictionary is to be assigned to</li>
+<li><strong>property of the MC simulation</strong> (<em>'Molecule_Files'</em>) – </li>
 </ul>
 </td>
 </tr>
@@ -494,8 +522,8 @@ molecules</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>props</strong> (<em>dictionary</em>) &#8211; contains the .mcf file names and maximally allowed number of molecules insertions.
-The dictionary is to be assigned to &#8216;Molecule_Files&#8217; property of the MC simulation</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>props</strong> (<em>dictionary</em>) – contains the .mcf file names and maximally allowed number of molecules insertions.
+The dictionary is to be assigned to ‘Molecule_Files’ property of the MC simulation</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">updated input dictionary</td>
 </tr>
@@ -515,13 +543,13 @@ The dictionary is to be assigned to &#8216;Molecule_Files&#8217; property of the
 <dl class="attribute">
 <dt id="pysimm.cassandra.McfWriter.syst">
 <code class="descname">syst</code><a class="headerlink" href="#pysimm.cassandra.McfWriter.syst" title="Permalink to this definition">¶</a></dt>
-<dd><p><a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> &#8211; represents the molecule to be described</p>
+<dd><p><a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> – represents the molecule to be described</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pysimm.cassandra.McfWriter.file_ref">
 <code class="descname">file_ref</code><a class="headerlink" href="#pysimm.cassandra.McfWriter.file_ref" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> &#8211; full relative path to the file that will be created</p>
+<dd><p><em>str</em> – full relative path to the file that will be created</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -542,8 +570,8 @@ The dictionary is to be assigned to &#8216;Molecule_Files&#8217; property of the
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>typing</strong> (<em>list</em>) &#8211; the list of sections to be written or the text keyword. List items should be as they are
-defined in <a class="reference internal" href="#pysimm.cassandra.McfWriter.mcf_tags" title="pysimm.cassandra.McfWriter.mcf_tags"><code class="xref py py-class docutils literal"><span class="pre">mcf_tags</span></code></a> field); default &#8216;all&#8217;</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>typing</strong> (<em>list</em>) – the list of sections to be written or the text keyword. List items should be as they are
+defined in <a class="reference internal" href="#pysimm.cassandra.McfWriter.mcf_tags" title="pysimm.cassandra.McfWriter.mcf_tags"><code class="xref py py-class docutils literal"><span class="pre">mcf_tags</span></code></a> field); default ‘all’</td>
 </tr>
 </tbody>
 </table>
@@ -568,15 +596,18 @@ of the OS. The validation is called once inside the <a class="reference internal
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="pysimm.cli.html" class="btn btn-neutral float-right" title="pysimm.cli module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pysimm.cli.html" class="btn btn-neutral float-right" title="pysimm.cli module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pysimm.calc.html" class="btn btn-neutral" title="pysimm.calc module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pysimm.calc.html" class="btn btn-neutral" title="pysimm.calc module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -607,10 +638,11 @@ of the OS. The validation is called once inside the <a class="reference internal
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.1',
+            VERSION:'0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>
