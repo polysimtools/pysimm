@@ -512,7 +512,7 @@ class OutputSettings(object):
                 lammps_input += ' '.join(self.dump['args'])
             lammps_input += '\n'
             if self.dump.get('modify'):
-                lammps_input += '{:<15} {} '.format('dump_modify', self.dump.get('modify'))
+                lammps_input += '{:<15} {} {} '.format('dump_modify', self.dump['name'], self.dump.get('modify'))
                 lammps_input += '\n'
             lammps_input += '#'*80 + '\n\n'
         return lammps_input
