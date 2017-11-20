@@ -50,11 +50,9 @@ If the LAMMPS_EXEC environment variable is not set, you will see a warning. Once
 Integration with Cassandra
 ==========================
 
-Cassandra is a versatile software for the Monte-Carlo simulations suitable for the variety of the molecular systems. For more details please refer the [web-page](https://cassandra.nd.edu/) of the Cassandra project. This explains how to integrate already installed Cassandra software to the pysimm. The integration is done through the environment variable CASSANDRA_EXEC. It defines the path to the Cassandra executable (it might be either serial or the parallel Cassandra compilation). If, for example, the Cassandra executable was installed to */usr/lib/cassandra/*, then the following should be set:
+Cassandra is a versatile software for the Monte-Carlo simulations suitable for the variety of the molecular systems. For more details please refer the [web-page](https://cassandra.nd.edu/) of the Cassandra project. This explains how to integrate already installed Cassandra software to the pysimm. The integration is done through the environment variable CASSANDRA_EXEC. It defines the path to the Cassandra executable (it might be either serial or the parallel Cassandra compilation). If, for example, the Cassandra executable named *cs_omp_gfort.exe* was installed to */usr/lib/cassandra/*, the following should be set:
 
 ```export CASSANDRA_EXEC=/usr/lib/cassandra/Src/cs_omp_gfort.exe```
-
-You might want to add this line to your *~/.bashrc* file to have the  environment variable permanently.
 
 The cassandra module of the pysimm will check whether the CASSANDRA_EXEC is set right before the running a simulation. Additionally, in the same way as in the lammps module, the setting can be checked using the code:
 
