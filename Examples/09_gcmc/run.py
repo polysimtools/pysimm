@@ -4,8 +4,8 @@ from pysimm import system, cassandra
 def run(test=False):
     # In order to run CASSANDRA GCMC one need to create the CASSANDRA object
     sst = system.System()
-    sst.forcefield = 'trappe/amber'
     sst.dim = system.Dimension(dx=45, dy=45, dz=45, center=[0, 0, 0])
+    sst.forcefield = 'trappe/amber'
     css = cassandra.Cassandra(sst)
     
     # Read the CASSANDRA .inp parameters file -- common way to setup simulations.

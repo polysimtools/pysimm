@@ -21,12 +21,9 @@ The example uses the hybrid MC-MD for simulation of swelling of an IRMOF-1 metal
 To start simulations, the application should get two **pysimm.system** objects. First, *frame*, is any molecular structure that presumed to be fixed during the MC simulations, and the second, *gas1*, that represents single gas molecule to be inserted by the MC. 
 
 ```python
-frame = system.read_lammps(os.path.join(os.path.dirname(
-					os.path.realpath(__file__)), 'irmof1_drei.lmps'))
+frame = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'irmof1_drei.lmps'))
 frame.forcefield = 'dreiding-lj'
-
-gas1 = system.read_lammps(os.path.join(os.path.dirname(
-					os.path.realpath(__file__)), 'ch4.lmps'))
+gas1 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ch4.lmps'))
 gas1.forcefield = 'trappe/amber'
 ```
 

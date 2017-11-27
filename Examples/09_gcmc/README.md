@@ -19,9 +19,9 @@ If you encounter an error **"ImportError: No module named pysimm"** make sure th
 The cassandra module of the pysimm works with **pysimm.system** objet modyfing it (by addition or replacement) with results of Cassandra simulations. For this example the initial system will be an empty cubic cell with the size of 45 &#8491; cenetred at the origin of the coordinate system. Additionally we explicitly specify the forcefield model for all particles that will be inserted into the system 
 
 ```python
-    sst = system.System()
-    sst.dim = system.Dimension(dx=45, dy=45, dz=45, center=[0, 0, 0])
-    sst.forcefield = 'trappe/amber'
+sst = system.System()
+sst.dim = system.Dimension(dx=45, dy=45, dz=45, center=[0, 0, 0])
+sst.forcefield = 'trappe/amber'
 ```
 
 The system object is passed to the constructor of the main cassandra simulation object 
@@ -37,8 +37,7 @@ The properties of the Cassandra simulation for the pysimm.cassandra module are p
 Let's read the data from the **props.inp** file that is in the same example directory 
 
 ```python
-my_gcmc_props = css.read_input(os.path.join(os.path.dirname(
-							os.path.realpath(__file__)), 'props.inp'))
+my_gcmc_props = css.read_input(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'props.inp'))
 ```
 Now different simulation properties can be modified if needed. Let's, for example, change the prefix of all simulation files that will be created by Cassandra
 
@@ -53,12 +52,9 @@ The setup of a Monte-Carlo simulations should include also the information about
 The example folder contains the LAMMPS files that describe one molecule of each gas specie, so the corresponding  **pysimm.system** objects can be created by reading the files by the **system.read_lammps()** method.
 
 ```python
-specie1 = system.read_lammps(os.path.join(
-		os.path.dirname(os.path.realpath(__file__)), 'co2.lmps'))
-specie2 = system.read_lammps(os.path.join(
-		os.path.dirname(os.path.realpath(__file__)), 'ch4.lmps'))
-specie3 = system.read_lammps(os.path.join(
-		os.path.dirname(os.path.realpath(__file__)), 'm-xylene.lmps'))
+specie1 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'co2.lmps'))
+specie2 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ch4.lmps'))
+specie3 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'm-xylene.lmps'))
 ```
 
 ### Setup and run the simulations
