@@ -2541,7 +2541,7 @@ class System(object):
         if self.write_coeffs and self.improper_types.count > 0:
             out_file.write('Improper Coeffs\n\n')
             for i in self.improper_types:
-                if self.improper_style == 'harmonic' or self.improper_style =='class2':
+                if self.improper_style == 'harmonic' or self.improper_style =='class2' or self.improper_style == 'umbrella':
                     if not i.k:
                         i.k = 0.0
                     if not i.x0:
@@ -4021,6 +4021,10 @@ def read_lammps(data_file, **kwargs):
                 line = line.strip().split()
                 tag = int(line[0])
                 if improper_style and improper_style.lower().startswith('harm'):
+                    s.improper_types.add(ImproperType(tag=tag, name=name,
+                                                      k=float(line[1]),
+                                                      x0=float(line[2])))
+                elif improper_style and improper_style.lower().startswith('umbrella'):
                     s.improper_types.add(ImproperType(tag=tag, name=name,
                                                       k=float(line[1]),
                                                       x0=float(line[2])))
