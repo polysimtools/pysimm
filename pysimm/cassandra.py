@@ -59,8 +59,10 @@ class GCMC(object):
 
     Attributes:
         mc_sst (:class:`~pysimm.cassandra.McSystem`) : describes all molecules to be inserted by CASSANDRA
-        fxd_sst (:class:`~pysimm.system.System`) : describes the optional fixed molecular system for MC simulations
-            (default: None)
+        init_sst (:class:`~pysimm.system.System`) : describes the optional initial fixed molecular configuration for MC
+            simulations (default: empty cubic box with 1 nm side length). If the particles in the system are not
+            attributed with the flag `is_fixed` all of them are considered to be fixed, and will be marked with this
+            flag, otherwise all particles with is_fixed=False will be removed.
 
     Keyword Args:
         out_folder (str) : the relative path of the simulation results (all .dat, .mcf, as well as .chk, ... files will
@@ -80,7 +82,7 @@ class GCMC(object):
         tot_sst (:class:`~pysimm.system.System`) : object containing the results of CASSANDRA simulations
     """
 
-    def __init__(self, mc_sst=None, fxd_sst=None, **kwargs):
+    def __init__(self, mc_sst=None, init_sst=None, **kwargs):
         global DATA_PATH
 
         # Initializing CASSANDRA input stream, empty at the beginning
@@ -91,7 +93,7 @@ class GCMC(object):
         self.props = OrderedDict()
 
         # Reading default properties of the GCMC simulations
-        def_dat = Cassandra(fxd_sst).read_input(os.path.join(DATA_PATH, '_gcmc_default.inp'))
+        def_dat = Cassandra(system.System()).read_input(os.path.join(DATA_PATH, '_gcmc_default.inp'))
 
         # Static (unchangeable) properties
         self.props['Sim_Type'] = InpSpec('Sim_Type', 'GCMC', 'GCMC')
@@ -105,7 +107,7 @@ class GCMC(object):
             self.out_folder = os.getcwd()
         if not os.path.exists(self.out_folder):
             os.makedirs(self.out_folder, mode=0755)
-        prefix = kwargs.get('Run_Name') or def_dat['Run_Name']
+        prefix = kwargs.get('Run_Name', def_dat['Run_Name'])
         self.props['Run_Name'] = InpSpec('Run_Name', os.path.join(self.out_folder, prefix), '')
 
         # Defining the path where to write all intermediate files () and results
@@ -114,31 +116,45 @@ class GCMC(object):
         # Molecule configuration files describing all species of the system.
         # They are **absolutely** needed to start calculation
         mol_files = OrderedDict()
-        sst_count = 0
 
-        # Setting the simulation box generating system
-
-        self.fxd_sst = fxd_sst
-        self.fxd_sst.center('box', [0, 0, 0], True)  # the center of the box around the system should be at origin
-        self.fxd_sst.name = 'matrix'
-        self.fixed_syst_mcf_file = None
-        if self.fxd_sst.particles.count > 0:
-            # Check few things of the system in order for CASSANDRA not to raise an exception
-            self.fxd_sst.zero_charge()         # 1) the sum of the charges should be 0
-            self.fixed_syst_mcf_file = os.path.join(self.out_folder, 'fixed_syst.mcf')
-            mol_files['file1'] = [self.fixed_syst_mcf_file, 1]
-            sst_count = 1
-
-        self.tot_sst = self.fxd_sst
-        if not self.tot_sst.ff_class:
-            self.tot_sst.ff_class = '1'
+        # Setting the simulation total system
+        if init_sst:
+            self.tot_sst = init_sst.copy()
+            self.tot_sst.center('box', [0, 0, 0], True)  # the center of the box around the system should be at origin
         else:
-            if self.tot_sst.ff_class is not '1':
-                print('CASSANDRA supports only 1-st class force fields')
-                exit(1)
+            self.logger.warning('The frame generating system for GCMC simulations is not set. '
+                                'Creating empty cubic box of 1 nm size')
+            self.tot_sst = system.System()
+            self.tot_sst.forcefield = 'trappe/amber'
+            self.tot_sst.dim = system.Dimension(dx=10, dy=10, dz=10, center=[0, 0, 0])
 
-        # self.tot_sst.add(fxd_sst, change_dim=False)
-        # self.tot_sst.dim = fxd_sst.dim
+        # Some necessary verification of obtained system
+        # TODO: check the forcefield to be sure that it is claas 1
+        if False:
+            self.logger.error('CASSANDRA supports only 1-st class force fields')
+            exit(1)
+        self.tot_sst.zero_charge()  # the sum of the charges should necessary be 0
+
+        self.fxd_sst_mcfile = None
+        if self.tot_sst.particles.count > 0:
+            # If the property 'is_fixed' is not attributed to any particle in the system, let's decorate the system
+            # with this property assuming all particles are fixed
+            if all([(p.is_fixed is None) for p in self.tot_sst.particles]):
+                for p in self.tot_sst.particles:
+                    p.is_fixed = True
+            else:  # Through all non fixed atoms away
+                for pt in self.tot_sst.particles:
+                    if not pt.is_fixed:
+                        self.tot_sst.particles.remove(pt.tag)
+                self.tot_sst.remove_spare_bonding()
+
+            self.fxd_sst_mcfile = os.path.join(self.out_folder, 'fixed_syst.mcf')
+            mol_files['file1'] = [self.fxd_sst_mcfile, 1]
+
+        # Creating the system of fixed molecules
+        self.fxd_sst = self.tot_sst.copy()
+
+        # Setting up the Monte Carlo system
         self.mc_sst = mc_sst
         if mc_sst:
             mc_sst.file_store = self.out_folder
@@ -157,7 +173,8 @@ class GCMC(object):
         self.props['Nbr_Species'] = InpSpec('Nbr_Species', n_spec, n_spec)
         self.props['Molecule_Files'] = InpSpec('Molecule_Files', mol_files, None, **{'new_line': True})
         self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info', mc_sst.chem_pot,
-                                                        def_dat['Chemical_Potential_Info'] * (n_spec - sst_count))
+                                                        def_dat['Chemical_Potential_Info'] *
+                                                        (n_spec - int(self.fxd_sst.particles.count > 0)))
         self.props['Seed_Info'] = InpSpec('Seed_Info', kwargs.get('Seed_Info'),
                                           [random.randint(int(1e+7), int(1e+8 - 1)),
                                            random.randint(int(1e+7), int(1e+8 - 1))])
@@ -596,8 +613,8 @@ class McSystem(object):
                     at.is_fixed = True
 
         self.file_store = os.getcwd()
-        self.max_ins = make_iterable(kwargs.get('max_ins') or 5000)
-        self.is_rigid = make_iterable(kwargs.get('is_rigid') or [True] * len(self.sst))
+        self.max_ins = make_iterable(kwargs.get('max_ins', 5000))
+        self.is_rigid = make_iterable(kwargs.get('is_rigid', [True] * len(self.sst)))
         self.chem_pot = make_iterable(chem_pot)
         self.made_ins = [0] * len(self.sst)
         self.mcf_file = []
@@ -748,18 +765,14 @@ class Cassandra(object):
     Organizational object for running CASSANDRA simulation tasks. In current implementation it is able to run Gibbs
     Canonical Monte-Carlo (GCMC :class:`~GCMC`) simulations.
 
-    Attributes:
-        init_sst (:class:`~pysimm.system.System`) : molecular system before the simulations
-
     Parameters:
-        final_sst (:class:`~pysimm.system.System`) : molecular system after the simulations
+        system (:class:`~pysimm.system.System`) : molecular updated during the simulations
         run_queue (list) : the list of scheduled tasks
     """
 
     def __init__(self, init_sst):
         self.logger = logging.getLogger('CSNDRA')
-        self.init_sst = init_sst
-        self.final_sst = None
+        self.system = init_sst
         self.run_queue = []
 
     def run(self):
@@ -777,15 +790,15 @@ class Cassandra(object):
                 task.write()
                 # Write .xyz of the fixed system if provided
                 if task.fxd_sst.particles.count > 0:
-                    if task.fixed_syst_mcf_file is not None:
-                        McfWriter(task.fxd_sst, task.fixed_syst_mcf_file).write('atoms')
+                    if task.fxd_sst_mcfile is not None:
+                        McfWriter(task.fxd_sst, task.fxd_sst_mcfile).write('atoms')
                     task.fxd_sst.write_xyz(task.fxd_sst_xyz)
                 try:
                     self.logger.info('Starting the GCMC simulations with CASSANDRA')
                     print('{:.^60}'.format(''))
                     subprocess.call([CASSANDRA_EXEC, task.props_file])
                     task.upd_simulation()
-                    self.final_sst = task.tot_sst
+                    self.system = task.tot_sst.copy()
 
                 except OSError as ose:
                     self.logger.error('There was a problem calling CASSANDRA executable')
@@ -826,7 +839,7 @@ class Cassandra(object):
                 mc_sst = McSystem(specs, kwargs.get('chem_pot'),
                                   max_ins=kwargs.get('max_ins'),
                                   is_rigid=kwargs.get('is_rigid'))
-                new_job = GCMC(mc_sst, self.init_sst, **kwargs)
+                new_job = GCMC(mc_sst, self.system, **kwargs)
             else:
                 self.logger.error('Unknown GCMC initialization. Please provide either '
                                   'the dictionary with GCMC parameters or GCMC simulation object')
