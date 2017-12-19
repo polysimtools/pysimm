@@ -137,11 +137,10 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
 
         # add the "spring tether" fix to the geometrical center of the system to avoid system creep
         sim.add_custom('fix tether_fix matrix spring tether 30.0 0.0 0.0 0.0 0.0')
-        sim.add_custom('run {:}\n'.format(mdp.get('length')))
-
         sim.add(lmps.OutputSettings(thermo=mdp.get('thermo'),
-                                    dump=int(mdp.get('dump')),
-                                    dump_name=os.path.join(sim_folder, str(l) + '.md.dump')))
+                                    dump={'filename': os.path.join(sim_folder, str(l) + '.md.dump'),
+                                          'freq': int(mdp.get('dump'))}))
+        sim.add_custom('run {:}\n'.format(mdp.get('length')))
 
         # The input for correct simulations is set, starting LAMMPS:
         sim.run()
