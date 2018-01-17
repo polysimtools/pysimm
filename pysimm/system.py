@@ -634,7 +634,7 @@ class System(object):
                              c=new.particles[i.c.tag],
                              d=new.particles[i.d.tag])
             if i.type:
-                new_i.type=new.improper_types[i.type.tag]
+                new_i.type = new.improper_types[i.type.tag]
             new.impropers.add(new_i)
             new_i.a.molecule.impropers.add(new_i)
             
@@ -765,7 +765,7 @@ class System(object):
         for m in other.molecules:
             del m.tag
             self.molecules.add(m)
-            p_list=m.particles.get('all')
+            p_list = m.particles.get('all')
             m.particles.remove('all')
             for p in p_list:
                 m.particles.add(p)

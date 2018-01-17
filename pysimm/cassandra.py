@@ -50,55 +50,22 @@ logging.basicConfig(level=logging.INFO, datefmt='%H:%M:%S',
                     format='%(asctime)s [%(levelname)s]: %(message)s')
 
 
-class GCMC(object):
-    """pysimm.cassandra.GCMC
-
-    Object containing the settings and the logic necessary to set-up the Grand-Canonical Monte-Carlo (GCMC) simulations
-    provided by the CASSANDRA software. The object also will include the simulation results once the simulations are
-    finished.
-
-    Attributes:
-        mc_sst (:class:`~pysimm.cassandra.McSystem`) : describes all molecules to be inserted by CASSANDRA
-        init_sst (:class:`~pysimm.system.System`) : describes the optional initial fixed molecular configuration for MC
-            simulations (default: empty cubic box with 1 nm side length). If the particles in the system are not
-            attributed with the flag `is_fixed` all of them are considered to be fixed, and will be marked with this
-            flag, otherwise all particles with is_fixed=False will be removed.
-
-    Keyword Args:
-        out_folder (str) : the relative path of the simulation results (all .dat, .mcf, as well as .chk, ... files will
-            go there). If the folder does not exist it will be created with 0755 permissions.
-        props_file (str) : the name of the  .inp file.
-
-    Note:
-        Other keyword arguments that are accepted are the GCMC simulation settings. The keywords of the settings
-        are the same as they are described in CASSANDRA specification but without # symbol.
-
-        **For example**: the keyword argument `Run_Name='my_simulation'` will set `#Run_Name` setting in CASSANDRA
-        input file to `my_simulation` value
-
-    Parameters:
-        props (dictionary) : include all simulation settings to be written to the CASSANDRA .inp file
-        input (str) : text stream that will be written to the CASSANDRA .inp file
-        tot_sst (:class:`~pysimm.system.System`) : object containing the results of CASSANDRA simulations
-    """
-
+class MCSimulation(object):
     def __init__(self, mc_sst=None, init_sst=None, **kwargs):
         global DATA_PATH
 
         # Initializing CASSANDRA input stream, empty at the beginning
         self.input = ''
-        self.logger = logging.getLogger('GCMC')
 
         # Initializing dictionary that contains records that directly will be sent to the .inp file
         self.props = OrderedDict()
 
+        self.logger = logging.getLogger('MC Simulation')
+
         # Reading default properties of the GCMC simulations
         def_dat = Cassandra(system.System()).read_input(os.path.join(DATA_PATH, '_gcmc_default.inp'))
 
-        # Static (unchangeable) properties
-        self.props['Sim_Type'] = InpSpec('Sim_Type', 'GCMC', 'GCMC')
-
-        tmp = kwargs.get('out_folder')  # Folder for the results and intermediate files
+        tmp = kwargs.get('out_folder')  # Folder for the results and temporary files
         if tmp:
             self.out_folder = tmp
             if os.path.isabs(tmp):
@@ -110,23 +77,46 @@ class GCMC(object):
         prefix = kwargs.get('Run_Name', def_dat['Run_Name'])
         self.props['Run_Name'] = InpSpec('Run_Name', os.path.join(self.out_folder, prefix), '')
 
-        # Defining the path where to write all intermediate files () and results
-        self.props_file = os.path.join(self.out_folder, kwargs.get('props_file') or 'gcmc_input_file.inp')
+        self.props_file = os.path.join(self.out_folder, kwargs.get('props_file', ''))
 
-        # Molecule configuration files describing all species of the system.
-        # They are **absolutely** needed to start calculation
-        mol_files = OrderedDict()
+        # Simple (one-value) dynamic properties
+        self.props['Temperature_Info'] = InpSpec('Temperature_Info',
+                                                 kwargs.get('Temperature_Info'), def_dat['Temperature_Info'])
+        self.props['Pair_Energy'] = InpSpec('Pair_Energy', kwargs.get('Pair_Energy'), def_dat['Pair_Energy'])
+        self.props['Rcutoff_Low'] = InpSpec('Rcutoff_Low', kwargs.get('Rcutoff_Low'), def_dat['Rcutoff_Low'])
+        self.props['Mixing_Rule'] = InpSpec('Mixing_Rule', kwargs.get('Mixing_Rule'), def_dat['Mixing_Rule'])
+
+        self.props['Seed_Info'] = InpSpec('Seed_Info', kwargs.get('Seed_Info'),
+                                          [random.randint(int(1e+7), int(1e+8 - 1)),
+                                           random.randint(int(1e+7), int(1e+8 - 1))])
+
+        # Multiple-value one/many line dynamic properties
+        self.props['Run_Type'] = InpSpec('Run_Type', kwargs.get('Run_Type'), def_dat['Run_Type'])
+        self.props['Charge_Style'] = InpSpec('Charge_Style', kwargs.get('Charge_Style'), def_dat['Charge_Style'])
+        self.props['VDW_Style'] = InpSpec('VDW_Style', kwargs.get('VDW_Style'), def_dat['VDW_Style'])
+        self.props['Simulation_Length_Info'] = InpSpec('Simulation_Length_Info', kwargs.get('Simulation_Length_Info'),
+                                                       def_dat['Simulation_Length_Info'],
+                                                       **{'write_headers': True, 'new_line': True})
+        self.props['CBMC_Info'] = InpSpec('CBMC_Info', kwargs.get('CBMC_Info'), def_dat['CBMC_Info'],
+                                          **{'write_headers': True, 'new_line': True})
+
+        self.props['Box_Info'] = InpSpec('Box_Info', kwargs.get('Box_Info'), def_dat['Box_Info'], **{'new_line': True})
+        self.props['Property_Info 1'] = InpSpec('Property_Info 1', kwargs.get('Property_Info'), None, **{'new_line': True})
 
         # Setting the simulation total system
         if init_sst:
             self.tot_sst = init_sst.copy()
-            self.tot_sst.center('box', [0, 0, 0], True)  # the center of the box around the system should be at origin
+            self.tot_sst.center('box', [0, 0, 0], True)  # the center of the calculation box should be at origin
         else:
-            self.logger.warning('The frame generating system for GCMC simulations is not set. '
+            self.logger.warning('The frame generating system for Monte-Carlo simulations is not set. '
                                 'Creating empty cubic box of 1 nm size')
             self.tot_sst = system.System()
             self.tot_sst.forcefield = 'trappe/amber'
             self.tot_sst.dim = system.Dimension(dx=10, dy=10, dz=10, center=[0, 0, 0])
+
+        # Molecule configuration files describing all species of the system.
+        # They are **absolutely** needed to start calculation
+        mol_files = OrderedDict()
 
         # Some necessary verification of obtained system
         # TODO: check the forcefield to be sure that it is claas 1
@@ -167,66 +157,15 @@ class GCMC(object):
         if (mc_sst is None) and (not kwargs.get('Molecule_Files')):
             self.logger.error('The molecular configuration files of gas molecules for simulation are not set. '
                               'Nothing to simulate. Exiting...')
-            exit(1)
+            exit(0)
 
-        n_spec = len(mol_files)
-        self.props['Nbr_Species'] = InpSpec('Nbr_Species', n_spec, n_spec)
+        self._n_spec = len(mol_files)
+        self.props['Nbr_Species'] = InpSpec('Nbr_Species', self._n_spec, self._n_spec)
         self.props['Molecule_Files'] = InpSpec('Molecule_Files', mol_files, None, **{'new_line': True})
-        self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info', mc_sst.chem_pot,
-                                                        def_dat['Chemical_Potential_Info'] *
-                                                        (n_spec - int(self.fxd_sst.particles.count > 0)))
-        self.props['Seed_Info'] = InpSpec('Seed_Info', kwargs.get('Seed_Info'),
-                                          [random.randint(int(1e+7), int(1e+8 - 1)),
-                                           random.randint(int(1e+7), int(1e+8 - 1))])
-
-        # Simple (one-value) dynamic properties
-        self.props['Temperature_Info'] = InpSpec('Temperature_Info',
-                                                 kwargs.get('Temperature_Info'), def_dat['Temperature_Info'])
-        self.props['Average_Info'] = InpSpec('Average_Info', kwargs.get('Average_Info'), def_dat['Average_Info'])
-        self.props['Pair_Energy'] = InpSpec('Pair_Energy', kwargs.get('Pair_Energy'), def_dat['Pair_Energy'])
-        self.props['Rcutoff_Low'] = InpSpec('Rcutoff_Low', kwargs.get('Rcutoff_Low'), def_dat['Rcutoff_Low'])
-        self.props['Mixing_Rule'] = InpSpec('Mixing_Rule', kwargs.get('Mixing_Rule'), def_dat['Mixing_Rule'])
-
-        # Multiple-value one/many line dynamic properties
-        self.props['Run_Type'] = InpSpec('Run_Type', kwargs.get('Run_Type'), def_dat['Run_Type'])
-        self.props['Charge_Style'] = InpSpec('Charge_Style', kwargs.get('Charge_Style'), def_dat['Charge_Style'])
-        self.props['VDW_Style'] = InpSpec('VDW_Style', kwargs.get('VDW_Style'), def_dat['VDW_Style'])
-        self.props['Simulation_Length_Info'] = InpSpec('Simulation_Length_Info', kwargs.get('Simulation_Length_Info'),
-                                                       def_dat['Simulation_Length_Info'],
-                                                       **{'write_headers': True, 'new_line': True})
-        self.props['CBMC_Info'] = InpSpec('CBMC_Info', kwargs.get('CBMC_Info'), def_dat['CBMC_Info'],
-                                          **{'write_headers': True, 'new_line': True})
-
-        self.props['Box_Info'] = InpSpec('Box_Info', kwargs.get('Box_Info'), def_dat['Box_Info'], **{'new_line': True})
-        self.props['Property_Info 1'] = InpSpec('Property_Info 1', kwargs.get('Property_Info'), None, **{'new_line': True})
-
-        # Order of the next three items is IMPORTANT! Check the CASSANDRA spec file for further info
-        limits = [0.3] * n_spec
-        if self.fxd_sst.particles.count:
-            limits[0] = 0
-        self.props['Prob_Translation'] = InpProbSpec('Prob_Translation', kwargs.get('Prob_Translation'),
-                                                     OrderedDict([('tot_prob', 0.25),
-                                                                  ('limit_vals', limits)]),
-                                                     **{'new_line': True, 'indicator': 'start'})
-        tps = ['cbmc'] * n_spec
-        if self.fxd_sst.particles.count:
-            tps[0] = 'none'
-        self.props['Prob_Insertion'] = InpProbSpec('Prob_Insertion', kwargs.get('Prob_Insertion'),
-                                                   OrderedDict([('tot_prob', 0.25), ('types', tps)]),
-                                                   **{'new_line': True})
-        max_ang = [180] * n_spec
-        if self.fxd_sst.particles.count:
-            max_ang[0] = 0
-        self.props['Prob_Rotation'] = InpProbSpec('Prob_Rotation', kwargs.get('Prob_Rotation'),
-                                                  OrderedDict([('tot_prob', 0.25), ('limit_vals', max_ang)]),
-                                                  **{'new_line': True})
-
-        self.props['Prob_Deletion'] = InpProbSpec('Prob_Deletion',
-                                                  kwargs.get('Prob_Deletion'), 0.25, **{'indicator': 'end'})
 
         # Synchronzing "start type" .inp record
         self.fxd_sst_xyz = ''
-        pops_list = [0] * n_spec
+        pops_list = [0] * self._n_spec
         start_type = 'make_config'
         if self.fxd_sst.particles.count:
             pops_list[0] = 1
@@ -265,6 +204,121 @@ class GCMC(object):
         out_stream.write('{:}'.format(self.input))
         out_stream.close()
         self.logger.info('File: "{:}" was created sucsessfully'.format(self.props_file))
+
+    def group_by_id(self, group_key='matrix'):
+        """pysimm.cassandra.GCMC.group_by_id
+
+        Method for grouping the atoms of the system :class:`~GCMC.tot_sst` by a certain property. Will iterate through
+        all atoms in the system and return indexes of only those atoms that match the property. Currently supports 3
+        properties defined by the input keyword argument argument.
+
+        Keyword Args:
+            group_key (str): text constant defines the property to match. Possible keywords are:
+
+                (1) `matrix` -- (default) indexes of the atoms in :obj:`~GCMC.fxd_sst`
+
+                (2) `rigid` -- indexes of all atoms that have rigid atomic bonds. It is assumed here that rigid and
+                    nonrigid atoms can interact only through intermolecular forces
+
+                (3) `nonrigid` -- opposite of previous, indexes of all atoms that have nonrigid atomic bonds
+
+        Returns:
+            str:
+                string in format `a1:b1 a2:b2 ...` where all indexes inside `[ak, bk]` belongs to the selected group
+                and array of the form `[[a1, b1], [a2, b2], ...]`
+        """
+        fxd_sst_idxs = []
+        if self.fxd_sst:
+            fxd_sst_idxs = range(1, len(self.fxd_sst.particles) + 1)
+        # Behaviour depending on type of particles to check
+        check = lambda x: x
+        if group_key.lower() == 'nonrigid':
+            check = lambda x: not x.is_rigid
+        elif group_key.lower() == 'rigid':
+            check = lambda x: x.is_rigid
+        elif group_key.lower() == 'matrix':
+            check = lambda x: x.tag in fxd_sst_idxs
+        idx_array = [[-1, -1]]
+        for p in self.tot_sst.particles:
+            if check(p):
+                if idx_array[-1][0] > 0:
+                    if abs(p.tag - idx_array[-1][1]) > 1:
+                        idx_array.append([p.tag, p.tag])
+                    else:
+                        idx_array[-1][1] = p.tag
+                else:
+                    idx_array[-1] = [p.tag, p.tag]
+        idx_string = ''
+        for t in idx_array:
+            if t[1] - t[0] > 1:
+                idx_string += str(t[0]) + ':' + str(t[1]) + ' '
+        return idx_string, idx_array
+
+    def upd_simulation(self):
+        """pysimm.cassandra.GCMC.upd_simulation
+
+        Updates the :class:`~GCMC.tot_sst` field using the `GCMC.props['Run_Name'].chk` file. Will try to parse the
+        checkpoint file and read the coordinates of the molecules inserted by CASSANDRA. If neither of the molecules
+        from the :class:`~GCMC.mc_sst` can be fit to the text that was read the method will raise an exception. The
+        fitting method: :class:`~McSystem.make_system` assumes that different molecules inserted by CASSANDRA have
+        the same order of the atoms.
+        """
+        fname = '{:}{:}'.format(self.props['Run_Name'].value, '.chk')
+        self.logger.info('Updating MC system from the CASSANDRA {:} file...'.format(fname))
+        if os.path.isfile(fname):
+            try:
+                with open(fname, 'r') as inp:
+                    lines = inp.read()
+                    # Define the starting index of the lines with inserted atoms
+                    start_ind = lines.find('total number of molecules')
+                    end_ind = start_ind + lines[start_ind:-1].find('****', 1)
+                    count_info = lines[start_ind:end_ind].split('\n')
+                    offset = 1
+                    if self.fxd_sst:
+                        tmp = count_info[1].split()
+                        offset += int(tmp[1]) * len(self.fxd_sst.particles)
+                    # Grab the lines with inserted atoms
+                    start_ind = lines.find('coordinates for all the boxes')
+                    all_coord_lines = lines[start_ind:-1].split('\n')
+                    inp.close()
+                self.tot_sst.add(self.mc_sst.make_system(all_coord_lines[offset:]), change_dim=False)
+                self.logger.info('Simulation system successfully updated')
+
+            except IndexError:
+                self.logger.error('Cannot fit the molecules from the CASSANDRA file to the PySIMM system')
+        else:
+            self.logger.error('Cannot find the CASSANDRA checkpoint file to update simulation. '
+                              'Probably it cannot be written by CASSANDRA to the place you specified')
+
+    def __check_params__(self):
+        """pysimm.cassandra.GCMC.__check_params__
+
+        Private method designed for update the fields of the GCMC object to make them conformed with each other
+        """
+        # Synchronizing the simulation box parameters
+        if self.fxd_sst:
+            dx = self.fxd_sst.dim.xhi - self.fxd_sst.dim.xlo
+            dy = self.fxd_sst.dim.yhi - self.fxd_sst.dim.ylo
+            dz = self.fxd_sst.dim.zhi - self.fxd_sst.dim.zlo
+            if (dx == dy) and (dy == dz):
+                box_type = 'cubic'
+                box_dims = str(dx)
+            else:
+                box_type = 'orthogonal'
+                box_dims = '{0:} {1:} {2:}'.format(dx, dy, dz)
+
+            upd_vals = OrderedDict([('box_count', 1),
+                                    ('box_type', box_type),
+                                    ('box_size', box_dims)])
+            if ('Box_Info' in self.props.keys()) and isinstance(self.props['Box_Info'], InpSpec):
+                self.props['Box_Info'] = InpSpec('Box_Info', upd_vals, None, **{'new_line': True})
+            else:
+                self.props['Box_Info'] = upd_vals
+
+        tmp = self.props['Box_Info'].value['box_size']
+        if self.props['Box_Info'].value['box_type'] == 'cubic':
+            tmp = [tmp] * 3
+        self.tot_sst.dim = system.Dimension(center=True, dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
 
     def __write_chk__(self, out_file):
         """pysimm.cassandra.GCMC.__write_chk__
@@ -339,120 +393,77 @@ class GCMC(object):
                 continue
         out_stream.close()
 
-    def upd_simulation(self):
-        """pysimm.cassandra.GCMC.upd_simulation
 
-        Updates the :class:`~GCMC.tot_sst` field using the `GCMC.props['Run_Name'].chk` file. Will try to parse the
-        checkpoint file and read the coordinates of the molecules inserted by CASSANDRA. If neither of the molecules
-        from the :class:`~GCMC.mc_sst` can be fit to the text that was read the method will raise an exception. The
-        fitting method: :class:`~McSystem.make_system` assumes that different molecules inserted by CASSANDRA have
-        the same order of the atoms.
-        """
-        fname = '{:}{:}'.format(self.props['Run_Name'].value, '.chk')
-        self.logger.info('Updating MC system from the CASSANDRA {:} file...'.format(fname))
-        if os.path.isfile(fname):
-            try:
-                with open(fname, 'r') as inp:
-                    lines = inp.read()
-                    # Define the starting index of the lines with inserted atoms
-                    start_ind = lines.find('total number of molecules')
-                    end_ind = start_ind + lines[start_ind:-1].find('****', 1)
-                    count_info = lines[start_ind:end_ind].split('\n')
-                    offset = 1
-                    if self.fxd_sst:
-                        tmp = count_info[1].split()
-                        offset += int(tmp[1]) * len(self.fxd_sst.particles)
-                    # Grab the lines with inserted atoms
-                    start_ind = lines.find('coordinates for all the boxes')
-                    all_coord_lines = lines[start_ind:-1].split('\n')
-                    inp.close()
-                self.tot_sst.add(self.mc_sst.make_system(all_coord_lines[offset:]), change_dim=False)
-                self.logger.info('Simulation system successfully updated')
+class GCMC(MCSimulation):
+    """pysimm.cassandra.GCMC
 
-            except IndexError:
-                self.logger.error('Cannot fit the molecules from the CASSANDRA file to the PySIMM system')
-        else:
-            self.logger.error('Cannot find the CASSANDRA checkpoint file to update simulation. '
-                              'Probably it cannot be written by CASSANDRA to the place you specified')
+    Object containing the settings and the logic necessary to set-up the Grand-Canonical Monte-Carlo (GCMC) simulations
+    provided by the CASSANDRA software. The object also will include the simulation results once the simulations are
+    finished.
 
-    def __check_params__(self):
-        """pysimm.cassandra.GCMC.__check_params__
+    Attributes:
+        mc_sst (:class:`~pysimm.cassandra.McSystem`) : describes all molecules to be inserted by CASSANDRA
+        init_sst (:class:`~pysimm.system.System`) : describes the optional initial fixed molecular configuration for MC
+            simulations (default: empty cubic box with 1 nm side length). If the particles in the system are not
+            attributed with the flag `is_fixed` all of them are considered to be fixed, and will be marked with this
+            flag, otherwise all particles with is_fixed=False will be removed.
 
-        Private method designed for update the fields of the GCMC object to make them conformed with each other
-        """
-        # Synchronizing the simulation box parameters
-        if self.fxd_sst:
-            dx = self.fxd_sst.dim.xhi - self.fxd_sst.dim.xlo
-            dy = self.fxd_sst.dim.yhi - self.fxd_sst.dim.ylo
-            dz = self.fxd_sst.dim.zhi - self.fxd_sst.dim.zlo
-            if (dx == dy) and (dy == dz):
-                box_type = 'cubic'
-                box_dims = str(dx)
-            else:
-                box_type = 'orthogonal'
-                box_dims = '{0:} {1:} {2:}'.format(dx, dy, dz)
+    Keyword Args:
+        out_folder (str) : the relative path of the simulation results (all .dat, .mcf, as well as .chk, ... files will
+            go there). If the folder does not exist it will be created with 0755 permissions.
+        props_file (str) : the name of the  .inp file.
 
-            upd_vals = OrderedDict([('box_count', 1),
-                                    ('box_type', box_type),
-                                    ('box_size', box_dims)])
-            if ('Box_Info' in self.props.keys()) and isinstance(self.props['Box_Info'], InpSpec):
-                self.props['Box_Info'] = InpSpec('Box_Info', upd_vals, None, **{'new_line': True})
-            else:
-                self.props['Box_Info'] = upd_vals
+    Note:
+        Other keyword arguments that are accepted are the GCMC simulation settings. The keywords of the settings
+        are the same as they are described in CASSANDRA specification but without # symbol.
 
-        tmp = self.props['Box_Info'].value['box_size']
-        if self.props['Box_Info'].value['box_type'] == 'cubic':
-            tmp = [tmp] * 3
-        self.tot_sst.dim = system.Dimension(center=True, dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
+        **For example**: the keyword argument `Run_Name='my_simulation'` will set `#Run_Name` setting in CASSANDRA
+        input file to `my_simulation` value
 
-    def group_by_id(self, group_key='matrix'):
-        """pysimm.cassandra.GCMC.group_by_id
+    Parameters:
+        props (dictionary) : include all simulation settings to be written to the CASSANDRA .inp file
+        input (str) : text stream that will be written to the CASSANDRA .inp file
+        tot_sst (:class:`~pysimm.system.System`) : object containing the results of CASSANDRA simulations
+    """
 
-        Method for grouping the atoms of the system :class:`~GCMC.tot_sst` by a certain property. Will iterate through
-        all atoms in the system and return indexes of only those atoms that match the property. Currently supports 3
-        properties defined by the input keyword argument argument.
+    def __init__(self, mc_sst=None, init_sst=None, **kwargs):
+        MCSimulation.__init__(self, mc_sst, init_sst, **kwargs)
 
-        Keyword Args:
-            group_key (str): text constant defines the property to match. Possible keywords are:
+        self.logger.name = 'GCMC'
+        self.props['Sim_Type'] = InpSpec('Sim_Type', 'GCMC', 'GCMC')
 
-                (1) `matrix` -- (default) indexes of the atoms in :obj:`~GCMC.fxd_sst`
+        # Path for all intermediate Cassandra files and results
+        self.props_file = os.path.join(self.out_folder, kwargs.get('props_file', 'gcmc_input_file.inp'))
 
-                (2) `rigid` -- indexes of all atoms that have rigid atomic bonds. It is assumed here that rigid and
-                    nonrigid atoms can interact only through intermolecular forces
+        self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info', mc_sst.chem_pot,
+                                                        -30 * (self._n_spec - int(self.fxd_sst.particles.count > 0)))
 
-                (3) `nonrigid` -- opposite of previous, indexes of all atoms that have nonrigid atomic bonds
+        # self.props['Average_Info'] = InpSpec('Average_Info', kwargs.get('Average_Info'), def_dat['Average_Info'])
 
-        Returns:
-            str:
-                string in format `a1:b1 a2:b2 ...` where all indexes inside `[ak, bk]` belongs to the selected group
-                and array of the form `[[a1, b1], [a2, b2], ...]`
-        """
-        fxd_sst_idxs = []
-        if self.fxd_sst:
-            fxd_sst_idxs = range(1, len(self.fxd_sst.particles) + 1)
-        # Behaviour depending on type of particles to check
-        check = lambda x: x
-        if group_key.lower() == 'nonrigid':
-            check = lambda x: not x.is_rigid
-        elif group_key.lower() == 'rigid':
-            check = lambda x: x.is_rigid
-        elif group_key.lower() == 'matrix':
-            check = lambda x: x.tag in fxd_sst_idxs
-        idx_array = [[-1, -1]]
-        for p in self.tot_sst.particles:
-            if check(p):
-                if idx_array[-1][0] > 0:
-                    if abs(p.tag - idx_array[-1][1]) > 1:
-                        idx_array.append([p.tag, p.tag])
-                    else:
-                        idx_array[-1][1] = p.tag
-                else:
-                    idx_array[-1] = [p.tag, p.tag]
-        idx_string = ''
-        for t in idx_array:
-            if t[1] - t[0] > 1:
-                idx_string += str(t[0]) + ':' + str(t[1]) + ' '
-        return idx_string, idx_array
+        # Order of the next four items is IMPORTANT! Check the CASSANDRA spec file for further info
+        limits = [0.3] * self._n_spec
+        if self.fxd_sst.particles.count:
+            limits[0] = 0
+        self.props['Prob_Translation'] = InpProbSpec('Prob_Translation', kwargs.get('Prob_Translation'),
+                                                     OrderedDict([('tot_prob', 0.25),
+                                                                  ('limit_vals', limits)]),
+                                                     **{'new_line': True, 'indicator': 'start'})
+        tps = ['cbmc'] * self._n_spec
+        if self.fxd_sst.particles.count:
+            tps[0] = 'none'
+        self.props['Prob_Insertion'] = InpProbSpec('Prob_Insertion', kwargs.get('Prob_Insertion'),
+                                                   OrderedDict([('tot_prob', 0.25), ('types', tps)]),
+                                                   **{'new_line': True})
+
+        self.props['Prob_Deletion'] = InpProbSpec('Prob_Deletion',
+                                                  kwargs.get('Prob_Deletion'), 0.25, **{'indicator': 'end'})
+
+        max_ang = [180] * self._n_spec
+        if self.fxd_sst.particles.count:
+            max_ang[0] = 0
+        self.props['Prob_Rotation'] = InpProbSpec('Prob_Rotation', kwargs.get('Prob_Rotation'),
+                                                  OrderedDict([('tot_prob', 0.25), ('limit_vals', max_ang)]),
+                                                  **{'new_line': True})
 
 
 class InpSpec(object):
@@ -555,7 +566,7 @@ class InpProbSpec(InpSpec):
         tmp = super(InpProbSpec, self).to_string()
         if self.key == 'Prob_Translation':
             tmp = '# Move_Probability_Info\n\n' + tmp
-        elif self.key == 'Prob_Deletion':
+        elif self.key == 'Prob_Rotation':
             tmp += '\n# Done_Probability_Info\n'
         return tmp
 
@@ -703,7 +714,7 @@ class McSystem(object):
         Returns:
             :class:`~pysimm.system.System` : object containing all newly inserted molecules
         """
-        sstm = system.System(ff_class='1')
+        sstm = None
         count = 0  # counter of the lines in the input file
         sys_idx = 0  # counter of the gas molecules to lookup
         while count < len(text_output) - 1:
@@ -720,7 +731,10 @@ class McSystem(object):
                 if self.is_rigid[sys_idx]:
                     for p in tmp.particles:
                         p.is_rigid = True
-                sstm.add(tmp)
+                if sstm:
+                    sstm.add(tmp)
+                else:
+                    sstm = tmp.copy()
                 self.made_ins[sys_idx] += 1
                 count += len(tmp.particles)
                 sys_idx = 0
@@ -836,9 +850,7 @@ class Cassandra(object):
         else:
             specs = kwargs.get('species')
             if specs:
-                mc_sst = McSystem(specs, kwargs.get('chem_pot'),
-                                  max_ins=kwargs.get('max_ins'),
-                                  is_rigid=kwargs.get('is_rigid'))
+                mc_sst = McSystem(specs, **kwargs)
                 new_job = GCMC(mc_sst, self.system, **kwargs)
             else:
                 self.logger.error('Unknown GCMC initialization. Please provide either '

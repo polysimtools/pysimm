@@ -1165,6 +1165,21 @@ def energy(s, all=False, np=None, **kwargs):
         return log.data.loc[0].TotEng
         
 
+def check_lmps_attr(s):
+    # sync of the forcefield-style properties
+    if hasattr(s, 'forcefield'):
+        styles_list = FF_SETTINGS['dreiding'].keys()
+        if s.forcefield in FF_SETTINGS.keys():
+            for st_prop in styles_list:
+                setattr(s, st_prop, FF_SETTINGS[s.forcefield][st_prop])
+        else:
+            warning_print('Cannot synchronize given forcefield with LAMMPS representation types. '
+                          'The forcefield is not present in the FF_SETTINGS of the pysimm.lmps module')
+    else:
+        warning_print('The forcefield attribute of the system is not defined. Some i/o methods of lmps '
+                      'module will not be acessible')
+
+
 class LogFile(object):
     """pysimm.lmps.LogFile
 
