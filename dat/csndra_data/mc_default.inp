@@ -27,7 +27,7 @@ lb
 !^^^^^^^^^^^^^^^^^^^^
 
 # Run_Type
-Equilibration 500
+Equilibration 500 100
 !^^^^^^^^^^^^^^^^^^^^
 
 # Charge_Style

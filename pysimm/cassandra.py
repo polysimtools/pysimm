@@ -49,6 +49,12 @@ CASSANDRA_EXEC = os.environ.get('CASSANDRA_EXEC')
 logging.basicConfig(level=logging.INFO, datefmt='%H:%M:%S',
                     format='%(asctime)s [%(levelname)s]: %(message)s')
 
+DEFAULT_PARAMS = {
+    'Temperature_Info': 300,
+    'Pressure_Info': 1,
+    'Rcutoff_Low': 0.1
+}
+
 
 class MCSimulation(object):
     def __init__(self, mc_sst=None, init_sst=None, **kwargs):
@@ -63,7 +69,7 @@ class MCSimulation(object):
         self.logger = logging.getLogger('MC Simulation')
 
         # Reading default properties of the GCMC simulations
-        def_dat = Cassandra(system.System()).read_input(os.path.join(DATA_PATH, '_gcmc_default.inp'))
+        def_dat = Cassandra(system.System()).read_input(os.path.join(DATA_PATH, 'mc_default.inp'))
 
         tmp = kwargs.get('out_folder')  # Folder for the results and temporary files
         if tmp:
@@ -81,7 +87,7 @@ class MCSimulation(object):
 
         # Simple (one-value) dynamic properties
         self.props['Temperature_Info'] = InpSpec('Temperature_Info',
-                                                 kwargs.get('Temperature_Info'), def_dat['Temperature_Info'])
+                                                 kwargs.get('Temperature_Info'), DEFAULT_PARAMS['Temperature_Info'])
         self.props['Pair_Energy'] = InpSpec('Pair_Energy', kwargs.get('Pair_Energy'), def_dat['Pair_Energy'])
         self.props['Rcutoff_Low'] = InpSpec('Rcutoff_Low', kwargs.get('Rcutoff_Low'), def_dat['Rcutoff_Low'])
         self.props['Mixing_Rule'] = InpSpec('Mixing_Rule', kwargs.get('Mixing_Rule'), def_dat['Mixing_Rule'])
@@ -92,7 +98,7 @@ class MCSimulation(object):
 
         # Multiple-value one/many line dynamic properties
         self.props['Run_Type'] = InpSpec('Run_Type', kwargs.get('Run_Type'), def_dat['Run_Type'])
-        self.props['Charge_Style'] = InpSpec('Charge_Style', kwargs.get('Charge_Style'), def_dat['Charge_Style'])
+        self.props['Charge_Style'] = InpSpec('Charge_Style', kwargs.get('Charge_Stylemc'), def_dat['Charge_Style'])
         self.props['VDW_Style'] = InpSpec('VDW_Style', kwargs.get('VDW_Style'), def_dat['VDW_Style'])
         self.props['Simulation_Length_Info'] = InpSpec('Simulation_Length_Info', kwargs.get('Simulation_Length_Info'),
                                                        def_dat['Simulation_Length_Info'],
@@ -125,24 +131,17 @@ class MCSimulation(object):
             exit(1)
         self.tot_sst.zero_charge()  # the sum of the charges should necessary be 0
 
+        # Creating the system of fixed molecules
         self.fxd_sst_mcfile = None
-        if self.tot_sst.particles.count > 0:
+        self.fxd_sst = kwargs.get('fixed_sst')
+        if self.fxd_sst:
             # If the property 'is_fixed' is not attributed to any particle in the system, let's decorate the system
-            # with this property assuming all particles are fixed
-            if all([(p.is_fixed is None) for p in self.tot_sst.particles]):
-                for p in self.tot_sst.particles:
+            # with this property
+            if all([(p.is_fixed is None) for p in self.fxd_sst.particles]):
+                for p in self.fxd_sst.particles:
                     p.is_fixed = True
-            else:  # Through all non fixed atoms away
-                for pt in self.tot_sst.particles:
-                    if not pt.is_fixed:
-                        self.tot_sst.particles.remove(pt.tag)
-                self.tot_sst.remove_spare_bonding()
-
             self.fxd_sst_mcfile = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fxd_sst_mcfile, 1]
-
-        # Creating the system of fixed molecules
-        self.fxd_sst = self.tot_sst.copy()
 
         # Setting up the Monte Carlo system
         self.mc_sst = mc_sst
@@ -167,7 +166,7 @@ class MCSimulation(object):
         self.fxd_sst_xyz = ''
         pops_list = [0] * self._n_spec
         start_type = 'make_config'
-        if self.fxd_sst.particles.count:
+        if self.fxd_sst:
             pops_list[0] = 1
             self.fxd_sst_xyz = os.path.join(self.out_folder, 'fixed_syst.xyz')
             start_type = 'read_config'
@@ -320,6 +319,12 @@ class MCSimulation(object):
             tmp = [tmp] * 3
         self.tot_sst.dim = system.Dimension(center=True, dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
 
+        # Sync of the volume change frecuency in equilibration regime
+        if self.props['Prob_Volume'] is None:
+            self.props['Run_Type'].value['steps'] = self.props['Run_Type'].value['steps'][0]
+
+
+
     def __write_chk__(self, out_file):
         """pysimm.cassandra.GCMC.__write_chk__
 
@@ -430,40 +435,85 @@ class GCMC(MCSimulation):
         MCSimulation.__init__(self, mc_sst, init_sst, **kwargs)
 
         self.logger.name = 'GCMC'
-        self.props['Sim_Type'] = InpSpec('Sim_Type', 'GCMC', 'GCMC')
+        self.props['Sim_Type'] = InpSpec('Sim_Type', 'GCMC', 'gcmc')
 
         # Path for all intermediate Cassandra files and results
-        self.props_file = os.path.join(self.out_folder, kwargs.get('props_file', 'gcmc_input_file.inp'))
+        self.props_file = os.path.join(self.out_folder, kwargs.get('props_file', 'gcmc_input.inp'))
 
-        self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info', mc_sst.chem_pot,
+        self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info',
+                                                        kwargs.get('Chemical_Potential_Info'),
                                                         -30 * (self._n_spec - int(self.fxd_sst.particles.count > 0)))
 
-        # self.props['Average_Info'] = InpSpec('Average_Info', kwargs.get('Average_Info'), def_dat['Average_Info'])
-
         # Order of the next four items is IMPORTANT! Check the CASSANDRA spec file for further info
+        def_init_prob = 0.25
         limits = [0.3] * self._n_spec
         if self.fxd_sst.particles.count:
             limits[0] = 0
         self.props['Prob_Translation'] = InpProbSpec('Prob_Translation', kwargs.get('Prob_Translation'),
-                                                     OrderedDict([('tot_prob', 0.25),
+                                                     OrderedDict([('tot_prob', def_init_prob),
                                                                   ('limit_vals', limits)]),
                                                      **{'new_line': True, 'indicator': 'start'})
         tps = ['cbmc'] * self._n_spec
         if self.fxd_sst.particles.count:
             tps[0] = 'none'
         self.props['Prob_Insertion'] = InpProbSpec('Prob_Insertion', kwargs.get('Prob_Insertion'),
-                                                   OrderedDict([('tot_prob', 0.25), ('types', tps)]),
+                                                   OrderedDict([('tot_prob', def_init_prob), ('types', tps)]),
                                                    **{'new_line': True})
 
-        self.props['Prob_Deletion'] = InpProbSpec('Prob_Deletion',
-                                                  kwargs.get('Prob_Deletion'), 0.25, **{'indicator': 'end'})
+        self.props['Prob_Deletion'] = InpProbSpec('Prob_Deletion', kwargs.get('Prob_Deletion'), def_init_prob)
 
         max_ang = [180] * self._n_spec
         if self.fxd_sst.particles.count:
             max_ang[0] = 0
         self.props['Prob_Rotation'] = InpProbSpec('Prob_Rotation', kwargs.get('Prob_Rotation'),
-                                                  OrderedDict([('tot_prob', 0.25), ('limit_vals', max_ang)]),
+                                                  OrderedDict([('tot_prob', def_init_prob), ('limit_vals', max_ang)]),
+                                                  **{'new_line': True,  'indicator': 'end'})
+
+
+class NPT(MCSimulation):
+    def __init__(self, mc_sst=None, init_sst=None, **kwargs):
+        MCSimulation.__init__(self, mc_sst, init_sst, **kwargs)
+
+        # Initialising object attributes
+        self.logger.name = 'NPT'
+        self.props_file = os.path.join(self.out_folder, kwargs.get('props_file', 'npt-mc_input.inp'))
+
+        # Initialising simulation-specific props attribute
+        self.props['Sim_Type'] = InpSpec('Sim_Type', 'npt_mc', 'npt_mc')
+
+        self.props['Pressure_Info'] = InpSpec('Pressure_Info',
+                                              kwargs.get('Pressure_Info'), DEFAULT_PARAMS['Pressure_Info'])
+
+        move_probs = [.34, .02, .32, .32]
+
+        limits = [0.3] * self._n_spec
+        if self.fxd_sst:
+            limits[0] = 0
+        self.props['Prob_Translation'] = InpProbSpec('Prob_Translation', kwargs.get('Prob_Translation'),
+                                                     OrderedDict([('tot_prob', move_probs[0]),
+                                                                  ('limit_vals', limits)]),
+                                                     **{'new_line': True, 'indicator': 'start'})
+
+        vol_margins = 0.1 * self.props['Box_Info'].value['box_size']
+        self.props['Prob_Volume'] = InpProbSpec('Prob_Volume', kwargs.get('Prob_Volume'),
+                                                OrderedDict([('tot_prob', move_probs[1]), ('types', vol_margins)]),
+                                                **{'new_line': True})
+
+        sub_probs = [1] * self._n_spec
+        if self.fxd_sst:
+            sub_probs[0] = 0
+        sm = sum(sub_probs)
+        sub_probs = [s / sm for s in sub_probs]
+        self.props['Prob_Regrowth'] = InpProbSpec('Prob_Regrowth', kwargs.get('Prob_Regrowth'),
+                                                  OrderedDict([('tot_prob', move_probs[2]), ('sub_probs', sub_probs)]),
                                                   **{'new_line': True})
+
+        max_ang = [180] * self._n_spec
+        if self.fxd_sst:
+            max_ang[0] = 0
+        self.props['Prob_Rotation'] = InpProbSpec('Prob_Rotation', kwargs.get('Prob_Rotation'),
+                                                  OrderedDict([('tot_prob', move_probs[3]), ('limit_vals', max_ang)]),
+                                                  **{'new_line': True, 'indicator': 'end'})
 
 
 class InpSpec(object):
@@ -598,7 +648,7 @@ class McSystem(object):
         frag_file (list of str) : defines full relative names of possible relative configuration files **(.dat)**
             required by CASSANDRA. Files will be created automatically.
     """
-    def __init__(self, sst, chem_pot, **kwargs):
+    def __init__(self, sst, **kwargs):
         self.logger = logging.getLogger('MC_SYSTEM')
         self.sst = make_iterable(sst)
         for sst in self.sst:
@@ -626,7 +676,6 @@ class McSystem(object):
         self.file_store = os.getcwd()
         self.max_ins = make_iterable(kwargs.get('max_ins', 5000))
         self.is_rigid = make_iterable(kwargs.get('is_rigid', [True] * len(self.sst)))
-        self.chem_pot = make_iterable(chem_pot)
         self.made_ins = [0] * len(self.sst)
         self.mcf_file = []
         self.frag_file = []
@@ -803,7 +852,7 @@ class Cassandra(object):
                 # Write .inp file
                 task.write()
                 # Write .xyz of the fixed system if provided
-                if task.fxd_sst.particles.count > 0:
+                if task.fxd_sst:
                     if task.fxd_sst_mcfile is not None:
                         McfWriter(task.fxd_sst, task.fxd_sst_mcfile).write('atoms')
                     task.fxd_sst.write_xyz(task.fxd_sst_xyz)
@@ -854,7 +903,26 @@ class Cassandra(object):
                 new_job = GCMC(mc_sst, self.system, **kwargs)
             else:
                 self.logger.error('Unknown GCMC initialization. Please provide either '
-                                  'the dictionary with GCMC parameters or GCMC simulation object')
+                                  'the dictionary with GCMC parameters or Cassandra.GCMC simulation object')
+                exit(1)
+        if kwargs.get('is_new'):
+            self.run_queue[:] = []
+        if new_job:
+            new_job.__check_params__()
+            self.run_queue.append(new_job)
+
+    def add_npt_mc(self, obj=None, **kwargs):
+        new_job = None
+        if isinstance(obj, NPT):
+            new_job = obj
+        else:
+            specs = kwargs.get('species')
+            if specs:
+                mc_sst = McSystem(specs, **kwargs)
+                new_job = NPT(mc_sst, self.system, **kwargs)
+            else:
+                self.logger.error('Unknown NPT initialization. Please provide either '
+                                  'the dictionary with NPT simulation parameters or Cassandra.NPT simulation object')
                 exit(1)
         if kwargs.get('is_new'):
             self.run_queue[:] = []
@@ -899,7 +967,7 @@ class Cassandra(object):
     def __parse_value__(self, cells):
         title = cells[0].lower()
         if title == 'run_type':
-            return OrderedDict([('type', cells[1]), ('steps', int(cells[2]))])
+            return OrderedDict([('type', cells[1]), ('steps', map(int, cells[2:]))])
 
         elif title == 'charge_style':
             return OrderedDict([('type', cells[1]),
