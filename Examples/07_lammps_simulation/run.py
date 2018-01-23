@@ -11,6 +11,7 @@ def run(test=False):
     # Initialize the wrapper object around the polymer that will organize the work with LAMMPS
     print('Creating Simulation object with log-file in "{0:s}"\n'.format(logFileName))
     sim = lmps.Simulation(polymer, log= 'steps.log')
+    sim.add(lmps.Init(pair_style='buck/coul/long'))
     
     # setting up the parameters for the energy optimization
     #  add_min() method will add the "Minimization" task to the task que of the 

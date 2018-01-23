@@ -4,7 +4,7 @@ from pysimm import system
 
 def run(test=False):
     frame = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'irmof1_drei.lmps'))
-    frame.forcefield = 'dreiding-lj'
+    frame.forcefield = 'dreiding'
     gas1 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ch4.lmps'))
     gas1.forcefield = 'trappe/amber'
     
