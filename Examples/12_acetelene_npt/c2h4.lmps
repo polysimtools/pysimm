@@ -1,0 +1,39 @@
+LAMMPS data file TraPPE CO2
+
+2 atoms
+1 bonds
+0 angles
+0 dihedrals
+0 impropers
+
+1 atom types
+1 bond types
+0 angle types
+
+-10.000000 10.000000 xlo xhi
+-10.000000 10.000000 ylo yhi
+-10.000000 10.000000 zlo zhi
+
+Masses
+
+   1	14.025	# CH2
+
+Pair Coeffs
+
+   1	0.1689  3.675	# CH2
+
+
+Bond Coeffs
+
+   1	1000.0	1.330	# CH2s
+
+
+Atoms
+
+   1	1	1	0.0    0.000  0.000  0.000
+   2	1	1	0.0    1.330  0.000  0.000
+
+Bonds
+
+   1	1	1	2
+
