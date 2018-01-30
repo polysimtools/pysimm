@@ -34,7 +34,7 @@ for line in tmp[1:-1]:
     data = line.split()
     tag, ptype, x, y, z, restof = data[:6]
     elem = re.sub('\d+', '', ptype)
-    bonds = map(int, restof[6:])
+    bonds = map(int, data[6:])
     p = system.Particle(tag=int(tag), elem=elem, type_name=ptype, x=float(x), y=float(y), z=float(z), bonds=bonds)
     s.particles.add(p)
 
