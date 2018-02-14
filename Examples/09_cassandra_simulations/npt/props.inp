@@ -1,0 +1,42 @@
+! Basic template input file for pysimm.Cassandra for GCMC in MC-MD iterations
+!   it lists "static' properties that will be set once for all MC simulations
+!   during MC-MD. It is made for convinience. Alternatively all this properties
+!   might be set from the MC-MD Python script.
+
+# VDW_Style
+lj cut_tail 14.0
+
+
+# Mixing_Rule
+lb
+
+# Charge_Style
+coul ewald 14.0 1e-5
+
+# Temperature_Info
+300
+
+# Simulation_Length_Info
+Units       Steps
+prop_freq   1000
+coord_freq  200000
+run         200000
+
+# Average_Info
+1
+
+# Property_Info 1
+Energy_Total
+Density
+Nmols
+Pressure
+
+# CBMC_Info
+kappa_ins 12
+kappa_dih 10
+rcut_cbmc 2.0
+
+# Pair_Energy
+true
+
+END

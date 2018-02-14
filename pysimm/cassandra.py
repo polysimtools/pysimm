@@ -38,6 +38,7 @@ import types
 from collections import Iterable, OrderedDict
 from pysimm import system
 from string import ascii_uppercase
+from pydoc import locate
 
 DATA_PATH = os.path.relpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dat/csndra_data'))
 
@@ -57,6 +58,36 @@ DEFAULT_PARAMS = {
 
 
 class MCSimulation(object):
+    """pysimm.cassandra.GCMC
+
+    Object containing the settings and the logic necessary to set-up the Grand-Canonical Monte-Carlo (GCMC) simulations
+    provided by the CASSANDRA software. The object also will include the simulation results once the simulations are
+    finished.
+
+    Attributes:
+        mc_sst (:class:`~pysimm.cassandra.McSystem`) : describes all molecules to be inserted by CASSANDRA
+        init_sst (:class:`~pysimm.system.System`) : describes the optional initial fixed molecular configuration for MC
+            simulations (default: empty cubic box with 1 nm side length). If the particles in the system are not
+            attributed with the flag `is_fixed` all of them are considered to be fixed, and will be marked with this
+            flag, otherwise all particles with is_fixed=False will be removed.
+
+    Keyword Args:
+        out_folder (str) : the relative path of the simulation results (all .dat, .mcf, as well as .chk, ... files will
+            go there). If the folder does not exist it will be created with 0755 permissions.
+        props_file (str) : the name of the  .inp file.
+
+    Note:
+        Other keyword arguments that are accepted are the GCMC simulation settings. The keywords of the settings
+        are the same as they are described in CASSANDRA specification but without # symbol.
+
+        **For example**: the keyword argument `Run_Name='my_simulation'` will set `#Run_Name` setting in CASSANDRA
+        input file to `my_simulation` value
+
+    Parameters:
+        props (dictionary) : include all simulation settings to be written to the CASSANDRA .inp file
+        input (str) : text stream that will be written to the CASSANDRA .inp file
+        tot_sst (:class:`~pysimm.system.System`) : object containing the results of CASSANDRA simulations
+    """
     def __init__(self, mc_sst=None, init_sst=None, **kwargs):
         global DATA_PATH
 
@@ -134,12 +165,8 @@ class MCSimulation(object):
         # Creating the system of fixed molecules
         self.fxd_sst_mcfile = None
         self.fxd_sst = kwargs.get('fixed_sst')
-        if self.fxd_sst:
-            # If the property 'is_fixed' is not attributed to any particle in the system, let's decorate the system
-            # with this property
-            if all([(p.is_fixed is None) for p in self.fxd_sst.particles]):
-                for p in self.fxd_sst.particles:
-                    p.is_fixed = True
+        if self.tot_sst.particles:
+            self.fxd_sst = self.tot_sst.copy()
             self.fxd_sst_mcfile = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fxd_sst_mcfile, 1]
 
@@ -294,25 +321,24 @@ class MCSimulation(object):
 
         Private method designed for update the fields of the GCMC object to make them conformed with each other
         """
-        # Synchronizing the simulation box parameters
-        if self.fxd_sst:
-            dx = self.fxd_sst.dim.xhi - self.fxd_sst.dim.xlo
-            dy = self.fxd_sst.dim.yhi - self.fxd_sst.dim.ylo
-            dz = self.fxd_sst.dim.zhi - self.fxd_sst.dim.zlo
-            if (dx == dy) and (dy == dz):
-                box_type = 'cubic'
-                box_dims = str(dx)
-            else:
-                box_type = 'orthogonal'
-                box_dims = '{0:} {1:} {2:}'.format(dx, dy, dz)
+        # Sync the simulation box parameters
+        dx = self.tot_sst.dim.xhi - self.tot_sst.dim.xlo
+        dy = self.tot_sst.dim.yhi - self.tot_sst.dim.ylo
+        dz = self.tot_sst.dim.zhi - self.tot_sst.dim.zlo
+        if (dx == dy) and (dy == dz):
+            box_type = 'cubic'
+            box_dims = str(dx)
+        else:
+            box_type = 'orthogonal'
+            box_dims = '{0:} {1:} {2:}'.format(dx, dy, dz)
 
-            upd_vals = OrderedDict([('box_count', 1),
-                                    ('box_type', box_type),
-                                    ('box_size', box_dims)])
-            if ('Box_Info' in self.props.keys()) and isinstance(self.props['Box_Info'], InpSpec):
-                self.props['Box_Info'] = InpSpec('Box_Info', upd_vals, None, **{'new_line': True})
-            else:
-                self.props['Box_Info'] = upd_vals
+        upd_vals = OrderedDict([('box_count', 1),
+                                ('box_type', box_type),
+                                ('box_size', box_dims)])
+        if ('Box_Info' in self.props.keys()) and isinstance(self.props['Box_Info'], InpSpec):
+            self.props['Box_Info'] = InpSpec('Box_Info', upd_vals, None, **{'new_line': True})
+        else:
+            self.props['Box_Info'] = upd_vals
 
         tmp = self.props['Box_Info'].value['box_size']
         if self.props['Box_Info'].value['box_type'] == 'cubic':
@@ -320,10 +346,9 @@ class MCSimulation(object):
         self.tot_sst.dim = system.Dimension(center=True, dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
 
         # Sync of the volume change frecuency in equilibration regime
-        if self.props['Prob_Volume'] is None:
-            self.props['Run_Type'].value['steps'] = self.props['Run_Type'].value['steps'][0]
-
-
+        if 'Prob_Volume' in self.props.keys():
+            if self.props['Prob_Volume'] is None:
+                self.props['Run_Type'].value['steps'] = self.props['Run_Type'].value['steps'][0]
 
     def __write_chk__(self, out_file):
         """pysimm.cassandra.GCMC.__write_chk__
@@ -400,36 +425,6 @@ class MCSimulation(object):
 
 
 class GCMC(MCSimulation):
-    """pysimm.cassandra.GCMC
-
-    Object containing the settings and the logic necessary to set-up the Grand-Canonical Monte-Carlo (GCMC) simulations
-    provided by the CASSANDRA software. The object also will include the simulation results once the simulations are
-    finished.
-
-    Attributes:
-        mc_sst (:class:`~pysimm.cassandra.McSystem`) : describes all molecules to be inserted by CASSANDRA
-        init_sst (:class:`~pysimm.system.System`) : describes the optional initial fixed molecular configuration for MC
-            simulations (default: empty cubic box with 1 nm side length). If the particles in the system are not
-            attributed with the flag `is_fixed` all of them are considered to be fixed, and will be marked with this
-            flag, otherwise all particles with is_fixed=False will be removed.
-
-    Keyword Args:
-        out_folder (str) : the relative path of the simulation results (all .dat, .mcf, as well as .chk, ... files will
-            go there). If the folder does not exist it will be created with 0755 permissions.
-        props_file (str) : the name of the  .inp file.
-
-    Note:
-        Other keyword arguments that are accepted are the GCMC simulation settings. The keywords of the settings
-        are the same as they are described in CASSANDRA specification but without # symbol.
-
-        **For example**: the keyword argument `Run_Name='my_simulation'` will set `#Run_Name` setting in CASSANDRA
-        input file to `my_simulation` value
-
-    Parameters:
-        props (dictionary) : include all simulation settings to be written to the CASSANDRA .inp file
-        input (str) : text stream that will be written to the CASSANDRA .inp file
-        tot_sst (:class:`~pysimm.system.System`) : object containing the results of CASSANDRA simulations
-    """
 
     def __init__(self, mc_sst=None, init_sst=None, **kwargs):
         MCSimulation.__init__(self, mc_sst, init_sst, **kwargs)
@@ -440,21 +435,23 @@ class GCMC(MCSimulation):
         # Path for all intermediate Cassandra files and results
         self.props_file = os.path.join(self.out_folder, kwargs.get('props_file', 'gcmc_input.inp'))
 
-        self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info',
-                                                        kwargs.get('Chemical_Potential_Info'),
-                                                        -30 * (self._n_spec - int(self.fxd_sst.particles.count > 0)))
+        add = 0
+        if self.fxd_sst and self.fxd_sst.particles.count:
+            add = 1
+        self.props['Chemical_Potential_Info'] = InpSpec('Chemical_Potential_Info', kwargs.get('chem_pot'),
+                                                        -30 * (self._n_spec - add))
 
         # Order of the next four items is IMPORTANT! Check the CASSANDRA spec file for further info
         def_init_prob = 0.25
         limits = [0.3] * self._n_spec
-        if self.fxd_sst.particles.count:
+        if self.fxd_sst:
             limits[0] = 0
         self.props['Prob_Translation'] = InpProbSpec('Prob_Translation', kwargs.get('Prob_Translation'),
                                                      OrderedDict([('tot_prob', def_init_prob),
                                                                   ('limit_vals', limits)]),
                                                      **{'new_line': True, 'indicator': 'start'})
         tps = ['cbmc'] * self._n_spec
-        if self.fxd_sst.particles.count:
+        if self.fxd_sst:
             tps[0] = 'none'
         self.props['Prob_Insertion'] = InpProbSpec('Prob_Insertion', kwargs.get('Prob_Insertion'),
                                                    OrderedDict([('tot_prob', def_init_prob), ('types', tps)]),
@@ -463,11 +460,42 @@ class GCMC(MCSimulation):
         self.props['Prob_Deletion'] = InpProbSpec('Prob_Deletion', kwargs.get('Prob_Deletion'), def_init_prob)
 
         max_ang = [180] * self._n_spec
-        if self.fxd_sst.particles.count:
+        if self.fxd_sst:
             max_ang[0] = 0
         self.props['Prob_Rotation'] = InpProbSpec('Prob_Rotation', kwargs.get('Prob_Rotation'),
                                                   OrderedDict([('tot_prob', def_init_prob), ('limit_vals', max_ang)]),
                                                   **{'new_line': True,  'indicator': 'end'})
+
+
+class NVT(MCSimulation):
+    def __init__(self, mc_sst=None, init_sst=None, **kwargs):
+        MCSimulation.__init__(self, mc_sst, init_sst, **kwargs)
+        self.logger.name = 'NVT'
+        self.props_file = os.path.join(self.out_folder, kwargs.get('props_file', 'nvt-mc_input.inp'))
+        self.props['Sim_Type'] = InpSpec('Sim_Type', 'nvt_mc', 'nvt_mc')
+
+        move_probs = [1, 1, 1]
+        limits = [0.3] * self._n_spec
+        if self.fxd_sst:
+            limits[0] = 0
+        self.props['Prob_Translation'] = InpProbSpec('Prob_Translation', kwargs.get('Prob_Translation'),
+                                                     OrderedDict([('tot_prob', move_probs[0]),
+                                                                  ('limit_vals', limits)]),
+                                                     **{'new_line': True, 'indicator': 'start'})
+        sub_probs = [1] * self._n_spec
+        if self.fxd_sst:
+            sub_probs[0] = 0
+        sm = sum(sub_probs)
+        sub_probs = [s / sm for s in sub_probs]
+        self.props['Prob_Regrowth'] = InpProbSpec('Prob_Regrowth', kwargs.get('Prob_Regrowth'),
+                                                  OrderedDict([('tot_prob', move_probs[1]), ('sub_probs', sub_probs)]),
+                                                  **{'new_line': True})
+        max_ang = [180] * self._n_spec
+        if self.fxd_sst:
+            max_ang[0] = 0
+        self.props['Prob_Rotation'] = InpProbSpec('Prob_Rotation', kwargs.get('Prob_Rotation'),
+                                                  OrderedDict([('tot_prob', move_probs[2]), ('limit_vals', max_ang)]),
+                                                  **{'new_line': True, 'indicator': 'end'})
 
 
 class NPT(MCSimulation):
@@ -493,12 +521,10 @@ class NPT(MCSimulation):
                                                      OrderedDict([('tot_prob', move_probs[0]),
                                                                   ('limit_vals', limits)]),
                                                      **{'new_line': True, 'indicator': 'start'})
-
         vol_margins = 0.1 * self.props['Box_Info'].value['box_size']
         self.props['Prob_Volume'] = InpProbSpec('Prob_Volume', kwargs.get('Prob_Volume'),
                                                 OrderedDict([('tot_prob', move_probs[1]), ('types', vol_margins)]),
                                                 **{'new_line': True})
-
         sub_probs = [1] * self._n_spec
         if self.fxd_sst:
             sub_probs[0] = 0
@@ -507,7 +533,6 @@ class NPT(MCSimulation):
         self.props['Prob_Regrowth'] = InpProbSpec('Prob_Regrowth', kwargs.get('Prob_Regrowth'),
                                                   OrderedDict([('tot_prob', move_probs[2]), ('sub_probs', sub_probs)]),
                                                   **{'new_line': True})
-
         max_ang = [180] * self._n_spec
         if self.fxd_sst:
             max_ang[0] = 0
@@ -835,7 +860,13 @@ class Cassandra(object):
 
     def __init__(self, init_sst):
         self.logger = logging.getLogger('CSNDRA')
+
+        # Assume all particles in initial sysrem are fixed
         self.system = init_sst
+        if init_sst.particles:
+            for p in init_sst.particles:
+                p.is_fixed = True
+
         self.run_queue = []
 
     def run(self):
@@ -875,6 +906,53 @@ class Cassandra(object):
                               'Please, be sure the CSNDRA_EXEC environment variable is set to the correct '
                               'CASSANDRA executable path. The current path is set to:\n\n{}\n\n'.format(CASSANDRA_EXEC))
             exit(1)
+
+    def add_simulation(self, ens_type, obj=None, **kwargs):
+        """pysimm.cassandra.Cassandra.add_simulation
+
+        Method for adding new GCMC simulation to the run queue.
+
+        Args:
+            ens_type: Type of the molecular ensemble for the Monte-Carlo simulations. The supported options are: `GCMC`
+                (Grand Canonical); `NVT` (canonical); `NPT` (isobaric-isothermal)
+            obj: the entity that should be added. Will be ignored if it is not of a type  :class:`~MCSimulation`
+
+        Keyword Args:
+            is_new (boolean) : defines whether all previous simulations should be erased or not
+            species (list of :class:`~pysimm.system.System`) : systems that describe molecules and will be passed to
+                :class:`~McSystem` constructor.
+
+        Note:
+            Other keyword arguments of this method will be redirected to the :class:`~McSystem` and
+            :class:`~MCSimulation` constructors. See their descriptions for the possible keyword options.
+        """
+        new_job = None
+
+        # Reading the molecule ensemble type
+        simul = locate('pysimm.cassandra.' + ens_type)
+        if simul is None:
+            self.logger.error('Unsopported simulation ensemble option. Please use ether GCMC, NPT, or '
+                              'NVT in \'add_simulation\' ')
+            exit(1)
+
+        if isinstance(obj, MCSimulation):
+            new_job = obj
+        else:
+            specs = kwargs.get('species')
+            if specs:
+                mc_sst = McSystem(specs, **kwargs)
+                new_job = simul(mc_sst, self.system, **kwargs)
+            else:
+                self.logger.error('Incorrect ' + ens_type + ' initialization. Please provide either Cassandra.' +
+                                  ens_type + ' simulation object or the dictionary with initialization parameters '
+                                  'of that object')
+                exit(1)
+        # Clean the run queue if 'is_new' set to to True
+        if kwargs.get('is_new'):
+            self.run_queue[:] = []
+        if new_job:
+            new_job.__check_params__()
+            self.run_queue.append(new_job)
 
     def add_gcmc(self, obj=None, **kwargs):
         """pysimm.cassandra.Cassandra.add_gcmc
@@ -930,6 +1008,25 @@ class Cassandra(object):
             new_job.__check_params__()
             self.run_queue.append(new_job)
 
+    def add_nvt(self, obj=None, **kwargs):
+        new_job = None
+        if isinstance(obj, NVT):
+            new_job = obj
+        else:
+            specs = kwargs.get('species')
+            if specs:
+                mc_sst = McSystem(specs, **kwargs)
+                new_job = NVT(mc_sst, self.system, **kwargs)
+            else:
+                self.logger.error('Unknown NVT initialization. Please provide either '
+                                  'the dictionary with NPT simulation parameters or Cassandra.NPT simulation object')
+                exit(1)
+        if kwargs.get('is_new'):
+            self.run_queue[:] = []
+        if new_job:
+            new_job.__check_params__()
+            self.run_queue.append(new_job)
+
     def read_input(self, inp_file):
         """pysimm.cassandra.Cassandra.read_input
 
@@ -961,7 +1058,7 @@ class Cassandra(object):
             inp_stream.close()
             self.logger.info('Reading finished sucsessfully')
         else:
-            self.logger.error('Cannot find specified file: ""{:}""'.format(inp_file))
+            self.logger.error('Cannot find specified file: \"{:}\"'.format(inp_file))
         return result
 
     def __parse_value__(self, cells):

@@ -93,9 +93,8 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         # >>> 2N: MD (LAMMPS) step:
         sim_sst = css.system
         sim_sst.write_lammps(os.path.join(sim_folder, str(l) + '.before_md.lmps'))
-        sim = lmps.Simulation(sim_sst,
-                              log=os.path.join(sim_folder, str(l) + '.md.log'),
-                              print_to_screen=mdp.get('print_to_screen'))
+        sim = lmps.Simulation(sim_sst, debug=True,
+                              log=os.path.join(sim_folder, str(l) + '.md.log'))
 
         sim.add(lmps.Init(cutoff=mdp.get('cutoff')))
 
@@ -111,8 +110,9 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
 
         # adding "run 0" line before velocities rescale for correct temperature init of the system with rigid molecules
         sim.add(lmps.Velocity(style='create'))
-        sim.add_custom('run 0')
-        sim.add(lmps.Velocity(style='scale'))
+        if rigid_mols:
+            sim.add_custom('run 0')
+            sim.add(lmps.Velocity(style='scale'))
 
         # create the description of the molecular dynamics simulation
         sim.add_md(lmps.MolecularDynamics(name='main_fix',
