@@ -1,0 +1,17 @@
+pysimm.models package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pysimm.models.monomers
+
+Module contents
+---------------
+
+.. automodule:: pysimm.models
+    :members:
+    :undoc-members:
+    :show-inheritance:

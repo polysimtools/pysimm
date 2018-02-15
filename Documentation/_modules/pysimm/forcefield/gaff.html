@@ -13,8 +13,6 @@
 
   
   
-  
-  
 
   
 
@@ -32,9 +30,6 @@
   
 
   
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="pysimm 0.2 documentation" href="../../../index.html"/>
         <link rel="up" title="pysimm" href="../../pysimm.html"/> 
 
@@ -45,7 +40,6 @@
 
 <body class="wy-body-for-nav" role="document">
 
-   
   <div class="wy-grid-for-nav">
 
     
@@ -86,10 +80,7 @@
           
             
             
-              
-            
-            
-              <ul>
+                <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../pysimm.html">pysimm package</a></li>
 </ul>
 
@@ -103,10 +94,8 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">pysimm</a>
-        
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">pysimm</a>
       </nav>
 
 
@@ -119,38 +108,21 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 <div role="navigation" aria-label="breadcrumbs navigation">
-
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../../index.html">Docs</a> &raquo;</li>
-        
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
           <li><a href="../../index.html">Module code</a> &raquo;</li>
-        
+      
           <li><a href="../../pysimm.html">pysimm</a> &raquo;</li>
-        
-      <li>pysimm.forcefield.gaff</li>
-    
-    
+      
+    <li>pysimm.forcefield.gaff</li>
       <li class="wy-breadcrumbs-aside">
         
-            
+          
         
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -187,11 +159,11 @@
 <span class="c1"># THE SOFTWARE.</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">permutations</span><span class="p">,</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">permutations</span><span class="p">,</span> <span class="n">combinations</span>
 
 <span class="kn">import</span> <span class="nn">gasteiger</span>
-<span class="kn">from</span> <span class="nn">pysimm.system</span> <span class="k">import</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">Dihedral</span><span class="p">,</span> <span class="n">Improper</span>
-<span class="kn">from</span> <span class="nn">forcefield</span> <span class="k">import</span> <span class="n">Forcefield</span>
+<span class="kn">from</span> <span class="nn">pysimm.system</span> <span class="kn">import</span> <span class="n">Angle</span><span class="p">,</span> <span class="n">Dihedral</span><span class="p">,</span> <span class="n">Improper</span>
+<span class="kn">from</span> <span class="nn">forcefield</span> <span class="kn">import</span> <span class="n">Forcefield</span>
 
 
 <div class="viewcode-block" id="Gaff"><a class="viewcode-back" href="../../../pysimm.forcefield.gaff.html#pysimm.forcefield.gaff.Gaff">[docs]</a><span class="k">class</span> <span class="nc">Gaff</span><span class="p">(</span><span class="n">Forcefield</span><span class="p">):</span>
@@ -205,8 +177,8 @@
 <span class="sd">        pair_style: lj</span>
 <span class="sd">        ff_class: 1</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">db_file</span> <span class="ow">and</span> <span class="n">db_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_file</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">db_file</span> <span class="ow">and</span> <span class="n">db_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">False</span><span class="p">:</span>
             <span class="n">db_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span>
                                    <span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">pardir</span><span class="p">,</span> <span class="s1">&#39;dat&#39;</span><span class="p">,</span> <span class="s1">&#39;forcefields&#39;</span><span class="p">,</span> <span class="s1">&#39;gaff.json&#39;</span><span class="p">)</span>
         <span class="n">Forcefield</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_file</span><span class="p">)</span>
@@ -238,7 +210,7 @@
         <span class="n">s</span><span class="o">.</span><span class="n">add_particle_bonding</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
             <span class="n">p</span><span class="o">.</span><span class="n">bond_orders</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">order</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bonds</span><span class="p">]</span>
-            <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bond_orders</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">None</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bond_orders</span><span class="p">:</span>
                 <span class="n">error_print</span><span class="p">(</span><span class="s1">&#39;error: bond orders are not set&#39;</span><span class="p">)</span>
             <span class="n">p</span><span class="o">.</span><span class="n">bond_elements</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">elem</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="n">x</span><span class="o">.</span><span class="n">b</span> <span class="k">else</span> <span class="n">x</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">elem</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>
                                <span class="n">p</span><span class="o">.</span><span class="n">bonds</span><span class="p">]</span>
@@ -248,10 +220,10 @@
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">elem</span> <span class="o">==</span> <span class="s1">&#39;H&#39;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s1">&#39;O&#39;</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bond_elements</span><span class="p">:</span>
-                    <span class="n">water</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">water</span> <span class="o">=</span> <span class="bp">False</span>
                     <span class="k">for</span> <span class="n">pb</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">pb</span><span class="o">.</span><span class="n">elem</span> <span class="o">==</span> <span class="s1">&#39;O&#39;</span> <span class="ow">and</span> <span class="n">pb</span><span class="o">.</span><span class="n">bond_elements</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                            <span class="n">water</span> <span class="o">=</span> <span class="kc">True</span>
+                            <span class="n">water</span> <span class="o">=</span> <span class="bp">True</span>
                     <span class="k">if</span> <span class="n">water</span><span class="p">:</span>
                         <span class="n">p</span><span class="o">.</span><span class="n">type_name</span> <span class="o">=</span> <span class="s1">&#39;hw&#39;</span>
                     <span class="k">else</span><span class="p">:</span>
@@ -318,16 +290,16 @@
                 <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">bond_elements</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;O&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                     <span class="n">p</span><span class="o">.</span><span class="n">type_name</span> <span class="o">=</span> <span class="s1">&#39;no&#39;</span>
                 <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">nbonds</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">:</span>
-                    <span class="n">amide</span> <span class="o">=</span> <span class="kc">False</span>
-                    <span class="n">aromatic_ring</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">amide</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="n">aromatic_ring</span> <span class="o">=</span> <span class="bp">False</span>
                     <span class="k">for</span> <span class="n">pb</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
                         <span class="k">if</span> <span class="n">pb</span><span class="o">.</span><span class="n">elem</span> <span class="o">==</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span>
                             <span class="k">if</span> <span class="mi">4</span> <span class="ow">in</span> <span class="n">pb</span><span class="o">.</span><span class="n">bond_orders</span> <span class="ow">or</span> <span class="s1">&#39;A&#39;</span> <span class="ow">in</span> <span class="n">pb</span><span class="o">.</span><span class="n">bond_orders</span><span class="p">:</span>
-                                <span class="n">aromatic_ring</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="n">aromatic_ring</span> <span class="o">=</span> <span class="bp">True</span>
                             <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">pb</span><span class="o">.</span><span class="n">bonds</span><span class="p">:</span>
                                 <span class="n">bp</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">a</span> <span class="k">if</span> <span class="n">pb</span> <span class="ow">is</span> <span class="n">b</span><span class="o">.</span><span class="n">b</span> <span class="k">else</span> <span class="n">b</span><span class="o">.</span><span class="n">b</span>
                                 <span class="k">if</span> <span class="n">bp</span><span class="o">.</span><span class="n">elem</span> <span class="o">==</span> <span class="s1">&#39;O&#39;</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span><span class="n">order</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                                    <span class="n">amide</span> <span class="o">=</span> <span class="kc">True</span>
+                                    <span class="n">amide</span> <span class="o">=</span> <span class="bp">True</span>
                     <span class="k">if</span> <span class="n">amide</span><span class="p">:</span>
                         <span class="n">p</span><span class="o">.</span><span class="n">type_name</span> <span class="o">=</span> <span class="s1">&#39;n&#39;</span>
                     <span class="k">elif</span> <span class="p">(</span><span class="mi">4</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bond_orders</span> <span class="ow">or</span> <span class="s1">&#39;A&#39;</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bond_orders</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;C&#39;</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bond_elements</span><span class="p">:</span>
@@ -339,7 +311,7 @@
                 <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">nbonds</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
                     <span class="n">p</span><span class="o">.</span><span class="n">type_name</span> <span class="o">=</span> <span class="s1">&#39;n4&#39;</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">nbonds</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">bond_elements</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">bond_orders</span><span class="p">)</span>
+                    <span class="k">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">nbonds</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">bond_elements</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">bond_orders</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">elem</span> <span class="o">==</span> <span class="s1">&#39;O&#39;</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">nbonds</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="n">p</span><span class="o">.</span><span class="n">type_name</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span>
@@ -375,12 +347,12 @@
                     <span class="k">elif</span> <span class="n">p</span><span class="o">.</span><span class="n">nbonds</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                         <span class="n">p</span><span class="o">.</span><span class="n">type_name</span> <span class="o">=</span> <span class="s1">&#39;ss&#39;</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span> <span class="s1">&#39;cant type particle </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">p</span><span class="o">.</span><span class="n">tag</span>
+                <span class="k">print</span> <span class="s1">&#39;cant type particle </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">p</span><span class="o">.</span><span class="n">tag</span>
                 <span class="k">return</span> <span class="n">p</span>
 
             <span class="n">type_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">particle_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">type_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">type_</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">type_name</span><span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">tag</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">elem</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">type_name</span><span class="p">)</span>
 
             <span class="n">all_types</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">particle_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">type_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
@@ -413,7 +385,7 @@
             <span class="k">if</span> <span class="n">bt</span><span class="p">:</span>
                 <span class="n">b</span><span class="o">.</span><span class="n">type_name</span> <span class="o">=</span> <span class="n">bt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;couldnt type this bond </span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span>
+                <span class="k">print</span> <span class="p">(</span><span class="s1">&#39;couldnt type this bond </span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span>
                        <span class="o">%</span> <span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
                 <span class="k">return</span> <span class="n">b</span>
             <span class="n">all_types</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bond_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">type_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
@@ -447,11 +419,11 @@
             <span class="k">for</span> <span class="n">p1</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">p1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">p2</span><span class="p">:</span>
-                        <span class="n">unique</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">unique</span> <span class="o">=</span> <span class="bp">True</span>
                         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">angles</span><span class="p">:</span>
                             <span class="k">if</span> <span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">a</span> <span class="ow">is</span> <span class="n">p1</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">b</span> <span class="ow">is</span> <span class="n">p</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">c</span> <span class="ow">is</span> <span class="n">p2</span><span class="p">)</span> <span class="ow">or</span>
                                     <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">a</span> <span class="ow">is</span> <span class="n">p2</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">b</span> <span class="ow">is</span> <span class="n">p</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">c</span> <span class="ow">is</span> <span class="n">p1</span><span class="p">)):</span>
-                                <span class="n">unique</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="n">unique</span> <span class="o">=</span> <span class="bp">False</span>
                         <span class="k">if</span> <span class="n">unique</span><span class="p">:</span>
                             <span class="n">at</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span>
                                                       <span class="o">%</span> <span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -462,7 +434,7 @@
                                                    <span class="n">a</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">p2</span><span class="p">))</span>
                                 <span class="n">all_types</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">at</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                             <span class="k">else</span><span class="p">:</span>
-                                <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;I cant type this angle </span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span>
+                                <span class="k">print</span> <span class="p">(</span><span class="s1">&#39;I cant type this angle </span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span>
                                        <span class="o">%</span> <span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                                           <span class="n">p</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                                           <span class="n">p2</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
@@ -496,13 +468,13 @@
                 <span class="k">for</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">b</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">bonded_to</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">p1</span> <span class="ow">is</span> <span class="n">b</span><span class="o">.</span><span class="n">b</span> <span class="ow">or</span> <span class="n">p2</span> <span class="ow">is</span> <span class="n">b</span><span class="o">.</span><span class="n">a</span><span class="p">:</span>
                         <span class="k">continue</span>
-                    <span class="n">unique</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">unique</span> <span class="o">=</span> <span class="bp">True</span>
                     <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">dihedrals</span><span class="p">:</span>
                         <span class="k">if</span> <span class="p">((</span><span class="n">d</span><span class="o">.</span><span class="n">a</span> <span class="o">==</span> <span class="n">p1</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">b</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">a</span> <span class="ow">and</span>
                                 <span class="n">d</span><span class="o">.</span><span class="n">c</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">b</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">d</span> <span class="o">==</span> <span class="n">p2</span><span class="p">)</span> <span class="ow">or</span>
                             <span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">a</span> <span class="o">==</span> <span class="n">p2</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">b</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">b</span> <span class="ow">and</span>
                                 <span class="n">d</span><span class="o">.</span><span class="n">c</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">a</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">d</span> <span class="o">==</span> <span class="n">p1</span><span class="p">)):</span>
-                            <span class="n">unique</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="n">unique</span> <span class="o">=</span> <span class="bp">False</span>
                     <span class="k">if</span> <span class="n">unique</span><span class="p">:</span>
                         <span class="n">p1_name</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span>
                         <span class="n">a_name</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span>
@@ -530,7 +502,7 @@
                                                          <span class="n">a</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">a</span><span class="p">,</span>
                                                          <span class="n">c</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">p2</span><span class="p">))</span>
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;I cant type this dihedral </span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span>
+                            <span class="k">print</span> <span class="p">(</span><span class="s1">&#39;I cant type this dihedral </span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span>
                                    <span class="o">%</span> <span class="p">(</span><span class="n">p1_name</span><span class="p">,</span> <span class="n">a_name</span><span class="p">,</span> <span class="n">b_name</span><span class="p">,</span> <span class="n">p2_name</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="n">all_types</span><span class="p">:</span>
@@ -538,7 +510,7 @@
             <span class="n">s</span><span class="o">.</span><span class="n">dihedral_types</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">dihedrals</span><span class="p">:</span>
-            <span class="n">dt</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">dihedral_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">item_wildcard</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">dihedral_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">type_name</span><span class="p">,</span> <span class="n">item_wildcard</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">dt</span><span class="p">:</span>
                 <span class="n">d</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">dt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
@@ -563,7 +535,7 @@
                     <span class="n">p2_name</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">eq_improper</span> <span class="ow">or</span> <span class="n">perm</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span>
                     <span class="n">p3_name</span> <span class="o">=</span> <span class="n">perm</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">eq_improper</span> <span class="ow">or</span> <span class="n">perm</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span>
                     <span class="n">it</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">improper_types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">p1_name</span><span class="p">,</span>
-                                                           <span class="n">p2_name</span><span class="p">,</span> <span class="n">p3_name</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                                                           <span class="n">p2_name</span><span class="p">,</span> <span class="n">p3_name</span><span class="p">]),</span> <span class="n">order</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">it</span><span class="p">:</span>
                         <span class="n">all_types</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
                         <span class="n">bonded_to</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">bonded_to</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
@@ -595,13 +567,10 @@
 <span class="sd">            None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">charges</span> <span class="o">==</span> <span class="s1">&#39;gasteiger&#39;</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;adding gasteiger charges&#39;</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;adding gasteiger charges&#39;</span><span class="p">)</span>
             <span class="n">gasteiger</span><span class="o">.</span><span class="n">set_charges</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div></div>
 </pre></div>
 
-           </div>
-           <div class="articleComments">
-            
            </div>
           </div>
           <footer>
@@ -636,8 +605,7 @@
             VERSION:'0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
+            HAS_SOURCE:  true
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

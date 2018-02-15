@@ -13,8 +13,6 @@
 
   
   
-  
-  
 
   
 
@@ -32,9 +30,6 @@
   
 
   
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="pysimm 0.2 documentation" href="../../index.html"/>
         <link rel="up" title="pysimm" href="../pysimm.html"/> 
 
@@ -45,7 +40,6 @@
 
 <body class="wy-body-for-nav" role="document">
 
-   
   <div class="wy-grid-for-nav">
 
     
@@ -86,10 +80,7 @@
           
             
             
-              
-            
-            
-              <ul>
+                <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../pysimm.html">pysimm package</a></li>
 </ul>
 
@@ -103,10 +94,8 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pysimm</a>
-        
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">pysimm</a>
       </nav>
 
 
@@ -119,38 +108,21 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 <div role="navigation" aria-label="breadcrumbs navigation">
-
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
-        
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
           <li><a href="../index.html">Module code</a> &raquo;</li>
-        
+      
           <li><a href="../pysimm.html">pysimm</a> &raquo;</li>
-        
-      <li>pysimm.calc</li>
-    
-    
+      
+    <li>pysimm.calc</li>
       <li class="wy-breadcrumbs-aside">
         
-            
+          
         
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -186,21 +158,21 @@
 <span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
 <span class="c1"># THE SOFTWARE.</span>
 
-<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">random</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">izip</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">acos</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">izip</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">acos</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">np</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">np</span> <span class="o">=</span> <span class="bp">None</span>
 
-<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">error_print</span>
-<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">warning_print</span>
-<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">verbose_print</span>
-<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">debug_print</span>
-<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">PysimmError</span>
-<span class="kn">from</span> <span class="nn">pysimm.utils</span> <span class="k">import</span> <span class="n">Item</span>
-<span class="kn">from</span> <span class="nn">pysimm.utils</span> <span class="k">import</span> <span class="n">ItemContainer</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">error_print</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">warning_print</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">verbose_print</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">debug_print</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">PysimmError</span>
+<span class="kn">from</span> <span class="nn">pysimm.utils</span> <span class="kn">import</span> <span class="n">Item</span>
+<span class="kn">from</span> <span class="nn">pysimm.utils</span> <span class="kn">import</span> <span class="n">ItemContainer</span>
 
 
 <div class="viewcode-block" id="intersection"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.intersection">[docs]</a><span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="n">line1</span><span class="p">,</span> <span class="n">line2</span><span class="p">):</span>
@@ -260,7 +232,7 @@
     <span class="k">return</span> <span class="n">rot_matrix</span></div>
 
 
-<div class="viewcode-block" id="rotate_vector"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.rotate_vector">[docs]</a><span class="k">def</span> <span class="nf">rotate_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">theta_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theta_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">theta_z</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="rotate_vector"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.rotate_vector">[docs]</a><span class="k">def</span> <span class="nf">rotate_vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">theta_x</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theta_y</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">theta_z</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.calc.rotate_vector</span>
 
 <span class="sd">    Rotates 3d vector around x-axis, y-axis and z-axis given by user defined angles</span>
@@ -277,9 +249,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;pysimm.calc.rotate_vector function requires numpy&#39;</span><span class="p">)</span>
-    <span class="n">xt</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="k">if</span> <span class="n">theta_x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">theta_x</span>
-    <span class="n">yt</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="k">if</span> <span class="n">theta_y</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">theta_y</span>
-    <span class="n">zt</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="k">if</span> <span class="n">theta_z</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">theta_z</span>
+    <span class="n">xt</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="k">if</span> <span class="n">theta_x</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">theta_x</span>
+    <span class="n">yt</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="k">if</span> <span class="n">theta_y</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">theta_y</span>
+    <span class="n">zt</span> <span class="o">=</span> <span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span> <span class="k">if</span> <span class="n">theta_z</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">theta_z</span>
 
     <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">([[</span><span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">z</span><span class="p">]])</span>
 
@@ -316,7 +288,7 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">([</span><span class="n">p1</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">p2</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p1</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">p2</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">p1</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">p2</span><span class="o">.</span><span class="n">z</span><span class="p">])</span></div>
 
 
-<div class="viewcode-block" id="angle"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.angle">[docs]</a><span class="k">def</span> <span class="nf">angle</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">radians</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="angle"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.angle">[docs]</a><span class="k">def</span> <span class="nf">angle</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">radians</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.calc.angle</span>
 
 <span class="sd">    Finds angle between three :class:`~pysimm.system.Particle` objects. Does not consider periodic boundary conditions.</span>
@@ -378,8 +350,8 @@
     <span class="k">return</span> <span class="n">acos</span><span class="p">(</span><span class="n">cos_theta</span><span class="p">)</span><span class="o">/</span><span class="n">pi</span><span class="o">*</span><span class="mi">180</span></div>
 
 
-<div class="viewcode-block" id="tacticity"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.tacticity">[docs]</a><span class="k">def</span> <span class="nf">tacticity</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a_tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">b_tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">c_tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">d_tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_angles</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">unwrap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-              <span class="n">rewrap</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skip_first</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="tacticity"><a class="viewcode-back" href="../../pysimm.calc.html#pysimm.calc.tacticity">[docs]</a><span class="k">def</span> <span class="nf">tacticity</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a_tag</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">b_tag</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">c_tag</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">d_tag</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">return_angles</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">unwrap</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+              <span class="n">rewrap</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">skip_first</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.calc.tacticity</span>
 
 <span class="sd">    Determines tacticity for polymer chain. Iterates through groups of four patricles given by X_tags, using offset. This assumes equivalent atoms in each group of four are perfectly offset.</span>
@@ -401,11 +373,11 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;pysimm.calc.tacticity function requires numpy&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">a_tag</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">b_tag</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">c_tag</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">d_tag</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">a_tag</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">b_tag</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">c_tag</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">d_tag</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">error_print</span><span class="p">(</span><span class="s1">&#39;particle tags for chiral center are required&#39;</span><span class="p">)</span>
         <span class="n">error_print</span><span class="p">(</span><span class="s1">&#39;a: chiral center, b-d: 3 side groups&#39;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">offset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">offset</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="n">error_print</span><span class="p">(</span><span class="s1">&#39;offset for tags in each monomer is required, i.e. - number of particles in each monomer&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">unwrap</span><span class="p">:</span>
@@ -425,11 +397,11 @@
         <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">izip</span><span class="p">(</span><span class="n">a_</span><span class="p">,</span> <span class="n">b_</span><span class="p">,</span> <span class="n">c_</span><span class="p">,</span> <span class="n">d_</span><span class="p">):</span>
             <span class="n">stereochem_angles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chiral_angle</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">))</span>
 
-    <span class="n">last</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">last</span> <span class="o">=</span> <span class="bp">None</span>
     <span class="n">iso_diads</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">syn_diads</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">stereochem_angles</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">last</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">last</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">90</span> <span class="ow">and</span> <span class="n">last</span> <span class="o">&lt;</span> <span class="mi">90</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">90</span> <span class="ow">and</span> <span class="n">last</span> <span class="o">&gt;</span> <span class="mi">90</span><span class="p">):</span>
                 <span class="n">iso_diads</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
@@ -446,8 +418,8 @@
     <span class="k">if</span> <span class="n">rewrap</span><span class="p">:</span>
         <span class="n">s</span><span class="o">.</span><span class="n">wrap</span><span class="p">()</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.1f}% s</span><span class="s1">yn diads&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">syn_diads</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">syn_diads</span><span class="o">+</span><span class="n">iso_diads</span><span class="p">)))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{:.1f}% i</span><span class="s1">so diads&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">iso_diads</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">syn_diads</span><span class="o">+</span><span class="n">iso_diads</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{:.1f}</span><span class="si">% s</span><span class="s1">yn diads&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">syn_diads</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">syn_diads</span><span class="o">+</span><span class="n">iso_diads</span><span class="p">)))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{:.1f}</span><span class="si">% i</span><span class="s1">so diads&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">iso_diads</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">syn_diads</span><span class="o">+</span><span class="n">iso_diads</span><span class="p">)))</span>
     <span class="k">if</span> <span class="n">return_angles</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">t</span><span class="p">,</span> <span class="n">stereochem_angles</span>
     <span class="k">else</span><span class="p">:</span>
@@ -501,9 +473,6 @@
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
           </div>
           <footer>
   
@@ -537,8 +506,7 @@
             VERSION:'0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
+            HAS_SOURCE:  true
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>

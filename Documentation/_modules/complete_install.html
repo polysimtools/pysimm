@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>complete_install &mdash; pysimm 0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="pysimm 0.2 documentation" href="../index.html"/>
+        <link rel="up" title="Module code" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pysimm
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../pysimm.html">pysimm package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">pysimm</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">Module code</a> &raquo;</li>
+      
+    <li>complete_install</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for complete_install</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">errno</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">call</span><span class="p">,</span> <span class="n">PIPE</span><span class="p">,</span> <span class="n">Popen</span>
+
+<span class="n">HOME_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;HOME&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="install_pysimm"><a class="viewcode-back" href="../complete_install.html#complete_install.install_pysimm">[docs]</a><span class="k">def</span> <span class="nf">install_pysimm</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s1">&#39;pysimm&#39;</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;pysimm directory already exists...assuming it is the pysimm repository and continuing...&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">call</span><span class="p">(</span><span class="s1">&#39;git clone https://github.com/polysimtools/pysimm&#39;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;pysimm/complete_install.py&#39;</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;assumption about pysimm repository existing was wrong; exiting...&#39;</span><span class="p">)</span>
+        <span class="nb">exit</span><span class="p">()</span>
+    <span class="n">call</span><span class="p">(</span><span class="s2">&quot;echo export PYTHONPATH=&#39;$PYTHONPATH&#39;:{} &gt;&gt; {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="s1">&#39;pysimm&#39;</span><span class="p">),</span>
+                                                                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">HOME_DIR</span><span class="p">,</span> <span class="s1">&#39;.bashrc&#39;</span><span class="p">)),</span>
+         <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">call</span><span class="p">(</span><span class="s2">&quot;echo export PATH=&#39;$PATH&#39;:{} &gt;&gt; {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="s1">&#39;pysimm&#39;</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">),</span>
+                                                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">HOME_DIR</span><span class="p">,</span> <span class="s1">&#39;.bashrc&#39;</span><span class="p">)),</span>
+         <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="apt_update"><a class="viewcode-back" href="../complete_install.html#complete_install.apt_update">[docs]</a><span class="k">def</span> <span class="nf">apt_update</span><span class="p">():</span>
+    <span class="n">call</span><span class="p">(</span><span class="s1">&#39;apt-get update&#39;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="apt_install"><a class="viewcode-back" href="../complete_install.html#complete_install.apt_install">[docs]</a><span class="k">def</span> <span class="nf">apt_install</span><span class="p">(</span><span class="o">*</span><span class="n">packages</span><span class="p">):</span>
+    <span class="n">call</span><span class="p">(</span><span class="s1">&#39;apt-get -y install {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">packages</span><span class="p">)),</span>
+         <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="install_lammps"><a class="viewcode-back" href="../complete_install.html#complete_install.install_lammps">[docs]</a><span class="k">def</span> <span class="nf">install_lammps</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="o">*</span><span class="n">packages</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+    <span class="n">call</span><span class="p">(</span><span class="s1">&#39;git clone -b unstable https://github.com/lammps/lammps.git lammps&#39;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span><span class="s1">&#39;lammps&#39;</span><span class="p">,</span><span class="s1">&#39;src&#39;</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
+        <span class="n">call</span><span class="p">(</span><span class="s1">&#39;make yes-{}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">package</span><span class="p">),</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">call</span><span class="p">(</span><span class="s1">&#39;make mpi&#39;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">call</span><span class="p">(</span><span class="s2">&quot;echo export PATH=&#39;$PATH&#39;:{} &gt;&gt; {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="s1">&#39;lammps&#39;</span><span class="p">,</span> <span class="s1">&#39;src&#39;</span><span class="p">),</span>
+                                                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">HOME_DIR</span><span class="p">,</span><span class="s1">&#39;.bashrc&#39;</span><span class="p">)),</span>
+         <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">call</span><span class="p">(</span><span class="s2">&quot;echo export LAMMPS_EXEC={} &gt;&gt; {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="s1">&#39;lammps&#39;</span><span class="p">,</span> <span class="s1">&#39;src&#39;</span><span class="p">,</span> <span class="s1">&#39;lmp_mpi&#39;</span><span class="p">),</span>
+                                                   <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">HOME_DIR</span><span class="p">,</span><span class="s1">&#39;.bashrc&#39;</span><span class="p">)),</span>
+         <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
+         
+<div class="viewcode-block" id="install_ambertools"><a class="viewcode-back" href="../complete_install.html#complete_install.install_ambertools">[docs]</a><span class="k">def</span> <span class="nf">install_ambertools</span><span class="p">(</span><span class="n">dir_</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dir_</span><span class="p">)</span>
+    <span class="n">call</span><span class="p">(</span><span class="s2">&quot;echo export AMBERHOME={} &gt;&gt; {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">HOME_DIR</span><span class="p">,</span><span class="s1">&#39;.bashrc&#39;</span><span class="p">)),</span>
+         <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;AMBERHOME&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dir_</span>
+    <span class="n">call</span><span class="p">(</span><span class="s1">&#39;./configure gnu&#39;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">call</span><span class="p">(</span><span class="s1">&#39;make install&#39;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">call</span><span class="p">(</span><span class="s2">&quot;echo export ANTECHAMBER_EXEC={} &gt;&gt; {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">,</span> <span class="s1">&#39;antechamber&#39;</span><span class="p">),</span>
+                                                   <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">HOME_DIR</span><span class="p">,</span><span class="s1">&#39;.bashrc&#39;</span><span class="p">)),</span>
+         <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span></div>
+         
+<div class="viewcode-block" id="install_openbabel"><a class="viewcode-back" href="../complete_install.html#complete_install.install_openbabel">[docs]</a><span class="k">def</span> <span class="nf">install_openbabel</span><span class="p">():</span>
+    <span class="n">apt_install</span><span class="p">(</span><span class="s1">&#39;libopenbabel4&#39;</span><span class="p">,</span> <span class="s1">&#39;libopenbabel-dev&#39;</span><span class="p">,</span> <span class="s1">&#39;openbabel&#39;</span><span class="p">,</span> <span class="s1">&#39;python-openbabel&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../complete_install.html#complete_install.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--apt-update&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;apt_update&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--apt-install&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;apt_install&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--pysimm&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;pysimm_prefix&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">HOME_DIR</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--lammps&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;lammps_prefix&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--lammps-packages&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;lammps_packages&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span>
+                        <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;molecule&#39;</span><span class="p">,</span> <span class="s1">&#39;class2&#39;</span><span class="p">,</span> <span class="s1">&#39;kspace&#39;</span><span class="p">,</span> <span class="s1">&#39;user-misc&#39;</span><span class="p">,</span> <span class="s1">&#39;misc&#39;</span><span class="p">,</span> <span class="s1">&#39;qeq&#39;</span><span class="p">,</span> <span class="s1">&#39;manybody&#39;</span><span class="p">])</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--amber-tools&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;ambertools_dir&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--openbabel&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;openbabel&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="mkdir_p"><a class="viewcode-back" href="../complete_install.html#complete_install.mkdir_p">[docs]</a><span class="k">def</span> <span class="nf">mkdir_p</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">exc</span><span class="o">.</span><span class="n">errno</span> <span class="o">==</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">apt_update</span><span class="p">):</span>
+        <span class="n">apt_update</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">pysimm_prefix</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">apt_install</span><span class="p">:</span>
+            <span class="n">apt_install</span><span class="p">(</span><span class="s1">&#39;git&#39;</span><span class="p">,</span> <span class="s1">&#39;python-numpy&#39;</span><span class="p">,</span> <span class="s1">&#39;python-matplotlib&#39;</span><span class="p">)</span>
+        <span class="n">mkdir_p</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">pysimm_prefix</span><span class="p">)</span>
+        <span class="n">install_pysimm</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">pysimm_prefix</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">lammps_prefix</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">apt_install</span><span class="p">:</span>
+            <span class="n">apt_install</span><span class="p">(</span><span class="s1">&#39;make git g++&#39;</span><span class="p">,</span> <span class="s1">&#39;libopenmpi-dev&#39;</span><span class="p">,</span> <span class="s1">&#39;openmpi-bin&#39;</span><span class="p">)</span>
+        <span class="n">mkdir_p</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">lammps_prefix</span><span class="p">)</span>
+        <span class="n">install_lammps</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">lammps_prefix</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">lammps_packages</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">ambertools_dir</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">apt_install</span><span class="p">:</span>
+            <span class="n">apt_install</span><span class="p">(</span><span class="s1">&#39;make&#39;</span><span class="p">,</span> <span class="s1">&#39;csh&#39;</span><span class="p">,</span> <span class="s1">&#39;gfortran&#39;</span><span class="p">,</span> <span class="s1">&#39;libopenmpi-dev&#39;</span><span class="p">,</span> <span class="s1">&#39;openmpi-bin&#39;</span><span class="p">,</span> <span class="s1">&#39;xorg-dev&#39;</span><span class="p">,</span> <span class="s1">&#39;xserver-xorg&#39;</span><span class="p">)</span>
+        <span class="n">install_ambertools</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ambertools_dir</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">openbabel</span><span class="p">:</span>
+        <span class="n">install_openbabel</span><span class="p">()</span>
+        
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">HOME_DIR</span><span class="p">)</span>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, https://pysimm.org.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

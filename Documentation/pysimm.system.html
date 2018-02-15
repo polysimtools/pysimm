@@ -13,8 +13,6 @@
 
   
   
-  
-  
 
   
 
@@ -32,9 +30,6 @@
   
 
   
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="pysimm 0.2 documentation" href="index.html"/>
         <link rel="up" title="pysimm package" href="pysimm.html"/>
         <link rel="next" title="pysimm.utils module" href="pysimm.utils.html"/>
@@ -47,7 +42,6 @@
 
 <body class="wy-body-for-nav" role="document">
 
-   
   <div class="wy-grid-for-nav">
 
     
@@ -88,10 +82,7 @@
           
             
             
-              
-            
-            
-              <ul class="current">
+                <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="pysimm.html">pysimm package</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pysimm.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="pysimm.html#submodules">Submodules</a><ul class="current">
@@ -100,7 +91,7 @@
 <li class="toctree-l3"><a class="reference internal" href="pysimm.cassandra.html">pysimm.cassandra module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.cli.html">pysimm.cli module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.lmps.html">pysimm.lmps module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">pysimm.system module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">pysimm.system module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pysimm.utils.html">pysimm.utils module</a></li>
 </ul>
 </li>
@@ -119,10 +110,8 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pysimm</a>
-        
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">pysimm</a>
       </nav>
 
 
@@ -131,42 +120,25 @@
         <div class="rst-content">
           
 
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
-
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html">Docs</a> &raquo;</li>
-        
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
           <li><a href="pysimm.html">pysimm package</a> &raquo;</li>
-        
-      <li>pysimm.system module</li>
-    
-    
+      
+    <li>pysimm.system module</li>
       <li class="wy-breadcrumbs-aside">
         
-            
-            <a href="_sources/pysimm.system.rst.txt" rel="nofollow"> View page source</a>
+          
+            <a href="_sources/pysimm.system.txt" rel="nofollow"> View page source</a>
           
         
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -179,7 +151,7 @@
 <em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">Angle</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Angle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
 <p>Angle between particles a, b, and c</p>
-<p>a–b–c</p>
+<p>a&#8211;b&#8211;c</p>
 <p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
 Keyword arguments are assigned as attributes.
 Attributes usually used are given below.</p>
@@ -215,7 +187,7 @@ Attributes usually used are given below.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>radians</strong> – True to return value in radians (default: False)</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>radians</strong> &#8211; True to return value in radians (default: False)</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Angle between Particle a, b, and c</td>
 </tr>
@@ -257,7 +229,7 @@ Attributes usually used are given below.</p>
 <em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">Bond</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Bond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Bond" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
 <p>Bond between particle a and b</p>
-<p>a–b</p>
+<p>a&#8211;b</p>
 <p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
 Keyword arguments are assigned as attributes.
 Attributes usually used are given below.</p>
@@ -288,7 +260,7 @@ Sets distance to dist attribute of self. Does not consider pbc.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Distance between Particle a and Particle b (not considering pbc)</td>
 </tr>
@@ -335,7 +307,7 @@ Attributes usually used are given below.</p>
 <em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">Dihedral</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Dihedral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Dihedral" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
 <p>Dihedral between particles a, b, c, and d</p>
-<p>a–b–c–d</p>
+<p>a&#8211;b&#8211;c&#8211;d</p>
 <p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
 Keyword arguments are assigned as attributes.
 Attributes usually used are given below.</p>
@@ -484,9 +456,9 @@ Attributes usually used are given below.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> – distance to shift box bounds in x direction</li>
-<li><strong>y</strong> – distance to shift box bounds in y direction</li>
-<li><strong>z</strong> – distance to shift box bounds in z direction</li>
+<li><strong>x</strong> &#8211; distance to shift box bounds in x direction</li>
+<li><strong>y</strong> &#8211; distance to shift box bounds in y direction</li>
+<li><strong>z</strong> &#8211; distance to shift box bounds in z direction</li>
 </ul>
 </td>
 </tr>
@@ -507,7 +479,7 @@ Attributes usually used are given below.</p>
 <div class="line-block">
 <div class="line">b</div>
 <div class="line"><a href="#id1"><span class="problematic" id="id2">|</span></a></div>
-<div class="line">a–d</div>
+<div class="line">a&#8211;d</div>
 <div class="line"><a href="#id3"><span class="problematic" id="id4">|</span></a></div>
 <div class="line">c</div>
 </div>
@@ -636,7 +608,7 @@ those which contain this <a class="reference internal" href="#pysimm.system.Part
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> – <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object from which bonding objects will be removed</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object from which bonding objects will be removed</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -653,9 +625,9 @@ those which contain this <a class="reference internal" href="#pysimm.system.Part
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>dx</strong> – distance to shift in x direction</li>
-<li><strong>dy</strong> – distance to shift in y direction</li>
-<li><strong>dz</strong> – distance to shift in z direction</li>
+<li><strong>dx</strong> &#8211; distance to shift in x direction</li>
+<li><strong>dy</strong> &#8211; distance to shift in y direction</li>
+<li><strong>dz</strong> &#8211; distance to shift in z direction</li>
 </ul>
 </td>
 </tr>
@@ -690,7 +662,7 @@ Attributes usually used are given below.</p>
 <dl class="attribute">
 <dt id="pysimm.system.ParticleType.elem">
 <code class="descname">elem</code><a class="headerlink" href="#pysimm.system.ParticleType.elem" title="Permalink to this definition">¶</a></dt>
-<dd><p>element abbreviation, i.e. ‘H’ for Hydrogen, ‘Cl’ for Chlorine</p>
+<dd><p>element abbreviation, i.e. &#8216;H&#8217; for Hydrogen, &#8216;Cl&#8217; for Chlorine</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -788,11 +760,11 @@ Contains information required for molecular simulation.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>other</strong> – <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object to add</li>
-<li><strong>unique_types</strong> (<em>optional</em>) – Remove duplicate types and reassign references to existing types (True)</li>
-<li><strong>change_dim</strong> (<em>optional</em>) – Update <a class="reference internal" href="#pysimm.system.Dimension" title="pysimm.system.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> object so that <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> objects do not exist
+<li><strong>other</strong> &#8211; <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object to add</li>
+<li><strong>unique_types</strong> (<em>optional</em>) &#8211; Remove duplicate types and reassign references to existing types (True)</li>
+<li><strong>change_dim</strong> (<em>optional</em>) &#8211; Update <a class="reference internal" href="#pysimm.system.Dimension" title="pysimm.system.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> object so that <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> objects do not exist
 outside of <a class="reference internal" href="#pysimm.system.Dimension" title="pysimm.system.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> extremes (True)</li>
-<li><strong>update_properties</strong> (<em>optional</em>) – Update system-wide mass, volume, density, center of gravity, and velocity
+<li><strong>update_properties</strong> (<em>optional</em>) &#8211; Update system-wide mass, volume, density, center of gravity, and velocity
 properties (True)</li>
 </ul>
 </td>
@@ -810,10 +782,10 @@ properties (True)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>a</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Angle" title="pysimm.system.Angle"><code class="xref py py-class docutils literal"><span class="pre">Angle</span></code></a></li>
-<li><strong>b</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Angle" title="pysimm.system.Angle"><code class="xref py py-class docutils literal"><span class="pre">Angle</span></code></a> (middle particle)</li>
-<li><strong>c</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Angle" title="pysimm.system.Angle"><code class="xref py py-class docutils literal"><span class="pre">Angle</span></code></a></li>
-<li><strong>f</strong> – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
+<li><strong>a</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Angle" title="pysimm.system.Angle"><code class="xref py py-class docutils literal"><span class="pre">Angle</span></code></a></li>
+<li><strong>b</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Angle" title="pysimm.system.Angle"><code class="xref py py-class docutils literal"><span class="pre">Angle</span></code></a> (middle particle)</li>
+<li><strong>c</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Angle" title="pysimm.system.Angle"><code class="xref py py-class docutils literal"><span class="pre">Angle</span></code></a></li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
 </ul>
 </td>
 </tr>
@@ -833,9 +805,9 @@ properties (True)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>a</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Bond" title="pysimm.system.Bond"><code class="xref py py-class docutils literal"><span class="pre">Bond</span></code></a></li>
-<li><strong>b</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Bond" title="pysimm.system.Bond"><code class="xref py py-class docutils literal"><span class="pre">Bond</span></code></a></li>
-<li><strong>f</strong> – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
+<li><strong>a</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Bond" title="pysimm.system.Bond"><code class="xref py py-class docutils literal"><span class="pre">Bond</span></code></a></li>
+<li><strong>b</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Bond" title="pysimm.system.Bond"><code class="xref py py-class docutils literal"><span class="pre">Bond</span></code></a></li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
 </ul>
 </td>
 </tr>
@@ -855,11 +827,11 @@ properties (True)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>a</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a></li>
-<li><strong>b</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a> (middle particle)</li>
-<li><strong>c</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a> (middle particle)</li>
-<li><strong>d</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a></li>
-<li><strong>f</strong> – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
+<li><strong>a</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a></li>
+<li><strong>b</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a> (middle particle)</li>
+<li><strong>c</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a> (middle particle)</li>
+<li><strong>d</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a></li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
 </ul>
 </td>
 </tr>
@@ -879,11 +851,11 @@ properties (True)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>a</strong> – <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a> (middle particle)</li>
-<li><strong>b</strong> – <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a></li>
-<li><strong>c</strong> – <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a></li>
-<li><strong>d</strong> – <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a></li>
-<li><strong>f</strong> – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
+<li><strong>a</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a> (middle particle)</li>
+<li><strong>b</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a></li>
+<li><strong>c</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a></li>
+<li><strong>d</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a></li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
 </ul>
 </td>
 </tr>
@@ -902,7 +874,7 @@ properties (True)</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>p</strong> – new <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object to be added</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>p</strong> &#8211; new <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object to be added</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -919,9 +891,9 @@ properties (True)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>p</strong> – new <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object to be added</li>
-<li><strong>p0</strong> – original <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object in <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> to which p will be bonded</li>
-<li><strong>f</strong> – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field types will be retrieved</li>
+<li><strong>p</strong> &#8211; new <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object to be added</li>
+<li><strong>p0</strong> &#8211; original <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object in <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> to which p will be bonded</li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field types will be retrieved</li>
 </ul>
 </td>
 </tr>
@@ -940,7 +912,7 @@ properties (True)</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -951,14 +923,14 @@ properties (True)</li>
 <dl class="method">
 <dt id="pysimm.system.System.apply_charges">
 <code class="descname">apply_charges</code><span class="sig-paren">(</span><em>f</em>, <em>charges='default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.apply_charges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.apply_charges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Applies charges derived using method provided by user. Defaults to ‘default’. Calls <code class="xref py py-func docutils literal"><span class="pre">assign_charges()</span></code> method of forcefield object provided.</p>
+<dd><p>Applies charges derived using method provided by user. Defaults to &#8216;default&#8217;. Calls <code class="xref py py-func docutils literal"><span class="pre">assign_charges()</span></code> method of forcefield object provided.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>f</strong> – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object</li>
-<li><strong>charges</strong> – type of charges to be applied default=’default’</li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object</li>
+<li><strong>charges</strong> &#8211; type of charges to be applied default=&#8217;default&#8217;</li>
 </ul>
 </td>
 </tr>
@@ -978,12 +950,12 @@ properties (True)</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>f</strong> – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
-<li><strong>charges</strong> – type of charges to be applied default=’default’</li>
-<li><strong>set_box</strong> – Update simulation box information based on particle positions default=True</li>
-<li><strong>box_padding</strong> – Add padding to simulation box if updating dimensions default=10 (Angstroms)</li>
-<li><strong>update_ptypes</strong> – If True, update particle types based on current <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> names default=False</li>
-<li><strong>skip_ptypes</strong> – if True, do not change particle types</li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
+<li><strong>charges</strong> &#8211; type of charges to be applied default=&#8217;default&#8217;</li>
+<li><strong>set_box</strong> &#8211; Update simulation box information based on particle positions default=True</li>
+<li><strong>box_padding</strong> &#8211; Add padding to simulation box if updating dimensions default=10 (Angstroms)</li>
+<li><strong>update_ptypes</strong> &#8211; If True, update particle types based on current <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> names default=False</li>
+<li><strong>skip_ptypes</strong> &#8211; if True, do not change particle types</li>
 </ul>
 </td>
 </tr>
@@ -997,15 +969,15 @@ properties (True)</li>
 <dl class="method">
 <dt id="pysimm.system.System.center">
 <code class="descname">center</code><span class="sig-paren">(</span><em>what='particles', at=[0, 0, 0], move_both=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.center"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.center" title="Permalink to this definition">¶</a></dt>
-<dd><p>Centers particles center of geometry or simulation box at given coordinate. A vector is defined based on the current coordinate for the center of either the particles or the simulation box and the “at” parameter. This shift vector is applied to the entity defined by the “what” parameter. Optionally, both the particles and the box can be shifted by the same vector.</p>
+<dd><p>Centers particles center of geometry or simulation box at given coordinate. A vector is defined based on the current coordinate for the center of either the particles or the simulation box and the &#8220;at&#8221; parameter. This shift vector is applied to the entity defined by the &#8220;what&#8221; parameter. Optionally, both the particles and the box can be shifted by the same vector.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>what</strong> – what is being centered: “particles” or “box”</li>
-<li><strong>at</strong> – new coordinate for center of particles or box</li>
-<li><strong>move_both</strong> – if True, determines vector for shift defined by “what” and “at” parameters, and applies shift to both particles and box. If false, only shift what is defined by “what” parameter.</li>
+<li><strong>what</strong> &#8211; what is being centered: &#8220;particles&#8221; or &#8220;box&#8221;</li>
+<li><strong>at</strong> &#8211; new coordinate for center of particles or box</li>
+<li><strong>move_both</strong> &#8211; if True, determines vector for shift defined by &#8220;what&#8221; and &#8220;at&#8221; parameters, and applies shift to both particles and box. If false, only shift what is defined by &#8220;what&#8221; parameter.</li>
 </ul>
 </td>
 </tr>
@@ -1019,12 +991,12 @@ properties (True)</li>
 <dl class="method">
 <dt id="pysimm.system.System.center_at_origin">
 <code class="descname">center_at_origin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.center_at_origin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.center_at_origin" title="Permalink to this definition">¶</a></dt>
-<dd><p>DEPRECATED: Use <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.center(‘particles’, [0, 0, 0], True) instead</p>
+<dd><p>DEPRECATED: Use <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.center(&#8216;particles&#8217;, [0, 0, 0], True) instead</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1035,12 +1007,12 @@ properties (True)</li>
 <dl class="method">
 <dt id="pysimm.system.System.center_system">
 <code class="descname">center_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.center_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.center_system" title="Permalink to this definition">¶</a></dt>
-<dd><p>DEPRECATED: Use <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.center(‘box’, [0, 0, 0], True) instead</p>
+<dd><p>DEPRECATED: Use <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.center(&#8216;box&#8217;, [0, 0, 0], True) instead</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1061,7 +1033,7 @@ bonded elements</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1077,7 +1049,7 @@ bonded elements</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1093,7 +1065,7 @@ bonded elements</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1110,12 +1082,12 @@ bonded elements</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>rotate_x</strong> – rotate duplicate system around x axis by this value (radians)</li>
-<li><strong>rotate_y</strong> – rotate duplicate system around y axis by this value (radians)</li>
-<li><strong>rotate_z</strong> – rotate duplicate system around z axis by this value (radians)</li>
-<li><strong>dx</strong> – translate duplicate system in x dimension by this value (Angstrom)</li>
-<li><strong>dy</strong> – translate duplicate system in y dimension by this value (Angstrom)</li>
-<li><strong>dz</strong> – translate duplicate system in z dimension by this value (Angstrom)</li>
+<li><strong>rotate_x</strong> &#8211; rotate duplicate system around x axis by this value (radians)</li>
+<li><strong>rotate_y</strong> &#8211; rotate duplicate system around y axis by this value (radians)</li>
+<li><strong>rotate_z</strong> &#8211; rotate duplicate system around z axis by this value (radians)</li>
+<li><strong>dx</strong> &#8211; translate duplicate system in x dimension by this value (Angstrom)</li>
+<li><strong>dy</strong> &#8211; translate duplicate system in y dimension by this value (Angstrom)</li>
+<li><strong>dz</strong> &#8211; translate duplicate system in z dimension by this value (Angstrom)</li>
 </ul>
 </td>
 </tr>
@@ -1132,8 +1104,8 @@ bonded elements</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>p1</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object</li>
-<li><strong>p2</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object</li>
+<li><strong>p1</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object</li>
+<li><strong>p2</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object</li>
 </ul>
 </td>
 </tr>
@@ -1153,7 +1125,7 @@ New <a class="reference internal" href="#pysimm.system.ParticleType" title="pysi
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1170,12 +1142,12 @@ New <a class="reference internal" href="#pysimm.system.ParticleType" title="pysi
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>p1</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in new bond</li>
-<li><strong>p2</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in new bond</li>
-<li><strong>f</strong> – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field types will be retrieved</li>
-<li><strong>angles</strong> – True to update new angles default=True</li>
-<li><strong>dihedrals</strong> – True to update new dihedrals default=True</li>
-<li><strong>impropers</strong> – True to update new impropers default=True</li>
+<li><strong>p1</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in new bond</li>
+<li><strong>p2</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in new bond</li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field types will be retrieved</li>
+<li><strong>angles</strong> &#8211; True to update new angles default=True</li>
+<li><strong>dihedrals</strong> &#8211; True to update new dihedrals default=True</li>
+<li><strong>impropers</strong> &#8211; True to update new impropers default=True</li>
 </ul>
 </td>
 </tr>
@@ -1195,7 +1167,7 @@ For example, if read from file that bond #1 is between particle 1 and 2 set <a c
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1211,7 +1183,7 @@ For example, if read from file that bond #1 is between particle 1 and 2 set <a c
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tolerance</strong> – fractional value of equilibrium bond length that is acceptable</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tolerance</strong> &#8211; fractional value of equilibrium bond length that is acceptable</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">number of bonds in system outside tolerance</td>
 </tr>
@@ -1229,7 +1201,7 @@ Assumes following format for each atom line:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> – LAMMPS dump file</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> &#8211; LAMMPS dump file</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1252,8 +1224,8 @@ Assumes following format for each atom line:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>trj</strong> – LAMMPS trajectory file</li>
-<li><strong>frame</strong> – sequential frame number (not LAMMPS timestep) default=1</li>
+<li><strong>trj</strong> &#8211; LAMMPS trajectory file</li>
+<li><strong>frame</strong> &#8211; sequential frame number (not LAMMPS timestep) default=1</li>
 </ul>
 </td>
 </tr>
@@ -1272,7 +1244,7 @@ Assumes following format for each atom line:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>types_file</strong> – type dictionary file name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>types_file</strong> &#8211; type dictionary file name</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1289,9 +1261,9 @@ Assumes following format for each atom line:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>xyz</strong> – xyz trajectory file</li>
-<li><strong>frame</strong> – sequential frame number default=1</li>
-<li><strong>quiet</strong> – True to print status default=False</li>
+<li><strong>xyz</strong> &#8211; xyz trajectory file</li>
+<li><strong>frame</strong> &#8211; sequential frame number default=1</li>
+<li><strong>quiet</strong> &#8211; True to print status default=False</li>
 </ul>
 </td>
 </tr>
@@ -1310,7 +1282,7 @@ Assumes following format for each atom line:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1326,7 +1298,7 @@ Assumes following format for each atom line:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>update_tags</strong> – True to update all tags after removal of bonding items default=True</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>update_tags</strong> &#8211; True to update all tags after removal of bonding items default=True</td>
 </tr>
 </tbody>
 </table>
@@ -1342,11 +1314,11 @@ Assumes following format for each atom line:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>around</strong> – <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> around which <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> will be rotated default=None</li>
-<li><strong>theta_x</strong> – angle around which system will be rotated on x axis</li>
-<li><strong>theta_y</strong> – angle around which system will be rotated on y axis</li>
-<li><strong>theta_z</strong> – angle around which system will be rotated on z axis</li>
-<li><strong>rot_matrix</strong> – rotation matrix to use for rotation</li>
+<li><strong>around</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> around which <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> will be rotated default=None</li>
+<li><strong>theta_x</strong> &#8211; angle around which system will be rotated on x axis</li>
+<li><strong>theta_y</strong> &#8211; angle around which system will be rotated on y axis</li>
+<li><strong>theta_z</strong> &#8211; angle around which system will be rotated on z axis</li>
+<li><strong>rot_matrix</strong> &#8211; rotation matrix to use for rotation</li>
 </ul>
 </td>
 </tr>
@@ -1365,7 +1337,7 @@ Assumes following format for each atom line:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1376,14 +1348,14 @@ Assumes following format for each atom line:</p>
 <dl class="method">
 <dt id="pysimm.system.System.set_box">
 <code class="descname">set_box</code><span class="sig-paren">(</span><em>padding=0.0</em>, <em>center=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_box" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.dim with user defined padding. Used to construct a simulation box if it doesn’t exist, or adjust the size of the simulation box following system modifications.</p>
+<dd><p>Update <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.dim with user defined padding. Used to construct a simulation box if it doesn&#8217;t exist, or adjust the size of the simulation box following system modifications.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>padding</strong> – add padding to all sides of box (Angstrom)</li>
-<li><strong>center</strong> – if True, place center of box at origin default=True</li>
+<li><strong>padding</strong> &#8211; add padding to all sides of box (Angstrom)</li>
+<li><strong>center</strong> &#8211; if True, place center of box at origin default=True</li>
 </ul>
 </td>
 </tr>
@@ -1402,7 +1374,7 @@ Assumes following format for each atom line:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1418,7 +1390,7 @@ Assumes following format for each atom line:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1434,7 +1406,7 @@ Assumes following format for each atom line:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1452,9 +1424,9 @@ Assumes following format for each atom line:</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>bonds</strong> – exclude particles involved in 1-2 interactions</li>
-<li><strong>angles</strong> – exclude particles involved in 1-3 interactions</li>
-<li><strong>dihedrals</strong> – exclude particles involved in 1-4 interactions</li>
+<li><strong>bonds</strong> &#8211; exclude particles involved in 1-2 interactions</li>
+<li><strong>angles</strong> &#8211; exclude particles involved in 1-3 interactions</li>
+<li><strong>dihedrals</strong> &#8211; exclude particles involved in 1-4 interactions</li>
 </ul>
 </td>
 </tr>
@@ -1470,7 +1442,7 @@ Assumes following format for each atom line:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>v_void</strong> – void volume if not defined in <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.void_volume default=None</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>v_void</strong> &#8211; void volume if not defined in <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.void_volume default=None</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1486,7 +1458,7 @@ Assumes following format for each atom line:</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1503,7 +1475,7 @@ Sets <a class="reference internal" href="#pysimm.system.System" title="pysimm.sy
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>molecules</strong> – <a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> of molecules to calculate distributions defaul=’all’</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>molecules</strong> &#8211; <a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> of molecules to calculate distributions defaul=&#8217;all&#8217;</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1520,7 +1492,7 @@ For example, if bond type value 2 is read from file, set <a class="reference int
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1536,7 +1508,7 @@ For example, if bond type value 2 is read from file, set <a class="reference int
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1552,7 +1524,7 @@ For example, if bond type value 2 is read from file, set <a class="reference int
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1569,9 +1541,9 @@ For example, if bond type value 2 is read from file, set <a class="reference int
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>shiftx</strong> – distance to shift particles in x direction</li>
-<li><strong>shifty</strong> – distance to shift particles in y direction</li>
-<li><strong>shiftz</strong> – distance to shift particles in z direction</li>
+<li><strong>shiftx</strong> &#8211; distance to shift particles in x direction</li>
+<li><strong>shifty</strong> &#8211; distance to shift particles in y direction</li>
+<li><strong>shiftz</strong> &#8211; distance to shift particles in z direction</li>
 </ul>
 </td>
 </tr>
@@ -1590,7 +1562,7 @@ For example, if bond type value 2 is read from file, set <a class="reference int
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1611,7 +1583,7 @@ For example, if bond type value 2 is read from file, set <a class="reference int
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1628,8 +1600,8 @@ For example, if bond type value 2 is read from file, set <a class="reference int
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>ff</strong> – forcefield to search for Type objects</li>
-<li><strong>acname</strong> – ac filename containing type names</li>
+<li><strong>ff</strong> &#8211; forcefield to search for Type objects</li>
+<li><strong>acname</strong> &#8211; ac filename containing type names</li>
 </ul>
 </td>
 </tr>
@@ -1649,7 +1621,7 @@ For example, if bond type value 2 is read from file, set <a class="reference int
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object reference</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object reference</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1680,11 +1652,11 @@ For example, if bond type value 2 is read from file, set <a class="reference int
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ptypes</strong> – list of <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> objects from which to update</li>
-<li><strong>btypes</strong> – list of <a class="reference internal" href="#pysimm.system.BondType" title="pysimm.system.BondType"><code class="xref py py-class docutils literal"><span class="pre">BondType</span></code></a> objects from which to update</li>
-<li><strong>atypes</strong> – list of <a class="reference internal" href="#pysimm.system.AngleType" title="pysimm.system.AngleType"><code class="xref py py-class docutils literal"><span class="pre">AngleType</span></code></a> objects from which to update</li>
-<li><strong>dtypes</strong> – list of <a class="reference internal" href="#pysimm.system.DihedralType" title="pysimm.system.DihedralType"><code class="xref py py-class docutils literal"><span class="pre">DihedralType</span></code></a> objects from which to update</li>
-<li><strong>itypes</strong> – list of <a class="reference internal" href="#pysimm.system.ImproperType" title="pysimm.system.ImproperType"><code class="xref py py-class docutils literal"><span class="pre">ImproperType</span></code></a> objects from which to update</li>
+<li><strong>ptypes</strong> &#8211; list of <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> objects from which to update</li>
+<li><strong>btypes</strong> &#8211; list of <a class="reference internal" href="#pysimm.system.BondType" title="pysimm.system.BondType"><code class="xref py py-class docutils literal"><span class="pre">BondType</span></code></a> objects from which to update</li>
+<li><strong>atypes</strong> &#8211; list of <a class="reference internal" href="#pysimm.system.AngleType" title="pysimm.system.AngleType"><code class="xref py py-class docutils literal"><span class="pre">AngleType</span></code></a> objects from which to update</li>
+<li><strong>dtypes</strong> &#8211; list of <a class="reference internal" href="#pysimm.system.DihedralType" title="pysimm.system.DihedralType"><code class="xref py py-class docutils literal"><span class="pre">DihedralType</span></code></a> objects from which to update</li>
+<li><strong>itypes</strong> &#8211; list of <a class="reference internal" href="#pysimm.system.ImproperType" title="pysimm.system.ImproperType"><code class="xref py py-class docutils literal"><span class="pre">ImproperType</span></code></a> objects from which to update</li>
 </ul>
 </td>
 </tr>
@@ -1702,9 +1674,9 @@ command line argument.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>vis_exec</strong> – executable to launch visualization software default=’vmd’</li>
-<li><strong>unwrap</strong> (<em>optional</em>) – if True, unwrap <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> first default=None</li>
-<li><strong>format</strong> (<em>optional</em>) – set format default=’xyz’</li>
+<li><strong>vis_exec</strong> &#8211; executable to launch visualization software default=&#8217;vmd&#8217;</li>
+<li><strong>unwrap</strong> (<em>optional</em>) &#8211; if True, unwrap <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> first default=None</li>
+<li><strong>format</strong> (<em>optional</em>) &#8211; set format default=&#8217;xyz&#8217;</li>
 </ul>
 </td>
 </tr>
@@ -1729,7 +1701,7 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1745,9 +1717,9 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> – where to write data, file name or ‘string’</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=’string’</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=&#8217;string&#8217;</td>
 </tr>
 </tbody>
 </table>
@@ -1761,9 +1733,9 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>out_data</strong> – where to write data, file name or ‘string’</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>out_data</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string if data file if out_data=’string’</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string if data file if out_data=&#8217;string&#8217;</td>
 </tr>
 </tbody>
 </table>
@@ -1777,9 +1749,9 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>out_data</strong> – where to write data, file name or ‘string’</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>out_data</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string if data file if out_data=’string’</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string if data file if out_data=&#8217;string&#8217;</td>
 </tr>
 </tbody>
 </table>
@@ -1793,9 +1765,9 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> – where to write data, file name or ‘string’</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=’string’</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=&#8217;string&#8217;</td>
 </tr>
 </tbody>
 </table>
@@ -1809,9 +1781,9 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> – where to write data, file name or ‘string’</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=’string’</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=&#8217;string&#8217;</td>
 </tr>
 </tbody>
 </table>
@@ -1825,9 +1797,9 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> – where to write data, file name or ‘string’</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=’string’</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=&#8217;string&#8217;</td>
 </tr>
 </tbody>
 </table>
@@ -1841,7 +1813,7 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> – file name to write data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> &#8211; file name to write data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1857,7 +1829,7 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1873,7 +1845,7 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -1896,7 +1868,7 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>p</strong> – Particle object with x, y, and z attributes</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>p</strong> &#8211; Particle object with x, y, and z attributes</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Distance of particle to origin</td>
 </tr>
@@ -1912,7 +1884,7 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>write</strong> (<em>optional</em>) – if True, write types dictionary to filename</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>write</strong> (<em>optional</em>) &#8211; if True, write types dictionary to filename</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(ptypes, btypes, atypes, dtypes, itypes)
 <strong>* for use with update_types *</strong></td>
@@ -1923,7 +1895,7 @@ Ensure particles are contained within simulation box.</p>
 
 <dl class="function">
 <dt id="pysimm.system.random">
-<code class="descclassname">pysimm.system.</code><code class="descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; x in the interval [0, 1).<a class="headerlink" href="#pysimm.system.random" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pysimm.system.</code><code class="descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; x in the interval [0, 1).<a class="headerlink" href="#pysimm.system.random" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -1934,7 +1906,7 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ac_file</strong> – ac file name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ac_file</strong> &#8211; ac file name</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</td>
 </tr>
@@ -1952,8 +1924,8 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file</strong> – xyz file name</li>
-<li><strong>quiet</strong> (<em>optional</em>) – if False, print status</li>
+<li><strong>file</strong> &#8211; xyz file name</li>
+<li><strong>quiet</strong> (<em>optional</em>) &#8211; if False, print status</li>
 </ul>
 </td>
 </tr>
@@ -1973,8 +1945,8 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>cml_file</strong> – cml file name</li>
-<li><strong>linkers</strong> (<em>optional</em>) – if True, use spinMultiplicity to determine linker default=None</li>
+<li><strong>cml_file</strong> &#8211; cml file name</li>
+<li><strong>linkers</strong> (<em>optional</em>) &#8211; if True, use spinMultiplicity to determine linker default=None</li>
 </ul>
 </td>
 </tr>
@@ -1994,16 +1966,16 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data_file</strong> – LAMMPS data file name</li>
-<li><strong>quiet</strong> (<em>optional</em>) – if False, print status</li>
-<li><strong>atom_style</strong> (<em>optional</em>) – option to let user override (understands charge, molecular, full)</li>
-<li><strong>pair_style</strong> (<em>optional</em>) – option to let user override</li>
-<li><strong>bond_style</strong> (<em>optional</em>) – option to let user override</li>
-<li><strong>angle_style</strong> (<em>optional</em>) – option to let user override</li>
-<li><strong>dihedral_style</strong> (<em>optional</em>) – option to let user override</li>
-<li><strong>improper_style</strong> (<em>optional</em>) – option to let user override</li>
-<li><strong>set_types</strong> (<em>optional</em>) – if True, objectify default=True</li>
-<li><strong>name</strong> (<em>optional</em>) – provide name for system</li>
+<li><strong>data_file</strong> &#8211; LAMMPS data file name</li>
+<li><strong>quiet</strong> (<em>optional</em>) &#8211; if False, print status</li>
+<li><strong>atom_style</strong> (<em>optional</em>) &#8211; option to let user override (understands charge, molecular, full)</li>
+<li><strong>pair_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
+<li><strong>bond_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
+<li><strong>angle_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
+<li><strong>dihedral_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
+<li><strong>improper_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
+<li><strong>set_types</strong> (<em>optional</em>) &#8211; if True, objectify default=True</li>
+<li><strong>name</strong> (<em>optional</em>) &#8211; provide name for system</li>
 </ul>
 </td>
 </tr>
@@ -2023,9 +1995,9 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>mol_file</strong> – mol file name</li>
-<li><strong>f</strong> (<em>optional</em>) – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object to get data from</li>
-<li><strong>version</strong> – version of mol file to expect default=’V2000’</li>
+<li><strong>mol_file</strong> &#8211; mol file name</li>
+<li><strong>f</strong> (<em>optional</em>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object to get data from</li>
+<li><strong>version</strong> &#8211; version of mol file to expect default=&#8217;V2000&#8217;</li>
 </ul>
 </td>
 </tr>
@@ -2044,7 +2016,7 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pdb_file</strong> – pdb file name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pdb_file</strong> &#8211; pdb file name</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</td>
 </tr>
@@ -2060,7 +2032,7 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prepc_file</strong> – ac file name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prepc_file</strong> &#8211; ac file name</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</td>
 </tr>
@@ -2078,8 +2050,8 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>smiles</strong> – smiles formatted string of molecule</li>
-<li><strong>type_with</strong> – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object to type with default=None</li>
+<li><strong>smiles</strong> &#8211; smiles formatted string of molecule</li>
+<li><strong>type_with</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object to type with default=None</li>
 </ul>
 </td>
 </tr>
@@ -2099,8 +2071,8 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>smiles</strong> – smiles formatted string of molecule</li>
-<li><strong>type_with</strong> – <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object to type with default=None</li>
+<li><strong>smiles</strong> &#8211; smiles formatted string of molecule</li>
+<li><strong>type_with</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object to type with default=None</li>
 </ul>
 </td>
 </tr>
@@ -2120,8 +2092,8 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file</strong> – xyz file name</li>
-<li><strong>quiet</strong> (<em>optional</em>) – if False, print status</li>
+<li><strong>file</strong> &#8211; xyz file name</li>
+<li><strong>quiet</strong> (<em>optional</em>) &#8211; if False, print status</li>
 </ul>
 </td>
 </tr>
@@ -2140,7 +2112,7 @@ Ensure particles are contained within simulation box.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file</strong> – yaml file name</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file</strong> &#8211; yaml file name</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</td>
 </tr>
@@ -2158,12 +2130,12 @@ Can be random insertion.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>ref</strong> – reference :class:<a href="#id5"><span class="problematic" id="id6">`</span></a>~pysimm.system.System`(s) (this can be a list)</li>
-<li><strong>nrep</strong> – number of insertions to perform (can be list but must match length of ref)</li>
-<li><strong>s</strong> – <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> into which insertions will be performed default=None</li>
-<li><strong>density</strong> – density of new <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> default=0.3 (set to None to not change box)</li>
-<li><strong>rand</strong> – if True, random insertion is performed</li>
-<li><strong>print_insertions</strong> – if True, update screen with number of insertions</li>
+<li><strong>ref</strong> &#8211; reference :class:<a href="#id5"><span class="problematic" id="id6">`</span></a>~pysimm.system.System`(s) (this can be a list)</li>
+<li><strong>nrep</strong> &#8211; number of insertions to perform (can be list but must match length of ref)</li>
+<li><strong>s</strong> &#8211; <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> into which insertions will be performed default=None</li>
+<li><strong>density</strong> &#8211; density of new <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> default=0.3 (set to None to not change box)</li>
+<li><strong>rand</strong> &#8211; if True, random insertion is performed</li>
+<li><strong>print_insertions</strong> &#8211; if True, update screen with number of insertions</li>
 </ul>
 </td>
 </tr>
@@ -2175,18 +2147,15 @@ Can be random insertion.</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="pysimm.utils.html" class="btn btn-neutral float-right" title="pysimm.utils module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="pysimm.utils.html" class="btn btn-neutral float-right" title="pysimm.utils module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="pysimm.lmps.html" class="btn btn-neutral" title="pysimm.lmps module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="pysimm.lmps.html" class="btn btn-neutral" title="pysimm.lmps module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -2220,8 +2189,7 @@ Can be random insertion.</p>
             VERSION:'0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
+            HAS_SOURCE:  true
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

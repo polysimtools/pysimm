@@ -13,8 +13,6 @@
 
   
   
-  
-  
 
   
 
@@ -32,9 +30,6 @@
   
 
   
-        <link rel="index" title="Index"
-              href="../../genindex.html"/>
-        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="pysimm 0.2 documentation" href="../../index.html"/>
         <link rel="up" title="pysimm" href="../pysimm.html"/> 
 
@@ -45,7 +40,6 @@
 
 <body class="wy-body-for-nav" role="document">
 
-   
   <div class="wy-grid-for-nav">
 
     
@@ -86,10 +80,7 @@
           
             
             
-              
-            
-            
-              <ul>
+                <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../pysimm.html">pysimm package</a></li>
 </ul>
 
@@ -103,10 +94,8 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pysimm</a>
-        
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">pysimm</a>
       </nav>
 
 
@@ -119,38 +108,21 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 <div role="navigation" aria-label="breadcrumbs navigation">
-
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../index.html">Docs</a> &raquo;</li>
-        
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
           <li><a href="../index.html">Module code</a> &raquo;</li>
-        
+      
           <li><a href="../pysimm.html">pysimm</a> &raquo;</li>
-        
-      <li>pysimm.amber</li>
-    
-    
+      
+    <li>pysimm.amber</li>
       <li class="wy-breadcrumbs-aside">
         
-            
+          
         
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -190,12 +162,12 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">from</span> <span class="nn">subprocess</span> <span class="k">import</span> <span class="n">call</span><span class="p">,</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">call</span><span class="p">,</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
 
-<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">forcefield</span>
-<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">error_print</span>
-<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">warning_print</span>
-<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">debug_print</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">forcefield</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">error_print</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">warning_print</span>
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">debug_print</span>
 
 
 <span class="n">ANTECHAMBER_EXEC</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ANTECHAMBER_EXEC&#39;</span><span class="p">)</span>
@@ -219,10 +191,10 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;problem removing </span><span class="si">{}</span><span class="s1"> during cleanup&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span></div>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;problem removing {} during cleanup&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="calc_charges"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.calc_charges">[docs]</a><span class="k">def</span> <span class="nf">calc_charges</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">charge_method</span><span class="o">=</span><span class="s1">&#39;bcc&#39;</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="calc_charges"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.calc_charges">[docs]</a><span class="k">def</span> <span class="nf">calc_charges</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">charge_method</span><span class="o">=</span><span class="s1">&#39;bcc&#39;</span><span class="p">,</span> <span class="n">cleanup</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.amber.calc_charges</span>
 
 <span class="sd">    Calculates charges using antechamber. Defaults to am1-bcc charges. </span>
@@ -236,10 +208,10 @@
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">s</span><span class="o">.</span><span class="n">write_pdb</span><span class="p">(</span><span class="s1">&#39;pysimm.tmp.pdb&#39;</span><span class="p">)</span>
-    <span class="n">cl</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -c </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ANTECHAMBER_EXEC</span><span class="p">,</span> <span class="n">charge_method</span><span class="p">)</span>
+    <span class="n">cl</span> <span class="o">=</span> <span class="s1">&#39;{} -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -c {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ANTECHAMBER_EXEC</span><span class="p">,</span> <span class="n">charge_method</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span>
     <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-    <span class="k">with</span> <span class="n">file</span><span class="p">(</span><span class="s1">&#39;pysimm.tmp.ac&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">file</span><span class="p">(</span><span class="s1">&#39;pysimm.tmp.ac&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
         <span class="n">f</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
@@ -252,7 +224,7 @@
         <span class="n">cleanup_antechamber</span><span class="p">()</span></div>
 
         
-<div class="viewcode-block" id="get_forcefield_types"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.get_forcefield_types">[docs]</a><span class="k">def</span> <span class="nf">get_forcefield_types</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="s1">&#39;gaff&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_forcefield_types"><a class="viewcode-back" href="../../pysimm.amber.html#pysimm.amber.get_forcefield_types">[docs]</a><span class="k">def</span> <span class="nf">get_forcefield_types</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="s1">&#39;gaff&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.amber.get_forcefield_types</span>
 
 <span class="sd">    Uses antechamber to determine atom types. Defaults to GAFF atom types. Retrieves :class:`~pysimm.system.ParticleType` objects from force field is provided </span>
@@ -266,10 +238,10 @@
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">s</span><span class="o">.</span><span class="n">write_pdb</span><span class="p">(</span><span class="s1">&#39;pysimm.tmp.pdb&#39;</span><span class="p">)</span>
-    <span class="n">cl</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -at </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ANTECHAMBER_EXEC</span><span class="p">,</span> <span class="n">types</span><span class="p">)</span>
+    <span class="n">cl</span> <span class="o">=</span> <span class="s1">&#39;{} -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -at {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ANTECHAMBER_EXEC</span><span class="p">,</span> <span class="n">types</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">split</span><span class="p">(),</span> <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span>
     <span class="n">p</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-    <span class="k">with</span> <span class="n">file</span><span class="p">(</span><span class="s1">&#39;pysimm.tmp.ac&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fr</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">file</span><span class="p">(</span><span class="s1">&#39;pysimm.tmp.ac&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fr</span><span class="p">:</span>
         <span class="n">fr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
         <span class="n">fr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">fr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
@@ -284,13 +256,10 @@
                     <span class="n">s</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">particle_types</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
                     
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">error_print</span><span class="p">(</span><span class="s1">&#39;cannot find type </span><span class="si">{}</span><span class="s1"> in system or forcefield&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_name</span><span class="p">))</span>
+                <span class="n">error_print</span><span class="p">(</span><span class="s1">&#39;cannot find type {} in system or forcefield&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">type_name</span><span class="p">))</span>
             <span class="n">line</span> <span class="o">=</span> <span class="n">fr</span><span class="o">.</span><span class="n">next</span><span class="p">()</span></div>
 </pre></div>
 
-           </div>
-           <div class="articleComments">
-            
            </div>
           </div>
           <footer>
@@ -325,8 +294,7 @@
             VERSION:'0.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
+            HAS_SOURCE:  true
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>
