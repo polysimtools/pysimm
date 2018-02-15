@@ -28,7 +28,7 @@
 # THE SOFTWARE.
 
 from StringIO import StringIO
-import subprocess
+from subprocess import call
 import os
 import re
 import numpy as np
@@ -58,11 +58,11 @@ DEFAULT_PARAMS = {
 
 
 class MCSimulation(object):
-    """pysimm.cassandra.GCMC
+    """pysimm.cassandra.MCSimulation
 
-    Object containing the settings and the logic necessary to set-up the Grand-Canonical Monte-Carlo (GCMC) simulations
-    provided by the CASSANDRA software. The object also will include the simulation results once the simulations are
-    finished.
+    Object containing the settings and the logic necessary to partially set-up an abstract Monte Carlo simulation
+    to be submitted to the CASSANDRA software. The object also will include the simulation results once the simulations
+    are finished.
 
     Attributes:
         mc_sst (:class:`~pysimm.cassandra.McSystem`) : describes all molecules to be inserted by CASSANDRA
@@ -214,9 +214,9 @@ class MCSimulation(object):
         self.props['Fragment_Files'] = InpSpec('Fragment_Files', frag_files, None, **{'new_line': True})
 
     def write(self):
-        """pysimm.cassandra.GCMC.write
+        """pysimm.cassandra.MCSimulation.write
 
-        Iterates through the :class:`~GCMC.props` dictionary creating the text for correct CASSANDRA input
+        Iterates through the :class:`~MCSimulation.props` dictionary creating the text for correct CASSANDRA input
         """
 
         for key in self.props.keys():
@@ -232,16 +232,16 @@ class MCSimulation(object):
         self.logger.info('File: "{:}" was created sucsessfully'.format(self.props_file))
 
     def group_by_id(self, group_key='matrix'):
-        """pysimm.cassandra.GCMC.group_by_id
+        """pysimm.cassandra.MCSimulation.group_by_id
 
-        Method for grouping the atoms of the system :class:`~GCMC.tot_sst` by a certain property. Will iterate through
+        Method groups the atoms of the system :class:`~MCSimulation.tot_sst` by a certain property. Will iterate through
         all atoms in the system and return indexes of only those atoms that match the property. Currently supports 3
         properties defined by the input keyword argument argument.
 
         Keyword Args:
             group_key (str): text constant defines the property to match. Possible keywords are:
 
-                (1) `matrix` -- (default) indexes of the atoms in :obj:`~GCMC.fxd_sst`
+                (1) `matrix` -- (default) indexes of the atoms in :obj:`~MCSimulation.fxd_sst`
 
                 (2) `rigid` -- indexes of all atoms that have rigid atomic bonds. It is assumed here that rigid and
                     nonrigid atoms can interact only through intermolecular forces
@@ -281,13 +281,13 @@ class MCSimulation(object):
         return idx_string, idx_array
 
     def upd_simulation(self):
-        """pysimm.cassandra.GCMC.upd_simulation
+        """pysimm.cassandra.MCSimulation.upd_simulation
 
-        Updates the :class:`~GCMC.tot_sst` field using the `GCMC.props['Run_Name'].chk` file. Will try to parse the
-        checkpoint file and read the coordinates of the molecules inserted by CASSANDRA. If neither of the molecules
-        from the :class:`~GCMC.mc_sst` can be fit to the text that was read the method will raise an exception. The
-        fitting method: :class:`~McSystem.make_system` assumes that different molecules inserted by CASSANDRA have
-        the same order of the atoms.
+        Updates the :class:`~MCSimulation.tot_sst` field using the `MCSimulation.props['Run_Name'].chk` file. Will try
+        to parse the checkpoint file and read the coordinates of the molecules inserted by CASSANDRA. If neither of the
+        molecules from the :class:`~MCSimulation.mc_sst` can be fit to the text that was read the method will raise an
+        exception. The fitting method: :class:`~McSystem.make_system` assumes that different molecules inserted by
+        CASSANDRA have the same order of the atoms.
         """
         fname = '{:}{:}'.format(self.props['Run_Name'].value, '.chk')
         self.logger.info('Updating MC system from the CASSANDRA {:} file...'.format(fname))
@@ -317,9 +317,9 @@ class MCSimulation(object):
                               'Probably it cannot be written by CASSANDRA to the place you specified')
 
     def __check_params__(self):
-        """pysimm.cassandra.GCMC.__check_params__
+        """pysimm.cassandra.MCSimulation.__check_params__
 
-        Private method designed for update the fields of the GCMC object to make them conformed with each other
+        Private method designed for update the fields of the simulation object to make them conformed with each other
         """
         # Sync the simulation box parameters
         dx = self.tot_sst.dim.xhi - self.tot_sst.dim.xlo
@@ -351,9 +351,9 @@ class MCSimulation(object):
                 self.props['Run_Type'].value['steps'] = self.props['Run_Type'].value['steps'][0]
 
     def __write_chk__(self, out_file):
-        """pysimm.cassandra.GCMC.__write_chk__
+        """pysimm.cassandra.MCSimulation.__write_chk__
 
-        Creates the CASSANDRA checkpoint file basing on the information from the `~GCMC.tot_sst` field
+        Creates the CASSANDRA checkpoint file basing on the information from the `~MCSimulation.tot_sst` field
         """
         # Initializing output stream
         if out_file == 'string':
@@ -425,7 +425,12 @@ class MCSimulation(object):
 
 
 class GCMC(MCSimulation):
+    """pysimm.cassandra.GCMC
+    Initiates the specific type of Monte Carlo simulations for CASSANDRA: simulations using Grand-Canonical ensemble of
+    particles (constant volume-temperature-chemical potential, muVT). See :class:`~pysimm.cassandra.MCSimulation`
+    for the detailed description of the properties.
 
+    """
     def __init__(self, mc_sst=None, init_sst=None, **kwargs):
         MCSimulation.__init__(self, mc_sst, init_sst, **kwargs)
 
@@ -468,6 +473,12 @@ class GCMC(MCSimulation):
 
 
 class NVT(MCSimulation):
+    """pysimm.cassandra.NVT
+    Initiates the specific type of Monte Carlo simulations for CASSANDRA: simulations using Canonical ensemble of
+    particles (constant volume-temperature-number of particles, NVT). See :class:`~pysimm.cassandra.MCSimulation`
+    for the detailed description of the properties.
+
+    """
     def __init__(self, mc_sst=None, init_sst=None, **kwargs):
         MCSimulation.__init__(self, mc_sst, init_sst, **kwargs)
         self.logger.name = 'NVT'
@@ -499,6 +510,11 @@ class NVT(MCSimulation):
 
 
 class NPT(MCSimulation):
+    """pysimm.cassandra.NPT
+    Initiates the specific type of Monte Carlo simulations for CASSANDRA: simulations using Isobaric-Isothermal ensemble
+    of particles (NPT). See :class:`~pysimm.cassandra.MCSimulation` for the detailed description of the properties.
+
+    """
     def __init__(self, mc_sst=None, init_sst=None, **kwargs):
         MCSimulation.__init__(self, mc_sst, init_sst, **kwargs)
 
@@ -850,14 +866,14 @@ class McSystem(object):
 class Cassandra(object):
     """pysimm.cassandra.Cassandra
 
-    Organizational object for running CASSANDRA simulation tasks. In current implementation it is able to run Gibbs
-    Canonical Monte-Carlo (GCMC :class:`~GCMC`) simulations.
+    Organizational object for running CASSANDRA simulation tasks. In current implementation it is able to run Canonical,
+    Grand Canonical, and Isothermal-Isobaric Monte Carlo simulations (:class:`~GCMC`, :class:`~NVT`, and :class:`~NPT`,
+    correspondingly).
 
     Parameters:
         system (:class:`~pysimm.system.System`) : molecular updated during the simulations
         run_queue (list) : the list of scheduled tasks
     """
-
     def __init__(self, init_sst):
         self.logger = logging.getLogger('CSNDRA')
 
@@ -890,7 +906,7 @@ class Cassandra(object):
                 try:
                     self.logger.info('Starting the GCMC simulations with CASSANDRA')
                     print('{:.^60}'.format(''))
-                    subprocess.call([CASSANDRA_EXEC, task.props_file])
+                    call([CASSANDRA_EXEC, task.props_file])
                     task.upd_simulation()
                     self.system = task.tot_sst.copy()
 
@@ -910,7 +926,7 @@ class Cassandra(object):
     def add_simulation(self, ens_type, obj=None, **kwargs):
         """pysimm.cassandra.Cassandra.add_simulation
 
-        Method for adding new GCMC simulation to the run queue.
+        Method for adding new Monte Carlo simulation to the run queue.
 
         Args:
             ens_type: Type of the molecular ensemble for the Monte-Carlo simulations. The supported options are: `GCMC`
@@ -957,7 +973,7 @@ class Cassandra(object):
     def add_gcmc(self, obj=None, **kwargs):
         """pysimm.cassandra.Cassandra.add_gcmc
 
-        Method for adding new GCMC simulation to the run queue.
+        Ads new simulation in grand-canonical ensemble to the run queue.
 
         Args:
             obj: the entity that should be added. Will be ignored if it is not of a type  :class:`~GCMC`
@@ -968,8 +984,8 @@ class Cassandra(object):
                 :class:`~McSystem` constructor.
 
         Note:
-            Other keyword arguments of this method will be redirected to the :class:`~McSystem` and :class:`~GCMC`
-            constructors. See their descriptions for the possible keyword options.
+            Other keyword arguments of this method will be redirected to the :class:`~McSystem`, :class:`~MCSimulation`,
+             and :class:`~GCMC` constructors. See their descriptions for the possible keyword options.
         """
         new_job = None
         if isinstance(obj, GCMC):
@@ -990,6 +1006,22 @@ class Cassandra(object):
             self.run_queue.append(new_job)
 
     def add_npt_mc(self, obj=None, **kwargs):
+        """pysimm.cassandra.Cassandra.add_npt_mc
+
+        Ads new simulation in isobaric-isothermal ensemble to the run queue.
+
+        Args:
+            obj: the entity that should be added. Will be ignored if it is not of a type  :class:`~NPT`
+
+        Keyword Args:
+            is_new (boolean) : defines whether all previous simulations should be erased or not
+            species (list of :class:`~pysimm.system.System`) : systems that describe molecules and will be passed to
+                :class:`~McSystem` constructor.
+
+        Note:
+            Other keyword arguments of this method will be redirected to the :class:`~McSystem`, :class:`~MCSimulation`,
+            and  :class:`~NPT` constructors. See their descriptions for the possible keyword options.
+        """
         new_job = None
         if isinstance(obj, NPT):
             new_job = obj
@@ -1009,6 +1041,22 @@ class Cassandra(object):
             self.run_queue.append(new_job)
 
     def add_nvt(self, obj=None, **kwargs):
+        """pysimm.cassandra.Cassandra.add_nvt
+
+        Ads new simulation in canonical ensemble to the run queue.
+
+        Args:
+            obj: the entity that should be added. Will be ignored if it is not of a type  :class:`~NVT`
+
+        Keyword Args:
+            is_new (boolean) : defines whether all previous simulations should be erased or not
+            species (list of :class:`~pysimm.system.System`) : systems that describe molecules and will be passed to
+                :class:`~McSystem` constructor.
+
+        Note:
+            Other keyword arguments of this method will be redirected to the :class:`~McSystem`, :class:`~MCSimulation`,
+            and  :class:`~NVT` constructors. See their descriptions for the possible keyword options.
+        """
         new_job = None
         if isinstance(obj, NVT):
             new_job = obj
@@ -1031,7 +1079,7 @@ class Cassandra(object):
         """pysimm.cassandra.Cassandra.read_input
 
         The method parses the CASSANDRA instructions file (.inp) split it into separate instructions and analyses each
-        one according to the instruction name.
+        according to the instruction name.
 
         Args:
             inp_file (str) : the full relative path of the file to be read

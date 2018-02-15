@@ -1,10 +1,10 @@
-Example 9: The Grand-Canonical Monte-Carlo simulations using Cassandra
-========================================================================================
+Example 9.1: The Grand-Canonical Monte Carlo simulations using Cassandra
+========================================================================
 by Alexander Demidov and Michael E. Fortunato
 
 ### Importing pysimm modules/packages
 
-The example illustrates the basic principles of utilizing the **pysimm.cassandra** module. The code sets up the Grand-Canonical (&#956;VT) Monte-Carlo simulations to be performed by the  [Cassandra](https://cassandra.nd.edu) software. The example shows how to use simulatneously molecules of different types and save the simulation results.  
+The example illustrates the basic principles of utilizing the **pysimm.cassandra** module. The code sets up the Grand-Canonical (&#956;VT) Monte Carlo simulations to be performed by the  [Cassandra](https://cassandra.nd.edu) software. The example shows how to use simulatneously molecules of different types and save the simulation results.
 
 First, let's import the required pysimm modules: system and cassandra
 
@@ -37,7 +37,7 @@ The properties of the Cassandra simulation for the pysimm.cassandra module are p
 Let's read the data from the **props.inp** file that is in the same example directory 
 
 ```python
-my_gcmc_props = css.read_input(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'props.inp'))
+my_gcmc_props = css.read_input('props.inp')
 ```
 Now different simulation properties can be modified if needed. Let's, for example, change the prefix of all simulation files that will be created by Cassandra
 
@@ -47,14 +47,14 @@ my_gcmc_props['Run_Name'] = 'gas_adsorb'
 
 ### Specifying the gas molecules
 
-The setup of a Monte-Carlo simulations should include also the information about entities to be inserted (modified or deleted) by the Monte-Carlo algorithm. In our example those are the gas molecules of three different species (CO<sub>2</sub>, methane, and m-xylene). For the **pysimm.cassandra** module they should be provided in the form of the **pysimm.system** objects. 
+The setup of a Monte Carlo simulations should include also the information about entities to be inserted (modified or deleted) by the Monte Carlo algorithm. In our example those are the gas molecules of three different species (CO<sub>2</sub>, methane, and m-xylene). For the **pysimm.cassandra** module they should be provided in the form of the **pysimm.system** objects.
 
 The example folder contains the LAMMPS files that describe one molecule of each gas specie, so the corresponding  **pysimm.system** objects can be created by reading the files by the **system.read_lammps()** method.
 
 ```python
-specie1 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'co2.lmps'))
-specie2 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ch4.lmps'))
-specie3 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'm-xylene.lmps'))
+specie1 = system.read_lammps('co2.lmps')
+specie2 = system.read_lammps('ch4.lmps')
+specie3 = system.read_lammps('m-xylene.lmps')
 ```
 
 ### Setup and run the simulations
@@ -77,9 +77,9 @@ The method `css.run()` will trigger the simulations from run queue. In our case 
 
 ### Working with simulation results
 
-The results of Cassandra simulations are written to the **cassandra.final_sst** field that is object of **pysimm.system** type.  The **pysimm.system** has few methods to write itself to the text-formatted file (e.g. such as .lmps ur .xyz)
+The results of Cassandra simulations are written to the **cassandra.system** field that is object of **pysimm.system** type.  The **pysimm.system** has few methods to write itself to the text-formatted file (e.g. such as .lmps or .xyz)
 
 ```python
-css.final_sst.write_lammps('gas_adsorb.lmps')
-css.final_sst.write_xyz('gas_adsorb.xyz')
+css.system.write_lammps('gas_adsorb.lmps')
+css.system.write_xyz('gas_adsorb.xyz')
 ```

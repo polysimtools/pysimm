@@ -1,4 +1,3 @@
-import os
 from pysimm import system, cassandra, lmps
 
 
@@ -13,15 +12,15 @@ def run(test=False):
     
     # Read the CASSANDRA .inp parameters file -- common way to setup simulations.
     # Any of the read properties can be modified here afterwards
-    my_gcmc_props = css.read_input(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'props.inp'))
+    my_gcmc_props = css.read_input('props.inp')
     
     # The prefix for the all files that will be created by this run
     my_gcmc_props['Run_Name'] = 'gas_adsorb'
     
     # Set the gas (gas system) to be purged in a box
-    specie1 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'co2.lmps'))
-    specie2 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ch4.lmps'))
-    specie3 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'm-xylene.lmps'))
+    specie1 = system.read_lammps('co2.lmps')
+    specie2 = system.read_lammps('ch4.lmps')
+    specie3 = system.read_lammps('m-xylene.lmps')
     for s in [specie1, specie2, specie3]:
         s.forcefield = 'trappe/amber'
 
