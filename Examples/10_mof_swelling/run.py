@@ -1,12 +1,11 @@
-import os
 from pysimm.apps import mc_md
 from pysimm import system
 
 
 def run(test=False):
-    frame = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'irmof-14.lmps'))
+    frame = system.read_lammps('irmof-14.lmps')
     frame.forcefield = 'dreiding-lj'
-    gas1 = system.read_lammps(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ch4.lmps'))
+    gas1 = system.read_lammps('ch4.lmps')
     gas1.forcefield = 'trappe/amber'
     
     mc_props = {'rigid_type': False,
