@@ -14,7 +14,7 @@ from pysimm import system
 import os
 ```
 
-The example uses the hybrid MC-MD for simulation of swelling of an IRMOF-1 metal-organic framework with pure methane. 
+The example uses the hybrid MC-MD for simulation of swelling of an IRMOF-14 metal-organic framework with pure methane. The IRMOF-14 structure is taken from the [repository](https://github.com/WMD-group/BTW-FF/tree/master/structures) of the BTW-FF project, typed with with Dreiding forcefield and saved as a .lmps file in *prepare_mof.py* file 
 
 ### Simulation system setup
 
@@ -33,27 +33,29 @@ Additionally the application requires two dictionaries *mc_props* and *md_props*
 
 ```python
 mc_props = {'rigid_type': False,
-            'max_ins': 1000,
-            'Chemical_Potential_Info': -30.09,
+            'max_ins': 2000,
+            'Chemical_Potential_Info': -22.5037,
             'Temperature_Info': 300,
-            'Run_Type': {'steps': 250},
+            'Run_Type': {'steps': 100},
             'CBMC_Info': {'rcut_cbmc': 2.0},
-            'Simulation_Length_Info': {'run': 10000,
-                                       'coord_freq': 10000,
-                                       'prop_freq': 500},
-            'VDW_Style': {'cut_val': 9.0},
-            'Charge_Style': {'cut_val': 9.0},
+            'Simulation_Length_Info': {'run': 300000,
+                                       'coord_freq': 300000,
+                                       'prop_freq': 1000},
+            'VDW_Style': {'cut_val': 14.0},
+            'Charge_Style': {'cut_val': 14.0},
             'Property_Info': {'prop1': 'energy_total',
-                              'prop2': 'pressure'}}
+                              'prop2': 'pressure',
+                              'prop3': 'nmols'}}
 
 md_props = {'temp': 300,
             'pressure': {'start': 15,
                          'iso': 'iso'},
-            'timestep': 0.25,
-            'cutoff': 9.0,
-            'length': 10000,
-            'thermo': 2500,
+            'timestep': 1,
+            'cutoff': 14.0,
+            'length': 100000,
+            'thermo': 1000,
             'dump': 2500,
+            'np': 8, 
             'print_to_screen': False}
 ```
 
@@ -62,7 +64,7 @@ md_props = {'temp': 300,
 The application itself has two settings that are provided in the form of keyword arguments: the number of iterative loops *mcmd_niter* (default is 10) and the relative path to all simulation results *sim_folder* (default is *results*).  The call of **mc_md()** function will automatically start the MC-MD simulations.
 
 ```python
-sim_result = mc_md.mc_md(gas1, polymer, mcmd_niter=3, sim_folder='results',  mc_props=mc_props, md_props=md_props)
+sim_result = mc_md.mc_md(gas1, polymer, mcmd_niter=5, sim_folder='results',  mc_props=mc_props, md_props=md_props)
 ```
 
 The application returns the **pysimm.system** object that is a dump of simulated system after the final iteration.
