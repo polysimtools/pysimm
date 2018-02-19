@@ -21366,7 +21366,7 @@
         }
     },
     "dihedral_style": "harmonic",
-    "pair_style": "lj",
+    "pair_style": "buck",
     "dihedrals": {
         "count": 888,
         "_dict": {

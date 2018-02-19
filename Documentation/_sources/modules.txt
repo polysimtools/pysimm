@@ -1,0 +1,8 @@
+pysimm
+======
+
+.. toctree::
+   :maxdepth: 4
+
+   complete_install
+   pysimm

@@ -1,0 +1,7 @@
+pysimm.models.monomers.gaff.ps module
+=====================================
+
+.. automodule:: pysimm.models.monomers.gaff.ps
+    :members:
+    :undoc-members:
+    :show-inheritance:

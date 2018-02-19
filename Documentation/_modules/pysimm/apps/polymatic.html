@@ -1,0 +1,603 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysimm.apps.polymatic &mdash; pysimm 0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="pysimm 0.2 documentation" href="../../../index.html"/>
+        <link rel="up" title="pysimm" href="../../pysimm.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pysimm
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pysimm.html">pysimm package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">pysimm</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+          <li><a href="../../pysimm.html">pysimm</a> &raquo;</li>
+      
+    <li>pysimm.apps.polymatic</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pysimm.apps.polymatic</h1><div class="highlight"><pre>
+<span></span><span class="c1"># polymatic module; calls Polymatic perl code and LAMMPS</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">shlex</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">strftime</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">Popen</span><span class="p">,</span> <span class="n">PIPE</span>
+
+<span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">system</span><span class="p">,</span> <span class="n">lmps</span>
+
+<span class="n">rappture</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">Rappture</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">rappture</span> <span class="o">=</span> <span class="bp">False</span>
+
+
+<div class="viewcode-block" id="pack"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.pack">[docs]</a><span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">file_in</span><span class="p">,</span> <span class="n">nrep</span><span class="p">,</span> <span class="n">boxl</span><span class="p">,</span> <span class="n">file_out</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.pack</span>
+
+<span class="sd">    Calls Polymatic random packing code</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        script: name of packing script</span>
+<span class="sd">        file_in: list of file names of reference molecules to pack</span>
+<span class="sd">        nrep: list of number of monomers for each reference molecule</span>
+<span class="sd">        boxl: length of one dimension of simulation box for random packing</span>
+<span class="sd">        file_out: name of output file (packed system)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        output from perl code</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_in</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">file_in</span> <span class="o">=</span> <span class="p">[</span><span class="n">file_in</span><span class="p">]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nrep</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">nrep</span> <span class="o">=</span> <span class="p">[</span><span class="n">nrep</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_in</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nrep</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_in</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;perl </span><span class="si">%s</span><span class="s1"> -i &#39;</span> <span class="o">%</span> <span class="n">script</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">file_in</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">file_in</span><span class="p">)):</span>
+        <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">file_in</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nrep</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">cmd</span> <span class="o">+=</span> <span class="s1">&#39;-l </span><span class="si">%s</span><span class="s1"> -o </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">boxl</span><span class="p">,</span> <span class="n">file_out</span><span class="p">)</span>
+
+    <span class="n">o</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">cmd</span><span class="p">),</span>
+                 <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+                 <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+                 <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">e</span> <span class="ow">and</span> <span class="n">o</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">o</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span></div>
+
+
+<div class="viewcode-block" id="polymatic"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.polymatic">[docs]</a><span class="k">def</span> <span class="nf">polymatic</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">file_in</span><span class="p">,</span> <span class="n">file_out</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.polymatic</span>
+
+<span class="sd">    Calls Polymatic code. polym.in and types.txt are assumed to exist.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        script: name of Polymatic script</span>
+<span class="sd">        file_in: initial system file name</span>
+<span class="sd">        file_out: final system file name</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        output from perl code</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;perl </span><span class="si">%s</span><span class="s1"> -i </span><span class="si">%s</span><span class="s1"> -s polym.in -t types.txt -o </span><span class="si">%s</span><span class="s1">&#39;</span>
+           <span class="o">%</span> <span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">file_in</span><span class="p">,</span> <span class="n">file_out</span><span class="p">))</span>
+    <span class="n">o</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">(</span><span class="n">shlex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">cmd</span><span class="p">),</span>
+                 <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+                 <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+                 <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">e</span> <span class="ow">and</span> <span class="n">o</span> <span class="ow">and</span> <span class="n">o</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;Error:&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">e</span> <span class="ow">and</span> <span class="n">o</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">o</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span></div>
+
+
+<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">settings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.run</span>
+
+<span class="sd">    Runs Polymatic algorithm.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        settings: object containing Polymatic settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (True/False, :class:`~pysimm.system.System`)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">rappture</span><span class="p">:</span>
+        <span class="n">Rappture</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Initializing Polymatic...&#39;</span><span class="p">)</span>
+    <span class="n">bonds</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s1">&#39;logs&#39;</span><span class="p">)</span>
+
+    <span class="n">polymatic</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polymatic_dir</span><span class="p">,</span> <span class="s1">&#39;polym_init.pl&#39;</span><span class="p">),</span>
+              <span class="s1">&#39;data.lmps&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;step_000.lmps&#39;</span><span class="p">)</span>
+
+    <span class="n">s</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">read_lammps</span><span class="p">(</span><span class="s1">&#39;step_000.lmps&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">read_type_names</span><span class="p">(</span><span class="s1">&#39;types.txt&#39;</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rappture</span><span class="p">:</span>
+        <span class="n">Rappture</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1"> bonds made: &#39;</span>
+                                   <span class="s1">&#39;optimizing initial structure...&#39;</span>
+                                <span class="o">%</span> <span class="p">(</span><span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">max_bonds</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">lmps_min</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;initial optimization&#39;</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
+        <span class="n">polymatic</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polymatic_dir</span><span class="p">,</span> <span class="s1">&#39;polym_final.pl&#39;</span><span class="p">),</span>
+                  <span class="s1">&#39;temp.lmps&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;final.lmps&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">s</span>
+
+    <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;step_000.lmps&#39;</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="n">bonds</span> <span class="o">&lt;</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">max_bonds</span><span class="p">:</span>
+        <span class="n">attempt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">polymatic</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polymatic_dir</span><span class="p">,</span> <span class="s1">&#39;polym.pl&#39;</span><span class="p">),</span>
+                            <span class="s1">&#39;temp.lmps&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;temp.lmps&#39;</span><span class="p">):</span>
+            <span class="n">attempt</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">rappture</span><span class="p">:</span>
+                <span class="n">Rappture</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">bonds</span><span class="p">)</span><span class="o">/</span><span class="n">settings</span><span class="o">.</span>
+                                            <span class="n">polym</span><span class="o">.</span><span class="n">max_bonds</span> <span class="o">*</span>
+                                            <span class="mi">100</span><span class="p">),</span>
+                                        <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1"> bonds made: attempt #</span><span class="si">%s</span><span class="s1"> to make &#39;</span>
+                                        <span class="s1">&#39;new bond&#39;</span>
+                                        <span class="o">%</span> <span class="p">(</span><span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">max_bonds</span><span class="p">,</span>
+                                           <span class="n">attempt</span><span class="p">))</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">read_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">read_type_names</span><span class="p">(</span><span class="s1">&#39;types.txt&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">lmps_step_md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">attempt</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
+                <span class="n">polymatic</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polymatic_dir</span><span class="p">,</span> <span class="s1">&#39;polym_final.pl&#39;</span><span class="p">),</span>
+                          <span class="s1">&#39;temp.lmps&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;final.lmps&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">s</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">attempt</span> <span class="o">&gt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">max_md</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">attempt</span> <span class="o">&gt;=</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">max_md</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="n">bonds</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">rappture</span><span class="p">:</span>
+            <span class="n">Rappture</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">bonds</span><span class="p">)</span><span class="o">/</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">max_bonds</span>
+                                        <span class="o">*</span> <span class="mi">100</span><span class="p">),</span>
+                                    <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1"> bonds made: &#39;</span>
+                                    <span class="s1">&#39;optimizing newly formed bond&#39;</span>
+                                    <span class="o">%</span> <span class="p">(</span><span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">max_bonds</span><span class="p">))</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">read_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">,</span> <span class="n">quiet</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">read_type_names</span><span class="p">(</span><span class="s1">&#39;types.txt&#39;</span><span class="p">)</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: bond </span><span class="si">%s</span><span class="s1"> made successfully&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="n">bonds</span><span class="p">))</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lmps_min</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;bond </span><span class="si">%s</span><span class="s1"> optimization&#39;</span> <span class="o">%</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
+            <span class="n">polymatic</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polymatic_dir</span><span class="p">,</span> <span class="s1">&#39;polym_final.pl&#39;</span><span class="p">),</span>
+                      <span class="s1">&#39;temp.lmps&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;final.lmps&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">s</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;step_</span><span class="si">%03d</span><span class="s1">.lmps&#39;</span> <span class="o">%</span> <span class="n">bonds</span><span class="p">)</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">bonds</span> <span class="o">%</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="n">bonds</span> <span class="o">/</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle</span><span class="p">)</span> <span class="o">%</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">npt_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">rappture</span><span class="p">:</span>
+                <span class="n">Rappture</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">bonds</span><span class="p">)</span><span class="o">/</span><span class="n">settings</span><span class="o">.</span>
+                                            <span class="n">polym</span><span class="o">.</span><span class="n">max_bonds</span>
+                                            <span class="o">*</span> <span class="mi">100</span><span class="p">),</span>
+                                        <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1"> bonds made: &#39;</span>
+                                        <span class="s1">&#39;performing npt cycle md&#39;</span>
+                                        <span class="o">%</span> <span class="p">(</span><span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">max_bonds</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">lmps_cycle_npt_md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
+                <span class="n">polymatic</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polymatic_dir</span><span class="p">,</span> <span class="s1">&#39;polym_final.pl&#39;</span><span class="p">),</span>
+                          <span class="s1">&#39;temp.lmps&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;final.lmps&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">s</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">bonds</span> <span class="o">%</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rappture</span><span class="p">:</span>
+                <span class="n">Rappture</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">bonds</span><span class="p">)</span><span class="o">/</span><span class="n">settings</span><span class="o">.</span>
+                                            <span class="n">polym</span><span class="o">.</span><span class="n">max_bonds</span>
+                                            <span class="o">*</span> <span class="mi">100</span><span class="p">),</span>
+                                        <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1"> bonds made: &#39;</span>
+                                        <span class="s1">&#39;performing nvt cycle md&#39;</span>
+                                        <span class="o">%</span> <span class="p">(</span><span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">max_bonds</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">lmps_cycle_nvt_md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
+                <span class="n">polymatic</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polymatic_dir</span><span class="p">,</span> <span class="s1">&#39;polym_final.pl&#39;</span><span class="p">),</span>
+                          <span class="s1">&#39;temp.lmps&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;final.lmps&#39;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">False</span><span class="p">,</span> <span class="n">s</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="s1">&#39;temp.lmps&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rappture</span><span class="p">:</span>
+        <span class="n">Rappture</span><span class="o">.</span><span class="n">Utils</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="mi">99</span><span class="p">,</span> <span class="s1">&#39;Finalizing Polymatic&#39;</span><span class="p">)</span>
+
+    <span class="n">polymatic</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polymatic_dir</span><span class="p">,</span> <span class="s1">&#39;polym_final.pl&#39;</span><span class="p">),</span>
+              <span class="s1">&#39;temp.lmps&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;final.lmps&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">True</span><span class="p">,</span> <span class="n">s</span></div>
+
+
+<div class="viewcode-block" id="lmps_min"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.lmps_min">[docs]</a><span class="k">def</span> <span class="nf">lmps_min</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.lmps_min</span>
+
+<span class="sd">    Runs LAMMPS minimization for the Polymatic algorithm.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: :class:`~pysimm.system.System` to minimize</span>
+<span class="sd">        name: name of simulation</span>
+<span class="sd">        settings: object containing Polymatic settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        result from :func:`~pysimm.lmps.minimize`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
+        <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">nanohub_cores</span><span class="p">),</span>
+                   <span class="s1">&#39;walltime&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">nanohub_walltime</span><span class="p">)}</span>
+        <span class="n">log_name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">log_name</span> <span class="o">=</span> <span class="s1">&#39;logs/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">user_input</span><span class="p">:</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial optimization&#39;</span><span class="p">,</span>
+                 <span class="n">print_to_screen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">,</span> <span class="n">custom</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">min_in</span><span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;initial optimization&#39;</span><span class="p">,</span>
+            <span class="n">print_to_screen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">,</span>
+            <span class="n">log</span><span class="o">=</span><span class="n">log_name</span>
+        <span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Init</span><span class="p">(</span><span class="n">cutoff</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">nb_cutoff</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">forcefield</span><span class="p">))</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add_min</span><span class="p">(</span>
+            <span class="n">min_style</span><span class="o">=</span><span class="s1">&#39;sd&#39;</span><span class="p">,</span>
+            <span class="n">etol</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">sd_etol</span><span class="p">,</span>
+            <span class="n">ftol</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">sd_ftol</span><span class="p">,</span>
+            <span class="n">maxiter</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">sd_maxiter</span><span class="p">,</span>
+            <span class="n">maxeval</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">sd_maxeval</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add_min</span><span class="p">(</span>
+            <span class="n">min_style</span><span class="o">=</span><span class="s1">&#39;cg&#39;</span><span class="p">,</span>
+            <span class="n">etol</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">cg_etol</span><span class="p">,</span>
+            <span class="n">ftol</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">cg_ftol</span><span class="p">,</span>
+            <span class="n">maxiter</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">cg_maxiter</span><span class="p">,</span>
+            <span class="n">maxeval</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">cg_maxeval</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">log_name</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">True</span></div>
+
+
+<div class="viewcode-block" id="lmps_step_md"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.lmps_step_md">[docs]</a><span class="k">def</span> <span class="nf">lmps_step_md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">attempt</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.lmps_step_md</span>
+
+<span class="sd">    Runs LAMMPS step md for the Polymatic algorithm.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: :class:`~pysimm.system.System` to minimize</span>
+<span class="sd">        bonds: number of bond to be made</span>
+<span class="sd">        attempt: number of bonding attempt</span>
+<span class="sd">        settings: object containing Polymatic settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        result from :func:`~pysimm.lmps.md`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
+        <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">nanohub_cores</span><span class="p">),</span>
+                   <span class="s1">&#39;walltime&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">nanohub_walltime</span><span class="p">)}</span>
+        <span class="n">log_name</span> <span class="o">=</span> <span class="s1">&#39;step_</span><span class="si">%03d</span><span class="s1">_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bonds</span><span class="p">,</span> <span class="n">attempt</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">log_name</span> <span class="o">=</span> <span class="s1">&#39;logs/step_</span><span class="si">%03d</span><span class="s1">_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bonds</span><span class="p">,</span> <span class="n">attempt</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">user_input</span><span class="p">:</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bond </span><span class="si">%s</span><span class="s1"> attempt #</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bonds</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">attempt</span><span class="p">),</span>
+                 <span class="n">print_to_screen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">,</span> <span class="n">custom</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">step_in</span><span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bond </span><span class="si">%s</span><span class="s1">: attempt #</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bonds</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">attempt</span><span class="p">),</span>
+            <span class="n">print_to_screen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">,</span>
+            <span class="n">log</span><span class="o">=</span><span class="n">log_name</span>
+        <span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Init</span><span class="p">(</span><span class="n">cutoff</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">nb_cutoff</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">forcefield</span><span class="p">))</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Velocity</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">temp</span><span class="p">))</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add_md</span><span class="p">(</span>
+            <span class="n">ensemble</span><span class="o">=</span><span class="s1">&#39;nvt&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
+            <span class="n">run</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">step</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">log_name</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">True</span></div>
+
+
+<div class="viewcode-block" id="lmps_cycle_nvt_md"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.lmps_cycle_nvt_md">[docs]</a><span class="k">def</span> <span class="nf">lmps_cycle_nvt_md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.lmps_cycle_nvt_md</span>
+
+<span class="sd">    Runs LAMMPS nvt cycle md for the Polymatic algorithm.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: :class:`~pysimm.system.System` to minimize</span>
+<span class="sd">        bonds: number of bond to be made</span>
+<span class="sd">        settings: object containing Polymatic settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        result from :func:`~pysimm.lmps.md`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
+        <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">nanohub_cores</span><span class="p">),</span>
+                   <span class="s1">&#39;walltime&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">nanohub_walltime</span><span class="p">)}</span>
+        <span class="n">log_name</span> <span class="o">=</span> <span class="s1">&#39;cycle_nvt_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">bonds</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">log_name</span> <span class="o">=</span> <span class="s1">&#39;logs/cycle_nvt_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">bonds</span>
+
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">user_input</span><span class="p">:</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bond </span><span class="si">%d</span><span class="s1"> cycle nvt&#39;</span> <span class="o">%</span> <span class="n">bonds</span><span class="p">,</span>
+                 <span class="n">print_to_screen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">,</span> <span class="n">custom</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">step_in</span><span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bond </span><span class="si">%d</span><span class="s1"> cycle nvt&#39;</span> <span class="o">%</span> <span class="n">bonds</span><span class="p">,</span>
+            <span class="n">print_to_screen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">,</span>
+            <span class="n">log</span><span class="o">=</span><span class="n">log_name</span>
+        <span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Init</span><span class="p">(</span><span class="n">cutoff</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">nb_cutoff</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">forcefield</span><span class="p">))</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Velocity</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">temp</span><span class="p">))</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add_md</span><span class="p">(</span>
+            <span class="n">ensemble</span><span class="o">=</span><span class="s1">&#39;nvt&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
+            <span class="n">run</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_nvt</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">log_name</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">True</span></div>
+
+
+<div class="viewcode-block" id="lmps_cycle_npt_md"><a class="viewcode-back" href="../../../pysimm.apps.polymatic.html#pysimm.apps.polymatic.lmps_cycle_npt_md">[docs]</a><span class="k">def</span> <span class="nf">lmps_cycle_npt_md</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">bonds</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.polymatic.lmps_cycle_npt_md</span>
+
+<span class="sd">    Runs LAMMPS npt cycle md for the Polymatic algorithm.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        s: :class:`~pysimm.system.System` to minimize</span>
+<span class="sd">        bonds: number of bond to be made</span>
+<span class="sd">        settings: object containing Polymatic settings</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        result from lmps.md</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
+        <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cores&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">nanohub_cores</span><span class="p">),</span>
+                   <span class="s1">&#39;walltime&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">nanohub_walltime</span><span class="p">)}</span>
+        <span class="n">log_name</span> <span class="o">=</span> <span class="s1">&#39;cycle_npt_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">bonds</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">nanohub</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">log_name</span> <span class="o">=</span> <span class="s1">&#39;logs/cycle_npt_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">bonds</span>
+
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">user_input</span><span class="p">:</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bond </span><span class="si">%d</span><span class="s1"> cycle npt&#39;</span> <span class="o">%</span> <span class="n">bonds</span><span class="p">,</span>
+                 <span class="n">print_to_screen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">,</span> <span class="n">custom</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">step_in</span><span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;bond </span><span class="si">%d</span><span class="s1"> cycle npt&#39;</span> <span class="o">%</span> <span class="n">bonds</span><span class="p">,</span>
+            <span class="n">print_to_screen</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">,</span>
+            <span class="n">log</span><span class="o">=</span><span class="n">log_name</span>
+        <span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Init</span><span class="p">(</span><span class="n">cutoff</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">nb_cutoff</span><span class="p">,</span> <span class="n">forcefield</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">forcefield</span><span class="p">))</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Velocity</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">temp</span><span class="p">))</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add_md</span><span class="p">(</span>
+            <span class="n">ensemble</span><span class="o">=</span><span class="s1">&#39;npt&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">nb_cutoff</span><span class="p">,</span>
+            <span class="n">run</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+            <span class="n">pressure</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">pressure</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="n">nanohub</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">settings</span><span class="o">.</span><span class="n">polym</span><span class="o">.</span><span class="n">cycle_npt</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">log_name</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">True</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, https://pysimm.org.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

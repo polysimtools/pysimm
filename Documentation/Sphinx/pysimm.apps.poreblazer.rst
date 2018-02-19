@@ -1,7 +1,0 @@
-pysimm.apps.poreblazer module
-=============================
-
-.. automodule:: pysimm.apps.poreblazer
-    :members:
-    :undoc-members:
-    :show-inheritance:

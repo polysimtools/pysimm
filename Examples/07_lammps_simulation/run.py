@@ -6,6 +6,7 @@ def run(test=False):
     
     # use an import from .yaml to get of previously created pmma-based 4-chain polymer structure
     polymer = system.read_yaml(os.path.join(os.path.dirname(os.path.realpath(__file__)), "polymer.yaml"))
+    polymer.forcefield = 'dreiding'
     
     # Initialize the wrapper object around the polymer that will organize the work with LAMMPS
     print('Creating Simulation object with log-file in "{0:s}"\n'.format(logFileName))
