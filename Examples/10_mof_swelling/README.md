@@ -20,11 +20,82 @@ The example uses the hybrid MC-MD for simulation of swelling of an IRMOF-14 meta
 To start simulations, the application should get two **pysimm.system** objects. First, *frame*, is any molecular structure that presumed to be fixed during the MC simulations, and the second, *gas1*, that represents single gas molecule to be inserted by the MC. 
 
 ```python
-frame = system.read_lammps('irmof1_drei.lmps')
+frame = system.read_lammps('irmof-14.lmps')
 frame.forcefield = 'dreiding-lj'
 gas1 = system.read_lammps('ch4.lmps')
 gas1.forcefield = 'trappe/amber'
 ```
+
+### Preparation of the MOF structure
+
+This section discusses the code from the *prepare_mof.py* file.
+Requirements: the script uses [pandas](https://pandas.pydata.org/) python package for data input/manipulation, if it is not installed, the script will not work.
+
+The XYZ configuration of the IRMOF-14 unit cell is downloaded as a text stream from the [GitHub repository](https://github.com/WMD-group/BTW-FF/) of the BTW-FF project, and then reorginized to the pandas dataframe.
+
+
+```python
+resp = requests.get('https://raw.githubusercontent.com/WMD-group/BTW-FF/master/structures/IRMOF-14.xyz')
+xyz = StringIO(resp.text)
+
+df = pd.read_table(xyz, sep='\s+', names=['tag', 'type', 'x', 'y', 'z'], usecols=[0, 1, 2, 3, 4], skiprows=1)
+```
+
+The downloaded XYZ file contains the topology information as well; for the visualisation purposes the script  produce the standard XYZ file containing only atoms coordinates:
+```python
+with file('irmof-14_clean.xyz', 'w') as f:
+    f.write(str(len(df)) + '\nThis is the place for the header of your XYZ file\n')
+    df[['type', 'x', 'y', 'z']].to_csv(f, sep='\t', header=False, index=False)
+```
+
+Using the dataframe obtained from the downloaded file, one can setup the PySimm system adding the coordinates and bonds to the particles.
+
+```python
+s = system.System()
+tmp = resp.text.encode('ascii', 'ignore').split('\n')
+for line in tmp[1:-1]:
+    data = line.split()
+    tag, ptype, x, y, z, restof = data[:6]
+    elem = re.sub('\d+', '', ptype)
+    bonds = map(int, data[6:])
+    p = system.Particle(tag=int(tag), elem=elem, type_name=ptype, x=float(x), y=float(y), z=float(z), bonds=bonds)
+    s.particles.add(p)
+```
+
+The last step is to assign  the particles with the Dreiding forcefield parameters. This is natural to do PySimm as well: all information about forcefield parameters is in the corresponding forcefield object.
+
+```python
+f = forcefield.Dreiding()
+f = forcefield.Dreiding()
+o_3 = s.particle_types.add(f.particle_types.get('O_3')[0].copy())
+o_r = s.particle_types.add(f.particle_types.get('O_R')[0].copy())
+c_r = s.particle_types.add(f.particle_types.get('C_R')[0].copy())
+zn = s.particle_types.add(f.particle_types.get('Zn')[0].copy())
+h_ = s.particle_types.add(f.particle_types.get('H_')[0].copy())
+
+for p in s.particles:
+    if p.elem == 'O':
+        if p.bonds.count == 4:
+            p.type = o_3
+        else:
+            p.type = o_r
+    if p.elem == 'C':
+        p.type = c_r
+    if p.elem == 'Zn':
+        p.type = zn
+    if p.elem == 'H':
+        p.type = h_
+```
+
+The bond, angular, dihiedral and improper terms can be assigned automatically
+
+```python
+f.assign_btypes(s)
+f.assign_atypes(s)
+f.assign_dtypes(s)
+f.assign_itypes(s)
+```
+
 
 ### Simulation properties setup
 
