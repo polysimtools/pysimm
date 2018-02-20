@@ -29,7 +29,8 @@ gas1.forcefield = 'trappe/amber'
 ### Preparation of the MOF structure
 
 This section discusses the code from the *prepare_mof.py* file.
-Requirements: the script uses [pandas](https://pandas.pydata.org/) python package for data input/manipulation, if it is not installed, the script will not work.
+
+*Requirement*: the script uses [pandas](https://pandas.pydata.org/) python package for data input/manipulation, if it is not installed, the script will not work.
 
 The XYZ configuration of the IRMOF-14 unit cell is downloaded as a text stream from the [GitHub repository](https://github.com/WMD-group/BTW-FF/) of the BTW-FF project, and then reorginized to the pandas dataframe.
 
@@ -62,29 +63,16 @@ for line in tmp[1:-1]:
     s.particles.add(p)
 ```
 
-The last step is to assign  the particles with the Dreiding forcefield parameters. This is natural to do PySimm as well: all information about forcefield parameters is in the corresponding forcefield object.
+The next step is to assign to the particles the parameters of the Dreiding forcefield. The PySimm has a special forcefield class for the Dreiding forcefield containing all parametric information. 
+Below the example of the forcefield typing for the carbon atoms in the system:
 
 ```python
 f = forcefield.Dreiding()
-f = forcefield.Dreiding()
-o_3 = s.particle_types.add(f.particle_types.get('O_3')[0].copy())
-o_r = s.particle_types.add(f.particle_types.get('O_R')[0].copy())
 c_r = s.particle_types.add(f.particle_types.get('C_R')[0].copy())
-zn = s.particle_types.add(f.particle_types.get('Zn')[0].copy())
-h_ = s.particle_types.add(f.particle_types.get('H_')[0].copy())
 
 for p in s.particles:
-    if p.elem == 'O':
-        if p.bonds.count == 4:
-            p.type = o_3
-        else:
-            p.type = o_r
     if p.elem == 'C':
         p.type = c_r
-    if p.elem == 'Zn':
-        p.type = zn
-    if p.elem == 'H':
-        p.type = h_
 ```
 
 The bond, angular, dihiedral and improper terms can be assigned automatically
@@ -95,6 +83,8 @@ f.assign_atypes(s)
 f.assign_dtypes(s)
 f.assign_itypes(s)
 ```
+
+
 
 
 ### Simulation properties setup
