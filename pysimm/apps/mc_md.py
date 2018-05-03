@@ -143,7 +143,7 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         sim.add_custom('run {:}\n'.format(mdp.get('length')))
 
         # The input for correct simulations is set, starting LAMMPS:
-        sim.run(np=mdp.get('np', 1))
+        sim.run(np=mdp.get('np', 4))
 
         # Updating the size of the fixed system from the MD simulations and saving the coordinates for the next MC
         css.system.dim = sim.system.dim

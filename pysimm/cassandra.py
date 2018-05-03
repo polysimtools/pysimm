@@ -164,9 +164,15 @@ class MCSimulation(object):
 
         # Creating the system of fixed molecules
         self.fxd_sst_mcfile = None
-        self.fxd_sst = kwargs.get('fixed_sst')
+        # self.fxd_sst = kwargs.get('fixed_sst')
         if self.tot_sst.particles:
-            self.fxd_sst = self.tot_sst.copy()
+            tmp = self.tot_sst.copy()
+            for p in tmp.particles:
+                if not p.is_fixed:
+                    tmp.particles.remove(p.tag)
+            tmp.remove_spare_bonding()
+
+            self.fxd_sst = tmp
             self.fxd_sst_mcfile = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fxd_sst_mcfile, 1]
 
@@ -776,7 +782,7 @@ class McSystem(object):
                 out.write('{:>21f}{:>21f}\n'.format(self.temperature, 0))
                 tmplte = '{:<10}{:<24f}{:<24f}{:<24f}\n'
                 for prt in sstm.particles:
-                    out.write(tmplte.format(prt.type.name, prt.x, prt.y, prt.z))
+                    out.write(tmplte.format(prt.type.elem, prt.x, prt.y, prt.z))
             self.frag_file.append(fullfile)
         # Generating the files list
         for (frags, count) in zip(self.frag_file, range(1, len(self.frag_file) + 1)):
@@ -877,7 +883,7 @@ class Cassandra(object):
     def __init__(self, init_sst):
         self.logger = logging.getLogger('CSNDRA')
 
-        # Assume all particles in initial sysrem are fixed
+        # Assume all particles in initial system are fixed
         self.system = init_sst
         if init_sst.particles:
             for p in init_sst.particles:

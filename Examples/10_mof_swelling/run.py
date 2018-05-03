@@ -5,12 +5,12 @@ from pysimm import system
 def run(test=False):
     frame = system.read_lammps('irmof-14.lmps')
     frame.forcefield = 'dreiding-lj'
-    gas1 = system.read_lammps('ch4.lmps')
+    gas1 = system.read_lammps('co2.lmps')
     gas1.forcefield = 'trappe/amber'
     
     mc_props = {'rigid_type': False,
                 'max_ins': 2000,
-                'Chemical_Potential_Info': -22.5037,
+                'Chemical_Potential_Info': -32.5037,
                 'Temperature_Info': 300,
                 'Rcutoff_Low': 1.0,
                 'Run_Type': {'steps': 100},
@@ -30,7 +30,7 @@ def run(test=False):
                 'timestep': 1,
                 'cutoff': 14.0,
                 'length': 10000,
-                'thermo': 2500,
+                'thermo': 1000,
                 'dump': 2500,
                 'np': 6,
                 'print_to_screen': False}
