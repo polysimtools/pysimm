@@ -149,7 +149,7 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         css.system.dim = sim.system.dim
         sim.system.write_xyz(xyz_fname.format(l))
         mcp['Start_Type']['file_name'] = xyz_fname.format(l)
-        mcp['Start_Type']['species'] = [1] + [0] * len(CHEM_POT)
+        mcp['Start_Type']['species'] = [1] + css.run_queue[-1].mc_sst.made_ins
         l += 1
 
     return sim.system if sim else None

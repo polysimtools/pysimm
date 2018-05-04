@@ -313,8 +313,13 @@ class MCSimulation(object):
                     start_ind = lines.find('coordinates for all the boxes')
                     all_coord_lines = lines[start_ind:-1].split('\n')
                     inp.close()
-                self.tot_sst.add(self.mc_sst.make_system(all_coord_lines[offset:]), change_dim=False)
-                self.logger.info('Simulation system successfully updated')
+
+                gas_lines = all_coord_lines[offset:]
+                if len(gas_lines) > 0:
+                    self.tot_sst.add(self.mc_sst.make_system(gas_lines), change_dim=False)
+                    self.logger.info('Simulation system successfully updated')
+                else:
+                    self.logger.info('Final MC configuration has 0 new particles the initial system remains the same')
 
             except IndexError:
                 self.logger.error('Cannot fit the molecules from the CASSANDRA file to the PySIMM system')
@@ -810,7 +815,7 @@ class McSystem(object):
         Returns:
             :class:`~pysimm.system.System` : object containing all newly inserted molecules
         """
-        sstm = None
+        tmp_sst = None
         count = 0  # counter of the lines in the input file
         sys_idx = 0  # counter of the gas molecules to lookup
         while count < len(text_output) - 1:
@@ -827,10 +832,10 @@ class McSystem(object):
                 if self.is_rigid[sys_idx]:
                     for p in tmp.particles:
                         p.is_rigid = True
-                if sstm:
-                    sstm.add(tmp)
+                if tmp_sst:
+                    tmp_sst.add(tmp)
                 else:
-                    sstm = tmp.copy()
+                    tmp_sst = tmp.copy()
                 self.made_ins[sys_idx] += 1
                 count += len(tmp.particles)
                 sys_idx = 0
@@ -841,9 +846,10 @@ class McSystem(object):
                                       'Please check either MC-simulation provided to PySIMM or the CASSANDRA '
                                       'checkpoint file ')
                     exit(1)
-        sstm.update_tags()
-        sstm.objectify()
-        return sstm
+        if tmp_sst:
+            tmp_sst.update_tags()
+            tmp_sst.objectify()
+        return tmp_sst
 
     def __fit_atoms__(self, molec, text_lines):
         """pysimm.cassandra.McSystem.__fit_atoms__
