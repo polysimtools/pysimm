@@ -164,14 +164,13 @@ class MCSimulation(object):
 
         # Creating the system of fixed molecules
         self.fxd_sst_mcfile = None
-        # self.fxd_sst = kwargs.get('fixed_sst')
+        self.fxd_sst = kwargs.get('fixed_sst')
         if self.tot_sst.particles:
             tmp = self.tot_sst.copy()
             for p in tmp.particles:
                 if not p.is_fixed:
                     tmp.particles.remove(p.tag)
             tmp.remove_spare_bonding()
-
             self.fxd_sst = tmp
             self.fxd_sst_mcfile = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fxd_sst_mcfile, 1]
@@ -316,7 +315,9 @@ class MCSimulation(object):
 
                 gas_lines = all_coord_lines[offset:]
                 if len(gas_lines) > 0:
+                    self.tot_sst = self.fxd_sst.copy()
                     self.tot_sst.add(self.mc_sst.make_system(gas_lines), change_dim=False)
+                    # self.tot_sst.add(self.mc_sst.make_system(gas_lines), change_dim=False)
                     self.logger.info('Simulation system successfully updated')
                 else:
                     self.logger.info('Final MC configuration has 0 new particles the initial system remains the same')
@@ -927,7 +928,8 @@ class Cassandra(object):
                     exit(1)
                 except IOError as ioe:
                     if check_cs_exec():
-                        self.logger.error('There was a problem running CASSANDRA. The process started but did not finish')
+                        self.logger.error('There was a problem running CASSANDRA. '
+                                          'The process started but did not finish')
                         exit(1)
         else:
             self.logger.error('There was a problem running CASSANDRA: seems it is not configured properly.\n'

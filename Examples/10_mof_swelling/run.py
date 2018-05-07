@@ -12,7 +12,7 @@ def run(test=False):
                 'max_ins': 2000,
                 'Chemical_Potential_Info': -32.5037,
                 'Temperature_Info': 300,
-                'Rcutoff_Low': 1.0,
+                'Rcutoff_Low': 0.0,
                 'Run_Type': {'steps': 100},
                 'CBMC_Info': {'rcut_cbmc': 2.0},
                 'Simulation_Length_Info': {'run': 10000,
@@ -30,10 +30,10 @@ def run(test=False):
                 'timestep': 1,
                 'cutoff': 14.0,
                 'length': 10000,
-                'thermo': 1000,
+                'thermo': 2500,
                 'dump': 2500,
                 'np': 6,
-                'print_to_screen': False}
+                'print_to_screen': True}
     
     sim_result = mc_md.mc_md(gas1, frame, mcmd_niter=5, sim_folder='results', mc_props=mc_props, md_props=md_props)
     sim_result.write_lammps('MOFplusME.lmps')

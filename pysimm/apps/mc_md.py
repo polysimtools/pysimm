@@ -91,9 +91,9 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         css.run()
 
         # >>> 2N: MD (LAMMPS) step:
-        sim_sst = css.system
+        sim_sst = css.run_queue[0].tot_sst.copy()
         sim_sst.write_lammps(os.path.join(sim_folder, str(l) + '.before_md.lmps'))
-        sim = lmps.Simulation(sim_sst, debug=True,
+        sim = lmps.Simulation(sim_sst, print_to_screen=mcp.get('print_to_screen', False),
                               log=os.path.join(sim_folder, str(l) + '.md.log'))
 
         sim.add(lmps.Init(cutoff=mdp.get('cutoff')))
@@ -143,10 +143,12 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         sim.add_custom('run {:}\n'.format(mdp.get('length')))
 
         # The input for correct simulations is set, starting LAMMPS:
-        sim.run(np=mdp.get('np', 4))
+        sim.run(np=mdp.get('np', 1))
 
         # Updating the size of the fixed system from the MD simulations and saving the coordinates for the next MC
-        css.system.dim = sim.system.dim
+        # css.system.dim = sim.system.dim
+        css.system = sim.system.copy()
+
         sim.system.write_xyz(xyz_fname.format(l))
         mcp['Start_Type']['file_name'] = xyz_fname.format(l)
         mcp['Start_Type']['species'] = [1] + css.run_queue[-1].mc_sst.made_ins
