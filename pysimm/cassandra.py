@@ -819,7 +819,7 @@ class McSystem(object):
         tmp_sst = None
         count = 0  # counter of the lines in the input file
         sys_idx = 0  # counter of the gas molecules to lookup
-        while count < len(text_output) - 1:
+        while count < len(text_output):
             tmp = self.sst[sys_idx].copy()
             dictn = text_output[count:(len(tmp.particles) + count)]
             if self.__fit_atoms__(tmp, dictn):
