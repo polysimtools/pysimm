@@ -91,9 +91,9 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         css.run()
 
         # >>> 2N: MD (LAMMPS) step:
-        sim_sst = css.system
+        sim_sst = css.run_queue[0].tot_sst.copy()
         sim_sst.write_lammps(os.path.join(sim_folder, str(l) + '.before_md.lmps'))
-        sim = lmps.Simulation(sim_sst, debug=True,
+        sim = lmps.Simulation(sim_sst, print_to_screen=mdp.get('print_to_screen', False),
                               log=os.path.join(sim_folder, str(l) + '.md.log'))
 
         sim.add(lmps.Init(cutoff=mdp.get('cutoff')))
@@ -146,8 +146,11 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         sim.run(np=mdp.get('np', 1))
 
         # Updating the size of the fixed system from the MD simulations and saving the coordinates for the next MC
-        css.system.dim = sim.system.dim
-        sim.system.write_xyz(xyz_fname.format(l))
+        # css.system.dim = sim.system.dim
+        css.system = sim.system.copy()
+        css.check_system()
+        css.system.write_xyz(xyz_fname.format(l))
+
         mcp['Start_Type']['file_name'] = xyz_fname.format(l)
         mcp['Start_Type']['species'] = [1] + [0] * len(CHEM_POT)
         l += 1
