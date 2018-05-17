@@ -35,7 +35,7 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
     rig_group_name = 'rigid_b'
     n_iter = mcmd_niter or 10
     sim_folder = sim_folder or 'results'
-    xyz_fname = os.path.join(sim_folder, 'MD{:}_out.xyz')
+    xyz_fname = os.path.join(sim_folder, '{:}.md_out.xyz')
     l = 1
 
     # Creating fixed polymer system
@@ -83,6 +83,7 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         exit(1)
 
     while l < n_iter + 1:
+        # >>> MC (CASSANDRA) step:
         mcp['Run_Name'] = str(l) + '.gcmc'
 
         css.add_gcmc(species=gases, is_new=True, chem_pot=CHEM_POT,
@@ -90,13 +91,15 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
                      out_folder=sim_folder, props_file=str(l) + '.gcmc_props.inp', **mcp)
         css.run()
 
-        # >>> 2N: MD (LAMMPS) step:
+        # >>> MD (LAMMPS) step:
         sim_sst = css.run_queue[0].tot_sst.copy()
         sim_sst.write_lammps(os.path.join(sim_folder, str(l) + '.before_md.lmps'))
         sim = lmps.Simulation(sim_sst, print_to_screen=mcp.get('print_to_screen', False),
                               log=os.path.join(sim_folder, str(l) + '.md.log'))
 
-        sim.add(lmps.Init(cutoff=mdp.get('cutoff')))
+        sim.add(lmps.Init(cutoff=mdp.get('cutoff'),
+                          special_bonds=mdp.get('special_bonds'),
+                          pair_modify=mdp.get('pair_modify')))
 
         # custom definitions for the neighbour list updates
         sim.add_custom('neighbor 1.0 nsq \nneigh_modify once no every 1 delay 0 check yes')
@@ -146,7 +149,6 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         sim.run(np=mdp.get('np', 1))
 
         # Updating the size of the fixed system from the MD simulations and saving the coordinates for the next MC
-        # css.system.dim = sim.system.dim
         css.system = sim.system.copy()
 
         sim.system.write_xyz(xyz_fname.format(l))
@@ -155,3 +157,4 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         l += 1
 
     return sim.system if sim else None
+
