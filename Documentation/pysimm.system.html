@@ -1,0 +1,2216 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysimm.system module &mdash; pysimm 0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="pysimm 0.2 documentation" href="index.html"/>
+        <link rel="up" title="pysimm package" href="pysimm.html"/>
+        <link rel="next" title="pysimm.utils module" href="pysimm.utils.html"/>
+        <link rel="prev" title="pysimm.lmps module" href="pysimm.lmps.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pysimm
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pysimm.html">pysimm package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pysimm.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pysimm.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pysimm.amber.html">pysimm.amber module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.calc.html">pysimm.calc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.cassandra.html">pysimm.cassandra module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.cli.html">pysimm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.lmps.html">pysimm.lmps module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">pysimm.system module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.utils.html">pysimm.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pysimm.html#module-pysimm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">pysimm</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="pysimm.html">pysimm package</a> &raquo;</li>
+      
+    <li>pysimm.system module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pysimm.system.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pysimm.system">
+<span id="pysimm-system-module"></span><h1>pysimm.system module<a class="headerlink" href="#module-pysimm.system" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysimm.system.Angle">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">Angle</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
+<p>Angle between particles a, b, and c</p>
+<p>a&#8211;b&#8211;c</p>
+<p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
+Keyword arguments are assigned as attributes.
+Attributes usually used are given below.</p>
+<dl class="attribute">
+<dt id="pysimm.system.Angle.a">
+<code class="descname">a</code><a class="headerlink" href="#pysimm.system.Angle.a" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in angle</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Angle.b">
+<code class="descname">b</code><a class="headerlink" href="#pysimm.system.Angle.b" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in angle (middle particle)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Angle.c">
+<code class="descname">c</code><a class="headerlink" href="#pysimm.system.Angle.c" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in angle</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Angle.type">
+<code class="descname">type</code><a class="headerlink" href="#pysimm.system.Angle.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>AngleType object reference</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.Angle.angle">
+<code class="descname">angle</code><span class="sig-paren">(</span><em>radians=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Angle.angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Angle.angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate angle.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>radians</strong> &#8211; True to return value in radians (default: False)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Angle between Particle a, b, and c</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.AngleType">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">AngleType</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#AngleType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.AngleType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
+<p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
+Keyword arguments are assigned as attributes.
+Attributes usually used are given below.</p>
+<dl class="attribute">
+<dt id="pysimm.system.AngleType.k">
+<code class="descname">k</code><a class="headerlink" href="#pysimm.system.AngleType.k" title="Permalink to this definition">¶</a></dt>
+<dd><p>harmonic angle bend force constant (kcal/mol/radian^2)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.AngleType.theta0">
+<code class="descname">theta0</code><a class="headerlink" href="#pysimm.system.AngleType.theta0" title="Permalink to this definition">¶</a></dt>
+<dd><p>angle equilibrium value (degrees)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.AngleType.name">
+<code class="descname">name</code><a class="headerlink" href="#pysimm.system.AngleType.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>force field angle type name</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.Bond">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">Bond</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Bond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Bond" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
+<p>Bond between particle a and b</p>
+<p>a&#8211;b</p>
+<p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
+Keyword arguments are assigned as attributes.
+Attributes usually used are given below.</p>
+<dl class="attribute">
+<dt id="pysimm.system.Bond.a">
+<code class="descname">a</code><a class="headerlink" href="#pysimm.system.Bond.a" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in bond</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Bond.b">
+<code class="descname">b</code><a class="headerlink" href="#pysimm.system.Bond.b" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in bond</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Bond.type">
+<code class="descname">type</code><a class="headerlink" href="#pysimm.system.Bond.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>BondType object reference</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.Bond.distance">
+<code class="descname">distance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Bond.distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Bond.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates distance between <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> a and <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> b in this Bond object.
+Sets distance to dist attribute of self. Does not consider pbc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Distance between Particle a and Particle b (not considering pbc)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.Bond.get_other_particle">
+<code class="descname">get_other_particle</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Bond.get_other_particle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Bond.get_other_particle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.BondType">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">BondType</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#BondType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.BondType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
+<p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
+Keyword arguments are assigned as attributes.
+Attributes usually used are given below.</p>
+<dl class="attribute">
+<dt id="pysimm.system.BondType.k">
+<code class="descname">k</code><a class="headerlink" href="#pysimm.system.BondType.k" title="Permalink to this definition">¶</a></dt>
+<dd><p>harmonic bond force constant (kcal/mol/A^2)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.BondType.r0">
+<code class="descname">r0</code><a class="headerlink" href="#pysimm.system.BondType.r0" title="Permalink to this definition">¶</a></dt>
+<dd><p>bond equilibrium distance (Angstrom)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.BondType.name">
+<code class="descname">name</code><a class="headerlink" href="#pysimm.system.BondType.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>force field bond type name</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.Dihedral">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">Dihedral</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Dihedral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Dihedral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
+<p>Dihedral between particles a, b, c, and d</p>
+<p>a&#8211;b&#8211;c&#8211;d</p>
+<p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
+Keyword arguments are assigned as attributes.
+Attributes usually used are given below.</p>
+<dl class="attribute">
+<dt id="pysimm.system.Dihedral.a">
+<code class="descname">a</code><a class="headerlink" href="#pysimm.system.Dihedral.a" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in dihedral</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dihedral.b">
+<code class="descname">b</code><a class="headerlink" href="#pysimm.system.Dihedral.b" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in dihedral (middle particle)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dihedral.c">
+<code class="descname">c</code><a class="headerlink" href="#pysimm.system.Dihedral.c" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in dihedral (middle particle)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dihedral.d">
+<code class="descname">d</code><a class="headerlink" href="#pysimm.system.Dihedral.d" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in dihedral</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dihedral.type">
+<code class="descname">type</code><a class="headerlink" href="#pysimm.system.Dihedral.type" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.DihedralType" title="pysimm.system.DihedralType"><code class="xref py py-class docutils literal"><span class="pre">DihedralType</span></code></a> object reference</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.DihedralType">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">DihedralType</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#DihedralType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.DihedralType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
+<p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
+Keyword arguments are assigned as attributes.
+Attributes usually used are given below.</p>
+<dl class="attribute">
+<dt id="pysimm.system.DihedralType.k">
+<code class="descname">k</code><a class="headerlink" href="#pysimm.system.DihedralType.k" title="Permalink to this definition">¶</a></dt>
+<dd><p>dihedral energy barrier (kcal/mol)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.DihedralType.d">
+<code class="descname">d</code><a class="headerlink" href="#pysimm.system.DihedralType.d" title="Permalink to this definition">¶</a></dt>
+<dd><p>minimum (+1 or -1)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.DihedralType.n">
+<code class="descname">n</code><a class="headerlink" href="#pysimm.system.DihedralType.n" title="Permalink to this definition">¶</a></dt>
+<dd><p>multiplicity (integer &gt;= 0)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.DihedralType.name">
+<code class="descname">name</code><a class="headerlink" href="#pysimm.system.DihedralType.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>force field dihedral type name</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.Dimension">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">Dimension</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Dimension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Dimension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
+<p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
+Keyword arguments are assigned as attributes.
+Attributes usually used are given below.</p>
+<dl class="attribute">
+<dt id="pysimm.system.Dimension.xlo">
+<code class="descname">xlo</code><a class="headerlink" href="#pysimm.system.Dimension.xlo" title="Permalink to this definition">¶</a></dt>
+<dd><p>minimum value in x dimension</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dimension.xhi">
+<code class="descname">xhi</code><a class="headerlink" href="#pysimm.system.Dimension.xhi" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum value in x dimension</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dimension.ylo">
+<code class="descname">ylo</code><a class="headerlink" href="#pysimm.system.Dimension.ylo" title="Permalink to this definition">¶</a></dt>
+<dd><p>minimum value in y dimension</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dimension.yhi">
+<code class="descname">yhi</code><a class="headerlink" href="#pysimm.system.Dimension.yhi" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum value in y dimension</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dimension.zlo">
+<code class="descname">zlo</code><a class="headerlink" href="#pysimm.system.Dimension.zlo" title="Permalink to this definition">¶</a></dt>
+<dd><p>minimum value in z dimension</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dimension.zhi">
+<code class="descname">zhi</code><a class="headerlink" href="#pysimm.system.Dimension.zhi" title="Permalink to this definition">¶</a></dt>
+<dd><p>maximum value in z dimension</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dimension.dx">
+<code class="descname">dx</code><a class="headerlink" href="#pysimm.system.Dimension.dx" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance in x dimension</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dimension.dy">
+<code class="descname">dy</code><a class="headerlink" href="#pysimm.system.Dimension.dy" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance in y dimension</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Dimension.dz">
+<code class="descname">dz</code><a class="headerlink" href="#pysimm.system.Dimension.dz" title="Permalink to this definition">¶</a></dt>
+<dd><p>distance in z dimension</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.Dimension.check">
+<code class="descname">check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Dimension.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Dimension.check" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.Dimension.size">
+<code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Dimension.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Dimension.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.Dimension.translate">
+<code class="descname">translate</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Dimension.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Dimension.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shifts box bounds by x, y, z.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; distance to shift box bounds in x direction</li>
+<li><strong>y</strong> &#8211; distance to shift box bounds in y direction</li>
+<li><strong>z</strong> &#8211; distance to shift box bounds in z direction</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.Improper">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">Improper</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Improper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Improper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
+<p>Improper dihedral around particle a, bonded to b, c, and d</p>
+<div class="line-block">
+<div class="line">b</div>
+<div class="line"><a href="#id1"><span class="problematic" id="id2">|</span></a></div>
+<div class="line">a&#8211;d</div>
+<div class="line"><a href="#id3"><span class="problematic" id="id4">|</span></a></div>
+<div class="line">c</div>
+</div>
+<p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
+Keyword arguments are assigned as attributes.
+Attributes usually used are given below.</p>
+<dl class="attribute">
+<dt id="pysimm.system.Improper.a">
+<code class="descname">a</code><a class="headerlink" href="#pysimm.system.Improper.a" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in improper (middle particle)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Improper.b">
+<code class="descname">b</code><a class="headerlink" href="#pysimm.system.Improper.b" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in improper</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Improper.c">
+<code class="descname">c</code><a class="headerlink" href="#pysimm.system.Improper.c" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in improper</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Improper.d">
+<code class="descname">d</code><a class="headerlink" href="#pysimm.system.Improper.d" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in improper</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Improper.type">
+<code class="descname">type</code><a class="headerlink" href="#pysimm.system.Improper.type" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.ImproperType" title="pysimm.system.ImproperType"><code class="xref py py-class docutils literal"><span class="pre">ImproperType</span></code></a> object reference</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.ImproperType">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">ImproperType</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#ImproperType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.ImproperType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
+<p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
+Keyword arguments are assigned as attributes.
+Attributes usually used are given below.</p>
+<dl class="attribute">
+<dt id="pysimm.system.ImproperType.k">
+<code class="descname">k</code><a class="headerlink" href="#pysimm.system.ImproperType.k" title="Permalink to this definition">¶</a></dt>
+<dd><p>improper energy barrier (kcal/mol)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.ImproperType.x0">
+<code class="descname">x0</code><a class="headerlink" href="#pysimm.system.ImproperType.x0" title="Permalink to this definition">¶</a></dt>
+<dd><p>equilibrium value (degrees)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.ImproperType.name">
+<code class="descname">name</code><a class="headerlink" href="#pysimm.system.ImproperType.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>force field improper type name</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.Molecule">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">Molecule</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Molecule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Molecule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">pysimm.system.System</span></code></a></p>
+<p>Very similar to <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>, but requires less information</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.Particle">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">Particle</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Particle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Particle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
+<p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
+Keyword arguments are assigned as attributes.
+Attributes usually used are given below.</p>
+<dl class="attribute">
+<dt id="pysimm.system.Particle.x">
+<code class="descname">x</code><a class="headerlink" href="#pysimm.system.Particle.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>x coordinate</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Particle.y">
+<code class="descname">y</code><a class="headerlink" href="#pysimm.system.Particle.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>y coordinate</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Particle.z">
+<code class="descname">z</code><a class="headerlink" href="#pysimm.system.Particle.z" title="Permalink to this definition">¶</a></dt>
+<dd><p>z coordinate</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Particle.charge">
+<code class="descname">charge</code><a class="headerlink" href="#pysimm.system.Particle.charge" title="Permalink to this definition">¶</a></dt>
+<dd><p>partial charge</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.Particle.type">
+<code class="descname">type</code><a class="headerlink" href="#pysimm.system.Particle.type" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> object reference</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.Particle.check">
+<code class="descname">check</code><span class="sig-paren">(</span><em>style='full'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Particle.check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Particle.check" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.Particle.coords">
+<code class="descname">coords</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Particle.coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Particle.coords" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.Particle.delete_bonding">
+<code class="descname">delete_bonding</code><span class="sig-paren">(</span><em>s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Particle.delete_bonding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Particle.delete_bonding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates through s.bonds, s.angles, s.dihedrals, and s.impropers and removes
+those which contain this <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>s</strong> &#8211; <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object from which bonding objects will be removed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.Particle.translate">
+<code class="descname">translate</code><span class="sig-paren">(</span><em>dx</em>, <em>dy</em>, <em>dz</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#Particle.translate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.Particle.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shifts Particle position by dx, dy, dz.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dx</strong> &#8211; distance to shift in x direction</li>
+<li><strong>dy</strong> &#8211; distance to shift in y direction</li>
+<li><strong>dz</strong> &#8211; distance to shift in z direction</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.ParticleType">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">ParticleType</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#ParticleType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.ParticleType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">pysimm.utils.Item</span></code></a></p>
+<p>Objects inheriting from <a class="reference internal" href="pysimm.utils.html#pysimm.utils.Item" title="pysimm.utils.Item"><code class="xref py py-class docutils literal"><span class="pre">Item</span></code></a> can contain arbitrary data.
+Keyword arguments are assigned as attributes.
+Attributes usually used are given below.</p>
+<dl class="attribute">
+<dt id="pysimm.system.ParticleType.sigma">
+<code class="descname">sigma</code><a class="headerlink" href="#pysimm.system.ParticleType.sigma" title="Permalink to this definition">¶</a></dt>
+<dd><p>LJ sigma value (Angstrom)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.ParticleType.epsilon">
+<code class="descname">epsilon</code><a class="headerlink" href="#pysimm.system.ParticleType.epsilon" title="Permalink to this definition">¶</a></dt>
+<dd><p>LJ epsilon value (kcal/mol)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.ParticleType.elem">
+<code class="descname">elem</code><a class="headerlink" href="#pysimm.system.ParticleType.elem" title="Permalink to this definition">¶</a></dt>
+<dd><p>element abbreviation, i.e. &#8216;H&#8217; for Hydrogen, &#8216;Cl&#8217; for Chlorine</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.ParticleType.name">
+<code class="descname">name</code><a class="headerlink" href="#pysimm.system.ParticleType.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>force field particle type name</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.system.System">
+<em class="property">class </em><code class="descclassname">pysimm.system.</code><code class="descname">System</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Object representation of molecular system.
+Contains information required for molecular simulation.</p>
+<dl class="attribute">
+<dt id="pysimm.system.System.dim">
+<code class="descname">dim</code><a class="headerlink" href="#pysimm.system.System.dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dimension object reference</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.System.particles">
+<code class="descname">particles</code><a class="headerlink" href="#pysimm.system.System.particles" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> for Particle organization</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.System.particle_types">
+<code class="descname">particle_types</code><a class="headerlink" href="#pysimm.system.System.particle_types" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> for ParticleType organization</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.System.bonds">
+<code class="descname">bonds</code><a class="headerlink" href="#pysimm.system.System.bonds" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> for Bond organization</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.System.bond_types">
+<code class="descname">bond_types</code><a class="headerlink" href="#pysimm.system.System.bond_types" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> for BondType organization</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.System.angles">
+<code class="descname">angles</code><a class="headerlink" href="#pysimm.system.System.angles" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> for Angle organization</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.System.angle_types">
+<code class="descname">angle_types</code><a class="headerlink" href="#pysimm.system.System.angle_types" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> for AngleType organization</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.System.dihedrals">
+<code class="descname">dihedrals</code><a class="headerlink" href="#pysimm.system.System.dihedrals" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> for Dihedral organization</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.System.dihedral_types">
+<code class="descname">dihedral_types</code><a class="headerlink" href="#pysimm.system.System.dihedral_types" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> for DihedralType organization</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.System.impropers">
+<code class="descname">impropers</code><a class="headerlink" href="#pysimm.system.System.impropers" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> for Improper organization</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.System.improper_types">
+<code class="descname">improper_types</code><a class="headerlink" href="#pysimm.system.System.improper_types" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> for ImproperType organization</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.system.System.molecules">
+<code class="descname">molecules</code><a class="headerlink" href="#pysimm.system.System.molecules" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> for Molecule organization</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>other</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add other <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> to this. Optionally remove duplicate types (default behavior).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>other</strong> &#8211; <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object to add</li>
+<li><strong>unique_types</strong> (<em>optional</em>) &#8211; Remove duplicate types and reassign references to existing types (True)</li>
+<li><strong>change_dim</strong> (<em>optional</em>) &#8211; Update <a class="reference internal" href="#pysimm.system.Dimension" title="pysimm.system.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> object so that <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> objects do not exist
+outside of <a class="reference internal" href="#pysimm.system.Dimension" title="pysimm.system.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> extremes (True)</li>
+<li><strong>update_properties</strong> (<em>optional</em>) &#8211; Update system-wide mass, volume, density, center of gravity, and velocity
+properties (True)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.add_angle">
+<code class="descname">add_angle</code><span class="sig-paren">(</span><em>a=None</em>, <em>b=None</em>, <em>c=None</em>, <em>f=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.add_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.add_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add <a class="reference internal" href="#pysimm.system.Angle" title="pysimm.system.Angle"><code class="xref py py-class docutils literal"><span class="pre">Angle</span></code></a> to system between three particles</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Angle" title="pysimm.system.Angle"><code class="xref py py-class docutils literal"><span class="pre">Angle</span></code></a></li>
+<li><strong>b</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Angle" title="pysimm.system.Angle"><code class="xref py py-class docutils literal"><span class="pre">Angle</span></code></a> (middle particle)</li>
+<li><strong>c</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Angle" title="pysimm.system.Angle"><code class="xref py py-class docutils literal"><span class="pre">Angle</span></code></a></li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.add_bond">
+<code class="descname">add_bond</code><span class="sig-paren">(</span><em>a=None</em>, <em>b=None</em>, <em>f=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.add_bond"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.add_bond" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add <a class="reference internal" href="#pysimm.system.Bond" title="pysimm.system.Bond"><code class="xref py py-class docutils literal"><span class="pre">Bond</span></code></a> to system between two particles</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Bond" title="pysimm.system.Bond"><code class="xref py py-class docutils literal"><span class="pre">Bond</span></code></a></li>
+<li><strong>b</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Bond" title="pysimm.system.Bond"><code class="xref py py-class docutils literal"><span class="pre">Bond</span></code></a></li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.add_dihedral">
+<code class="descname">add_dihedral</code><span class="sig-paren">(</span><em>a=None</em>, <em>b=None</em>, <em>c=None</em>, <em>d=None</em>, <em>f=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.add_dihedral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.add_dihedral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a> to system between four particles</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a></li>
+<li><strong>b</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a> (middle particle)</li>
+<li><strong>c</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a> (middle particle)</li>
+<li><strong>d</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> involved in new <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a></li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.add_improper">
+<code class="descname">add_improper</code><span class="sig-paren">(</span><em>a=None</em>, <em>b=None</em>, <em>c=None</em>, <em>d=None</em>, <em>f=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.add_improper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.add_improper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a> to system between four particles</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a> (middle particle)</li>
+<li><strong>b</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a></li>
+<li><strong>c</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a></li>
+<li><strong>d</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code> involved in new <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a></li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.add_particle">
+<code class="descname">add_particle</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.add_particle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.add_particle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> to <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>p</strong> &#8211; new <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object to be added</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.add_particle_bonded_to">
+<code class="descname">add_particle_bonded_to</code><span class="sig-paren">(</span><em>p</em>, <em>p0</em>, <em>f=None</em>, <em>sep=1.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.add_particle_bonded_to"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.add_particle_bonded_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> to <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> bonded to p0 and automatically update new forcefield types</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p</strong> &#8211; new <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object to be added</li>
+<li><strong>p0</strong> &#8211; original <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object in <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> to which p will be bonded</li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field types will be retrieved</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">new Particle being added to system for convenient reference</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.add_particle_bonding">
+<code class="descname">add_particle_bonding</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.add_particle_bonding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.add_particle_bonding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> objects such that <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a>.bonded_to contains other <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> objects invloved in bonding</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.apply_charges">
+<code class="descname">apply_charges</code><span class="sig-paren">(</span><em>f</em>, <em>charges='default'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.apply_charges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.apply_charges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies charges derived using method provided by user. Defaults to &#8216;default&#8217;. Calls <code class="xref py py-func docutils literal"><span class="pre">assign_charges()</span></code> method of forcefield object provided.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object</li>
+<li><strong>charges</strong> &#8211; type of charges to be applied default=&#8217;default&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.apply_forcefield">
+<code class="descname">apply_forcefield</code><span class="sig-paren">(</span><em>f</em>, <em>charges='default'</em>, <em>set_box=True</em>, <em>box_padding=10</em>, <em>update_ptypes=False</em>, <em>skip_ptypes=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.apply_forcefield"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.apply_forcefield" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies force field data to <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> based on typing rules defined in <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object f</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field type will be retrieved</li>
+<li><strong>charges</strong> &#8211; type of charges to be applied default=&#8217;default&#8217;</li>
+<li><strong>set_box</strong> &#8211; Update simulation box information based on particle positions default=True</li>
+<li><strong>box_padding</strong> &#8211; Add padding to simulation box if updating dimensions default=10 (Angstroms)</li>
+<li><strong>update_ptypes</strong> &#8211; If True, update particle types based on current <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> names default=False</li>
+<li><strong>skip_ptypes</strong> &#8211; if True, do not change particle types</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.center">
+<code class="descname">center</code><span class="sig-paren">(</span><em>what='particles', at=[0, 0, 0], move_both=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.center"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Centers particles center of geometry or simulation box at given coordinate. A vector is defined based on the current coordinate for the center of either the particles or the simulation box and the &#8220;at&#8221; parameter. This shift vector is applied to the entity defined by the &#8220;what&#8221; parameter. Optionally, both the particles and the box can be shifted by the same vector.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>what</strong> &#8211; what is being centered: &#8220;particles&#8221; or &#8220;box&#8221;</li>
+<li><strong>at</strong> &#8211; new coordinate for center of particles or box</li>
+<li><strong>move_both</strong> &#8211; if True, determines vector for shift defined by &#8220;what&#8221; and &#8220;at&#8221; parameters, and applies shift to both particles and box. If false, only shift what is defined by &#8220;what&#8221; parameter.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.center_at_origin">
+<code class="descname">center_at_origin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.center_at_origin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.center_at_origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>DEPRECATED: Use <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.center(&#8216;particles&#8217;, [0, 0, 0], True) instead</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.center_system">
+<code class="descname">center_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.center_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.center_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>DEPRECATED: Use <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.center(&#8216;box&#8217;, [0, 0, 0], True) instead</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.check_forcefield">
+<code class="descname">check_forcefield</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.check_forcefield"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.check_forcefield" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates through particles and prints the following:</p>
+<p>tag
+type name
+type element
+type description
+bonded elements</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.check_items">
+<code class="descname">check_items</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.check_items"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.check_items" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks particles, bonds, angles, dihedrals, impropers, and molecules containers and raises exception if the length of items in the container does not equal the count property</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.consolidate_types">
+<code class="descname">consolidate_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.consolidate_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.consolidate_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes duplicate types and reassigns references</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><em>rotate_x=None</em>, <em>rotate_y=None</em>, <em>rotate_z=None</em>, <em>dx=0</em>, <em>dy=0</em>, <em>dz=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create duplicate <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object. Default behavior does not modify particle positions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>rotate_x</strong> &#8211; rotate duplicate system around x axis by this value (radians)</li>
+<li><strong>rotate_y</strong> &#8211; rotate duplicate system around y axis by this value (radians)</li>
+<li><strong>rotate_z</strong> &#8211; rotate duplicate system around z axis by this value (radians)</li>
+<li><strong>dx</strong> &#8211; translate duplicate system in x dimension by this value (Angstrom)</li>
+<li><strong>dy</strong> &#8211; translate duplicate system in y dimension by this value (Angstrom)</li>
+<li><strong>dz</strong> &#8211; translate duplicate system in z dimension by this value (Angstrom)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.distance">
+<code class="descname">distance</code><span class="sig-paren">(</span><em>p1</em>, <em>p2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate distance between two particles considering pbc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p1</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object</li>
+<li><strong>p2</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">distance between particles considering pbc</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.make_linker_types">
+<code class="descname">make_linker_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.make_linker_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.make_linker_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies linker particles and creates duplicate <code class="xref py py-class docutils literal"><span class="pre">Particle</span></code>.linker attribute.
+New <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> name is prepended with [H or T]L&#64; to designate head or tail linker</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.make_new_bonds">
+<code class="descname">make_new_bonds</code><span class="sig-paren">(</span><em>p1=None</em>, <em>p2=None</em>, <em>f=None</em>, <em>angles=True</em>, <em>dihedrals=True</em>, <em>impropers=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.make_new_bonds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.make_new_bonds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes new bond between two particles and updates new force field types</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p1</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in new bond</li>
+<li><strong>p2</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object involved in new bond</li>
+<li><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object from which new force field types will be retrieved</li>
+<li><strong>angles</strong> &#8211; True to update new angles default=True</li>
+<li><strong>dihedrals</strong> &#8211; True to update new dihedrals default=True</li>
+<li><strong>impropers</strong> &#8211; True to update new impropers default=True</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.objectify">
+<code class="descname">objectify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.objectify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.objectify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set references for <a class="reference internal" href="#pysimm.system.Bond" title="pysimm.system.Bond"><code class="xref py py-class docutils literal"><span class="pre">Bond</span></code></a>, <a class="reference internal" href="#pysimm.system.Angle" title="pysimm.system.Angle"><code class="xref py py-class docutils literal"><span class="pre">Angle</span></code></a>, <a class="reference internal" href="#pysimm.system.Dihedral" title="pysimm.system.Dihedral"><code class="xref py py-class docutils literal"><span class="pre">Dihedral</span></code></a>, <a class="reference internal" href="#pysimm.system.Improper" title="pysimm.system.Improper"><code class="xref py py-class docutils literal"><span class="pre">Improper</span></code></a> objects.
+For example, if read from file that bond #1 is between particle 1 and 2 set <a class="reference internal" href="#pysimm.system.Bond" title="pysimm.system.Bond"><code class="xref py py-class docutils literal"><span class="pre">Bond</span></code></a>.a to particles[1], etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.quality">
+<code class="descname">quality</code><span class="sig-paren">(</span><em>tolerance=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.quality"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.quality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attemps to assess quality of <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> based on bond lengths in unwrapped system.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tolerance</strong> &#8211; fractional value of equilibrium bond length that is acceptable</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">number of bonds in system outside tolerance</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.read_lammps_dump">
+<code class="descname">read_lammps_dump</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.read_lammps_dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.read_lammps_dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates particle positions and box size from LAMMPS dump file.
+Assumes following format for each atom line:</p>
+<p>tag charge xcoord ycoord zcoord xvelocity yvelocity zvelocity</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> &#8211; LAMMPS dump file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.read_lammpstrj">
+<code class="descname">read_lammpstrj</code><span class="sig-paren">(</span><em>trj</em>, <em>frame=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.read_lammpstrj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.read_lammpstrj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates particle positions and box size from LAMMPS trajectory file at given frame.</p>
+<p>Assumes one of following formats for each atom line:</p>
+<p>tag xcoord ycoord zcoord</p>
+<p>OR</p>
+<p>tag type_id xcoord ycoord zcoord</p>
+<p>OR</p>
+<p>tag type_id xcoord ycoord zcoord ximage yimage zimage</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>trj</strong> &#8211; LAMMPS trajectory file</li>
+<li><strong>frame</strong> &#8211; sequential frame number (not LAMMPS timestep) default=1</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.read_type_names">
+<code class="descname">read_type_names</code><span class="sig-paren">(</span><em>types_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.read_type_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.read_type_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> names from file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>types_file</strong> &#8211; type dictionary file name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.read_xyz">
+<code class="descname">read_xyz</code><span class="sig-paren">(</span><em>xyz</em>, <em>frame=1</em>, <em>quiet=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.read_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.read_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates particle positions and box size from xyz file at given frame</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xyz</strong> &#8211; xyz trajectory file</li>
+<li><strong>frame</strong> &#8211; sequential frame number default=1</li>
+<li><strong>quiet</strong> &#8211; True to print status default=False</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.remove_linker_types">
+<code class="descname">remove_linker_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.remove_linker_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.remove_linker_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reassigns <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a>.type references to original <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> objects without linker prepend</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.remove_spare_bonding">
+<code class="descname">remove_spare_bonding</code><span class="sig-paren">(</span><em>update_tags=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.remove_spare_bonding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.remove_spare_bonding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes bonds, angles, dihedrals and impropers that reference particles not in <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.particles</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>update_tags</strong> &#8211; True to update all tags after removal of bonding items default=True</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.rotate">
+<code class="descname">rotate</code><span class="sig-paren">(</span><em>around=None</em>, <em>theta_x=0</em>, <em>theta_y=0</em>, <em>theta_z=0</em>, <em>rot_matrix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.rotate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.rotate" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>* REQUIRES NUMPY *</strong></p>
+<p>Rotates entire system around given <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> by user defined angles</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>around</strong> &#8211; <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> around which <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> will be rotated default=None</li>
+<li><strong>theta_x</strong> &#8211; angle around which system will be rotated on x axis</li>
+<li><strong>theta_y</strong> &#8211; angle around which system will be rotated on y axis</li>
+<li><strong>theta_z</strong> &#8211; angle around which system will be rotated on z axis</li>
+<li><strong>rot_matrix</strong> &#8211; rotation matrix to use for rotation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_atomic_numbers">
+<code class="descname">set_atomic_numbers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_atomic_numbers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_atomic_numbers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> objects with atomic number based on <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a>.elem</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_box">
+<code class="descname">set_box</code><span class="sig-paren">(</span><em>padding=0.0</em>, <em>center=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_box"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.dim with user defined padding. Used to construct a simulation box if it doesn&#8217;t exist, or adjust the size of the simulation box following system modifications.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>padding</strong> &#8211; add padding to all sides of box (Angstrom)</li>
+<li><strong>center</strong> &#8211; if True, place center of box at origin default=True</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_charge">
+<code class="descname">set_charge</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_charge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_charge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets total charge of all <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> objects in System.particles</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_cog">
+<code class="descname">set_cog</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_cog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_cog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate center of gravity of <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> and assign to <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.cog</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_density">
+<code class="descname">set_density</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_density"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate density of <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> from mass and volume</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_excluded_particles">
+<code class="descname">set_excluded_particles</code><span class="sig-paren">(</span><em>bonds=True</em>, <em>angles=True</em>, <em>dihedrals=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_excluded_particles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_excluded_particles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> object such that <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a>.excluded_particles contains other <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> objects involved in
+1-2, 1-3, and/or 1-4 interactions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>bonds</strong> &#8211; exclude particles involved in 1-2 interactions</li>
+<li><strong>angles</strong> &#8211; exclude particles involved in 1-3 interactions</li>
+<li><strong>dihedrals</strong> &#8211; exclude particles involved in 1-4 interactions</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_frac_free_volume">
+<code class="descname">set_frac_free_volume</code><span class="sig-paren">(</span><em>v_void=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_frac_free_volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_frac_free_volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates fractional free volume from void volume and bulk density</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>v_void</strong> &#8211; void volume if not defined in <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.void_volume default=None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_mass">
+<code class="descname">set_mass</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_mass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_mass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set total mass of particles in <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_mm_dist">
+<code class="descname">set_mm_dist</code><span class="sig-paren">(</span><em>molecules=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_mm_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_mm_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate molecular mass distribution (mainly for polymer systems).
+Sets <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.mw, <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.mn, and <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.disperisty</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>molecules</strong> &#8211; <a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> of molecules to calculate distributions defaul=&#8217;all&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_references">
+<code class="descname">set_references</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_references"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_references" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set object references when <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> information read from text file.
+For example, if bond type value 2 is read from file, set <a class="reference internal" href="#pysimm.system.Bond" title="pysimm.system.Bond"><code class="xref py py-class docutils literal"><span class="pre">Bond</span></code></a>.type to bond_types[2]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_velocity">
+<code class="descname">set_velocity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_velocity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate total velocity of particles in <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.set_volume">
+<code class="descname">set_volume</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.set_volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.set_volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set volume of <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> based on Dimension</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.shift_particles">
+<code class="descname">shift_particles</code><span class="sig-paren">(</span><em>shiftx</em>, <em>shifty</em>, <em>shiftz</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.shift_particles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.shift_particles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shifts all particles by shiftx, shifty, shiftz. Recalculates cog.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shiftx</strong> &#8211; distance to shift particles in x direction</li>
+<li><strong>shifty</strong> &#8211; distance to shift particles in y direction</li>
+<li><strong>shiftz</strong> &#8211; distance to shift particles in z direction</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.shift_to_origin">
+<code class="descname">shift_to_origin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.shift_to_origin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.shift_to_origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shifts simulation box to begin at origin. i.e. xlo=ylo=zlo=0</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.unite_atoms">
+<code class="descname">unite_atoms</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.unite_atoms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.unite_atoms" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.unwrap">
+<code class="descname">unwrap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.unwrap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.unwrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unwraps <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> images such that no bonds cross box edges.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.update_ff_types_from_ac">
+<code class="descname">update_ff_types_from_ac</code><span class="sig-paren">(</span><em>ff</em>, <em>acname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.update_ff_types_from_ac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.update_ff_types_from_ac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> objects in system using type names given in antechamber (ac) file. Retrieves type from System if possible, then searches force field provided by ff.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ff</strong> &#8211; forcefield to search for Type objects</li>
+<li><strong>acname</strong> &#8211; ac filename containing type names</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.update_particle_types_from_forcefield">
+<code class="descname">update_particle_types_from_forcefield</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.update_particle_types_from_forcefield"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.update_particle_types_from_forcefield" title="Permalink to this definition">¶</a></dt>
+<dd><p>pysimm.system.System.update_types_from_forcefield</p>
+<p>Updates <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> data from <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object f based on <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a>.name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object reference</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.update_tags">
+<code class="descname">update_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.update_tags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.update_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update Item tags in <a class="reference internal" href="pysimm.utils.html#pysimm.utils.ItemContainer" title="pysimm.utils.ItemContainer"><code class="xref py py-class docutils literal"><span class="pre">ItemContainer</span></code></a> objects to preserve continuous tags. Removes all objects and then reinserts them.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Args:</dt>
+<dd>None</dd>
+<dt>Returns:</dt>
+<dd>None</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.update_types">
+<code class="descname">update_types</code><span class="sig-paren">(</span><em>ptypes</em>, <em>btypes</em>, <em>atypes</em>, <em>dtypes</em>, <em>itypes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.update_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.update_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates type objects from a given list of types.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ptypes</strong> &#8211; list of <a class="reference internal" href="#pysimm.system.ParticleType" title="pysimm.system.ParticleType"><code class="xref py py-class docutils literal"><span class="pre">ParticleType</span></code></a> objects from which to update</li>
+<li><strong>btypes</strong> &#8211; list of <a class="reference internal" href="#pysimm.system.BondType" title="pysimm.system.BondType"><code class="xref py py-class docutils literal"><span class="pre">BondType</span></code></a> objects from which to update</li>
+<li><strong>atypes</strong> &#8211; list of <a class="reference internal" href="#pysimm.system.AngleType" title="pysimm.system.AngleType"><code class="xref py py-class docutils literal"><span class="pre">AngleType</span></code></a> objects from which to update</li>
+<li><strong>dtypes</strong> &#8211; list of <a class="reference internal" href="#pysimm.system.DihedralType" title="pysimm.system.DihedralType"><code class="xref py py-class docutils literal"><span class="pre">DihedralType</span></code></a> objects from which to update</li>
+<li><strong>itypes</strong> &#8211; list of <a class="reference internal" href="#pysimm.system.ImproperType" title="pysimm.system.ImproperType"><code class="xref py py-class docutils literal"><span class="pre">ImproperType</span></code></a> objects from which to update</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.visualize">
+<code class="descname">visualize</code><span class="sig-paren">(</span><em>vis_exec='vmd'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.visualize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.visualize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualize system in third party software with given executable. Software must accept pdb or xyz as first
+command line argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>vis_exec</strong> &#8211; executable to launch visualization software default=&#8217;vmd&#8217;</li>
+<li><strong>unwrap</strong> (<em>optional</em>) &#8211; if True, unwrap <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> first default=None</li>
+<li><strong>format</strong> (<em>optional</em>) &#8211; set format default=&#8217;xyz&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.viz">
+<code class="descname">viz</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.viz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.viz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.wrap">
+<code class="descname">wrap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.wrap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.wrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap <a class="reference internal" href="#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> images into box defined by <a class="reference internal" href="#pysimm.system.Dimension" title="pysimm.system.Dimension"><code class="xref py py-class docutils literal"><span class="pre">Dimension</span></code></a> object.
+Ensure particles are contained within simulation box.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.write_chemdoodle_json">
+<code class="descname">write_chemdoodle_json</code><span class="sig-paren">(</span><em>outfile</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.write_chemdoodle_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.write_chemdoodle_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> data in chemdoodle json format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=&#8217;string&#8217;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.write_lammps">
+<code class="descname">write_lammps</code><span class="sig-paren">(</span><em>out_data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.write_lammps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.write_lammps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> data formatted for LAMMPS</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>out_data</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string if data file if out_data=&#8217;string&#8217;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.write_lammps_mol">
+<code class="descname">write_lammps_mol</code><span class="sig-paren">(</span><em>out_data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.write_lammps_mol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.write_lammps_mol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> data formatted as LAMMPS molecule template</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>out_data</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string if data file if out_data=&#8217;string&#8217;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.write_mol">
+<code class="descname">write_mol</code><span class="sig-paren">(</span><em>outfile='data.mol'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.write_mol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.write_mol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> data in mol format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=&#8217;string&#8217;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.write_pdb">
+<code class="descname">write_pdb</code><span class="sig-paren">(</span><em>outfile='data.pdb'</em>, <em>type_names=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.write_pdb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.write_pdb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> data in pdb format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=&#8217;string&#8217;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.write_xyz">
+<code class="descname">write_xyz</code><span class="sig-paren">(</span><em>outfile='data.xyz'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.write_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.write_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> data in xyz format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> &#8211; where to write data, file name or &#8216;string&#8217;</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None or string of data file if out_data=&#8217;string&#8217;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.write_yaml">
+<code class="descname">write_yaml</code><span class="sig-paren">(</span><em>file_</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.write_yaml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.write_yaml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> data in yaml format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>outfile</strong> &#8211; file name to write data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.zero_charge">
+<code class="descname">zero_charge</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.zero_charge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.zero_charge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enforces total <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> charge to be 0.0 by subtracting excess charge from last particle</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.system.System.zero_velocity">
+<code class="descname">zero_velocity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#System.zero_velocity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.System.zero_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enforce zero shift velocity in <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>None</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.compare">
+<code class="descclassname">pysimm.system.</code><code class="descname">compare</code><span class="sig-paren">(</span><em>s1</em>, <em>s2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#compare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.compare" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.distance_to_origin">
+<code class="descclassname">pysimm.system.</code><code class="descname">distance_to_origin</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#distance_to_origin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.distance_to_origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates distance of particle to origin.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>p</strong> &#8211; Particle object with x, y, and z attributes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Distance of particle to origin</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.get_types">
+<code class="descclassname">pysimm.system.</code><code class="descname">get_types</code><span class="sig-paren">(</span><em>*arg</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#get_types"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.get_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get unique type names from list of systems</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>write</strong> (<em>optional</em>) &#8211; if True, write types dictionary to filename</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">(ptypes, btypes, atypes, dtypes, itypes)
+<strong>* for use with update_types *</strong></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.random">
+<code class="descclassname">pysimm.system.</code><code class="descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; x in the interval [0, 1).<a class="headerlink" href="#pysimm.system.random" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_ac">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_ac</code><span class="sig-paren">(</span><em>ac_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_ac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_ac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interprets ac file and creates <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ac_file</strong> &#8211; ac file name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_chemdoodle_json">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_chemdoodle_json</code><span class="sig-paren">(</span><em>file_</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_chemdoodle_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_chemdoodle_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>pysimm.system.read_xyz</p>
+<p>Interprets xyz file and creates <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file</strong> &#8211; xyz file name</li>
+<li><strong>quiet</strong> (<em>optional</em>) &#8211; if False, print status</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_cml">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_cml</code><span class="sig-paren">(</span><em>cml_file</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_cml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_cml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interprets cml file and creates <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>cml_file</strong> &#8211; cml file name</li>
+<li><strong>linkers</strong> (<em>optional</em>) &#8211; if True, use spinMultiplicity to determine linker default=None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_lammps">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_lammps</code><span class="sig-paren">(</span><em>data_file</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_lammps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_lammps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interprets LAMMPS data file and creates <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_file</strong> &#8211; LAMMPS data file name</li>
+<li><strong>quiet</strong> (<em>optional</em>) &#8211; if False, print status</li>
+<li><strong>atom_style</strong> (<em>optional</em>) &#8211; option to let user override (understands charge, molecular, full)</li>
+<li><strong>pair_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
+<li><strong>bond_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
+<li><strong>angle_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
+<li><strong>dihedral_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
+<li><strong>improper_style</strong> (<em>optional</em>) &#8211; option to let user override</li>
+<li><strong>set_types</strong> (<em>optional</em>) &#8211; if True, objectify default=True</li>
+<li><strong>name</strong> (<em>optional</em>) &#8211; provide name for system</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_mol">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_mol</code><span class="sig-paren">(</span><em>mol_file</em>, <em>type_with=None</em>, <em>version='V2000'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_mol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_mol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interprets mol file and creates <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mol_file</strong> &#8211; mol file name</li>
+<li><strong>f</strong> (<em>optional</em>) &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object to get data from</li>
+<li><strong>version</strong> &#8211; version of mol file to expect default=&#8217;V2000&#8217;</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_pdb">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_pdb</code><span class="sig-paren">(</span><em>pdb_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_pdb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_pdb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interprets pdb file and creates <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pdb_file</strong> &#8211; pdb file name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_prepc">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_prepc</code><span class="sig-paren">(</span><em>prec_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_prepc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_prepc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interprets prepc file and creates <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prepc_file</strong> &#8211; ac file name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_pubchem_cid">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_pubchem_cid</code><span class="sig-paren">(</span><em>cid</em>, <em>type_with=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_pubchem_cid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_pubchem_cid" title="Permalink to this definition">¶</a></dt>
+<dd><p>pysimm.system.read_pubchem_smiles</p>
+<p>Interface with pubchem restful API to create molecular system from SMILES format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>smiles</strong> &#8211; smiles formatted string of molecule</li>
+<li><strong>type_with</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object to type with default=None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_pubchem_smiles">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_pubchem_smiles</code><span class="sig-paren">(</span><em>smiles</em>, <em>quiet=False</em>, <em>type_with=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_pubchem_smiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_pubchem_smiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface with pubchem restful API to create molecular system from SMILES format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>smiles</strong> &#8211; smiles formatted string of molecule</li>
+<li><strong>type_with</strong> &#8211; <code class="xref py py-class docutils literal"><span class="pre">Forcefield</span></code> object to type with default=None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_xyz">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_xyz</code><span class="sig-paren">(</span><em>file_</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_xyz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_xyz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interprets xyz file and creates <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file</strong> &#8211; xyz file name</li>
+<li><strong>quiet</strong> (<em>optional</em>) &#8211; if False, print status</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.read_yaml">
+<code class="descclassname">pysimm.system.</code><code class="descname">read_yaml</code><span class="sig-paren">(</span><em>file_</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#read_yaml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.read_yaml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interprets yaml file and creates <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file</strong> &#8211; yaml file name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.system.replicate">
+<code class="descclassname">pysimm.system.</code><code class="descname">replicate</code><span class="sig-paren">(</span><em>ref</em>, <em>nrep</em>, <em>s_=None</em>, <em>density=0.3</em>, <em>rand=True</em>, <em>print_insertions=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/system.html#replicate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.system.replicate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replicates list of <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> objects into new (or exisintg) <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>.
+Can be random insertion.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ref</strong> &#8211; reference :class:<a href="#id5"><span class="problematic" id="id6">`</span></a>~pysimm.system.System`(s) (this can be a list)</li>
+<li><strong>nrep</strong> &#8211; number of insertions to perform (can be list but must match length of ref)</li>
+<li><strong>s</strong> &#8211; <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> into which insertions will be performed default=None</li>
+<li><strong>density</strong> &#8211; density of new <a class="reference internal" href="#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> default=0.3 (set to None to not change box)</li>
+<li><strong>rand</strong> &#8211; if True, random insertion is performed</li>
+<li><strong>print_insertions</strong> &#8211; if True, update screen with number of insertions</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pysimm.utils.html" class="btn btn-neutral float-right" title="pysimm.utils module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pysimm.lmps.html" class="btn btn-neutral" title="pysimm.lmps module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, https://pysimm.org.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+# Run_Name
+result.out
+!^^^^^^^^^^^^^^^^^^^^
+
+# Temperature_Info
+300
+!^^^^^^^^^^^^^^^^^^^^
+
+# Chemical_Potential_Info
+-33.58
+!^^^^^^^^^^^^^^^^^^^^
+
+# Average_Info
+1
+!^^^^^^^^^^^^^^^^^^^^
+
+# Pair_Energy
+true
+!^^^^^^^^^^^^^^^^^^^^
+
+# Rcutoff_Low
+0.0
+!^^^^^^^^^^^^^^^^^^^^
+
+# Mixing_Rule
+lb
+!^^^^^^^^^^^^^^^^^^^^
+
+# Run_Type
+Equilibration 500 100
+!^^^^^^^^^^^^^^^^^^^^
+
+# Charge_Style
+coul ewald 12.0 1e-05
+!^^^^^^^^^^^^^^^^^^^^
+
+# VDW_Style
+lj cut_tail 12.0
+!^^^^^^^^^^^^^^^^^^^^
+
+# Simulation_Length_Info
+units   steps
+prop_freq   500
+coord_freq   10000
+run   10000
+!^^^^^^^^^^^^^^^^^^^^
+
+# CBMC_Info
+kappa_ins   12
+kappa_dih   10
+rcut_cbmc   5.0
+!^^^^^^^^^^^^^^^^^^^^
+
+# Box_Info
+1
+cubic
+75
+!^^^^^^^^^^^^^^^^^^^^
+
+# Property_Info 1
+energy_total
+density
+nmols
+pressure
+!^^^^^^^^^^^^^^^^^^^^
+
+END

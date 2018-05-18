@@ -242,28 +242,36 @@ def lmps_min(s, name, settings):
         log_name = 'logs/%s' % '_'.join(name.split())
 
     if settings.polym.min.user_input:
-        lmps.run(s, lammps_in=settings.polym.min.min_in,
-                 name='initial optimization',
-                 print_to_screen=False, nanohub=nanohub)
+        sim = lmps.Simulation(s, name='initial optimization',
+                 print_to_screen=False, nanohub=nanohub, custom=True)
+        sim.add(settings.polym.min.min_in)
+        sim.run(np=settings.np, nanohub=nanohub)
     else:
-        result = lmps.minimize(s, name=name,
-                               cutoff=settings.polym.min.nb_cutoff,
-                               sd_etol=settings.polym.min.sd_etol,
-                               sd_ftol=settings.polym.min.sd_ftol,
-                               sd_maxiter=settings.polym.min.sd_maxiter,
-                               sd_maxeval=settings.polym.min.sd_maxeval,
-                               cg_etol=settings.polym.min.cg_etol,
-                               cg_ftol=settings.polym.min.cg_ftol,
-                               cg_maxiter=settings.polym.min.cg_maxiter,
-                               cg_maxeval=settings.polym.min.cg_maxeval,
-                               log=log_name,
-                               np=settings.np,
-                               nanohub=nanohub)
+        sim = lmps.Simulation(s, name='initial optimization',
+            print_to_screen=False, nanohub=nanohub,
+            log=log_name
+        )
+        sim.add(lmps.Init(cutoff=settings.polym.min.nb_cutoff, forcefield=settings.forcefield))
+        sim.add_min(
+            min_style='sd',
+            etol=settings.polym.min.sd_etol,
+            ftol=settings.polym.min.sd_ftol,
+            maxiter=settings.polym.min.sd_maxiter,
+            maxeval=settings.polym.min.sd_maxeval,
+        )
+        sim.add_min(
+            min_style='cg',
+            etol=settings.polym.min.cg_etol,
+            ftol=settings.polym.min.cg_ftol,
+            maxiter=settings.polym.min.cg_maxiter,
+            maxeval=settings.polym.min.cg_maxeval,
+        )
+        sim.run(np=settings.np, nanohub=nanohub)
 
     if settings.polym.min.cluster:
         shutil.move(log_name, 'logs')
 
-    return result
+    return True
 
 
 def lmps_step_md(s, bonds, attempt, settings):
@@ -289,24 +297,27 @@ def lmps_step_md(s, bonds, attempt, settings):
         log_name = 'logs/step_%03d_%03d' % (bonds, attempt)
 
     if settings.polym.step.user_input:
-        lmps.run(s, lammps_in=settings.polym.step.step_in,
-                 name='bond %s attempt #%d' % (bonds + 1, attempt),
-                 print_to_screen=False, nanohub=nanohub)
+        sim = lmps.Simulation(s, name='bond %s attempt #%d' % (bonds + 1, attempt),
+                 print_to_screen=False, nanohub=nanohub, custom=True)
+        sim.add(settings.polym.step.step_in)
+        sim.run(np=settings.np, nanohub=nanohub)
     else:
-        result = lmps.md(s, name='bond %s: attempt #%d' % (bonds + 1, attempt),
-                         ensemble='nvt',
-                         cutoff=settings.polym.step.nb_cutoff,
-                         temp=settings.polym.step.temp,
-                         new_v=True,
-                         length=settings.polym.step.length,
-                         log=log_name,
-                         np=settings.np,
-                         nanohub=nanohub)
+        sim = lmps.Simulation(s, name='bond %s: attempt #%d' % (bonds + 1, attempt),
+            print_to_screen=False, nanohub=nanohub,
+            log=log_name
+        )
+        sim.add(lmps.Init(cutoff=settings.polym.step.nb_cutoff, forcefield=settings.forcefield))
+        sim.add(lmps.Velocity(temperature=settings.polym.step.temp))
+        sim.add_md(
+            ensemble='nvt', temperature=settings.polym.step.temp,
+            run=settings.polym.step.length,
+        )
+        sim.run(np=settings.np, nanohub=nanohub)
 
     if settings.polym.step.cluster:
         shutil.move(log_name, 'logs')
 
-    return result
+    return True
 
 
 def lmps_cycle_nvt_md(s, bonds, settings):
@@ -331,24 +342,27 @@ def lmps_cycle_nvt_md(s, bonds, settings):
         log_name = 'logs/cycle_nvt_%03d' % bonds
 
     if settings.polym.cycle_nvt.user_input:
-        lmps.run(s, lammps_in=settings.polym.cycle_nvt.step_in,
-                 name='bond %d cycle nvt' % bonds,
-                 print_to_screen=False, nanohub=nanohub)
+        sim = lmps.Simulation(s, name='bond %d cycle nvt' % bonds,
+                 print_to_screen=False, nanohub=nanohub, custom=True)
+        sim.add(settings.polym.cycle_nvt.step_in)
+        sim.run(np=settings.np, nanohub=nanohub)
     else:
-        result = lmps.md(s, name='bond %d cycle nvt' % bonds,
-                         ensemble='nvt',
-                         cutoff=settings.polym.cycle_nvt.nb_cutoff,
-                         temp=settings.polym.cycle_nvt.temp,
-                         new_v=True,
-                         length=settings.polym.cycle_nvt.length,
-                         log=log_name,
-                         np=settings.np,
-                         nanohub=nanohub)
+        sim = lmps.Simulation(s, name='bond %d cycle nvt' % bonds,
+            print_to_screen=False, nanohub=nanohub,
+            log=log_name
+        )
+        sim.add(lmps.Init(cutoff=settings.polym.cycle_nvt.nb_cutoff, forcefield=settings.forcefield))
+        sim.add(lmps.Velocity(temperature=settings.polym.cycle_nvt.temp))
+        sim.add_md(
+            ensemble='nvt', temperature=settings.polym.cycle_nvt.temp,
+            run=settings.polym.cycle_nvt.length,
+        )
+        sim.run(np=settings.np, nanohub=nanohub)
 
     if settings.polym.cycle_nvt.cluster:
         shutil.move(log_name, 'logs')
 
-    return result
+    return True
 
 
 def lmps_cycle_npt_md(s, bonds, settings):
@@ -373,22 +387,25 @@ def lmps_cycle_npt_md(s, bonds, settings):
         log_name = 'logs/cycle_npt_%03d' % bonds
 
     if settings.polym.cycle_npt.user_input:
-        lmps.run(s, lammps_in=settings.polym.cycle_npt.step_in,
-                 name='bond %d cycle npt' % bonds,
-                 print_to_screen=False, nanohub=nanohub)
+        sim = lmps.Simulation(s, name='bond %d cycle npt' % bonds,
+                 print_to_screen=False, nanohub=nanohub, custom=True)
+        sim.add(settings.polym.cycle_npt.step_in)
+        sim.run(np=settings.np, nanohub=nanohub)
     else:
-        result = lmps.md(s, name='bond %d cycle npt' % bonds,
-                         ensemble='nvt',
-                         cutoff=settings.polym.cycle_npt.nb_cutoff,
-                         temp=settings.polym.cycle_npt.temp,
-                         new_v=True,
-                         pressure=settings.polym.cycle_npt.pressure,
-                         length=settings.polym.cycle_npt.length,
-                         log=log_name,
-                         np=settings.np,
-                         nanohub=nanohub)
+        sim = lmps.Simulation(s, name='bond %d cycle npt' % bonds,
+            print_to_screen=False, nanohub=nanohub,
+            log=log_name
+        )
+        sim.add(lmps.Init(cutoff=settings.polym.cycle_npt.nb_cutoff, forcefield=settings.forcefield))
+        sim.add(lmps.Velocity(temperature=settings.polym.cycle_npt.temp))
+        sim.add_md(
+            ensemble='npt', temperature=settings.polym.cycle_npt.nb_cutoff,
+            run=settings.polym.cycle_npt.length,
+            pressure=settings.polym.cycle_npt.pressure,
+        )
+        sim.run(np=settings.np, nanohub=nanohub)
 
     if settings.polym.cycle_npt.cluster:
         shutil.move(log_name, 'logs')
 
-    return result
+    return True

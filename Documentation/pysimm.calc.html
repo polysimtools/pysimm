@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysimm.calc module &mdash; pysimm 0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="pysimm 0.2 documentation" href="index.html"/>
+        <link rel="up" title="pysimm package" href="pysimm.html"/>
+        <link rel="next" title="pysimm.cassandra module" href="pysimm.cassandra.html"/>
+        <link rel="prev" title="pysimm.amber module" href="pysimm.amber.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pysimm
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pysimm.html">pysimm package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pysimm.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pysimm.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pysimm.amber.html">pysimm.amber module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">pysimm.calc module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.cassandra.html">pysimm.cassandra module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.cli.html">pysimm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.lmps.html">pysimm.lmps module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.system.html">pysimm.system module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.utils.html">pysimm.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pysimm.html#module-pysimm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">pysimm</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="pysimm.html">pysimm package</a> &raquo;</li>
+      
+    <li>pysimm.calc module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pysimm.calc.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pysimm.calc">
+<span id="pysimm-calc-module"></span><h1>pysimm.calc module<a class="headerlink" href="#module-pysimm.calc" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pysimm.calc.angle">
+<code class="descclassname">pysimm.calc.</code><code class="descname">angle</code><span class="sig-paren">(</span><em>p1</em>, <em>p2</em>, <em>p3</em>, <em>radians=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds angle between three <a class="reference internal" href="pysimm.system.html#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> objects. Does not consider periodic boundary conditions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p1</strong> &#8211; pysimm.system.Particle</li>
+<li><strong>p2</strong> &#8211; pysimm.system.Particle</li>
+<li><strong>p3</strong> &#8211; pysimm.system.Particle</li>
+<li><strong>radians</strong> &#8211; returns value in radians if True (False)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">angle between particles</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.calc.chiral_angle">
+<code class="descclassname">pysimm.calc.</code><code class="descname">chiral_angle</code><span class="sig-paren">(</span><em>a</em>, <em>b</em>, <em>c</em>, <em>d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#chiral_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.chiral_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds chiral angle between four <a class="reference internal" href="pysimm.system.html#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> objects. Chiral angle is defined as the angle between the vector resulting from vec(a-&gt;c) X vec(a-&gt;d) and vec(a-&gt;b). Used to help define tacticity where backbone follow b&#8217;&#8211;a&#8211;b and c and d are side groups.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>b&#8217;&#8211;a&#8211;b</dt>
+<dd>/          c   d</dd>
+</dl>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> &#8211; pysimm.system.Particle</li>
+<li><strong>b</strong> &#8211; pysimm.system.Particle</li>
+<li><strong>c</strong> &#8211; pysimm.system.Particle</li>
+<li><strong>d</strong> &#8211; pysimm.system.Particle</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">chiral angle</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.calc.distance">
+<code class="descclassname">pysimm.calc.</code><code class="descname">distance</code><span class="sig-paren">(</span><em>p1</em>, <em>p2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds distance between two <a class="reference internal" href="pysimm.system.html#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a> objects. Simply calculates length of vector between particle coordinates and does not consider periodic boundary conditions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>p1</strong> &#8211; <a class="reference internal" href="pysimm.system.html#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a></li>
+<li><strong>p2</strong> &#8211; <a class="reference internal" href="pysimm.system.html#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">distance between particles</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.calc.find_rotation">
+<code class="descclassname">pysimm.calc.</code><code class="descname">find_rotation</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#find_rotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.find_rotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds rotation vector required to align vector a and vector b</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> &#8211; 3D vector [x,y,z]</li>
+<li><strong>b</strong> &#8211; 3D vector [x,y,z]</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">rotation matrix</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.calc.frac_free_volume">
+<code class="descclassname">pysimm.calc.</code><code class="descname">frac_free_volume</code><span class="sig-paren">(</span><em>v_sp</em>, <em>v_void</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#frac_free_volume"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.frac_free_volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines fractional free volume for a poroous system.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>v_sp</strong> &#8211; specific volume</li>
+<li><strong>v_void</strong> &#8211; void volume</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">fractional free volume</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.calc.intersection">
+<code class="descclassname">pysimm.calc.</code><code class="descname">intersection</code><span class="sig-paren">(</span><em>line1</em>, <em>line2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#intersection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.intersection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds intersection between two 2D lines given by two sets of points</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>line1</strong> &#8211; [[x1,y1], [x2,y2]] for line 1</li>
+<li><strong>line2</strong> &#8211; [[x1,y1], [x2,y2]] for line 2</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">x,y intersection point</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.calc.pbc_distance">
+<code class="descclassname">pysimm.calc.</code><code class="descname">pbc_distance</code><span class="sig-paren">(</span><em>s</em>, <em>p1</em>, <em>p2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#pbc_distance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.pbc_distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates distance between particles using PBC</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>s</strong> &#8211; <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a></li>
+<li><strong>p1</strong> &#8211; <a class="reference internal" href="pysimm.system.html#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a></li>
+<li><strong>p2</strong> &#8211; <a class="reference internal" href="pysimm.system.html#pysimm.system.Particle" title="pysimm.system.Particle"><code class="xref py py-class docutils literal"><span class="pre">Particle</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">distance between particles</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.calc.random">
+<code class="descclassname">pysimm.calc.</code><code class="descname">random</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &rarr; x in the interval [0, 1).<a class="headerlink" href="#pysimm.calc.random" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="pysimm.calc.rotate_vector">
+<code class="descclassname">pysimm.calc.</code><code class="descname">rotate_vector</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em>, <em>theta_x=None</em>, <em>theta_y=None</em>, <em>theta_z=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#rotate_vector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.rotate_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rotates 3d vector around x-axis, y-axis and z-axis given by user defined angles</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; x vector component</li>
+<li><strong>y</strong> &#8211; y vector component</li>
+<li><strong>z</strong> &#8211; z vector component</li>
+<li><strong>theta_x</strong> &#8211; angle to rotate vector around x axis</li>
+<li><strong>theta_y</strong> &#8211; angle to rotate vector around y axis</li>
+<li><strong>theta_z</strong> &#8211; angle to rotate vector around z axis</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">new vector [x,y,z]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.calc.tacticity">
+<code class="descclassname">pysimm.calc.</code><code class="descname">tacticity</code><span class="sig-paren">(</span><em>s</em>, <em>a_tag=None</em>, <em>b_tag=None</em>, <em>c_tag=None</em>, <em>d_tag=None</em>, <em>offset=None</em>, <em>return_angles=True</em>, <em>unwrap=True</em>, <em>rewrap=True</em>, <em>skip_first=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/calc.html#tacticity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.calc.tacticity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines tacticity for polymer chain. Iterates through groups of four patricles given by X_tags, using offset. This assumes equivalent atoms in each group of four are perfectly offset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>s</strong> &#8211; <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a></li>
+<li><strong>a_tag</strong> &#8211; tag of first a particle</li>
+<li><strong>b_tag</strong> &#8211; tag of first b particle</li>
+<li><strong>c_tag</strong> &#8211; tag of first c particle</li>
+<li><strong>d_tag</strong> &#8211; tag of first d particle</li>
+<li><strong>offset</strong> &#8211; offset of particle tags (monomer repeat atomic count)</li>
+<li><strong>return_angles</strong> &#8211; if True return chiral angles of all monomers</li>
+<li><strong>unwrap</strong> &#8211; True to perform unwrap before calculation (REQUIRED before calculation, but not required in this</li>
+<li><strong>function)</strong> &#8211; </li>
+<li><strong>rewrap</strong> &#8211; True to rewrap system after calculation</li>
+<li><strong>skip_first</strong> &#8211; True to skip first monomer (sometime chirality is poorly defined for thsi monomer)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">tacticity or tacticity, [chiral_angles]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pysimm.cassandra.html" class="btn btn-neutral float-right" title="pysimm.cassandra module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pysimm.amber.html" class="btn btn-neutral" title="pysimm.amber module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, https://pysimm.org.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

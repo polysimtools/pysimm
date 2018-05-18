@@ -1,0 +1,750 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysimm.cassandra module &mdash; pysimm 0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="pysimm 0.2 documentation" href="index.html"/>
+        <link rel="up" title="pysimm package" href="pysimm.html"/>
+        <link rel="next" title="pysimm.cli module" href="pysimm.cli.html"/>
+        <link rel="prev" title="pysimm.calc module" href="pysimm.calc.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pysimm
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pysimm.html">pysimm package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pysimm.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pysimm.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pysimm.amber.html">pysimm.amber module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.calc.html">pysimm.calc module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">pysimm.cassandra module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.cli.html">pysimm.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.lmps.html">pysimm.lmps module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.system.html">pysimm.system module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pysimm.utils.html">pysimm.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pysimm.html#module-pysimm">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">pysimm</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="pysimm.html">pysimm package</a> &raquo;</li>
+      
+    <li>pysimm.cassandra module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/pysimm.cassandra.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pysimm.cassandra">
+<span id="pysimm-cassandra-module"></span><h1>pysimm.cassandra module<a class="headerlink" href="#module-pysimm.cassandra" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysimm.cassandra.Cassandra">
+<em class="property">class </em><code class="descclassname">pysimm.cassandra.</code><code class="descname">Cassandra</code><span class="sig-paren">(</span><em>init_sst</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#Cassandra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.Cassandra" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Organizational object for running CASSANDRA simulation tasks. In current implementation it is able to run Canonical,
+Grand Canonical, and Isothermal-Isobaric Monte Carlo simulations (<a class="reference internal" href="#pysimm.cassandra.GCMC" title="pysimm.cassandra.GCMC"><code class="xref py py-class docutils literal"><span class="pre">GCMC</span></code></a>, <a class="reference internal" href="#pysimm.cassandra.NVT" title="pysimm.cassandra.NVT"><code class="xref py py-class docutils literal"><span class="pre">NVT</span></code></a>, and <a class="reference internal" href="#pysimm.cassandra.NPT" title="pysimm.cassandra.NPT"><code class="xref py py-class docutils literal"><span class="pre">NPT</span></code></a>,
+correspondingly).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>system</strong> (<a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) &#8211; molecular updated during the simulations</li>
+<li><strong>run_queue</strong> (<em>list</em>) &#8211; the list of scheduled tasks</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysimm.cassandra.Cassandra.add_gcmc">
+<code class="descname">add_gcmc</code><span class="sig-paren">(</span><em>obj=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#Cassandra.add_gcmc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.Cassandra.add_gcmc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ads new simulation in grand-canonical ensemble to the run queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>obj</strong> &#8211; the entity that should be added. Will be ignored if it is not of a type  <a class="reference internal" href="#pysimm.cassandra.GCMC" title="pysimm.cassandra.GCMC"><code class="xref py py-class docutils literal"><span class="pre">GCMC</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
+<li><strong>is_new</strong> (<em>boolean</em>) &#8211; defines whether all previous simulations should be erased or not</li>
+<li><strong>species</strong> (list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) &#8211; systems that describe molecules and will be passed to
+<a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a> constructor.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<dl class="last docutils">
+<dt>Other keyword arguments of this method will be redirected to the <a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a>, <a class="reference internal" href="#pysimm.cassandra.MCSimulation" title="pysimm.cassandra.MCSimulation"><code class="xref py py-class docutils literal"><span class="pre">MCSimulation</span></code></a>,</dt>
+<dd>and <a class="reference internal" href="#pysimm.cassandra.GCMC" title="pysimm.cassandra.GCMC"><code class="xref py py-class docutils literal"><span class="pre">GCMC</span></code></a> constructors. See their descriptions for the possible keyword options.</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.cassandra.Cassandra.add_npt_mc">
+<code class="descname">add_npt_mc</code><span class="sig-paren">(</span><em>obj=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#Cassandra.add_npt_mc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.Cassandra.add_npt_mc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ads new simulation in isobaric-isothermal ensemble to the run queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>obj</strong> &#8211; the entity that should be added. Will be ignored if it is not of a type  <a class="reference internal" href="#pysimm.cassandra.NPT" title="pysimm.cassandra.NPT"><code class="xref py py-class docutils literal"><span class="pre">NPT</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
+<li><strong>is_new</strong> (<em>boolean</em>) &#8211; defines whether all previous simulations should be erased or not</li>
+<li><strong>species</strong> (list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) &#8211; systems that describe molecules and will be passed to
+<a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a> constructor.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Other keyword arguments of this method will be redirected to the <a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a>, <a class="reference internal" href="#pysimm.cassandra.MCSimulation" title="pysimm.cassandra.MCSimulation"><code class="xref py py-class docutils literal"><span class="pre">MCSimulation</span></code></a>,
+and  <a class="reference internal" href="#pysimm.cassandra.NPT" title="pysimm.cassandra.NPT"><code class="xref py py-class docutils literal"><span class="pre">NPT</span></code></a> constructors. See their descriptions for the possible keyword options.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.cassandra.Cassandra.add_nvt">
+<code class="descname">add_nvt</code><span class="sig-paren">(</span><em>obj=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#Cassandra.add_nvt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.Cassandra.add_nvt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ads new simulation in canonical ensemble to the run queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>obj</strong> &#8211; the entity that should be added. Will be ignored if it is not of a type  <a class="reference internal" href="#pysimm.cassandra.NVT" title="pysimm.cassandra.NVT"><code class="xref py py-class docutils literal"><span class="pre">NVT</span></code></a></p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
+<li><strong>is_new</strong> (<em>boolean</em>) &#8211; defines whether all previous simulations should be erased or not</li>
+<li><strong>species</strong> (list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) &#8211; systems that describe molecules and will be passed to
+<a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a> constructor.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Other keyword arguments of this method will be redirected to the <a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a>, <a class="reference internal" href="#pysimm.cassandra.MCSimulation" title="pysimm.cassandra.MCSimulation"><code class="xref py py-class docutils literal"><span class="pre">MCSimulation</span></code></a>,
+and  <a class="reference internal" href="#pysimm.cassandra.NVT" title="pysimm.cassandra.NVT"><code class="xref py py-class docutils literal"><span class="pre">NVT</span></code></a> constructors. See their descriptions for the possible keyword options.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.cassandra.Cassandra.add_simulation">
+<code class="descname">add_simulation</code><span class="sig-paren">(</span><em>ens_type</em>, <em>obj=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#Cassandra.add_simulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.Cassandra.add_simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for adding new Monte Carlo simulation to the run queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ens_type</strong> &#8211; Type of the molecular ensemble for the Monte-Carlo simulations. The supported options are: <cite>GCMC</cite>
+(Grand Canonical); <cite>NVT</cite> (canonical); <cite>NPT</cite> (isobaric-isothermal)</li>
+<li><strong>obj</strong> &#8211; the entity that should be added. Will be ignored if it is not of a type  <a class="reference internal" href="#pysimm.cassandra.MCSimulation" title="pysimm.cassandra.MCSimulation"><code class="xref py py-class docutils literal"><span class="pre">MCSimulation</span></code></a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
+<li><strong>is_new</strong> (<em>boolean</em>) &#8211; defines whether all previous simulations should be erased or not</li>
+<li><strong>species</strong> (list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) &#8211; systems that describe molecules and will be passed to
+<a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a> constructor.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Other keyword arguments of this method will be redirected to the <a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a> and
+<a class="reference internal" href="#pysimm.cassandra.MCSimulation" title="pysimm.cassandra.MCSimulation"><code class="xref py py-class docutils literal"><span class="pre">MCSimulation</span></code></a> constructors. See their descriptions for the possible keyword options.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.cassandra.Cassandra.read_input">
+<code class="descname">read_input</code><span class="sig-paren">(</span><em>inp_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#Cassandra.read_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.Cassandra.read_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>The method parses the CASSANDRA instructions file (.inp) split it into separate instructions and analyses each
+according to the instruction name.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>inp_file</strong> (<em>str</em>) &#8211; the full relative path of the file to be read</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">read CASSANDRA properties in the format required by <a class="reference internal" href="#pysimm.cassandra.GCMC" title="pysimm.cassandra.GCMC"><code class="xref py py-class docutils literal"><span class="pre">GCMC</span></code></a></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.cassandra.Cassandra.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#Cassandra.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.Cassandra.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that triggers the simulations. Does two consecutive steps: <strong>(1)</strong> tries to write all files necessary
+for simulation (.dat, .inp, .mcf): <strong>(2)</strong> tries to invoke the CASSANDRA executable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.cassandra.GCMC">
+<em class="property">class </em><code class="descclassname">pysimm.cassandra.</code><code class="descname">GCMC</code><span class="sig-paren">(</span><em>mc_sst=None</em>, <em>init_sst=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#GCMC"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.GCMC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysimm.cassandra.MCSimulation" title="pysimm.cassandra.MCSimulation"><code class="xref py py-class docutils literal"><span class="pre">pysimm.cassandra.MCSimulation</span></code></a></p>
+<p>Initiates the specific type of Monte Carlo simulations for CASSANDRA: simulations using Grand-Canonical ensemble of
+particles (constant volume-temperature-chemical potential, muVT). See <a class="reference internal" href="#pysimm.cassandra.MCSimulation" title="pysimm.cassandra.MCSimulation"><code class="xref py py-class docutils literal"><span class="pre">MCSimulation</span></code></a>
+for the detailed description of the properties.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.cassandra.InpProbSpec">
+<em class="property">class </em><code class="descclassname">pysimm.cassandra.</code><code class="descname">InpProbSpec</code><span class="sig-paren">(</span><em>key</em>, <em>value</em>, <em>default</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#InpProbSpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.InpProbSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysimm.cassandra.InpSpec" title="pysimm.cassandra.InpSpec"><code class="xref py py-class docutils literal"><span class="pre">pysimm.cassandra.InpSpec</span></code></a></p>
+<p>Extension of the <a class="reference internal" href="#pysimm.cassandra.InpSpec" title="pysimm.cassandra.InpSpec"><code class="xref py py-class docutils literal"><span class="pre">InpSpec</span></code></a> class that takes into account special representation of the movement
+probabilities in the CASSANDRA input file.</p>
+<dl class="method">
+<dt id="pysimm.cassandra.InpProbSpec.to_string">
+<code class="descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#InpProbSpec.to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.InpProbSpec.to_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.cassandra.InpSpec">
+<em class="property">class </em><code class="descclassname">pysimm.cassandra.</code><code class="descname">InpSpec</code><span class="sig-paren">(</span><em>key</em>, <em>value</em>, <em>default</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#InpSpec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.InpSpec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the most common object used for carrying one logical unit of the CASSANDRA simulation options</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>str</em>) &#8211; the keyword of the simulation option (literally the string that goes after the # sign in
+CASSANDRA .inp file)</li>
+<li><strong>value</strong> (<em>object</em>) &#8211; numerical or text values of the particular simulation option structured in a certain way.
+Here goes only the values that are wished to be changed (it might be just one field of a big dictionary)</li>
+<li><strong>default</strong> (<em>object</em>) &#8211; the most complete default description of the simulation option</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
+<li><strong>write_headers</strong> (<em>boolean</em>) &#8211; if the <code class="xref py py-obj docutils literal"><span class="pre">value</span></code> is dictionary defines whether the dictionary keys should be
+written to the output</li>
+<li><strong>new_line</strong> (<em>boolean</em>) &#8211; if the <code class="xref py py-obj docutils literal"><span class="pre">value</span></code> is iterable defines whether each new element will be written to
+the new line</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysimm.cassandra.InpSpec.to_string">
+<code class="descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#InpSpec.to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.InpSpec.to_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the proper text representation of the property stored in the <code class="xref py py-obj docutils literal"><span class="pre">value</span></code> field</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">formatted text string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.cassandra.MCSimulation">
+<em class="property">class </em><code class="descclassname">pysimm.cassandra.</code><code class="descname">MCSimulation</code><span class="sig-paren">(</span><em>mc_sst=None</em>, <em>init_sst=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#MCSimulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.MCSimulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Object containing the settings and the logic necessary to partially set-up an abstract Monte Carlo simulation
+to be submitted to the CASSANDRA software. The object also will include the simulation results once the simulations
+are finished.</p>
+<dl class="attribute">
+<dt id="pysimm.cassandra.MCSimulation.mc_sst">
+<code class="descname">mc_sst</code><a class="headerlink" href="#pysimm.cassandra.MCSimulation.mc_sst" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pysimm.cassandra.McSystem" title="pysimm.cassandra.McSystem"><code class="xref py py-class docutils literal"><span class="pre">McSystem</span></code></a> &#8211; describes all molecules to be inserted by CASSANDRA</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.cassandra.MCSimulation.init_sst">
+<code class="descname">init_sst</code><a class="headerlink" href="#pysimm.cassandra.MCSimulation.init_sst" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> &#8211; describes the optional initial fixed molecular configuration for MC
+simulations (default: empty cubic box with 1 nm side length). If the particles in the system are not
+attributed with the flag <cite>is_fixed</cite> all of them are considered to be fixed, and will be marked with this
+flag, otherwise all particles with is_fixed=False will be removed.</p>
+</dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
+<li><strong>out_folder</strong> (<em>str</em>) &#8211; the relative path of the simulation results (all .dat, .mcf, as well as .chk, ... files will
+go there). If the folder does not exist it will be created with 0755 permissions.</li>
+<li><strong>props_file</strong> (<em>str</em>) &#8211; the name of the  .inp file.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Other keyword arguments that are accepted are the GCMC simulation settings. The keywords of the settings
+are the same as they are described in CASSANDRA specification but without # symbol.</p>
+<p class="last"><strong>For example</strong>: the keyword argument <cite>Run_Name=&#8217;my_simulation&#8217;</cite> will set <cite>#Run_Name</cite> setting in CASSANDRA
+input file to <cite>my_simulation</cite> value</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>props</strong> (<em>dictionary</em>) &#8211; include all simulation settings to be written to the CASSANDRA .inp file</li>
+<li><strong>input</strong> (<em>str</em>) &#8211; text stream that will be written to the CASSANDRA .inp file</li>
+<li><strong>tot_sst</strong> (<a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a>) &#8211; object containing the results of CASSANDRA simulations</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysimm.cassandra.MCSimulation.group_by_id">
+<code class="descname">group_by_id</code><span class="sig-paren">(</span><em>group_key='matrix'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#MCSimulation.group_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.MCSimulation.group_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method groups the atoms of the system <code class="xref py py-class docutils literal"><span class="pre">tot_sst</span></code> by a certain property. Will iterate through
+all atoms in the system and return indexes of only those atoms that match the property. Currently supports 3
+properties defined by the input keyword argument argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><strong>group_key</strong> (<em>str</em>) &#8211; <p>text constant defines the property to match. Possible keywords are:</p>
+<ol class="arabic simple">
+<li><cite>matrix</cite> &#8211; (default) indexes of the atoms in <code class="xref py py-obj docutils literal"><span class="pre">fxd_sst</span></code></li>
+<li><cite>rigid</cite> &#8211; indexes of all atoms that have rigid atomic bonds. It is assumed here that rigid and
+nonrigid atoms can interact only through intermolecular forces</li>
+<li><cite>nonrigid</cite> &#8211; opposite of previous, indexes of all atoms that have nonrigid atomic bonds</li>
+</ol>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">string in format <cite>a1:b1 a2:b2 ...</cite> where all indexes inside <cite>[ak, bk]</cite> belongs to the selected group
+and array of the form <cite>[[a1, b1], [a2, b2], ...]</cite></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.cassandra.MCSimulation.upd_simulation">
+<code class="descname">upd_simulation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#MCSimulation.upd_simulation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.MCSimulation.upd_simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the <code class="xref py py-class docutils literal"><span class="pre">tot_sst</span></code> field using the <cite>MCSimulation.props[&#8216;Run_Name&#8217;].chk</cite> file. Will try
+to parse the checkpoint file and read the coordinates of the molecules inserted by CASSANDRA. If neither of the
+molecules from the <a class="reference internal" href="#pysimm.cassandra.MCSimulation.mc_sst" title="pysimm.cassandra.MCSimulation.mc_sst"><code class="xref py py-class docutils literal"><span class="pre">mc_sst</span></code></a> can be fit to the text that was read the method will raise an
+exception. The fitting method: <a class="reference internal" href="#pysimm.cassandra.McSystem.make_system" title="pysimm.cassandra.McSystem.make_system"><code class="xref py py-class docutils literal"><span class="pre">make_system</span></code></a> assumes that different molecules inserted by
+CASSANDRA have the same order of the atoms.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.cassandra.MCSimulation.write">
+<code class="descname">write</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#MCSimulation.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.MCSimulation.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates through the <code class="xref py py-class docutils literal"><span class="pre">props</span></code> dictionary creating the text for correct CASSANDRA input</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.cassandra.McSystem">
+<em class="property">class </em><code class="descclassname">pysimm.cassandra.</code><code class="descname">McSystem</code><span class="sig-paren">(</span><em>sst</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#McSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.McSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Wrapper around the list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> objects. Each element in the list represents single
+molecule of a different specie that will be used during MC simulations. Additionally, the object is responsible for
+creating .dat and .mcf files needed for the simulation and reading back the CASSANDRA simulation results.</p>
+<dl class="attribute">
+<dt id="pysimm.cassandra.McSystem.sst">
+<code class="descname">sst</code><a class="headerlink" href="#pysimm.cassandra.McSystem.sst" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of <a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> &#8211; items representing single molecules of different species to be
+inserted by CASSANDRA. If the sst is a list (not a single value) it is assumed that all of the following
+properties are synchronized with it by indexes.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.cassandra.McSystem.chem_pot">
+<code class="descname">chem_pot</code><a class="headerlink" href="#pysimm.cassandra.McSystem.chem_pot" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>list of int</em> &#8211; chemical potential for each specie [Joule/mol]</p>
+</dd></dl>
+
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Keyword Arguments:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><strong>max_ins</strong> (<em>list of int</em>) &#8211; defines the highest possible number of molecules of corresponding specie.
+Basing on these values CASSANDRA allocates memory for simulations. (default: 5000).</li>
+<li><strong>is_rigid</strong> (<em>list of boolean</em>) &#8211; defines whether the atoms in the particular molecule should be marked as rigid
+or not. <strong>Important!</strong> In current implementation the module doesn&#8217;t support flexible molecule angles, so
+the <cite>is_rigid=False</cite> is designed to be used exclusively for <strong>single bead</strong> molecules.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>made_ins</strong> (<em>list of int</em>) &#8211; number of particles of each specie inserted by CASSANDRA.</li>
+<li><strong>mcf_file</strong> (<em>list of str</em>) &#8211; defines full relative names of molecule configuration files <strong>(.mcf)</strong> required by
+CASSANDRA. Files will be created automatically.</li>
+<li><strong>frag_file</strong> (<em>list of str</em>) &#8211; defines full relative names of possible relative configuration files <strong>(.dat)</strong>
+required by CASSANDRA. Files will be created automatically.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pysimm.cassandra.McSystem.make_system">
+<code class="descname">make_system</code><span class="sig-paren">(</span><em>text_output</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#McSystem.make_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.McSystem.make_system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the checkpoint (.chk) file made by CASSANDRA and creates new molecules basing on the new coordinates
+information. Assumes that all atoms of a certain molecule are listed in .chk file together (molecule
+identifiers are not mixed).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The logic of comparison of the xyz-like text record from the .chk file with the
+<a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> object is most straightforward: It is the consecutive comparison of particle
+names and first letters (before the white space) in the text record. In this implementation order matters!
+For example, for CO2, if in the system atoms are ordered as C-O-O and in the text they are ordered as
+O-C-O fit will fail.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text_output</strong> (<em>str</em>) &#8211; text stream from the CASSANDRA .chk file containing the coordinates of newly inserted
+molecules</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">object containing all newly inserted molecules</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.cassandra.McSystem.update_frag_record">
+<code class="descname">update_frag_record</code><span class="sig-paren">(</span><em>frag_record</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#McSystem.update_frag_record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.McSystem.update_frag_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each specie in the system creates the single configuration .dat file required for CASSANDRA simulation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>frag_record</strong> &#8211; dictionary containing the .dat file names and their ids. The dictionary is to be assigned to</li>
+<li><strong>property of the MC simulation</strong> (<em>'Molecule_Files'</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">updated dictionary</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dictionary</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysimm.cassandra.McSystem.update_props">
+<code class="descname">update_props</code><span class="sig-paren">(</span><em>props</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#McSystem.update_props"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.McSystem.update_props" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each specie in the system creates the .mcf file required for CASSANDRA simulation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>props</strong> (<em>dictionary</em>) &#8211; contains the .mcf file names and maximally allowed number of molecules insertions.
+The dictionary is to be assigned to &#8216;Molecule_Files&#8217; property of the MC simulation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">updated input dictionary</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">props</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.cassandra.McfWriter">
+<em class="property">class </em><code class="descclassname">pysimm.cassandra.</code><code class="descname">McfWriter</code><span class="sig-paren">(</span><em>syst</em>, <em>file_ref</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#McfWriter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.McfWriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Object responsible for creating the CASSANDRA Molecular Configuration file (.mcf).</p>
+<dl class="attribute">
+<dt id="pysimm.cassandra.McfWriter.syst">
+<code class="descname">syst</code><a class="headerlink" href="#pysimm.cassandra.McfWriter.syst" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="pysimm.system.html#pysimm.system.System" title="pysimm.system.System"><code class="xref py py-class docutils literal"><span class="pre">System</span></code></a> &#8211; represents the molecule to be described</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.cassandra.McfWriter.file_ref">
+<code class="descname">file_ref</code><a class="headerlink" href="#pysimm.cassandra.McfWriter.file_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; full relative path to the file that will be created</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.cassandra.McfWriter.empty_line">
+<code class="descname">empty_line</code><em class="property"> = '0'</em><a class="headerlink" href="#pysimm.cassandra.McfWriter.empty_line" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pysimm.cassandra.McfWriter.mcf_tags">
+<code class="descname">mcf_tags</code><em class="property"> = ['# Atom_Info', '# Bond_Info', '# Angle_Info', '# Dihedral_Info', '# Improper_Info', '# Intra_Scaling', '# Fragment_Info', '# Fragment_Connectivity']</em><a class="headerlink" href="#pysimm.cassandra.McfWriter.mcf_tags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pysimm.cassandra.McfWriter.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>typing='all'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#McfWriter.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.McfWriter.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method creates the .mcf file writing only those sections of it that are marked to be written</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>typing</strong> (<em>list</em>) &#8211; the list of sections to be written or the text keyword. List items should be as they are
+defined in <a class="reference internal" href="#pysimm.cassandra.McfWriter.mcf_tags" title="pysimm.cassandra.McfWriter.mcf_tags"><code class="xref py py-class docutils literal"><span class="pre">mcf_tags</span></code></a> field); default &#8216;all&#8217;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.cassandra.NPT">
+<em class="property">class </em><code class="descclassname">pysimm.cassandra.</code><code class="descname">NPT</code><span class="sig-paren">(</span><em>mc_sst=None</em>, <em>init_sst=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#NPT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.NPT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysimm.cassandra.MCSimulation" title="pysimm.cassandra.MCSimulation"><code class="xref py py-class docutils literal"><span class="pre">pysimm.cassandra.MCSimulation</span></code></a></p>
+<p>Initiates the specific type of Monte Carlo simulations for CASSANDRA: simulations using Isobaric-Isothermal ensemble
+of particles (NPT). See <a class="reference internal" href="#pysimm.cassandra.MCSimulation" title="pysimm.cassandra.MCSimulation"><code class="xref py py-class docutils literal"><span class="pre">MCSimulation</span></code></a> for the detailed description of the properties.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pysimm.cassandra.NVT">
+<em class="property">class </em><code class="descclassname">pysimm.cassandra.</code><code class="descname">NVT</code><span class="sig-paren">(</span><em>mc_sst=None</em>, <em>init_sst=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#NVT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.NVT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pysimm.cassandra.MCSimulation" title="pysimm.cassandra.MCSimulation"><code class="xref py py-class docutils literal"><span class="pre">pysimm.cassandra.MCSimulation</span></code></a></p>
+<p>Initiates the specific type of Monte Carlo simulations for CASSANDRA: simulations using Canonical ensemble of
+particles (constant volume-temperature-number of particles, NVT). See <a class="reference internal" href="#pysimm.cassandra.MCSimulation" title="pysimm.cassandra.MCSimulation"><code class="xref py py-class docutils literal"><span class="pre">MCSimulation</span></code></a>
+for the detailed description of the properties.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.cassandra.check_cs_exec">
+<code class="descclassname">pysimm.cassandra.</code><code class="descname">check_cs_exec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#check_cs_exec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.check_cs_exec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the absolute path to the CASSANDRA executable is set in the <cite>CASSANDRA_EXEC</cite> environmental variable
+of the OS. The validation is called once inside the <a class="reference internal" href="#pysimm.cassandra.Cassandra.run" title="pysimm.cassandra.Cassandra.run"><code class="xref py py-class docutils literal"><span class="pre">run</span></code></a> method.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysimm.cassandra.make_iterable">
+<code class="descclassname">pysimm.cassandra.</code><code class="descname">make_iterable</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pysimm/cassandra.html#make_iterable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysimm.cassandra.make_iterable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility method that forces the attributes be iterable (wrap in a list if it contains of only one item)</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pysimm.cli.html" class="btn btn-neutral float-right" title="pysimm.cli module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pysimm.calc.html" class="btn btn-neutral" title="pysimm.calc module" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, https://pysimm.org.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

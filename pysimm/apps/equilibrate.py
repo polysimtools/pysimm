@@ -58,45 +58,38 @@ def equil(s, **kwargs):
     Returns:
         None
     """
-    nb_cutoff = kwargs.get('nb_cutoff', 12.0)
     tmax = kwargs.get('tmax', 1000)
     pmax = kwargs.get('pmax', 50000)
     tfinal = kwargs.get('tfinal', 300)
     pfinal = kwargs.get('pfinal', 1)
+    
+    init = kwargs.get('init')
+    output_settings = kwargs.get('output_settings')
 
-    nanohub = kwargs.get('nanohub')
     np = kwargs.get('np')
 
-    p_list = kwargs.get('p_steps')
+    p_list = kwargs.get('p_steps', [0.02*pmax, 0.6*pmax, pmax, 0.5*pmax, 0.1*pmax, 0.01*pmax, pfinal])
 
-    if not p_list:
-        p_list = [0.02*pmax, 0.6*pmax, pmax, 0.5*pmax, 0.1*pmax, 0.01*pmax, pfinal]
+    length_list = kwargs.get('length_list', [100000, 100000, 100000, 100000, 100000, 100000, 100000])
 
-    length_list = kwargs.get('length_list')
-
-    if not length_list:
-        length_list = [100000, 100000, 100000, 100000, 100000, 100000, 100000]
-
-    dump = kwargs.get('dump') or 1000
-    dump_append = kwargs.get('dump_append') if kwargs.get('dump_append') is not None else True
-
-    scale_v = kwargs.get('scale_v') if kwargs.get('scale_v') is not None else True
-
-    settings = {'dump': dump, 'cutoff': nb_cutoff, 'dump_append': dump_append, 'scale_v': scale_v}
-
-    sim = lmps.Simulation(s, name='equil')
-    sim.add_min(nanohub=nanohub, cutoff=nb_cutoff, np=np)
-    sim.add_md(new_v=True, temp=tfinal, nanohub=nanohub, cutoff=nb_cutoff, np=np)
+    sim = lmps.Simulation(s, name='equil', **kwargs)
+    
+    if init:
+        sim.add(init)
+    if output_settings:
+        sim.add(output_settings)
+        
+    sim.add(lmps.Velocity(temperature=tfinal))
 
     step = 0
     for p, l in izip(p_list, length_list):
         step += 1
         if l:
-            sim.add_md(length=l/2, temp=tmax, **settings)
-            sim.add_md(length=l, temp=tfinal, **settings)
-            sim.add_md(length=l/2, ensemble='npt', temp=tfinal, pressure=p, **settings)
+            sim.add_md(length=l/2, ensemble='nvt', temperature=tmax, **kwargs)
+            sim.add_md(length=l, ensemble='nvt', temperature=tfinal, **kwargs)
+            sim.add_md(length=l/2, ensemble='npt', temperature=tfinal, pressure=p, **kwargs)
 
-    sim.run(np=np, nanohub=nanohub)
+    sim.run(np=np)
 
     s.write_lammps('equil.lmps')
     s.write_xyz('equil.xyz')

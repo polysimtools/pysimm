@@ -1,7 +1,0 @@
-pysimm.forcefield.pcff module
-=============================
-
-.. automodule:: pysimm.forcefield.pcff
-    :members:
-    :undoc-members:
-    :show-inheritance:

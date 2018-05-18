@@ -1,7 +1,0 @@
-pysimm.utils module
-===================
-
-.. automodule:: pysimm.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:

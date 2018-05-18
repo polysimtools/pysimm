@@ -53,7 +53,7 @@ class Pcff(Forcefield):
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                    os.pardir, os.pardir, 'dat', 'forcefields', 'pcff.xml')
         Forcefield.__init__(self, db_file)
-        self.ff_name = 'pcff'
+        self.name = 'pcff'
         self.ff_class = '2'
         self.pair_style = 'class2'
         self.bond_style = 'class2'

@@ -12,6 +12,7 @@ def run(test=False):
     # retrieve Dreiding parameters
     print('Example progress: Retrieving Dreiding force field parameters...')
     f = forcefield.Dreiding()
+    s.forcefield = f.name
     
     # get a copy of the C_ particle type object from Dreiding
     # get method returns a list, we need the first element
@@ -47,13 +48,13 @@ def run(test=False):
     # before we optimize our structure, LAMMPS needs to know what type of 
     # pair, bond, and angle interactions we are using
     # these are determined by the forcefield being used
-    s.pair_style='lj'
+    s.pair_style='buck'
     s.bond_style='harmonic'
     s.angle_style='harmonic'
     
     # we'll perform energy minimization using the fire algorithm in LAMMPS
     print('Example progress: Optimizing structure using LAMMPS...')
-    lmps.quick_min(s, min_style='fire', name='fire_min', etol=1e-6, ftol=1e-8)
+    lmps.quick_min(s, min_style='fire', name='fire_min', etol=1e-10, ftol=1e-10)
     
     # write xyz, YAML, LAMMPS data, and chemdoodle json files
     print('Example progress: Saving structure to files...')

@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysimm.apps.mc_md &mdash; pysimm 0.2 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="pysimm 0.2 documentation" href="../../../index.html"/>
+        <link rel="up" title="pysimm" href="../../pysimm.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pysimm
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pysimm.html">pysimm package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">pysimm</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+          <li><a href="../../pysimm.html">pysimm</a> &raquo;</li>
+      
+    <li>pysimm.apps.mc_md</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pysimm.apps.mc_md</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pysimm</span> <span class="kn">import</span> <span class="n">system</span><span class="p">,</span> <span class="n">lmps</span><span class="p">,</span> <span class="n">cassandra</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">types</span>
+
+
+<div class="viewcode-block" id="mc_md"><a class="viewcode-back" href="../../../pysimm.apps.mc_md.html#pysimm.apps.mc_md.mc_md">[docs]</a><span class="k">def</span> <span class="nf">mc_md</span><span class="p">(</span><span class="n">gas_sst</span><span class="p">,</span> <span class="n">fixed_sst</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mcmd_niter</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sim_folder</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mc_props</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">md_props</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;pysimm.apps.mc_md</span>
+
+<span class="sd">    Performs the iterative hybrid Monte-Carlo/Molecular Dynamics (MC/MD) simulations using :class:`~pysimm.lmps` for</span>
+<span class="sd">    MD and :class:`~pysimm.cassandra` for MC</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        gas_sst (list of :class:`~pysimm.system.System`) : list items describe a different molecule to be</span>
+<span class="sd">            inserted by MC</span>
+<span class="sd">        fixed_sst (:class:`~pysimm.system.System`) : fixed during th MC steps group of atoms (default: None)</span>
+
+
+<span class="sd">    Keyword Args:</span>
+<span class="sd">        mcmd_niter (int) : number of MC-MD iterations (default: 10)</span>
+<span class="sd">        sim_folder (str): relative path to the folder with all simulation files (default: &#39;results&#39;)</span>
+<span class="sd">        mc_props (dictionary) : description of  all MC properties needed for simulations (see</span>
+<span class="sd">            :class:`~pysimm.cassandra.GCMC` and :class:`~pysimm.cassandra.GCMC.props` for details)</span>
+<span class="sd">        md_props (dictionary):  description of all Molecular Dynamics settings needed for simulations (see</span>
+<span class="sd">            :class:`~pysimm.lmps.Simulation` and :class:`~pysimm.lmps.MolecularDynamics` for details)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :class:`~pysimm.system.System`:</span>
+<span class="sd">            Final state of the simulated system</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">nonrig_group_name</span> <span class="o">=</span> <span class="s1">&#39;nonrigid_b&#39;</span>
+    <span class="n">rig_group_name</span> <span class="o">=</span> <span class="s1">&#39;rigid_b&#39;</span>
+    <span class="n">n_iter</span> <span class="o">=</span> <span class="n">mcmd_niter</span> <span class="ow">or</span> <span class="mi">10</span>
+    <span class="n">sim_folder</span> <span class="o">=</span> <span class="n">sim_folder</span> <span class="ow">or</span> <span class="s1">&#39;results&#39;</span>
+    <span class="n">xyz_fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sim_folder</span><span class="p">,</span> <span class="s1">&#39;MD{:}_out.xyz&#39;</span><span class="p">)</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="c1"># Creating fixed polymer system</span>
+    <span class="n">fs</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="n">fixed_sst</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fixed_sst</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">System</span><span class="p">):</span>
+            <span class="n">fs</span> <span class="o">=</span> <span class="n">fixed_sst</span>
+            <span class="n">fs</span><span class="o">.</span><span class="n">wrap</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Cannot setup the fixed system for the simulations. Skipping this&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Set the one-molecule gas systems</span>
+    <span class="n">gases</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">gas_sst</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gas_sst</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">System</span><span class="p">):</span>
+            <span class="n">gases</span> <span class="o">=</span> <span class="p">[</span><span class="n">gas_sst</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gas_sst</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">ListType</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">make_iterable</span><span class="p">(</span><span class="n">gas_sst</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">system</span><span class="o">.</span><span class="n">System</span><span class="p">):</span>
+                    <span class="n">gases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">gases</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;There are no gas molecules were specified correctely</span><span class="se">\n</span><span class="s1">The gas molecules are needed to start the &#39;</span>
+              <span class="s1">&#39;MC-MD simulations</span><span class="se">\n</span><span class="s1">Exiting...&#39;</span><span class="p">)</span>
+        <span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">css</span> <span class="o">=</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">Cassandra</span><span class="p">(</span><span class="n">fixed_sst</span><span class="p">)</span>
+    <span class="c1"># Set the Monte-Carlo properties:</span>
+    <span class="n">mcp</span> <span class="o">=</span> <span class="n">mc_props</span>
+    <span class="k">if</span> <span class="n">mcp</span><span class="p">:</span>
+        <span class="n">CHEM_POT</span> <span class="o">=</span> <span class="n">cassandra</span><span class="o">.</span><span class="n">make_iterable</span><span class="p">(</span><span class="n">mcp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Chemical_Potential_Info&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">CHEM_POT</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Missing chemical potential info</span><span class="se">\n</span><span class="s1">Exiting...&#39;</span><span class="p">)</span>
+            <span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Missing the MC Simulation settings</span><span class="se">\n</span><span class="s1">Exiting...&#39;</span><span class="p">)</span>
+        <span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">mcp</span><span class="p">[</span><span class="s1">&#39;Start_Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="s1">&#39;species&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">CHEM_POT</span><span class="p">))])</span>
+
+    <span class="c1"># Set the Molecular-Dynamics properties:</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">mdp</span> <span class="o">=</span> <span class="n">md_props</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">mdp</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Missing the MD Simulation settings</span><span class="se">\n</span><span class="s1">Exiting...&#39;</span><span class="p">)</span>
+        <span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="n">l</span> <span class="o">&lt;</span> <span class="n">n_iter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">mcp</span><span class="p">[</span><span class="s1">&#39;Run_Name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.gcmc&#39;</span>
+
+        <span class="n">css</span><span class="o">.</span><span class="n">add_gcmc</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="n">gases</span><span class="p">,</span> <span class="n">is_new</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">chem_pot</span><span class="o">=</span><span class="n">CHEM_POT</span><span class="p">,</span>
+                     <span class="n">is_rigid</span><span class="o">=</span><span class="n">mcp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rigid_type&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[</span><span class="bp">False</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">gases</span><span class="p">),</span>
+                     <span class="n">out_folder</span><span class="o">=</span><span class="n">sim_folder</span><span class="p">,</span> <span class="n">props_file</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.gcmc_props.inp&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">mcp</span><span class="p">)</span>
+        <span class="n">css</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+        <span class="c1"># &gt;&gt;&gt; 2N: MD (LAMMPS) step:</span>
+        <span class="n">sim_sst</span> <span class="o">=</span> <span class="n">css</span><span class="o">.</span><span class="n">system</span>
+        <span class="n">sim_sst</span><span class="o">.</span><span class="n">write_lammps</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sim_folder</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.before_md.lmps&#39;</span><span class="p">))</span>
+        <span class="n">sim</span> <span class="o">=</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">sim_sst</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+                              <span class="n">log</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sim_folder</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.md.log&#39;</span><span class="p">))</span>
+
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Init</span><span class="p">(</span><span class="n">cutoff</span><span class="o">=</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cutoff&#39;</span><span class="p">)))</span>
+
+        <span class="c1"># custom definitions for the neighbour list updates</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add_custom</span><span class="p">(</span><span class="s1">&#39;neighbor 1.0 nsq </span><span class="se">\n</span><span class="s1">neigh_modify once no every 1 delay 0 check yes&#39;</span><span class="p">)</span>
+
+        <span class="c1"># adding group definitions to separate rigid and non-rigid bodies</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Group</span><span class="p">(</span><span class="s1">&#39;matrix&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">css</span><span class="o">.</span><span class="n">run_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">group_by_id</span><span class="p">(</span><span class="s1">&#39;matrix&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Group</span><span class="p">(</span><span class="n">nonrig_group_name</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">css</span><span class="o">.</span><span class="n">run_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">group_by_id</span><span class="p">(</span><span class="s1">&#39;nonrigid&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">rigid_mols</span> <span class="o">=</span> <span class="n">css</span><span class="o">.</span><span class="n">run_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">group_by_id</span><span class="p">(</span><span class="s1">&#39;rigid&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">rigid_mols</span><span class="p">:</span>
+            <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Group</span><span class="p">(</span><span class="n">rig_group_name</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">rigid_mols</span><span class="p">))</span>
+
+        <span class="c1"># adding &quot;run 0&quot; line before velocities rescale for correct temperature init of the system with rigid molecules</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Velocity</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;create&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">rigid_mols</span><span class="p">:</span>
+            <span class="n">sim</span><span class="o">.</span><span class="n">add_custom</span><span class="p">(</span><span class="s1">&#39;run 0&#39;</span><span class="p">)</span>
+            <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">Velocity</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;scale&#39;</span><span class="p">))</span>
+
+        <span class="c1"># create the description of the molecular dynamics simulation</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add_md</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">MolecularDynamics</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;main_fix&#39;</span><span class="p">,</span>
+                                          <span class="n">group</span><span class="o">=</span><span class="n">nonrig_group_name</span> <span class="k">if</span> <span class="n">rigid_mols</span> <span class="k">else</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span>
+                                          <span class="n">ensemble</span><span class="o">=</span><span class="s1">&#39;npt&#39;</span><span class="p">,</span>
+                                          <span class="n">timestep</span><span class="o">=</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timestep&#39;</span><span class="p">),</span>
+                                          <span class="n">temperature</span><span class="o">=</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;temp&#39;</span><span class="p">),</span>
+                                          <span class="n">pressure</span><span class="o">=</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pressure&#39;</span><span class="p">),</span>
+                                          <span class="n">run</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+                                          <span class="n">extra_keywords</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;dilate&#39;</span><span class="p">:</span> <span class="s1">&#39;all&#39;</span><span class="p">}</span> <span class="k">if</span> <span class="n">rigid_mols</span> <span class="k">else</span> <span class="p">{}))</span>
+
+        <span class="c1"># create the second NVT fix for rigid molecules that cannot be put in NPT fix</span>
+        <span class="k">if</span> <span class="n">rigid_mols</span><span class="p">:</span>
+            <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">MolecularDynamics</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;rig_fix&#39;</span><span class="p">,</span>
+                                           <span class="n">ensemble</span><span class="o">=</span><span class="s1">&#39;rigid/nvt/small molecule&#39;</span><span class="p">,</span>
+                                           <span class="n">timestep</span><span class="o">=</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timestep&#39;</span><span class="p">),</span>
+                                           <span class="n">length</span><span class="o">=</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;length&#39;</span><span class="p">),</span>
+                                           <span class="n">group</span><span class="o">=</span><span class="n">rig_group_name</span><span class="p">,</span>
+                                           <span class="n">temperature</span><span class="o">=</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;temp&#39;</span><span class="p">),</span>
+                                           <span class="n">pressure</span><span class="o">=</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pressure&#39;</span><span class="p">),</span>
+                                           <span class="n">run</span><span class="o">=</span><span class="bp">False</span><span class="p">))</span>
+
+        <span class="c1"># add the &quot;spring tether&quot; fix to the geometrical center of the system to avoid system creep</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add_custom</span><span class="p">(</span><span class="s1">&#39;fix tether_fix matrix spring tether 30.0 0.0 0.0 0.0 0.0&#39;</span><span class="p">)</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">lmps</span><span class="o">.</span><span class="n">OutputSettings</span><span class="p">(</span><span class="n">thermo</span><span class="o">=</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;thermo&#39;</span><span class="p">),</span>
+                                    <span class="n">dump</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sim_folder</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.md.dump&#39;</span><span class="p">),</span>
+                                          <span class="s1">&#39;freq&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dump&#39;</span><span class="p">))}))</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">add_custom</span><span class="p">(</span><span class="s1">&#39;run {:}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;length&#39;</span><span class="p">)))</span>
+
+        <span class="c1"># The input for correct simulations is set, starting LAMMPS:</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="o">=</span><span class="n">mdp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;np&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># Updating the size of the fixed system from the MD simulations and saving the coordinates for the next MC</span>
+        <span class="n">css</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dim</span>
+        <span class="n">sim</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">write_xyz</span><span class="p">(</span><span class="n">xyz_fname</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">l</span><span class="p">))</span>
+        <span class="n">mcp</span><span class="p">[</span><span class="s1">&#39;Start_Type&#39;</span><span class="p">][</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xyz_fname</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+        <span class="n">mcp</span><span class="p">[</span><span class="s1">&#39;Start_Type&#39;</span><span class="p">][</span><span class="s1">&#39;species&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">CHEM_POT</span><span class="p">)</span>
+        <span class="n">l</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">sim</span><span class="o">.</span><span class="n">system</span> <span class="k">if</span> <span class="n">sim</span> <span class="k">else</span> <span class="bp">None</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, https://pysimm.org.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

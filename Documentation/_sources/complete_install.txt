@@ -1,0 +1,7 @@
+complete_install module
+=======================
+
+.. automodule:: complete_install
+    :members:
+    :undoc-members:
+    :show-inheritance:

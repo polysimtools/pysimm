@@ -1,7 +1,0 @@
-pysimm.models.monomers.dreiding.pe module
-=========================================
-
-.. automodule:: pysimm.models.monomers.dreiding.pe
-    :members:
-    :undoc-members:
-    :show-inheritance:

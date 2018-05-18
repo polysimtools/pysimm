@@ -51,7 +51,7 @@ class Tip3p(Forcefield):
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                    os.pardir, os.pardir, 'dat', 'forcefields', 'tip3p.xml')
         Forcefield.__init__(self, db_file)
-        self.ff_name = 'tip3p'
+        self.name = 'tip3p'
         self.pair_style = 'lj'
         self.ff_class = '1'
 
