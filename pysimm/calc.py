@@ -144,11 +144,11 @@ def rotate_vector(x, y, z, theta_x=None, theta_y=None, theta_z=None):
 def distance(p1, p2):
     """pysimm.calc.distance
 
-    Finds distance between two pysimm.system.Particle objects. Simply calculates length of vector between particle coordinates and does not consider periodic boundary conditions.
+    Finds distance between two :class:`~pysimm.system.Particle` objects. Simply calculates length of vector between particle coordinates and does not consider periodic boundary conditions.
 
     Args:
-        p1: pysimm.system.Particle
-        p2: pysimm.system.Particle
+        p1: :class:`~pysimm.system.Particle`
+        p2: :class:`~pysimm.system.Particle`
     Returns:
         distance between particles
     """
@@ -160,7 +160,7 @@ def distance(p1, p2):
 def angle(p1, p2, p3, radians=False):
     """pysimm.calc.angle
 
-    Finds angle between three pysimm.system.Particle objects. Does not consider periodic boundary conditions.
+    Finds angle between three :class:`~pysimm.system.Particle` objects. Does not consider periodic boundary conditions.
 
     Args:
         p1: pysimm.system.Particle
@@ -173,7 +173,7 @@ def angle(p1, p2, p3, radians=False):
     p12 = distance(p1, p2)
     p23 = distance(p2, p3)
     p13 = distance(p1, p3)
-    theta = acos((pow(p12, 2)+pow(p23, 2)-pow(p13, 2))/(2*p13*p23))
+    theta = acos((pow(p12, 2)+pow(p23, 2)-pow(p13, 2))/(2*p12*p23))
     if not radians:
         theta = theta * 180 / pi
     return theta
@@ -182,7 +182,7 @@ def angle(p1, p2, p3, radians=False):
 def chiral_angle(a, b, c, d):
     """pysimm.calc.chiral_angle
 
-    Finds chiral angle between four pysimm.system.Particle objects. Chiral angle is defined as the angle between the vector resulting from vec(a->c) X vec(a->d) and vec(a->b). Used to help define tacticity where backbone follow b'--a--b and c and d are side groups.
+    Finds chiral angle between four :class:`~pysimm.system.Particle` objects. Chiral angle is defined as the angle between the vector resulting from vec(a->c) X vec(a->d) and vec(a->b). Used to help define tacticity where backbone follow b'--a--b and c and d are side groups.
            
        b'--a--b
           / \
@@ -226,7 +226,7 @@ def tacticity(s, a_tag=None, b_tag=None, c_tag=None, d_tag=None, offset=None, re
     Determines tacticity for polymer chain. Iterates through groups of four patricles given by X_tags, using offset. This assumes equivalent atoms in each group of four are perfectly offset.
 
     Args:
-        s: pysimm.system.System
+        s: :class:`~pysimm.system.System`
         a_tag: tag of first a particle
         b_tag: tag of first b particle
         c_tag: tag of first c particle
@@ -315,9 +315,9 @@ def pbc_distance(s, p1, p2):
     Calculates distance between particles using PBC
 
     Args:
-        s: pysimm.system.System
-        p1: pysimm.system.Particle
-        p2: pysimm.system.Particle
+        s: :class:`~pysimm.system.System`
+        p1: :class:`~pysimm.system.Particle`
+        p2: :class:`~pysimm.system.Particle`
     Returns:
         distance between particles
     """

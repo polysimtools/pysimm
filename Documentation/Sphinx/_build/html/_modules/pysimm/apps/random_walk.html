@@ -559,7 +559,7 @@
             <span class="n">sim</span><span class="o">.</span><span class="n">add_min</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">lmps</span><span class="o">.</span><span class="n">Simulation</span><span class="p">):</span>
             <span class="n">sim</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">s</span>
-            <span class="n">sim</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;relax_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">insertion</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">sim</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;custom_relax_</span><span class="si">%03d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">insertion</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
             <span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">np</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;np&#39;</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">unwrap</span><span class="p">:</span>

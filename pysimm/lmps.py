@@ -70,7 +70,6 @@ def check_lmps_exec():
             print 'LAMMPS is not configured properly for one reason or another'
             return False
             
-check_lmps_exec()
 
 class Qeq(object):
     """pysimm.lmps.MolecularDynamics
@@ -84,9 +83,9 @@ class Qeq(object):
         qfile: file with qeq parameters (leave undefined for defaults)
     """
     def __init__(self, **kwargs):
-        self.cutoff = kwargs.get('cutoff') if kwargs.has_key('cutoff') else 10
-        self.tol = kwargs.get('tol') if kwargs.has_key('tol') else 1.0e-6
-        self.max_iter = kwargs.get('max_iter') if kwargs.has_key('max_iter') else 200
+        self.cutoff = kwargs.get('cutoff', 10)
+        self.tol = kwargs.get('tol', 1.0e-6)
+        self.max_iter = kwargs.get('max_iter', 200)
         self.qfile = kwargs.get('qfile')
         
         self.input = ''
@@ -97,7 +96,7 @@ class Qeq(object):
         Create LAMMPS input for a charge equilibration calculation
 
         Args:
-            sim: pysimm.lmps.Simulation object reference
+            sim: :class:`~pysimm.lmps.Simulation` object reference
 
         Returns:
             input string
@@ -123,8 +122,8 @@ class Qeq(object):
         self.input += 'unfix 1\n'
         
         return self.input
-
-
+        
+    
 class MolecularDynamics(object):
     """pysimm.lmps.MolecularDynamics
 
@@ -135,7 +134,9 @@ class MolecularDynamics(object):
         ensemble: 'nvt' or 'npt' or 'nve'
         limit: numerical value to use with nve when limiting particle displacement
         temp: temperature for use with 'nvt' and 'npt' or new_v
+        tdamp: damping parameter for thermostat (default=100*timestep)
         pressure: pressure for use with 'npt'
+        pdamp: damping parameter for barostat (default=1000*timestep)
         new_v: True to have LAMMPS generate new velocities
         seed: seed value for RNG (random by default)
         scale_v: True to scale velocities to given temperature default=False
@@ -148,21 +149,23 @@ class MolecularDynamics(object):
     """
     def __init__(self, **kwargs):
 
-        self.timestep = kwargs.get('timestep') or 1
-        self.ensemble = kwargs.get('ensemble') or 'nvt'
+        self.timestep = kwargs.get('timestep', 1)
+        self.ensemble = kwargs.get('ensemble', 'nvt')
         self.limit = kwargs.get('limit')
         self.temp = kwargs.get('temp')
-        self.pressure = kwargs.get('pressure') or 1.
+        self.tdamp = kwargs.get('tdamp', int(100*self.timestep))
+        self.pressure = kwargs.get('pressure', 1.)
+        self.pdamp = kwargs.get('pdamp', int(1000*self.timestep))
         self.new_v = kwargs.get('new_v')
-        self.seed = kwargs.get('seed') or randint(10000, 99999)
+        self.seed = kwargs.get('seed', randint(10000, 99999))
         self.scale_v = kwargs.get('scale_v')
-        self.length = kwargs.get('length') if kwargs.has_key('length') else 2000
-        self.thermo = kwargs.get('thermo') or 1000
+        self.length = kwargs.get('length', 2000)
+        self.thermo = kwargs.get('thermo', 1000)
         self.thermo_style = kwargs.get('thermo_style')
-        self.dump = kwargs.get('dump') or False
+        self.dump = kwargs.get('dump', False)
         self.dump_name = kwargs.get('dump_name')
         self.dump_append = kwargs.get('dump_append')
-
+        
         if self.temp is None:
             self.t_start = kwargs.get('t_start')
             self.t_stop = kwargs.get('t_stop')
@@ -193,7 +196,7 @@ class MolecularDynamics(object):
         Create LAMMPS input for a molecular dynamics simulation.
 
         Args:
-            sim: pysimm.lmps.Simulation object reference
+            sim: :class:`~pysimm.lmps.Simulation` object reference
 
         Returns:
             input string
@@ -207,10 +210,10 @@ class MolecularDynamics(object):
         self.input += 'timestep %s\n' % self.timestep
 
         if self.ensemble == 'nvt':
-            self.input += 'fix 1 all %s temp %s %s 100\n' % (self.ensemble, self.t_start, self.t_stop)
+            self.input += 'fix 1 all %s temp %s %s %s\n' % (self.ensemble, self.t_start, self.t_stop, self.tdamp)
         elif self.ensemble == 'npt':
-            self.input += ('fix 1 all %s temp %s %s 100 iso %s %s 100\n'
-                           % (self.ensemble, self.t_start, self.t_stop, self.p_start, self.p_stop))
+            self.input += ('fix 1 all %s temp %s %s %s iso %s %s %s\n'
+                           % (self.ensemble, self.t_start, self.t_stop, self.tdamp, self.p_start, self.p_stop, self.pdamp))
         elif self.ensemble == 'nve' and self.limit:
             self.input += 'fix 1 all %s/limit %s\n' % (self.ensemble, self.limit)
         elif self.ensemble == 'nve':
@@ -234,12 +237,80 @@ class MolecularDynamics(object):
             if self.dump_append:
                 self.input += 'dump_modify pysimm_dump append yes\n'
 
-        self.input += 'run %s\n' % self.length
+        self.input += 'run %s\n' % int(self.length)
         self.input += 'unfix 1\n'
         if self.dump:
             self.input += 'undump pysimm_dump\n'
 
         return self.input
+        
+        
+class SteeredMolecularDynamics(MolecularDynamics):
+    def __init__(self, **kwargs):
+        MolecularDynamics.__init__(self, **kwargs)
+        self.p1 = kwargs.get('p1')
+        self.p2 = kwargs.get('p2')
+        self.k = kwargs.get('k', 20.0)
+        self.v = kwargs.get('v', 0.001)
+        self.d = kwargs.get('d', 3.0)
+    
+    def write(self, sim):
+        """pysimm.lmps.SteeredMolecularDynamics.write
+
+        Create LAMMPS input for a steered molecular dynamics simulation.
+
+        Args:
+            sim: :class:`~pysimm.lmps.Simulation` object reference
+
+        Returns:
+            input string
+        """
+        self.input = ''
+        if self.thermo:
+            self.input += 'thermo %s\n' % int(self.thermo)
+        if self.thermo_style:
+            self.input += 'thermo_style %s\n' % self.thermo_style
+
+        self.input += 'timestep %s\n' % self.timestep
+
+        if self.ensemble == 'nvt':
+            self.input += 'fix 1 all %s temp %s %s %s\n' % (self.ensemble, self.t_start, self.t_stop, self.tdamp)
+        elif self.ensemble == 'npt':
+            self.input += ('fix 1 all %s temp %s %s %s iso %s %s %s\n'
+                           % (self.ensemble, self.t_start, self.t_stop, self.tdamp, self.p_start, self.p_stop, self.pdamp))
+        elif self.ensemble == 'nve':
+            self.input += 'fix 1 all %s\n' % self.ensemble
+
+        if self.new_v:
+            self.input += 'velocity all create %s %s\n' % (self.t_start, self.seed)
+        elif self.scale_v:
+            self.input += 'velocity all scale %s\n' % self.t_start
+
+        if self.dump:
+            if self.dump_name:
+                self.input += ('dump pysimm_dump all atom %s %s.lammpstrj\n'
+                               % (self.dump, self.dump_name))
+            elif sim.name:
+                self.input += ('dump pysimm_dump all atom %s %s.lammpstrj\n'
+                               % (self.dump, '_'.join(sim.name.split())))
+            else:
+                self.input += ('dump pysimm_dump all atom %s pysimm_dump.lammpstrj\n'
+                               % self.dump)
+            if self.dump_append:
+                self.input += 'dump_modify pysimm_dump append yes\n'
+                
+        self.input += 'group p1 id {}\n'.format(self.p1.tag)
+        self.input += 'group p2 id {}\n'.format(self.p2.tag)
+        self.input += 'fix steer p1 smd cvel {} {} couple p2 auto auto auto {}\n'.format(self.k, self.v, self.d)
+
+        self.input += 'run %s\n' % int(self.length)
+        self.input += 'unfix 1\n'
+        self.input += 'unfix steer\n'
+        if self.dump:
+            self.input += 'undump pysimm_dump\n'
+
+        return self.input
+        
 
 
 class Minimization(object):
@@ -261,15 +332,15 @@ class Minimization(object):
     """
     def __init__(self, **kwargs):
 
-        self.min_style = kwargs.get('min_style') or 'fire'
+        self.min_style = kwargs.get('min_style', 'fire')
         self.dmax = kwargs.get('dmax')
-        self.etol = kwargs.get('etol') or 1.0e-3
-        self.ftol = kwargs.get('ftol') or 1.0e-3
-        self.maxiter = kwargs.get('maxiter') or 10000
-        self.maxeval = kwargs.get('maxeval') or 100000
-        self.thermo = kwargs.get('thermo') or 1000
+        self.etol = kwargs.get('etol', 1.0e-3)
+        self.ftol = kwargs.get('ftol', 1.0e-3)
+        self.maxiter = kwargs.get('maxiter', 10000)
+        self.maxeval = kwargs.get('maxeval', 100000)
+        self.thermo = kwargs.get('thermo', 1000)
         self.thermo_style = kwargs.get('thermo_style')
-        self.dump = kwargs.get('dump') or False
+        self.dump = kwargs.get('dump', False)
         self.dump_name = kwargs.get('dump_name')
         self.dump_append = kwargs.get('dump_append')
         
@@ -298,7 +369,7 @@ class Minimization(object):
         Create LAMMPS input for an energy minimization simulation.
 
         Args:
-            sim: pysimm.lmps.Simulation object reference
+            sim: :class:`~pysimm.lmps.Simulation` object reference
 
         Returns:
             input string
@@ -367,7 +438,7 @@ class Simulation(object):
     """pysimm.lmps.Simulation
 
     Organizational object for LAMMPS simulation. Should contain combination of
-    pysimm.lmps.MolecularDynamics, pysimm.lmps.Minimization, and/or pysimm.lmps.CustomInput object.
+    :class:`~pysimm.lmps.MolecularDynamics`, :class:`~pysimm.lmps.Minimization`, and/or :class:`~pysimm.lmps.CustomInput` object.
 
     Attributes:
         atom_style: LAMMPS atom_style default=full
@@ -385,31 +456,31 @@ class Simulation(object):
 
         self.system = s
 
-        self.atom_style = kwargs.get('atom_style') or 'full'
-        self.kspace_style = kwargs.get('kspace_style') or 'pppm 1e-4'
-        self.units = kwargs.get('units') or 'real'
+        self.atom_style = kwargs.get('atom_style', 'full')
+        self.kspace_style = kwargs.get('kspace_style', 'pppm 1e-4')
+        self.units = kwargs.get('units', 'real')
         self.special_bonds = kwargs.get('special_bonds')
-        self.nonbond_mixing = kwargs.get('nonbond_mixing') or 'arithmetic'
-        self.cutoff = kwargs.get('cutoff') or 12.0
+        self.nonbond_mixing = kwargs.get('nonbond_mixing', 'arithmetic')
+        self.cutoff = kwargs.get('cutoff', 12.0)
 
-        self.print_to_screen = kwargs.get('print_to_screen') if kwargs.get('print_to_screen') is not None else False
-        self.name = kwargs.get('name') or False
+        self.print_to_screen = kwargs.get('print_to_screen', False)
+        self.name = kwargs.get('name', False)
         self.log = kwargs.get('log')
-        self.write = kwargs.get('write') or False
+        self.write = kwargs.get('write', False)
 
         self.input = ''
         self.custom = kwargs.get('custom')
 
-        self.sim = kwargs.get('sim') if kwargs.get('sim') is not None else []
+        self.sim = kwargs.get('sim', [])
         
     def add_qeq(self, template=None, **kwargs):
         """pysimm.lmps.Simulation.add_qeq
 
-        Add pysimm.lmps.Qeq template to simulation
+        Add :class:`~pysimm.lmps.Qeq` template to simulation
 
         Args:
-            template: pysimm.lmps.Qeq object reference
-            **kwargs: if template is None these are passed to pysimm.lmps.Qeq constructor to create new template
+            template: :class:`~pysimm.lmps.Qeq` object reference
+            **kwargs: if template is None these are passed to :class:`~pysimm.lmps.Qeq` constructor to create new template
         """
         if template is None:
             self.sim.append(Qeq(**kwargs))
@@ -421,12 +492,11 @@ class Simulation(object):
     def add_md(self, template=None, **kwargs):
         """pysimm.lmps.Simulation.add_md
 
-        Add pysimm.lmps.MolecularDyanmics template to simulation
+        Add :class:`~pysimm.lmps.MolecularDyanmics` template to simulation
 
         Args:
-            template: pysimm.lmps.MolecularDynamics object reference
-            **kwargs: if template is None these are passed to
-            pysimm.lmps.MolecularDynamics constructor to create new template
+            template: :class:`~pysimm.lmps.MolecularDynamics` object reference
+            **kwargs: if template is None these are passed to :class:`~pysimm.lmps.MolecularDynamics` constructor to create new template
         """
         if template is None:
             self.sim.append(MolecularDynamics(**kwargs))
@@ -438,12 +508,12 @@ class Simulation(object):
     def add_min(self, template=None, **kwargs):
         """pysimm.lmps.Simulation.add_min
 
-        Add pysimm.lmps.Minimization template to simulation
+        Add :class:`~pysimm.lmps.Minimization` template to simulation
 
         Args:
-            template: pysimm.lmps.Minimization object reference
+            template: :class:`~pysimm.lmps.Minimization` object reference
             **kwargs: if template is None these are passed to
-            pysimm.lmps.Minimization constructor to create new template
+            :class:`~pysimm.lmps.Minimization` constructor to create new template
         """
         if template is None:
             self.sim.append(Minimization(**kwargs))
@@ -544,7 +614,7 @@ def call_lammps(simulation, np, nanohub):
     Wrapper to call LAMMPS using executable name defined in pysimm.lmps module.
 
     Args:
-        simulation: pysimm.lmps.Simulation object reference
+        simulation: :class:`~pysimm.lmps.Simulation` object reference
         np: number of threads to use
         nanohub: dictionary containing nanohub resource information default=None
 
@@ -552,8 +622,12 @@ def call_lammps(simulation, np, nanohub):
         None
     """
     if nanohub:
+        with file('temp.in', 'w') as f:
+            f.write(simulation.input)
         if simulation.name:
             print('%s: sending %s simulation to computer cluster at nanoHUB' % (strftime('%H:%M:%S'), simulation.name))
+        else:
+            print('%s: sending simulation to computer cluster at nanoHUB' % strftime('%H:%M:%S'))
         sys.stdout.flush()
         cmd = ('submit -n %s -w %s -i temp.lmps -i temp.in '
                'lammps-09Dec14-parallel -e both -l none -i temp.in'
@@ -619,7 +693,7 @@ def call_lammps(simulation, np, nanohub):
 def qeq(s, np=None, nanohub=None, **kwargs):
     """pysimm.lmps.qeq
 
-    Convenience function to call a qeq calculation. kwargs are passed to Qeq constructor
+    Convenience function to call a qeq calculation. kwargs are passed to :class:`~pysimm.lmps.Qeq` constructor
 
     Args:
         s: system to perform simulation on
@@ -673,7 +747,7 @@ def quick_min(s, np=None, nanohub=None, **kwargs):
 def energy(s, all=False, np=None, **kwargs):
     """pysimm.lmps.energy
 
-    Convenience function to calculate energy of a given System object.
+    Convenience function to calculate energy of a given :class:`~pysimm.system.System` object.
 
     Args:
         s: system to calculate energy
@@ -802,7 +876,7 @@ def md(s, template=None, **kwargs):
                         % dump)
         if dump_append:
             command += 'dump_modify pysimm_dump append yes\n'
-    command += 'run %s\n' % length
+    command += 'run %s\n' % int(length)
     command += 'unfix 1\n'
     if write:
         command += 'write_data %s\n' % write
@@ -1182,7 +1256,7 @@ def relax(s, template=None, **kwargs):
         command += 'velocity all scale %s\n' % t_start
 
     command += 'fix 1 all nve/limit %s\n' % xmax
-    command += 'run %s\n' % length
+    command += 'run %s\n' % int(length)
     command += 'unfix 1\n'
 
     if write:
@@ -1294,10 +1368,10 @@ def relax(s, template=None, **kwargs):
 def write_init(l, **kwargs):
     """pysimm.lmps.write_init
 
-    Create initialization LAMMPS input based on pysimm.system.System data
+    Create initialization LAMMPS input based on :class:`~pysimm.system.System` data
 
     Args:
-        l: pysimm.system.System object reference
+        l: :class:`~pysimm.system.System` object reference
         kwargs:
             atom_style: LAMMPS atom_style default=full
             kspace_style: LAMMPS kspace style default='pppm 1e-4'
@@ -1306,12 +1380,12 @@ def write_init(l, **kwargs):
             nonbond_mixing: type of mixing rule for nonbonded interactions default=arithmetic
             nb_cut: cutoff for nonbonded interactions default=12
     """
-    atom_style = kwargs.get('atom_style') or 'full'
-    kspace_style = kwargs.get('kspace_style') or 'pppm 1e-4'
-    units = kwargs.get('units') or 'real'
-    nb_cut = kwargs.get('nb_cut') or 12.0
+    atom_style = kwargs.get('atom_style', 'full')
+    kspace_style = kwargs.get('kspace_style', 'pppm 1e-4')
+    units = kwargs.get('units', 'real')
+    nb_cut = kwargs.get('nb_cut', 12.0)
     special_bonds = kwargs.get('special_bonds')
-    nonbond_mixing = kwargs.get('nonbond_mixing') or 'arithmetic'
+    nonbond_mixing = kwargs.get('nonbond_mixing', 'arithmetic')
 
     output = ''
 

@@ -2,7 +2,11 @@ from pysimm import system, lmps, forcefield
 from pysimm.apps.random_walk import random_walk
 
 def monomer():
-    s = system.read_pubchem_smiles('CC')
+    try:
+        s = system.read_pubchem_smiles('CC')
+    except:
+        import os
+        s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'CC.mol'))
     f = forcefield.Gaff2()
     s.apply_forcefield(f)
     
@@ -33,5 +37,5 @@ def monomer():
     
 def polymer_chain(length):
     mon = monomer()
-    polym = random_walk(mon, length, forcefield=forcefield.Dreiding())
+    polym = random_walk(mon, length, forcefield=forcefield.Gaff2())
     return polym

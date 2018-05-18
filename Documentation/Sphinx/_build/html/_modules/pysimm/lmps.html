@@ -174,7 +174,6 @@
 <span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">warning_print</span>
 <span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">verbose_print</span>
 <span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">debug_print</span>
-<span class="kn">from</span> <span class="nn">pysimm</span> <span class="k">import</span> <span class="n">PysimmError</span>
 <span class="kn">from</span> <span class="nn">pysimm.utils</span> <span class="k">import</span> <span class="n">PysimmError</span><span class="p">,</span> <span class="n">Item</span><span class="p">,</span> <span class="n">ItemContainer</span>
 
 <span class="k">try</span><span class="p">:</span>
@@ -186,18 +185,23 @@
 <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">templates</span> <span class="o">=</span> <span class="p">{}</span>
 
-<span class="k">if</span> <span class="n">LAMMPS_EXEC</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="nb">print</span> <span class="s1">&#39;you must set environment variable LAMMPS_EXEC&#39;</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">([</span><span class="n">LAMMPS_EXEC</span><span class="p">,</span> <span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">],</span>
-                               <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
-                               <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-            <span class="nb">print</span> <span class="s1">&#39;using </span><span class="si">%s</span><span class="s1"> LAMMPS machine&#39;</span> <span class="o">%</span> <span class="n">LAMMPS_EXEC</span>
-    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="s1">&#39;LAMMPS is not configured properly for one reason or another&#39;</span>
-
+<div class="viewcode-block" id="check_lmps_exec"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.check_lmps_exec">[docs]</a><span class="k">def</span> <span class="nf">check_lmps_exec</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">LAMMPS_EXEC</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s1">&#39;you must set environment variable LAMMPS_EXEC&#39;</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">Popen</span><span class="p">([</span><span class="n">LAMMPS_EXEC</span><span class="p">,</span> <span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">],</span>
+                                   <span class="n">stdin</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">PIPE</span><span class="p">,</span>
+                                   <span class="n">stderr</span><span class="o">=</span><span class="n">PIPE</span><span class="p">)</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="s1">&#39;using </span><span class="si">%s</span><span class="s1"> LAMMPS machine&#39;</span> <span class="o">%</span> <span class="n">LAMMPS_EXEC</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="s1">&#39;LAMMPS is not configured properly for one reason or another&#39;</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+            
+<span class="n">check_lmps_exec</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Qeq"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.Qeq">[docs]</a><span class="k">class</span> <span class="nc">Qeq</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;pysimm.lmps.MolecularDynamics</span>
@@ -300,6 +304,17 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">t_stop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp</span>
+            
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_start</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;p_start&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_stop</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;p_stop&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">p_start</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_stop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">p_stop</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressure</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">p_stop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressure</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
@@ -326,7 +341,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;fix 1 all </span><span class="si">%s</span><span class="s1"> temp </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 100</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_stop</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">==</span> <span class="s1">&#39;npt&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;fix 1 all </span><span class="si">%s</span><span class="s1"> temp </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 100 iso </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 100</span><span class="se">\n</span><span class="s1">&#39;</span>
-                           <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_stop</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressure</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pressure</span><span class="p">))</span>
+                           <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_stop</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_stop</span><span class="p">))</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">==</span> <span class="s1">&#39;nve&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;fix 1 all </span><span class="si">%s</span><span class="s1">/limit </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">==</span> <span class="s1">&#39;nve&#39;</span><span class="p">:</span>
@@ -378,6 +393,7 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">min_style</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;min_style&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;fire&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dmax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dmax&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">etol</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;etol&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">1.0e-3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ftol</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ftol&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">1.0e-3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maxiter</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;maxiter&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">10000</span>
@@ -387,6 +403,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dump</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dump&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dump_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dump_name&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dump_append</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dump_append&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;t_start&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">t_stop</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;t_stop&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span> <span class="o">=</span> <span class="mf">300.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_stop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">t_stop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">t_stop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_v</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;new_v&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;seed&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">randint</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">99999</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_v</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;scale_v&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
@@ -406,6 +439,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;thermo </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">thermo</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">thermo_style</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;thermo_style </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">thermo_style</span>
+            
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_v</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;velocity all create </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">t_start</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_v</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;velocity all scale </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_start</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dump</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dump_name</span><span class="p">:</span>
@@ -421,6 +459,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;dump_modify pysimm_dump append yes</span><span class="se">\n</span><span class="s1">&#39;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;min_style </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_style</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmax</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;min_modify dmax </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">dmax</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="p">(</span><span class="s1">&#39;minimize </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">etol</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ftol</span><span class="p">,</span>
                                                    <span class="bp">self</span><span class="o">.</span><span class="n">maxiter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxeval</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dump</span><span class="p">:</span>
@@ -584,11 +624,6 @@
             
         <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;write_dump all custom pysimm.dump.tmp id q x y z vx vy vz</span><span class="se">\n</span><span class="s1">&#39;</span>
 
-        <span class="sd">&#39;&#39;&#39;if self.write:</span>
-<span class="sd">            self.input += &#39;write_data %s\n&#39; % self.write</span>
-<span class="sd">        else:</span>
-<span class="sd">            self.input += &#39;write_data pysimm_md.lmps\n&#39;&#39;&#39;</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+=</span> <span class="s1">&#39;quit</span><span class="se">\n</span><span class="s1">&#39;</span></div>
 
 <div class="viewcode-block" id="Simulation.run"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.Simulation.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">np</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nanohub</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rewrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">init</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">write_input</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -613,7 +648,15 @@
         <span class="k">elif</span> <span class="n">write_input</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">file</span><span class="p">(</span><span class="s1">&#39;pysimm.sim.in&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
-        <span class="n">call_lammps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="p">)</span></div></div>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">call_lammps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">np</span><span class="p">,</span> <span class="n">nanohub</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">ose</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;There was a problem calling LAMMPS with mpiexec&#39;</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IOError</span> <span class="k">as</span> <span class="n">ioe</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">check_lmps_exec</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;There was a problem running LAMMPS. The process started but did not finish successfully. Check the log file, or rerun the simulation with print_to_screen=True to debug issue from LAMMPS output&#39;</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">PysimmError</span><span class="p">(</span><span class="s1">&#39;There was a problem running LAMMPS. LAMMPS is not configured properly. Make sure the LAMMPS_EXEC environment variable is set to the correct LAMMPS executable path. The current path is set to:</span><span class="se">\n\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">LAMMPS_EXEC</span><span class="p">)),</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="enqueue_output"><a class="viewcode-back" href="../../pysimm.lmps.html#pysimm.lmps.enqueue_output">[docs]</a><span class="k">def</span> <span class="nf">enqueue_output</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">queue</span><span class="p">):</span>
@@ -640,8 +683,12 @@
 <span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">nanohub</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">file</span><span class="p">(</span><span class="s1">&#39;temp.in&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: sending </span><span class="si">%s</span><span class="s1"> simulation to computer cluster at nanoHUB&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">),</span> <span class="n">simulation</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">: sending simulation to computer cluster at nanoHUB&#39;</span> <span class="o">%</span> <span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%H:%M:%S&#39;</span><span class="p">))</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;submit -n </span><span class="si">%s</span><span class="s1"> -w </span><span class="si">%s</span><span class="s1"> -i temp.lmps -i temp.in &#39;</span>
                <span class="s1">&#39;lammps-09Dec14-parallel -e both -l none -i temp.in&#39;</span>

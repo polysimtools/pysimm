@@ -63,19 +63,19 @@ class Dreiding(Forcefield):
         """pysimm.forcefield.Dreiding.assign_ptypes
 
         Dreiding specific particle typing rules.
-        Requires System object Particle objects have Particle.bonds defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds defined.
         *** use System.add_particle_bonding() to ensure this ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
         """
         s.pair_style = self.pair_style
         all_types = set()
+        s.add_particle_bonding()
         for p in s.particles:
-            p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
             p.bond_orders = [x.order for x in p.bonds]
             if len(set(p.bond_orders)) == 1 and p.bond_orders[0] is None:
                 error_print('error: bond orders are not set')
@@ -153,12 +153,11 @@ class Dreiding(Forcefield):
         """pysimm.forcefield.Dreiding.assign_btypes
 
         Dreiding specific bond typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -188,20 +187,19 @@ class Dreiding(Forcefield):
         """pysimm.forcefield.Dreiding.assign_atypes
 
         Dreiding specific angle typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
         """
         all_types = set()
         s.angle_style = self.angle_style
+        s.add_particle_bonding()
         for p in s.particles:
-            p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
             for p1 in p.bonded_to:
                 for p2 in p.bonded_to:
                     if p1 is not p2:
@@ -238,12 +236,11 @@ class Dreiding(Forcefield):
         """pysimm.forcefield.Dreiding.assign_dtypes
 
         Dreiding specific dihedral typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -262,8 +259,11 @@ class Dreiding(Forcefield):
                             (d.a == p2 and d.b == b.b and
                                 d.c == b.a and d.d == p1)):
                             unique = False
-                    if (unique and (b.a.type.name[2] != '1' and
-                                    b.b.type.name[2] != '1')):
+                    if unique:
+                        if len(b.a.type.name) > 2 and b.a.type.name[2] == '1':
+                            continue
+                        if len(b.b.type.name) > 2 and b.b.type.name[2] == '1':
+                            continue
                         p1_name = p1.type.name
                         a_name = b.a.type.name
                         b_name = b.b.type.name
@@ -306,12 +306,11 @@ class Dreiding(Forcefield):
         """pysimm.forcefield.Dreiding.assign_itypes
 
         Dreiding specific improper typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -328,10 +327,11 @@ class Dreiding(Forcefield):
                                                            p2_name, p3_name]), order=True)
                     if it:
                         all_types.add(it[0])
+                        bonded_to = p.bonded_to.get('all')
                         s.impropers.add(Improper(type_name=it[0].name,
-                                                 a=p, b=p.bonded_to[0],
-                                                 c=p.bonded_to[1],
-                                                 d=p.bonded_to[2]))
+                                                 a=p, b=bonded_to[0],
+                                                 c=bonded_to[1],
+                                                 d=bonded_to[2]))
                         break
 
         for it in all_types:
@@ -349,7 +349,7 @@ class Dreiding(Forcefield):
         Charge assignment. Gasteiger is default for now.
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
             charges: gasteiger
 
         Returns:

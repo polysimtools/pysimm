@@ -1,9 +1,10 @@
 Example 8: Creating a system of a mixture of ethanol and acetone, and run NPT simulation using LAMMPS
 =========================================================================================================
+by Ping Lin and Michael E. Fortunato
 
 ### Importing pysimm modules/packages
 
-This example code creates a system of mixture of ethanol and acetone using **system.replicate** command. To begin we need to import three modules/packages from pysimm: system, lmps, forcefield.
+This example code creates a system representing a mixture of ethanol and acetone using **system.replicate** command. To begin we need to import three modules/packages from pysimm: system, lmps, forcefield.
 
 ```
 from pysimm import system, lmps, forcefield
@@ -11,9 +12,9 @@ from pysimm import system, lmps, forcefield
 
 If you encounter an error **"ImportError: No module named pysimm"** make sure that the pysimm directory you cloned from github is in your PYTHONPATH. See installation instructions for further directions.
 
-### Creating a ethanol and acetone molecule
+### Creating an ethanol and acetone molecule
 
-[PubChem](https://pubchem.ncbi.nlm.nih.gov/search/#collection=compounds) offers a database of compounds accessible through a RESTful API. pysimm utilizes this API and allows users to create **system.System** objects from a puchem SMILES query. In this example, we will use the SMILES string "CCO" to generate a ethanol molecule using the **system.read_puchem_smiles()** method. The function makes an http request to the PubChem server, which returns a mol file. This mol file is interpreted and the function returns a **system.System** object that we store in variable **pmma**. This system now contains elemental composition bond connectivity, and bond orders.
+[PubChem](https://pubchem.ncbi.nlm.nih.gov/search/#collection=compounds) offers a database of compounds accessible through a RESTful API. pysimm utilizes this API and allows users to create **system.System** objects from a puchem SMILES query. In this example, we will use the SMILES string "CCO" to generate a ethanol molecule using the **system.read_puchem_smiles()** method. The function makes an http request to the PubChem server, which returns a mol file. This mol file is interpreted and the function returns a **system.System** object that we store in variable **ethanol**. This system now contains elemental composition bond connectivity, and bond orders.
 
 `ethanol = system.read_pubchem_smiles('CCO')`
 
@@ -29,7 +30,7 @@ We will need to use a force field object more than once, so we create a referenc
 
 ### Automatically applying force field parameters
 
-Our **system.System** object **ethanol** and **acetone** contains a class method **apply_forcefield()** that accepts a **forcefield.Forcefield** object and automatically assigns force field parameters to our systems. In this example we use our previously created **forcefield.Gaff2** object and pass it to the **apply_forcefield()** function, as well as specify we would like to derive Gasteiger charges.
+Our **system.System** objects **ethanol** and **acetone** contain a class method **apply_forcefield()** that accepts a **forcefield.Forcefield** object and automatically assigns force field parameters to our systems. In this example we use our previously created **forcefield.Gaff2** object and pass it to the **apply_forcefield()** function, as well as specify we would like to derive Gasteiger charges.
 
 ```
 ethanol.apply_forcefield(f, charges='gasteiger')
@@ -38,6 +39,7 @@ acetone.apply_forcefield(f, charges='gasteiger')
 If **Ambertools** is installed, and **antechamber** is in the PATH, the charges can also assigned using AM1-BCC charge method, which is more compatible with GAFF2 force field. The corresponding commands are:
 
 ```
+import amber
 amber.calc_charges(ethanol)
 amber.calc_charges(acetone)
 ```
@@ -60,16 +62,52 @@ molecule_list=[ethanol,acetone]
 n_molecules=[300,200]
 ```
 
-The **system.replicate** command will also take the density input to set up the simulation box. 
+The **system.replicate** command will also take density input in g/ml to set up the simulation box. 
 
 `s=system.replicate(molecule_list, n_molecules , density=0.3)`
 
-Now that we have the molecules packed in a box, we can carry out simple minimization, NVT molecular dynamics for 10ps, and NPT molecular dynamics for 100ps to obtain a reasonable packed mixture of ethanol and acetone. 
+Now that we have the molecules packed in a box, we can carry out simple minimization, NVT molecular dynamics for 10ps, and NPT molecular dynamics for 100ps to obtain a reasonable packed mixture of ethanol and acetone. The settings for each simulation step can be configured in a python dictionary.
 
 ```
-lmps.quick_min(s, name='fire_min', min_style='fire', print_to_screen=True, thermo=500)
-lmps.quick_md(s, name='nvt_md', ensemble='nvt', length=10000, print_to_screen=True, thermo=500)
-lmps.quick_md(s, name='npt_md', ensemble='npt', length=100000, print_to_screen=True, thermo=500)
+min_settings = {
+    'name': 'fire_min',
+    'min_style': 'fire',
+}
+```
+
+During the NVT simulation, we will generate new velocities and heat our system from 100 K to 300 K.
+
+```
+nvt_settings = {
+    'name': 'nvt_md',
+    'ensemble': 'nvt',
+    't_start': 100,
+    't_stop': 300,
+    'new_v': True,
+    'length': 10000
+}
+```
+
+During the NPT simulation, we'll again generate new initial velocities and start with a positive compressive pressure and slowly decrease the pressure to 1 atm. We can also use the lammps keyword thermo_style to change the thermodynamics output in our log file. Here we'll output the step, temperature, pressure and density of our system.
+
+```
+npt_settings = {
+    'name': 'npt_md',
+    'ensemble': 'npt',
+    'temp': 300,
+    'new_v': True,
+    'p_start': 1000,
+    'p_stop': 1,
+    'length': 100000,
+    'thermo_style': 'custom step temp press density'
+}
+```
+
+The simulations then can be performed using the **quick_min** and **quick_md** functions in the **lmps** module, and supplying the unpacked dictionary as keyword arguments.
+```
+lmps.quick_min(s, **min_settings)
+lmps.quick_md(s, **nvt_settings)
+lmps.quick_md(s, **npt_settings)
 ```
 
 ### Writing the mixture system to various file formats

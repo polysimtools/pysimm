@@ -49,31 +49,35 @@ class Gaff(Forcefield):
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   os.pardir, os.pardir, 'dat', 'forcefields', 'gaff.xml')
+                                   os.pardir, os.pardir, 'dat', 'forcefields', 'gaff.json')
         Forcefield.__init__(self, db_file)
         self.ff_name = 'gaff'
         self.pair_style = 'lj'
+        self.bond_style = 'harmonic'
+        self.angle_style = 'harmonic'
+        self.dihedral_style = 'fourier'
+        self.improper_style = 'cvff'
         self.ff_class = '1'
 
     def assign_ptypes(self, s):
         """pysimm.forcefield.Gaff.assign_ptypes
 
         Gaff specific particle typing rules.
-        Requires System object Particle objects have Particle.bonds defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds defined.
         *** use System.add_particle_bonding() to ensure this ***
 
         *** Not entirely inclusive - some atom types not used ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
         """
         all_types = set()
         s.pair_style = self.pair_style
+        s.add_particle_bonding()
         for p in s.particles:
-            p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
             p.bond_orders = [x.order for x in p.bonds]
             if None in p.bond_orders:
                 error_print('error: bond orders are not set')
@@ -234,17 +238,17 @@ class Gaff(Forcefield):
         """pysimm.forcefield.Gaff.assign_btypes
 
         Gaff specific bond typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
         """
         all_types = set()
+        s.bond_style = self.bond_style
         for b in s.bonds:
             bt = self.bond_types.get('%s,%s' % (b.a.type.name, b.b.type.name))
             if bt:
@@ -268,19 +272,19 @@ class Gaff(Forcefield):
         """pysimm.forcefield.Gaff.assign_atypes
 
         Gaff specific boanglend typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
         """
         all_types = set()
+        s.angle_style = self.angle_style
+        s.add_particle_bonding()
         for p in s.particles:
-            p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
             for p1 in p.bonded_to:
                 for p2 in p.bonded_to:
                     if p1 is not p2:
@@ -317,17 +321,17 @@ class Gaff(Forcefield):
         """pysimm.forcefield.Gaff.assign_dtypes
 
         Gaff specific dihedral typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
         """
         all_types = set()
+        s.dihedral_style = self.dihedral_style
         for b in s.bonds:
             for p1 in b.a.bonded_to:
                 for p2 in b.b.bonded_to:
@@ -386,12 +390,38 @@ class Gaff(Forcefield):
         There are none.
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
         """
-        pass
+        all_types = set()
+        s.improper_style = self.improper_style
+        for p in s.particles:
+            if len(p.bonded_to) == 3:
+                for perm in permutations(p.bonded_to, 3):
+                    p1_name = perm[0].type.eq_improper or perm[0].type.name
+                    p2_name = perm[1].type.eq_improper or perm[1].type.name
+                    p3_name = perm[2].type.eq_improper or perm[2].type.name
+                    it = self.improper_types.get(','.join([p.type.name, p1_name,
+                                                           p2_name, p3_name]), order=True)
+                    if it:
+                        all_types.add(it[0])
+                        bonded_to = p.bonded_to.get('all')
+                        s.impropers.add(Improper(type_name=it[0].name,
+                                                 a=p, b=bonded_to[0],
+                                                 c=bonded_to[1],
+                                                 d=bonded_to[2]))
+                        break
+
+        for it in all_types:
+            it = it.copy()
+            s.improper_types.add(it)
+
+        for i in s.impropers:
+            it = s.improper_types.get(i.type_name)
+            if it:
+                i.type = it[0]
 
     def assign_charges(self, s, charges='gasteiger'):
         """pysimm.forcefield.Gaff.assign_charges
@@ -399,7 +429,7 @@ class Gaff(Forcefield):
         Charge assignment. Gasteiger is default for now.
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
             charges: gasteiger
 
         Returns:

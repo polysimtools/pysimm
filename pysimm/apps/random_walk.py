@@ -39,77 +39,14 @@ from pysimm import system, lmps, forcefield, calc
 from pysimm import error_print
 
 
-def add_bonds(s, p1, p2, f):
-    """pysimm.apps.random_walk.add_bonds
-
-    Add bonding information from force field f to system s given a new bond is forming between p1 and p2
-
-    Args:
-        s: pysimm.system.System object
-        p1: pysimm.system.Particle object
-        p2: pysimm.system.Particle object
-        f: pysimm.forcefield.Forcefield object
-    Returns:
-        None
-    """
-    if p1.molecule.particles.count < p2.molecule.particles.count:
-        old_molecule_tag = p1.molecule.tag
-        for p_ in p1.molecule.particles:
-            p_.molecule = p2.molecule
-    else:
-        old_molecule_tag = p2.molecule.tag
-        for p_ in p2.molecule.particles:
-            p_.molecule = p1.molecule
-    s.molecules.remove(old_molecule_tag)
-
-    s.add_bond(p1, p2, f)
-    for p in p1.bonded_to:
-        s.add_angle(p, p1, p2, f)
-        for pb in p.bonded_to:
-            if pb is not p1:
-                s.add_dihedral(pb, p, p1, p2, f)
-    for p in p2.bonded_to:
-        s.add_angle(p1, p2, p, f)
-        for pb in p.bonded_to:
-            if pb is not p2:
-                s.add_dihedral(p1, p2, p, pb, f)
-    for pb1 in p1.bonded_to:
-        for pb2 in p2.bonded_to:
-            s.add_dihedral(pb1, p1, p2, pb2, f)
-
-    if s.ff_class == '2':
-        for perm in permutations(p1.bonded_to, 3):
-            unique = True
-            for i in s.impropers:
-                if i.a is not p1:
-                    continue
-                if set([i.b, i.c, i.d]) == set([perm[0], perm[1],
-                                                perm[2]]):
-                    unique = False
-                    break
-            if unique:
-                s.add_improper(p1, perm[0], perm[1], perm[2], f)
-        for perm in permutations(p2.bonded_to, 3):
-            unique = True
-            for i in s.impropers:
-                if i.a is not p2:
-                    continue
-                if set([i.b, i.c, i.d]) == set([perm[0], perm[1],
-                                                perm[2]]):
-                    unique = False
-                    break
-            if unique:
-                s.add_improper(p2, perm[0], perm[1], perm[2], f)
-
-
 def find_last_backbone_vector(s, m):
     """pysimm.apps.random_walk.find_last_backbone_vector
 
     Finds vector between backbone atoms in terminal monomer. Requires current system s, and reference monomer m.
 
     Args:
-        s: pysimm.system.System object
-        m:pysimm.system.System object
+        s: :class:`~pysimm.system.System` object
+        m: :class:`~pysimm.system.System` object
     Returns:
         list of vector components
     """
@@ -129,31 +66,31 @@ def copolymer(m, nmon, s_=None, **kwargs):
     Builds copolymer using random walk methodology using pattern
 
     Args:
-        m: list of reference monomer systems
+        m: list of reference monomer :class:`~pysimm.system.System`s
         nmon: total number of monomers to add to chain
-        s_: system in which to build polymer chain (None)
+        s_: :class:`~pysimm.system.System` in which to build polymer chain (None)
         settings: dictionary of simulation settings
         density: density at which to build polymer (0.3)
-        forcefield: pysimm.forcefield.Forcefield object to acquire new force field parameters
+        forcefield: :class:`~pysimm.forcefield.Forcefield` object to acquire new force field parameters
         capped: True/False if monomers are capped
         unwrap: True to unwrap final system
         traj: True to build xyz trajectory of polymer growth (True)
         pattern: list of pattern for monomer repeat units, should match length of m ([1 for _ in range(len(m))])
         limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)
-        sim: pysimm.lmps.Simulation object for relaxation between polymer growth
+        sim: :class:`~pysimm.lmps.Simulation` object for relaxation between polymer growth
     Returns:
-        new copolymer pysimm.system.System
+        new copolymer :class:`~pysimm.system.System`
     """
     m = [x.copy() for x in m]
 
-    settings = kwargs.get('settings') if kwargs.get('settings') is not None else {}
-    density = kwargs.get('density') or 0.3
+    settings = kwargs.get('settings', {})
+    density = kwargs.get('density', 0.3)
     f = kwargs.get('forcefield')
     capped = kwargs.get('capped')
     unwrap = kwargs.get('unwrap')
-    traj = kwargs.get('traj') if kwargs.get('traj') is not None else True
-    pattern = kwargs.get('pattern') or [1 for _ in range(len(m))]
-    limit = kwargs.get('limit') if kwargs.get('limit') is not None else 0.1
+    traj = kwargs.get('traj', True)
+    pattern = kwargs.get('pattern', [1 for _ in range(len(m))])
+    limit = kwargs.get('limit', 0.1)
     sim = kwargs.get('sim')
 
     for m_ in m:
@@ -254,7 +191,7 @@ def copolymer(m, nmon, s_=None, **kwargs):
                 if p.linker == 'tail':
                     tail = p
 
-            add_bonds(s, head, tail, f)
+            s.make_new_bonds(head, tail, f)
             temp_nmon += 1
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), temp_nmon, nmon))
 
@@ -313,35 +250,33 @@ def random_walk(m, nmon, s_=None, **kwargs):
     Builds homopolymer using random walk methodology
 
     Args:
-        m: reference monomer system
+        m: reference monomer :class:`~pysimm.system.System`
         nmon: total number of monomers to add to chain
-        s_: system in which to build polymer chain (None)
+        s_: :class:`~pysimm.system.System` in which to build polymer chain (None)
         extra_bonds: EXPERMINTAL, True if making ladder backbone polymer
         settings: dictionary of simulation settings
         density: density at which to build polymer (0.3)
-        forcefield: pysimm.forcefield.Forcefield object to acquire new force field parameters
+        forcefield: :class:`~pysimm.forcefield.Forcefield` object to acquire new force field parameters
         capped: True/False if monomers are capped
         unwrap: True to unwrap final system
         traj: True to build xyz trajectory of polymer growth (True)
         limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)
-        sim: pysimm.lmps.Simulation object for relaxation between polymer growth
+        sim: :class:`~pysimm.lmps.Simulation` object for relaxation between polymer growth
     Returns:
-        new polymer pysimm.system.System
+        new polymer :class:`~pysimm.system.System`
     """
     m = m.copy()
 
-    extra_bonds = kwargs.get('extra_bonds') if kwargs.get('extra_bonds') is not None else False
+    extra_bonds = kwargs.get('extra_bonds', False)
 
-    settings = kwargs.get('settings') if kwargs.get('settings') is not None else {}
-    density = kwargs.get('density') or 0.3
+    settings = kwargs.get('settings', {})
+    density = kwargs.get('density', 0.3)
     f = kwargs.get('forcefield')
     capped = kwargs.get('capped')
     unwrap = kwargs.get('unwrap')
-    traj = kwargs.get('traj') if kwargs.get('traj') is not None else True
-    limit = kwargs.get('limit') if kwargs.get('limit') is not None else 0.1
+    traj = kwargs.get('traj', True)
+    limit = kwargs.get('limit', 0.1)
     sim = kwargs.get('sim')
-    
-    steered = kwargs.get('steered')
 
     m.add_particle_bonding()
 
@@ -415,11 +350,11 @@ def random_walk(m, nmon, s_=None, **kwargs):
                 print(p.tag)
 
         if head and tail:
-            add_bonds(s, head, tail, f)
+            s.make_new_bonds(head, tail, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
         elif extra_bonds and len(heads) == len(tails):
             for h, t in izip(heads, tails):
-                add_bonds(s, h, t, f)
+                s.make_new_bonds(h, t, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
         else:
             print('cannot find head and tail')
@@ -430,7 +365,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
             sim.add_min(**settings)
         if isinstance(sim, lmps.Simulation):
             sim.system = s
-            sim.name = 'custom_relax_%03d' % (insertion+2)
+            sim.name = 'relax_%03d' % (insertion+2)
             sim.run(np=settings.get('np'))
 
         if unwrap:

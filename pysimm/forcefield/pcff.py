@@ -66,19 +66,19 @@ class Pcff(Forcefield):
         """pysimm.forcefield.Pcff.assign_ptypes
 
         Pcff specific particle typing rules.
-        Requires System object Particle objects have Particle.bonds defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds defined.
         *** use System.add_particle_bonding() to ensure this ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
         """
         all_types = set()
         s.pair_style = self.pair_style
+        s.add_particle_bonding()
         for p in s.particles:
-            p.bond_orders = [x.order for x in p.bonds]
             p.bond_elements = [x.a.elem if p is x.b else x.b.elem for x in
                                p.bonds]
             p.nbonds = len(p.bond_elements)
@@ -185,12 +185,11 @@ class Pcff(Forcefield):
         """pysimm.forcefield.Pcff.assign_btypes
 
         Pcff specific bond typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -220,20 +219,19 @@ class Pcff(Forcefield):
         """pysimm.forcefield.Pcff.assign_atypes
 
         Pcff specific angle typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
         """
         all_types = set()
         s.angle_style = self.angle_style
+        s.add_particle_bonding()
         for p in s.particles:
-            p.bonded_to = [x.a if p is x.b else x.b for x in p.bonds]
             for p1 in p.bonded_to:
                 for p2 in p.bonded_to:
                     if p1 is not p2:
@@ -287,12 +285,11 @@ class Pcff(Forcefield):
         """pysimm.forcefield.Pcff.assign_dtypes
 
         Pcff specific dihedral typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -368,12 +365,11 @@ class Pcff(Forcefield):
         """pysimm.forcefield.Pcff.assign_itypes
 
         Pcff specific improper typing rules.
-        Requires System object Particle objects have Particle.bonds, Particle.type
-        and Particle.type.name defined.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
 
         Returns:
             None
@@ -417,7 +413,7 @@ class Pcff(Forcefield):
         Default Pcff charge assignment. Gasteiger is also an option.
 
         Args:
-            s: pysimm.system.System
+            s: :class:`~pysimm.system.System`
             charges: default
 
         Returns:
