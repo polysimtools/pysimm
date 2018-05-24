@@ -562,7 +562,7 @@ class System(object):
         new.dim = self.dim.copy()
 
         for _ in self.molecules:
-            new.molecules.add(Molecule())
+            new.molecules.add(Molecule(tag=_.tag))
 
         for pt in self.particle_types:
             new.particle_types.add(pt.copy())
@@ -3274,6 +3274,9 @@ class Molecule(System):
     """
     def __init__(self, **kwargs):
         System.__init__(self, **kwargs)
+        mt = kwargs.get('tag')
+        if mt and isinstance(mt, int):
+            self.tag = mt
 
 
 def read_yaml(file_, **kwargs):
