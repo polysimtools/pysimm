@@ -5,7 +5,7 @@ by Alexander Demidov and Michael E. Fortunato
 ### Importing pysimm modules/packages
 
 The example illustrates the basic principles of utilizing the **pysimm.cassandra** module. 
-The code sets up the grand canonical (&#956;VT) Monte Carlo simulations to be performed by the  [Cassandra](https://cassandra.nd.edu) software. 
+The code sets up the Grand-Canonical (&#956;VT) Monte Carlo simulations to be performed by the  [Cassandra](https://cassandra.nd.edu) software. 
 The example shows how to use simultaneously molecules of different types and save the simulation results.
 
 First, let's import the required pysimm modules: system and cassandra
