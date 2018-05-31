@@ -419,7 +419,11 @@ class Dimension(Item):
         dz: distance in z dimension
     """
     def __init__(self, **kwargs):
+        center = kwargs.get('center')
         Item.__init__(self, **kwargs)
+        if center:
+            self.translate(*center)
+            del self.center
 
     def check(self):
         if self.dx is not None and self.dy is not None and self.dz is not None:
@@ -459,6 +463,8 @@ class Dimension(Item):
         
     @dx.setter
     def dx(self, dx):
+        if dx is None:
+            return
         center = 0
         if self.xlo is not None and self.xhi is not None:
             center = float(self.xhi + self.xlo)/2
@@ -474,6 +480,8 @@ class Dimension(Item):
         
     @dy.setter
     def dy(self, dy):
+        if dy is None:
+            return
         center = 0
         if self.ylo is not None and self.yhi is not None:
             center = float(self.yhi + self.ylo)/2
@@ -489,6 +497,8 @@ class Dimension(Item):
         
     @dz.setter
     def dz(self, dz):
+        if dz is None:
+            return
         center = 0
         if self.zlo is not None and self.zhi is not None:
             center = float(self.zhi + self.zlo)/2
