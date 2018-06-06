@@ -199,6 +199,98 @@ class ParticleType(Item):
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
         
+    @classmethod
+    def guess_style(cls, nparam):
+        if nparam == 2:
+            return 'lj'
+        elif nparam == 3:
+            return 'buck'
+        elif nparam == 4:
+            return 'charmm'
+        else:
+            raise PysimmError('Cannot guess pair style')
+    
+    @classmethod
+    def parse_lammps(cls, line, style):
+        tmp = line.split('#')
+        data = tmp.pop(0).strip().split()
+        name = ','.join(re.split(',|\s+', tmp[0].strip())) if tmp else None
+        if style == 'mass':
+            if len(data) != 2:
+                raise PysimmError('LAMMPS data improperly formatted for mass info')
+            return cls(tag=int(data[0]), name=name, mass=float(data[1]))
+        elif style.startswith('lj') or style.startswith('class2'):
+            if len(data) != 3:
+                raise PysimmError('LAMMPS data improperly formatted for LJ style')
+            return cls(
+                tag=int(data[0]), name=name,
+                epsilon=float(data[1]), sigma=float(data[2])
+            )
+        elif style.startswith('charmm'):
+            if len(data) == 3:
+                return cls(
+                    tag=int(data[0]), name=name,
+                    epsilon=float(data[1]), sigma=float(data[2]),
+                    epsilon_14=float(data[1]), sigma_14=float(data[2])
+                )
+            elif len(data) == 5:
+                return cls(
+                    tag=int(data[0]), name=name,
+                    epsilon=float(data[1]), sigma=float(data[2]),
+                    epsilon_14=float(data[3]), sigma_14=float(data[4])
+                )
+            else:
+                raise PysimmError('LAMMPS data improperly formatted for charmm style')
+        elif style.startswith('buck'):
+            if len(data) != 4:
+                raise PysimmError('LAMMPS data improperly formatted for buckingham style')
+            return cls(
+                tag=int(data[0]), name=name,
+                a=float(data[1]), rho=float(data[2]), c=float(data[1])
+            )
+        else:
+            raise PysimmError('LAMMPS pair style {} not supported yet'.format(style))
+        
+    def write_lammps(self, style='lj'):
+        """pysimm.system.ParticleType.write_lammps
+
+        Formats a string to define particle type coefficients for a LAMMPS 
+        data file given the provided style.
+
+        Args:
+            style: string for pair style of ParticleType (lj, class2, mass, buck)
+
+        Returns:
+            LAMMPS formatted string with pair coefficients
+        """
+        if style.startswith('lj'):
+            return '{:4}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.epsilon, self.sigma, self.name
+            )
+        elif style.startswith('charmm'):
+            if self.epsilon_14 and self.sigma_14:
+                return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag, self.epsilon, self.sigma, self.epsilon_14, self.sigma_14, self.name
+                )
+            else:
+                return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag, self.epsilon, self.sigma, self.epsilon, self.sigma, self.name
+                )
+        elif style.startswith('class2'):
+            return '{:4}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.epsilon, self.sigma, self.name
+            )
+        elif style.startswith('mass'):
+            return '{:4}\t{}\t# {}\n'.format(
+                self.tag, self.mass, self.name
+            )
+        elif style.startswith('buck'):
+            return '{:4}\t{}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.a, self.rho, self.c, self.name
+            )
+        else:
+            raise PysimmError('cannot understand pair style {}'.format(style))
+        
         
 class Bond(Item):
     """pysimm.system.Bond
@@ -260,6 +352,61 @@ class BondType(Item):
         Item.__init__(self, **kwargs)
         if self.name:
             self.rname = ','.join(reversed(self.name.split(',')))
+        
+    @classmethod
+    def guess_style(cls, nparam):
+        if nparam == 2:
+            return 'harmonic'
+        elif nparam == 4:
+            return 'class2'
+        else:
+            raise PysimmError('Cannot guess bond style')
+    
+    @classmethod
+    def parse_lammps(cls, line, style):
+        tmp = line.split('#')
+        data = tmp.pop(0).strip().split()
+        name = ','.join(re.split(',|\s+', tmp[0].strip())) if tmp else None
+        if style.startswith('harm'):
+            if len(data) != 3:
+                raise PysimmError('LAMMPS data improperly formatted for harmonic bond')
+            return cls(
+                tag=int(data[0]), name=name,
+                k=float(data[1]), r0=float(data[2])
+            )
+        elif style.startswith('class2'):
+            if len(data) != 5:
+                raise PysimmError('LAMMPS data improperly formatted for class2 bond')
+            return cls(
+                tag=int(data[0]), name=name,
+                r0=float(data[1]), k2=float(data[2]),
+                k3=float(data[3]), k4=float(data[4])
+            )
+        else:
+            raise PysimmError('LAMMPS bond style {} not supported yet'.format(style))
+            
+    def write_lammps(self, style='harmonic'):
+        """pysimm.system.BondType.write_lammps
+
+        Formats a string to define bond type coefficients for a LAMMPS 
+        data file given the provided style.
+
+        Args:
+            style: string for pair style of BondType (harmonic, class2)
+
+        Returns:
+            LAMMPS formatted string with bond coefficients
+        """
+        if style.startswith('harm'):
+            return '{:4}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.k, self.r0, self.name
+            )
+        elif style.startswith('class2'):
+            return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.r0, self.k2, self.k3, self.k4, self.name
+            )
+        else:
+            raise PysimmError('cannot understand pair style {}'.format(style))
 
 
 class Angle(Item):
@@ -313,6 +460,86 @@ class AngleType(Item):
         Item.__init__(self, **kwargs)
         if self.name:
             self.rname = ','.join(reversed(self.name.split(',')))
+        
+    @classmethod
+    def guess_style(cls, nparam):
+        if nparam == 2:
+            return 'harmonic'
+        #elif nparam == 4:
+            #could be class2 or charmm
+        else:
+            raise PysimmError('Cannot guess angle style')
+    
+    @classmethod
+    def parse_lammps(cls, line, style):
+        tmp = line.split('#')
+        data = tmp.pop(0).strip().split()
+        name = ','.join(re.split(',|\s+', tmp[0].strip())) if tmp else None
+        if style.startswith('harm'):
+            if len(data) != 3:
+                raise PysimmError('LAMMPS data improperly formatted for harmonic angle')
+            return cls(
+                tag=int(data[0]), name=name,
+                k=float(data[1]), theta0=float(data[2])
+            )
+        elif style.startswith('class2'):
+            if len(data) != 5:
+                raise PysimmError('LAMMPS data improperly formatted for class2 angle')
+            return cls(
+                tag=int(data[0]), name=name,
+                theta0=float(data[1]), k2=float(data[2]),
+                k3=float(data[3]), k4=float(data[4])
+            )
+        elif style.startswith('charmm'):
+            if len(data) != 5:
+                raise PysimmError('LAMMPS data improperly formatted for harmonic angle')
+            return cls(
+                tag=int(data[0]), name=name,
+                k=float(data[1]), theta0=float(data[2]),
+                k_ub=float(data[3]), r_ub=float(data[4])
+            )
+        else:
+            raise PysimmError('LAMMPS angle style {} not supported yet'.format(style))
+            
+    def write_lammps(self, style='harmonic', cross_term=None):
+        """pysimm.system.AngleType.write_lammps
+
+        Formats a string to define angle type coefficients for a LAMMPS 
+        data file given the provided style.
+
+        Args:
+            style: string for pair style of AngleType (harmonic, class2, charmm)
+            cross_term: type of class2 cross term to write (default=None)
+              -  BondBond
+              -  BondAngle
+
+        Returns:
+            LAMMPS formatted string with angle coefficients
+        """
+        if style.startswith('harm'):
+            return '{:4}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.k, self.theta0, self.name
+            )
+        elif style.startswith('class2'):
+            if not cross_term:
+                return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag, self.theta0, self.k2, self.k3, self.k4, self.name
+                )
+            elif cross_term == 'BondBond':
+                return '{:4}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag, self.m, self.r1, self.r2, self.name
+                )
+            elif cross_term == 'BondAngle':
+                return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag, self.n1, self.n2, self.r1, self.r2, self.name
+                )
+        
+        elif style.startswith('charmm'):
+            return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.k, self.theta0, self.k_ub, self.r_ub, self.name
+            )
+        else:
+            raise PysimmError('cannot understand pair style {}'.format(style))
 
 
 class Dihedral(Item):
@@ -354,6 +581,158 @@ class DihedralType(Item):
         Item.__init__(self, **kwargs)
         if self.name:
             self.rname = ','.join(reversed(self.name.split(',')))
+        
+    @classmethod
+    def guess_style(cls, nparam):
+        if nparam == 3:
+            return 'harmonic'
+        elif nparam != 4 and nparam % 3 == 1:
+            return 'fourier'
+        elif nparam == 6:
+            return 'class2'
+        else:
+            raise PysimmError('Cannot guess dihedral style')
+    
+    @classmethod
+    def parse_lammps(cls, line, style):
+        tmp = line.split('#')
+        data = tmp.pop(0).strip().split()
+        name = ','.join(re.split(',|\s+', tmp[0].strip())) if tmp else None
+        if style.startswith('harm'):
+            if len(data) != 4:
+                raise PysimmError('LAMMPS data improperly formatted for harmonic dihedral')
+            return cls(
+                tag=int(data[0]), name=name,
+                k=float(data[1]), d=int(data[2]), n=int(data[3])
+            )
+        elif style.startswith('fourier'):
+            if len(data) % 3 != 2:
+                raise PysimmError('LAMMPS data improperly formatted for fourier dihedral')
+            tag = int(data.pop(0))
+            m = int(data.pop(0))
+            k = []
+            n = []
+            d = []
+            for i in range(m):
+                k.append(data.pop(0))
+                n.append(data.pop(0))
+                d.append(data.pop(0))
+            return cls(
+                tag=tag, name=name,
+                m=m, k=map(float, k), n=map(int, n), d=map(float, d)
+            )
+        elif style.startswith('class2'):
+            if len(data) != 7:
+                raise PysimmError('LAMMPS data improperly formatted for class2 dihedral')
+            return cls(
+                tag=int(data[0]), name=name,
+                k1=float(data[1]), phi1=float(data[2]),
+                k2=float(data[3]), phi2=float(data[4]),
+                k3=float(data[5]), phi3=float(data[6]),
+            )
+        elif style.startswith('charmm'):
+            if len(data) != 5:
+                raise PysimmError('LAMMPS data improperly formatted for charmm dihedral')
+            return cls(
+                tag=int(data[0]), name=name,
+                k=float(data[1]), n=float(data[2]),
+                d=float(data[3]), w=float(data[4])
+            )
+        elif style.startswith('opls'):
+            if len(data) != 5:
+                raise PysimmError('LAMMPS data improperly formatted for opls dihedral')
+            return cls(
+                tag=int(data[0]), name=name,
+                k1=float(data[1]), k2=float(data[2]),
+                k3=float(data[3]), k4=float(data[4])
+            )
+        else:
+            raise PysimmError('LAMMPS dihedral style {} not supported yet'.format(style))
+                    
+        
+    def write_lammps(self, style='harmonic', cross_term=None):
+        """pysimm.system.DihedralType.write_lammps
+
+        Formats a string to define dihedral type coefficients for a LAMMPS 
+        data file given the provided style.
+
+        Args:
+            style: string for pair style of DihedralType (harmonic, class2, fourier)
+            cross_term: type of class2 cross term to write (default=None)
+              -  MiddleBond
+              -  EndBond
+              -  Angle
+              -  AngleAngle
+              -  BondBond13
+
+        Returns:
+            LAMMPS formatted string with dihedral coefficients
+        """
+        if style.startswith('harm'):
+            return '{:4}\t{:f}\t{:d}\t{:d}\t# {}\n'.format(
+                self.tag, self.k, int(self.d), int(self.n), self.name
+            )
+        elif style.startswith('charmm'):
+            return '{:4}\t{:f}\t{:d}\t{:d}\t{:f}\t# {}\n'.format(
+                self.tag, self.k, int(self.n), int(self.d), self.w, self.name
+            )
+        elif style.startswith('opls'):
+            return '{:4}\t{:f}\t{:f}\t{:f}\t{:f}\t# {}\n'.format(
+                self.tag, self.k1, self.k2, self.k3, self.k4, self.name
+            )
+        elif style.startswith('fourier'):
+            st = '{:4}\t{:d}'.format(self.tag, self.m)
+            for k, n, d in zip(self.k, self.n, self.d):
+                st += '\t{}\t{:d}\t{}'.format(k, int(n), d)
+            st += '\t# {}\n'.format(self.name)
+            return st
+        elif style.startswith('class2'):
+            if not cross_term:
+                return '{:4}\t{}\t{}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag, 
+                    self.k1, self.phi1, 
+                    self.k2, self.phi2, 
+                    self.k3, self.phi3, 
+                    self.name
+                )
+            elif cross_term == 'MiddleBond':
+                return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag, 
+                    self.a1, self.a2, self.a3, self.r2,
+                    self.name
+                )
+            elif cross_term == 'EndBond':
+                return '{:4}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag, 
+                    self.b1, self.b2, self.b3,
+                    self.c1, self.c2, self.c3,
+                    self.r1, self.r3,
+                    self.name
+                )
+            elif cross_term == 'Angle':
+                return '{:4}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag, 
+                    self.d1, self.d2, self.d3,
+                    self.e1, self.e2, self.e3,
+                    self.theta1, self.theta2,
+                    self.name
+                )
+            elif cross_term == 'AngleAngle':
+                return '{:4}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag, 
+                    self.m,
+                    self.theta1, self.theta2,
+                    self.name
+                )
+            elif cross_term == 'BondBond13':
+                return '{:4}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag, 
+                    self.n,
+                    self.r1, self.r3,
+                    self.name
+                )
+        else:
+            raise PysimmError('cannot understand pair style {}'.format(style))
 
 
 class Improper(Item):
@@ -398,6 +777,74 @@ class ImproperType(Item):
         Item.__init__(self, **kwargs)
         if self.name:
             self.rname = ','.join(reversed(self.name.split(',')))
+        
+    @classmethod
+    def guess_style(cls, nparam):
+        #if nparam == 2:
+            #could be harmonic or class2
+        if nparam == 3:
+            return 'cvff'
+        else:
+            raise PysimmError('Cannot guess improper style')
+    
+    @classmethod
+    def parse_lammps(cls, line, style):
+        tmp = line.split('#')
+        data = tmp.pop(0).strip().split()
+        name = ','.join(re.split(',|\s+', tmp[0].strip())) if tmp else None
+        if style.startswith('harm') or style.startswith('class2'):
+            if len(data) != 3:
+                raise PysimmError('LAMMPS data improperly formatted for harmonic improper')
+            return cls(
+                tag=int(data[0]), name=name,
+                k=float(data[1]), x0=float(data[2])
+            )
+        elif style.startswith('cvff'):
+            if len(data) != 4:
+                raise PysimmError('LAMMPS data improperly formatted for harmonic improper')
+            return cls(
+                tag=int(data[0]), name=name,
+                k=float(data[1]), d=int(data[2]), n=int(data[3])
+            )
+        else:
+            raise PysimmError('LAMMPS improper style {} not supported yet'.format(style))
+            
+    def write_lammps(self, style='harmonic', cross_term=None):
+        """pysimm.system.ImproperType.write_lammps
+
+        Formats a string to define improper type coefficients for a LAMMPS 
+        data file given the provided style.
+
+        Args:
+            style: string for pair style of ImproperType (harmonic, class2, cvff)
+            cross_term: type of class2 cross term to write (default=None)
+              -  AngleAngle
+
+        Returns:
+            LAMMPS formatted string with dihedral coefficients
+        """
+        if style.startswith('harmonic'):
+            return '{:4}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.k, self.x0, self.name
+            )
+        elif style.startswith('cvff'):
+            return '{:4}\t{}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.k, self.d, self.n, self.name
+            )
+        elif style.startswith('class2'):
+            if not cross_term:
+                return '{:4}\t{}\t{}\t# {}\n'.format(
+                    self.tag, self.k, self.x0, self.name
+                )
+            elif cross_term == 'AngleAngle':
+                return '{:4}\t{}\t{}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                    self.tag,
+                    self.m1, self.m2, self.m3,
+                    self.theta1, self.theta2, self.theta3,
+                    self.name
+                )
+        else:
+            raise PysimmError('cannot understand pair style {}'.format(style))
 
 
 class Dimension(Item):
@@ -2254,6 +2701,11 @@ class System(object):
             None or string if data file if out_data='string'
         """
         empty = kwargs.get('empty')
+        pair_style = kwargs.get('pair_style', self.pair_style)
+        bond_style = kwargs.get('bond_style', self.bond_style)
+        angle_style = kwargs.get('angle_style', self.angle_style)
+        dihedral_style = kwargs.get('dihedral_style', self.dihedral_style)
+        improper_style = kwargs.get('improper_style', self.improper_style)
 
         if out_data == 'string':
             out_file = StringIO()
@@ -2298,294 +2750,78 @@ class System(object):
         if self.particle_types.count > 0:
             out_file.write('Masses\n\n')
             for pt in self.particle_types:
-                if pt.mass is None:
-                    error_print('error: some particle types do not have masses')
-                    return
-                out_file.write('%4d\t%s\t# %s\n' % (pt.tag, pt.mass, pt.name))
+                out_file.write(pt.write_lammps('mass'))
             out_file.write('\n')
 
         if self.write_coeffs and self.particle_types.count > 0:
             out_file.write('Pair Coeffs\n\n')
             for pt in self.particle_types:
-                if (self.pair_style and (self.pair_style.startswith('lj') or
-                        self.pair_style.startswith('class2')) and
-                        pt.sigma is not None and pt.epsilon is not None):
-                    out_file.write('%4d\t%s\t%s\t# %s\n'
-                                   % (pt.tag, pt.epsilon, pt.sigma, pt.name))
-                elif (self.pair_style and self.pair_style.startswith('buck') and
-                        pt.a is not None and pt.rho is not None and pt.c is not None):
-                    out_file.write('%4d\t%s\t%s\t%s\t# %s\n'
-                                   % (pt.tag, pt.a, pt.rho, pt.c, pt.name))
-                elif not self.pair_style and pt.sigma is not None and pt.epsilon is not None:
-                    out_file.write('%4d\t%s\t%s\t# %s\n'
-                                   % (pt.tag, pt.epsilon, pt.sigma, pt.name))
-                elif not self.pair_style and pt.a is not None and pt.rho is not None and pt.c is not None:
-                    out_file.write('%4d\t%s\t%s\t%s\t# %s\n'
-                                   % (pt.tag, pt.a, pt.rho, pt.c, pt.name))
-                else:
-                    error_print('error: cannot understand your pair style')
-                    return
+                out_file.write(pt.write_lammps(pair_style))
             out_file.write('\n')
 
         if self.write_coeffs and self.bond_types.count > 0:
             out_file.write('Bond Coeffs\n\n')
             for b in self.bond_types:
-                if self.bond_style == 'harmonic' or self.ff_class == '1':
-                    out_file.write('%4d\t%s\t%s\t# %s\n'
-                                   % (b.tag, b.k, b.r0, b.name))
-                elif self.bond_style == 'class2' or self.ff_class == '2':
-                    out_file.write('%4d\t%s\t%s\t%s\t%s\t# %s\n'
-                                   % (b.tag, b.r0, b.k2, b.k3, b.k4, b.name))
-                else:
-                    error_print('error: cannot understand your bond style')
+                out_file.write(b.write_lammps(bond_style))
             out_file.write('\n')
 
         if self.write_coeffs and self.angle_types.count > 0:
             out_file.write('Angle Coeffs\n\n')
             for a in self.angle_types:
-                if self.angle_style == 'harmonic' or self.ff_class == '1':
-                    out_file.write('%4d\t%s\t'
-                                   '%s\t# %s\n'
-                                   % (a.tag, a.k,
-                                      a.theta0, a.name))
-                elif self.angle_style == 'class2' or self.ff_class == '2':
-                    out_file.write('%4d\t%s\t'
-                                   '%s\t%s\t%s\t# %s\n'
-                                   % (a.tag, a.theta0,
-                                      a.k2, a.k3, a.k4, a.name))
+                out_file.write(a.write_lammps(angle_style))
             out_file.write('\n')
 
         if self.write_coeffs and (self.angle_types.count > 0 and (self.ff_class == '2' or
-                                            self.angle_style == 'class2')):
+                                            angle_style == 'class2')):
             out_file.write('BondBond Coeffs\n\n')
             for a in self.angle_types:
-                if not a.m:
-                    a.m = 0.0
-                    if not a.r1:
-                        a.r1 = 0.0
-                    if not a.r2:
-                        a.r2 = 0.0
-                out_file.write('%4d\t%s\t%s\t%s\t# %s\n'
-                               % (a.tag, a.m, a.r1, a.r2, a.name))
+                out_file.write(a.write_lammps(angle_style, cross_term='BondBond'))
             out_file.write('\n')
             out_file.write('BondAngle Coeffs\n\n')
             for a in self.angle_types:
-                if not a.n1:
-                    a.n1 = 0.0
-                    if not a.r1:
-                        a.r1 = 0.0
-                    if not a.r2:
-                        a.r2 = 0.0
-                if not a.n2:
-                    a.n2 = 0.0
-                out_file.write('%4d\t%s\t%s\t%s\t%s\t# %s\n'
-                               % (a.tag, a.n1, a.n2, a.r1, a.r2, a.name))
+                out_file.write(a.write_lammps(angle_style, cross_term='BondAngle'))
             out_file.write('\n')
 
         if self.write_coeffs and self.dihedral_types.count > 0:
             out_file.write('Dihedral Coeffs\n\n')
             for dt in self.dihedral_types:
-                if self.dihedral_style == 'fourier':
-                    dt_str = '{:4d}\t{}'.format(dt.tag, dt.m)
-                    for k, n, d in zip(dt.k, dt.n, dt.d):
-                        dt_str += '\t{}\t{}\t{}'.format(k, n, d)
-                    dt_str += '\t# {}\n'.format(dt.name)
-                    out_file.write(dt_str)
-                elif self.dihedral_style == 'harmonic' or self.ff_class == '1':
-                    out_file.write('%4d\t%s\t%2s\t%s\t# %s\n'
-                                   % (dt.tag, dt.k, dt.d, dt.n, dt.name))
-                elif self.dihedral_style == 'class2' or self.ff_class == '2':
-                    out_file.write('%4d\t%s\t%s\t%s\t%s\t%s\t%s\t# %s\n'
-                                   % (dt.tag, dt.k1, dt.phi1, dt.k2, dt.phi2, dt.k3,
-                                      dt.phi3, dt.name))
+                out_file.write(dt.write_lammps(dihedral_style))
             out_file.write('\n')
 
         if self.write_coeffs and self.dihedral_types.count > 0 and (self.ff_class == '2' or
-                                        self.dihedral_style == 'class2'):
+                                        dihedral_style == 'class2'):
             out_file.write('MiddleBondTorsion Coeffs\n\n')
             for d in self.dihedral_types:
-                if not d.a1:
-                    d.a1 = 0.0
-                    if not d.r2:
-                        d.r2 = 0.0
-                if not d.a2:
-                    d.a2 = 0.0
-                    if not d.r2:
-                        d.r2 = 0.0
-                if not d.a3:
-                    d.a3 = 0.0
-                    if not d.r2:
-                        d.r2 = 0.0
-                out_file.write('%4d\t%s\t%s\t%s\t%s\t# %s\n'
-                               % (d.tag, d.a1, d.a2, d.a3, d.r2, d.name))
+                out_file.write(d.write_lammps(dihedral_style, cross_term='MiddleBond'))
             out_file.write('\n')
             out_file.write('EndBondTorsion Coeffs\n\n')
             for d in self.dihedral_types:
-                if not d.b1:
-                    d.b1 = 0.0
-                    if not d.r1:
-                        d.r1 = 0.0
-                    if not d.r3:
-                        d.r3 = 0.0
-                if not d.b2:
-                    d.b2 = 0.0
-                    if not d.r1:
-                        d.r1 = 0.0
-                    if not d.r3:
-                        d.r3 = 0.0
-                if not d.b3:
-                    d.b3 = 0.0
-                    if not d.r1:
-                        d.r1 = 0.0
-                    if not d.r3:
-                        d.r3 = 0.0
-                if not d.c1:
-                    d.c1 = 0.0
-                    if not d.r1:
-                        d.r1 = 0.0
-                    if not d.r3:
-                        d.r3 = 0.0
-                if not d.c2:
-                    d.c2 = 0.0
-                    if not d.r1:
-                        d.r1 = 0.0
-                    if not d.r3:
-                        d.r3 = 0.0
-                if not d.c3:
-                    d.c3 = 0.0
-                    if not d.r1:
-                        d.r1 = 0.0
-                    if not d.r3:
-                        d.r3 = 0.0
-                out_file.write('%4d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t# %s\n'
-                               % (d.tag,
-                                  d.b1, d.b2, d.b3,
-                                  d.c1, d.c2, d.c3,
-                                  d.r1, d.r3,
-                                  d.name))
+                out_file.write(d.write_lammps(dihedral_style, cross_term='EndBond'))
             out_file.write('\n')
             out_file.write('AngleTorsion Coeffs\n\n')
             for d in self.dihedral_types:
-                if not d.d1:
-                    d.d1 = 0.0
-                    if not d.theta1:
-                        d.theta1 = 0.0
-                    if not d.theta2:
-                        d.theta2 = 0.0
-                if not d.d2:
-                    d.d2 = 0.0
-                    if not d.theta1:
-                        d.theta1 = 0.0
-                    if not d.theta2:
-                        d.theta2 = 0.0
-                if not d.d3:
-                    d.d3 = 0.0
-                    if not d.theta1:
-                        d.theta1 = 0.0
-                    if not d.theta2:
-                        d.theta2 = 0.0
-                if not d.e1:
-                    d.e1 = 0.0
-                    if not d.theta1:
-                        d.theta1 = 0.0
-                    if not d.theta2:
-                        d.theta2 = 0.0
-                if not d.e2:
-                    d.e2 = 0.0
-                    if not d.theta1:
-                        d.theta1 = 0.0
-                    if not d.theta2:
-                        d.theta2 = 0.0
-                if not d.e3:
-                    d.e3 = 0.0
-                    if not d.theta1:
-                        d.theta1 = 0.0
-                    if not d.theta2:
-                        d.theta2 = 0.0
-                out_file.write('%4d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t# %s\n'
-                               % (d.tag,
-                                  d.d1, d.d2, d.d3,
-                                  d.e1, d.e2, d.e3,
-                                  d.theta1, d.theta2,
-                                  d.name))
+                out_file.write(d.write_lammps(dihedral_style, cross_term='Angle'))
             out_file.write('\n')
             out_file.write('AngleAngleTorsion Coeffs\n\n')
             for d in self.dihedral_types:
-                if not d.m:
-                    d.m = 0.0
-                    if not d.theta1:
-                        d.theta1 = 0.0
-                    if not d.theta2:
-                        d.theta2 = 0.0
-                out_file.write('%4d\t%s\t%s\t%s\t# %s\n'
-                               % (d.tag,
-                                  d.m,
-                                  d.theta1, d.theta2,
-                                  d.name))
+                out_file.write(d.write_lammps(dihedral_style, cross_term='AngleAngle'))
             out_file.write('\n')
             out_file.write('BondBond13 Coeffs\n\n')
             for d in self.dihedral_types:
-                if not d.n_class2:
-                    d.n_class2 = 0.0
-                    if not d.r1:
-                        d.r1 = 0.0
-                    if not d.r3:
-                        d.r3 = 0.0
-                out_file.write('%4d\t%s\t%s\t%s\t# %s\n'
-                               % (d.tag,
-                                  d.n_class2,
-                                  d.r1, d.r3,
-                                  d.name))
+                out_file.write(d.write_lammps(dihedral_style, cross_term='BondBond13'))
             out_file.write('\n')
 
         if self.write_coeffs and self.improper_types.count > 0:
             out_file.write('Improper Coeffs\n\n')
             for i in self.improper_types:
-                if self.improper_style == 'harmonic' or self.improper_style =='class2':
-                    if not i.k:
-                        i.k = 0.0
-                    if not i.x0:
-                        i.x0 = 0.0
-                    out_file.write('%4d\t%s\t%s\t# %s\n'
-                                   % (i.tag, i.k, i.x0, i.name))
-                elif self.improper_style == 'cvff':
-                    out_file.write('%4d\t%s\t%s\t%s\t# %s\n'
-                                   % (i.tag, i.k, i.d, i.n, i.name))
+                out_file.write(i.write_lammps(improper_style))
             out_file.write('\n')
 
         if self.write_coeffs and self.improper_types.count > 0 and (self.ff_class == '2' or
-                                              self.improper_style == 'class2'):
+                                              improper_style == 'class2'):
             out_file.write('AngleAngle Coeffs\n\n')
             for i in self.improper_types:
-                if not i.m1:
-                    i.m1 = 0.0
-                    if not i.theta1:
-                        i.theta1 = 0.0
-                    if not i.theta2:
-                        i.theta2 = 0.0
-                    if not i.theta3:
-                        i.theta3 = 0.0
-                if not i.m2:
-                    i.m2 = 0.0
-                    if not i.theta1:
-                        i.theta1 = 0.0
-                    if not i.theta2:
-                        i.theta2 = 0.0
-                    if not i.theta3:
-                        i.theta3 = 0.0
-                if not i.m3:
-                    i.m3 = 0.0
-                    if not i.theta1:
-                        i.theta1 = 0.0
-                    if not i.theta2:
-                        i.theta2 = 0.0
-                    if not i.theta3:
-                        i.theta3 = 0.0
-                out_file.write('%4d\t%s\t%s\t%s\t%s\t%s\t%s\t# %s\n'
-                               % (i.tag,
-                                  i.m1, i.m2, i.m3,
-                                  i.theta1, i.theta2, i.theta3,
-                                  i.name))
+                out_file.write(i.write_lammps(improper_style, cross_term='AngleAngle'))
             out_file.write('\n')
 
         if self.particles.count > 0 and not empty:
