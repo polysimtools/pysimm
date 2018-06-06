@@ -28,7 +28,7 @@
 # THE SOFTWARE.
 
 from StringIO import StringIO
-from subprocess import call
+from subprocess import call, Popen, PIPE
 import os
 import re
 import numpy as np
@@ -906,7 +906,10 @@ class Cassandra(object):
                 try:
                     self.logger.info('Starting the GCMC simulations with CASSANDRA')
                     print('{:.^60}'.format(''))
-                    call([CASSANDRA_EXEC, task.props_file])
+                    p = Popen([CASSANDRA_EXEC, task.props_file], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+                    stout, sterr = p.communicate()
+                    print(stout)
+                    print(sterr)
                     task.upd_simulation()
                     self.system = task.tot_sst.copy()
 
@@ -915,7 +918,8 @@ class Cassandra(object):
                     exit(1)
                 except IOError as ioe:
                     if check_cs_exec():
-                        self.logger.error('There was a problem running CASSANDRA. The process started but did not finish')
+                        self.logger.error('There was a problem running CASSANDRA. '
+                                          'The process started but did not finish')
                         exit(1)
         else:
             self.logger.error('There was a problem running CASSANDRA: seems it is not configured properly.\n'
