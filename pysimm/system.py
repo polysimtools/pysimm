@@ -198,6 +198,30 @@ class ParticleType(Item):
     """
     def __init__(self, **kwargs):
         Item.__init__(self, **kwargs)
+            
+    def form(self, style='lj_12-6', d_range=None):
+        """pysimm.system.ParticleType.form
+
+        Returns data to plot functional form for the potential energy with 
+        the given style.
+
+        Args:
+            style: string for pair style of ParticleType (lj_12-6, lj_9-6, buck)
+
+        Returns:
+            x, y for plotting functional form (energy vs distance)
+        """
+        if not d_range:
+            d_range = np.linspace(0.1, 8, 79)
+        if style == 'lj_12-6':
+            e = np.array([calc.LJ_12_6(self, d) for d in d_range])
+            return d_range, e
+        elif style == 'lj_9-6':
+            e = np.array([calc.LJ_9_6(self, d) for d in d_range])
+            return d_range, e
+        elif style.startswith('buck'):
+            e = np.array([calc.buckingham(self, d) for d in d_range])
+            return d_range, e
         
         
 class Bond(Item):
@@ -261,6 +285,27 @@ class BondType(Item):
         if self.name:
             self.rname = ','.join(reversed(self.name.split(',')))
 
+    def form(self, style='harmonic', d_range=None):
+        """pysimm.system.BondType.form
+
+        Returns data to plot functional form for the potential energy with 
+        the given style.
+
+        Args:
+            style: string for pair style of BondType (harmonic, class2)
+
+        Returns:
+            x, y for plotting functional form (energy vs distance)
+        """
+        if not d_range:
+            d_range = np.linspace(self.r0-0.5, self.r0+0.5, 100)
+        if style == 'harmonic':
+            e = np.array([calc.harmonic_bond(self, d) for d in d_range])
+            return d_range, e
+        elif style == 'class2':
+            e = np.array([calc.class2_bond(self, d) for d in d_range])
+            return d_range, e
+
 
 class Angle(Item):
     """pysimm.system.Angle
@@ -313,6 +358,30 @@ class AngleType(Item):
         Item.__init__(self, **kwargs)
         if self.name:
             self.rname = ','.join(reversed(self.name.split(',')))
+        
+    def form(self, style='harmonic', d_range=None):
+        """pysimm.system.AngleType.form
+
+        Returns data to plot functional form for the potential energy with 
+        the given style.
+
+        Args:
+            style: string for pair style of AngleType (harmonic, class2, charmm)
+
+        Returns:
+            x, y for plotting functional form (energy vs angle)
+        """
+        if not d_range:
+            d_range = np.linspace(self.theta0-1, self.theta0+1, 100)
+        if style == 'harmonic':
+            e = np.array([calc.harmonic_angle(self, d) for d in d_range])
+            return d_range, e
+        elif style == 'charmm':
+            e = np.array([calc.harmonic_angle(self, d) for d in d_range])
+            return d_range, e
+        elif style == 'class2':
+            e = np.array([calc.class2_angle(self, d) for d in d_range])
+            return d_range, e
 
 
 class Dihedral(Item):
@@ -354,6 +423,33 @@ class DihedralType(Item):
         Item.__init__(self, **kwargs)
         if self.name:
             self.rname = ','.join(reversed(self.name.split(',')))
+
+    def form(self, style='harmonic', d_range=None):
+        """pysimm.system.DihedralType.form
+
+        Returns data to plot functional form for the potential energy with 
+        the given style.
+
+        Args:
+            style: string for pair style of DihedralType (harmonic, class2, fourier)
+
+        Returns:
+            x, y for plotting functional form (energy vs angle)
+        """
+        if not d_range:
+            d_range = np.linspace(-180, 180, 100)
+        if style == 'harmonic':
+            e = np.array([calc.harmonic_dihedral(self, d) for d in d_range])
+            return d_range, e
+        elif style == 'fourier':
+            e = np.array([calc.fourier_dihedral(self, d) for d in d_range])
+            return d_range, e
+        elif style == 'class2':
+            e = np.array([calc.class2_dihedral(self, d) for d in d_range])
+            return d_range, e
+        elif style == 'opls':
+            e = np.array([calc.opls_dihedral(self, d) for d in d_range])
+            return d_range, e
 
 
 class Improper(Item):
@@ -398,6 +494,30 @@ class ImproperType(Item):
         Item.__init__(self, **kwargs)
         if self.name:
             self.rname = ','.join(reversed(self.name.split(',')))
+            
+    def form(self, style='harmonic', d_range=None):
+        """pysimm.system.ImproperType.form
+
+        Returns data to plot functional form for the potential energy with 
+        the given style.
+
+        Args:
+            style: string for pair style of ImproperType (harmonic, cvff)
+
+        Returns:
+            x, y for plotting functional form (energy vs angle)
+        """
+        if not d_range:
+            d_range = np.linspace(-2, 2, 100)
+        if style == 'harmonic':
+            e = np.array([calc.harmonic_improper(self, d) for d in d_range])
+            return d_range, e
+        elif style == 'cvff':
+            e = np.array([calc.cvff_improper(self, d) for d in d_range])
+            return d_range, e
+        elif style == 'umbrella':
+            e = np.array([calc.umbrella_improper(self, d) for d in d_range])
+            return d_range, e
 
 
 class Dimension(Item):
