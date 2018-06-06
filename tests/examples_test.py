@@ -3,6 +3,7 @@ import shutil
 import glob
 import imp
 import os
+import re
 from os import path as osp
 
 
@@ -74,6 +75,11 @@ class ExamplesTestCase(unittest.TestCase):
         for p in self.path_generator(osp.join('09_cassandra_simulations', '*')):
             self.assertEqual(self.run_example(p), True)
 
+    def test_example10(self):
+        for p in self.path_generator(osp.join('10_mof_swelling'), script_mask='run.py'):
+            self.assertEqual(self.run_example(p), True)
 
 if __name__ == '__main__':
-    unittest.main()
+    my_tl = unittest.TestLoader()
+    my_tl.sortTestMethodsUsing = lambda x, y: int(re.search('\d+', x).group(0)) - int(re.search('\d+', y).group(0))
+    unittest.main(testLoader=my_tl)

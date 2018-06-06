@@ -40,7 +40,7 @@ from pysimm import system
 from string import ascii_uppercase
 from pydoc import locate
 
-DATA_PATH = os.path.relpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dat/csndra_data'))
+DATA_PATH = os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dat/csndra_data'))
 
 KCALMOL_2_K = 503.22271716452
 
