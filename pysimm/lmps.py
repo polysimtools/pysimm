@@ -64,18 +64,6 @@ templates = {}
 FF_SETTINGS = {
     'dreiding':
         {
-            'pair_style':       'buck',
-            'bond_style':       'harmonic',
-            'angle_style':      'harmonic',
-            'dihedral_style':   'harmonic',
-            'improper_style':   'harmonic',
-            'pair_modify':      {
-                'mix': 'arithmetic'
-            },
-            'special_bonds':    'dreiding'
-        },
-    'dreiding-lj':
-        {
             'pair_style':       'lj/cut',
             'bond_style':       'harmonic',
             'angle_style':      'harmonic',
