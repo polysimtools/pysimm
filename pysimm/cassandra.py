@@ -149,7 +149,7 @@ class MCSimulation(object):
                                 'Creating empty cubic box of 1 nm size')
             self.tot_sst = system.System()
             self.tot_sst.forcefield = 'trappe/amber'
-            self.tot_sst.dim = system.Dimension(dx=10, dy=10, dz=10, center=[0, 0, 0])
+            self.tot_sst.dim = system.Dimension(dx=10, dy=10, dz=10)
 
         # Molecule configuration files describing all species of the system.
         # They are **absolutely** needed to start calculation
@@ -343,7 +343,7 @@ class MCSimulation(object):
         tmp = self.props['Box_Info'].value['box_size']
         if self.props['Box_Info'].value['box_type'] == 'cubic':
             tmp = [tmp] * 3
-        self.tot_sst.dim = system.Dimension(center=True, dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
+        self.tot_sst.dim = system.Dimension(dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
 
         # Sync of the volume change frecuency in equilibration regime
         if 'Prob_Volume' in self.props.keys():

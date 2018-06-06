@@ -419,42 +419,19 @@ class Dimension(Item):
         dz: distance in z dimension
     """
     def __init__(self, **kwargs):
+        center = kwargs.get('center')
         Item.__init__(self, **kwargs)
-        if (self.center and
-                self.dx is not None and
-                self.dy is not None and
-                self.dz is not None):
-            if self.center is True:
-                self.center = [0., 0., 0.]
-            self.xlo = -1*self.dx/2. + self.center[0]
-            self.xhi = self.dx/2. + self.center[0]
-            self.ylo = -1*self.dy/2. + self.center[1]
-            self.yhi = self.dy/2. + self.center[1]
-            self.zlo = -1*self.dz/2. + self.center[2]
-            self.zhi = self.dz/2. + self.center[2]
-        if self.xhi is not None and self.xlo is not None:
-            self.dx = self.xhi - self.xlo
-        if self.yhi is not None and self.ylo is not None:
-            self.dy = self.yhi - self.ylo
-        if self.zhi is not None and self.zlo is not None:
-            self.dz = self.zhi - self.zlo
+        if center:
+            self.translate(*center)
+            del self.center
 
     def check(self):
-        if ((self.xlo is not None and self.xhi is not None and
-                self.ylo is not None and self.yhi is not None and
-                self.zlo is not None and self.zhi is not None) and
-                (self.dx is not None and self.dy is not None and
-                 self.dz is not None)):
-            return True
-        elif self.center and self.dx and self.dy and self.dz:
+        if self.dx is not None and self.dy is not None and self.dz is not None:
             return True
         else:
             return False
             
     def size(self):
-        self.dx = self.xhi - self.xlo
-        self.dy = self.yhi - self.ylo
-        self.dz = self.zhi - self.zlo
         return (self.dx, self.dy, self.dz)
         
     def translate(self, x, y, z):
@@ -476,6 +453,57 @@ class Dimension(Item):
         self.yhi += y
         self.zlo += z
         self.zhi += z
+        
+    @property
+    def dx(self):
+        if self.xhi is None or self.xlo is None:
+            return None
+        else:
+            return self.xhi-self.xlo
+        
+    @dx.setter
+    def dx(self, dx):
+        if dx is None:
+            return
+        center = 0
+        if self.xlo is not None and self.xhi is not None:
+            center = float(self.xhi + self.xlo)/2
+        self.xlo = center - float(dx)/2
+        self.xhi = center + float(dx)/2
+        
+    @property
+    def dy(self):
+        if self.yhi is None or self.ylo is None:
+            return None
+        else:
+            return self.yhi-self.ylo
+        
+    @dy.setter
+    def dy(self, dy):
+        if dy is None:
+            return
+        center = 0
+        if self.ylo is not None and self.yhi is not None:
+            center = float(self.yhi + self.ylo)/2
+        self.ylo = center - float(dy)/2
+        self.yhi = center + float(dy)/2
+        
+    @property
+    def dz(self):
+        if self.zhi is None or self.zlo is None:
+            return None
+        else:
+            return self.zhi-self.zlo
+        
+    @dz.setter
+    def dz(self, dz):
+        if dz is None:
+            return
+        center = 0
+        if self.zlo is not None and self.zhi is not None:
+            center = float(self.zhi + self.zlo)/2
+        self.zlo = center - float(dz)/2
+        self.zhi = center + float(dz)/2
 
 
 class System(object):
@@ -3165,10 +3193,6 @@ class System(object):
         self.dim.yhi = ymax + padding
         self.dim.zlo = zmin - padding
         self.dim.zhi = zmax + padding
-
-        self.dim.dx = self.dim.xhi - self.dim.xlo
-        self.dim.dy = self.dim.yhi - self.dim.ylo
-        self.dim.dz = self.dim.zhi - self.dim.zlo
         
         if center:
             self.center('particles', [0, 0, 0], True)
@@ -3619,15 +3643,12 @@ def read_lammps(data_file, **kwargs):
         elif len(line) > 3 and line[2] == 'xlo':
             s.dim.xlo = float(line[0])
             s.dim.xhi = float(line[1])
-            s.dim.dx = s.dim.xhi - s.dim.xlo
         elif len(line) > 3 and line[2] == 'ylo':
             s.dim.ylo = float(line[0])
             s.dim.yhi = float(line[1])
-            s.dim.dy = s.dim.yhi - s.dim.ylo
         elif len(line) > 3 and line[2] == 'zlo':
             s.dim.zlo = float(line[0])
             s.dim.zhi = float(line[1])
-            s.dim.dz = s.dim.zhi - s.dim.zlo
         elif len(line) > 0 and line[0] == 'Masses':
             f.next()
             for i in range(nparticle_types):
@@ -4773,13 +4794,10 @@ def replicate(ref, nrep, s_=None, density=0.3, rand=True, print_insertions=True)
         boxl = pow(volume, 1 / 3.) * 1e8
         s_.dim.xlo = -1. * boxl / 2.
         s_.dim.xhi = boxl / 2.
-        s_.dim.dx = s_.dim.xhi - s_.dim.xlo
         s_.dim.ylo = -1. * boxl / 2.
         s_.dim.yhi = boxl / 2.
-        s_.dim.dy = s_.dim.yhi - s_.dim.ylo
         s_.dim.zlo = -1. * boxl / 2.
         s_.dim.zhi = boxl / 2.
-        s_.dim.dz = s_.dim.zhi - s_.dim.zlo
 
     num = 0
     for j, r in enumerate(ref):
