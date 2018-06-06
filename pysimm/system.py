@@ -794,7 +794,7 @@ class ImproperType(Item):
         tmp = line.split('#')
         data = tmp.pop(0).strip().split()
         name = ','.join(re.split(',|\s+', tmp[0].strip())) if tmp else None
-        if style.startswith('harm') or style.startswith('class2'):
+        if style.startswith('harm') or style.startswith('class2') or style.startswith('umbrella'):
             if len(data) != 3:
                 raise PysimmError('LAMMPS data improperly formatted for harmonic improper')
             return cls(
@@ -826,6 +826,10 @@ class ImproperType(Item):
             LAMMPS formatted string with dihedral coefficients
         """
         if style.startswith('harmonic'):
+            return '{:4}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.k, self.x0, self.name
+            )
+        elif style.startswith('umbrella'):
             return '{:4}\t{}\t{}\t# {}\n'.format(
                 self.tag, self.k, self.x0, self.name
             )

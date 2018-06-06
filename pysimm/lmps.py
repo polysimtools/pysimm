@@ -68,7 +68,7 @@ FF_SETTINGS = {
             'bond_style':       'harmonic',
             'angle_style':      'harmonic',
             'dihedral_style':   'harmonic',
-            'improper_style':   'harmonic',
+            'improper_style':   'umbrella',
             'pair_modify':      {
                 'mix': 'arithmetic'
             },
