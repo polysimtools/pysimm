@@ -14,7 +14,7 @@ First, let's import the required pysimm modules: system and cassandra
 from pysimm import system, cassandra
 ```
 
-If you encounter an error **"ImportError: No module named pysimm"** make sure that the pysimm directory you cloned from github is in your PYTHONPATH. 
+If you encounter an error **"ImportError: No module named pysimm"** make sure that the pysimm directory you cloned from GitHub is in your PYTHONPATH. 
 See installation instructions for further directions.
 
 ### Creating the system for simulations
@@ -49,8 +49,7 @@ The pysimm system is passed to the constructor of the main cassandra simulation 
 
 ### Creating/changing the simulation properties
 
-The properties of the Cassandra simulation for the pysimm.cassandra module are provided in the form of a dictionary 
-in which the key is the property name and the value (depending on the property itself) can be integer, float, string or another dictionary. 
+The properties of the Cassandra simulation for the pysimm.cassandra module are provided by the dictionary in which the key is the property name and the value (depending on the property itself) can be integer, float, string or another dictionary. 
 Thus, all required Cassandra simulation properties can be specified directly in the Python script file by creating the dictionary. 
 Alternatively, pysimm.cassandra object can read and interpret the proper Cassandra input file. 
 If the file does not specify all properties required for certain type of simulations, they will be set to the default ones.
@@ -74,23 +73,22 @@ Note: the default value for the `'Run_Type'` property is `{'equilibration': 100}
 
 ### Setup and run the simulations
 
-The set-up of NPT simulations in **pysimm.cassandra** module are implemented in NPT class. 
+The set-up of NPT simulations in the **pysimm.cassandra** module is implemented in NPT class. 
 The way to add it to the simulation queue is to call **css.add_npt_mc()** method. The method has few keyword arguments:
 * *species*: the molecules to be inserted;
-* *out_folder*: relative path for all Cassandra files such as log files, .xyz and .chk files
+* *out_folder*: relative path for all Cassandra files such as log files, .xyz, and .chk files
 
 ```python
     cs.add_npt_mc(species=molec, is_rigid=True, out_folder='results', **npt_props)
 ```
 
-The method `css.run()` will trigger the simulations from run queue. In our case it will be single NPT simulation.
+The method `css.run()` will trigger the simulations from run queue. In our case, it will be single NPT simulation.
 
 
 ### Working with simulation results
 
-The results of Cassandra simulations are written to the **cassandra.system** field that is object of **pysimm.system** type. 
-The **pysimm.system** has few methods to write itself to the text-formatted files (such as .lmps or .xyz) for further 
-molecular simulation/visualisation treating. 
+The results of Cassandra simulations are written to the **cassandra.system** field that is the object of **pysimm.system** type. 
+The **pysimm.system** has few methods to write itself to the text-formatted files (such as .lmps or .xyz) for further molecular simulation/ visualization treating. 
 
 
 ```python
