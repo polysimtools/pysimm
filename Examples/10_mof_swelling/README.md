@@ -5,12 +5,12 @@ by Alexander Demidov and Michael E. Fortunato
 
 ### Preparation of the MOF structure
 
-This section describes the code from the *prepare_mof.py* file. It is used to create the *.lmps* file of the Metal-Organic Framework (MOF) unit cell needed in further simulations.
+This section describes the code from the *prepare_mof.py* file. It is used to create the *.lmps* file of the Metal-Organic Framework (MOF) unit cell needed for further simulations.
 You can skip this section and use already created *irmof-14.lmps* file ready for MC/MD simulations.
 
 **Requirement**: the script uses [pandas](https://pandas.pydata.org/) python package for data input/manipulation, if it is not installed, the script will not work.
 
-The *.xyz* configuration of the IRMOF-14 unit cell is downloaded as a text stream from the [GitHub repository](https://github.com/WMD-group/BTW-FF/) of the BTW-FF project, and then reorginized to the pandas dataframe.
+The *.xyz* configuration of the IRMOF-14 unit cell is downloaded as a text stream from the [GitHub repository](https://github.com/WMD-group/BTW-FF/) of the BTW-FF project and then reorganized to the pandas dataframe.
 ```python
 resp = requests.get('https://raw.githubusercontent.com/WMD-group/BTW-FF/master/structures/IRMOF-14.xyz')
 xyz = StringIO(resp.text)
@@ -57,7 +57,7 @@ f.assign_dtypes(s)
 f.assign_itypes(s)
 ```
 
-Finally, the size of the simulation box need to be defined. Here, the cubic simulation box can be set (MOF unit cell has same structure along any of its 3 principal axes). 
+Finally, the size of the simulation box should be defined. Here, the cubic simulation box can be set (MOF unit cell has same structure along any of its 3 principal axes). 
 The length of the cube edge is the maximal distance between x-coordinates of the molecules of the system plus half-distance of the C-C bond.
 ```python
 cc_bnd_lngth = 1.363
@@ -82,18 +82,18 @@ s.write_lammps('irmof-14.lmps')
 
 The example describes the work with the pysimm app that implements the hybrid MC-MD approach. Under the "hybrid MC-MD approach" here we understand the following serial iterative set of simulations. First, the Monte Carlo (MC) simulation is performed, inserting the gas molecules into the simulation system with constant volume temperature and chemical potential of inserted species (&#956;VT). This is followed by the molecular dynamics (MD) simulation step at constant pressure, temperature and number of particles (NPT). After the MD is finished, the next step of the &#956;VT MC with the new size of the simulation box is performed, and so on.
 
-In the pySIMM the hybrid MC-MD simulations are implemented in **apps.mc_md** application. The application in turn communicates with [Cassandra](https://cassandra.nd.edu) and [LAMMPS](http://lammps.sandia.gov)  programs through **pysimm.cassandra** and **pysimm.lmps** modules correspondingly automatically setting up the required for simulation data.
+In the pySIMM the hybrid MC-MD simulations are implemented in **apps.mc_md** application. The application, in turn, communicates with [Cassandra](https://cassandra.nd.edu) and [LAMMPS](http://lammps.sandia.gov)  programs through **pysimm.cassandra** and **pysimm.lmps** modules correspondingly automatically setting up the required for simulation data.
 
 ```python
 from pysimm.apps import mc_md
 from pysimm import system
 ```
 
-The example uses the hybrid MC-MD for simulation of swelling of an IRMOF-14 metal-organic framework with pure methane. The IRMOF-14 structure is taken from the [repository](https://github.com/WMD-group/BTW-FF/tree/master/structures) of the BTW-FF project, typed with with Dreiding forcefield and saved as a .lmps file in *prepare_mof.py* file.
+The example uses the hybrid MC-MD for simulation of swelling of an IRMOF-14 metal-organic framework with pure methane. The IRMOF-14 structure is taken from the [repository](https://github.com/WMD-group/BTW-FF/tree/master/structures) of the BTW-FF project, typed with Dreiding forcefield and saved as a .lmps file in *prepare_mof.py* file.
 
 ### Simulation system setup
 
-To start simulations, the application should get two **pysimm.system** objects. First, *frame*, is any molecular structure that presumed to be fixed during the MC simulations, and the second, *gas1*, that represents single gas molecule to be inserted by the MC. 
+To start simulations, the application should get two **pysimm.system** objects. First, *frame* is any molecular structure that presumed to be fixed during the MC simulations, and the second, *gas1*, that represents single gas molecule to be inserted by the MC. 
 
 ```python
 frame = system.read_lammps('irmof-14.lmps')
@@ -105,7 +105,7 @@ gas1.forcefield = 'trappe/amber'
 
 ### Simulation properties setup
 
-Additionally the application requires two dictionaries *mc_props* and *md_props* that describe the Cassandra and LAMMPS simulation settings correspondingly. The keywords of the property dictionaries correspond to the keywords provided to the Cassandra and LAMMPS programs directely.
+Additionally, the application requires two dictionaries *mc_props* and *md_props* that describe the Cassandra and LAMMPS simulation settings correspondingly. The keywords of the property dictionaries correspond to the keywords provided to the Cassandra and LAMMPS programs directly.
 
 ```python
 mc_props = {'rigid_type': False,
@@ -143,4 +143,4 @@ The application itself has two settings that are provided in the form of keyword
 sim_result = mc_md.mc_md(gas1, frame, mcmd_niter=5, sim_folder='results',  mc_props=mc_props, md_props=md_props)
 ```
 
-The application returns the **pysimm.system** object that is a dump of simulated system after the final iteration.
+The application returns the **pysimm.system** object that is a dump of the simulated system after the final iteration.
