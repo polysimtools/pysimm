@@ -14,14 +14,14 @@ First, let's import the required pysimm modules: system and cassandra
 from pysimm import system, cassandra
 ```
 
-If you encounter an error **"ImportError: No module named pysimm"** make sure that the pysimm directory you cloned from github is in your PYTHONPATH. 
+If you encounter an error **"ImportError: No module named pysimm"** make sure that the pysimm directory you cloned from GitHub is in your PYTHONPATH. 
 See installation instructions for further directions.
 
 ### Creating the system for simulations
 
 The cassandra module of the pysimm works with **pysimm.system** object modifying it by the results of Cassandra simulations. 
 For this example the initial system can be an empty cubic cell with the size of 30 &#8491; centered at the origin of the coordinate system. 
-Additionally we explicitly specify the forcefield model for all particles that will be inserted into the system.
+Additionally, we explicitly specify the forcefield model for all particles that will be inserted into the system.
 
 ```python
     bx_size = 30
@@ -33,8 +33,7 @@ The setup of a Monte Carlo simulations should include also the information about
 This example works with  ethylene (CH<sub>2</sub>--CH<sub>2</sub>) molecule using TraPPE-UA forcefield. 
 For the **pysimm.cassandra** module the molecule should be provided in the form of the **pysimm.system** object.
 
-The example folder contains the LAMMPS files that describe the molecule, so the corresponding  **pysimm.system** 
-object can be created by reading the files by the **system.read_lammps()** method.
+The example folder contains the LAMMPS files that describe the molecule, so the corresponding  **pysimm.system** object can be created by reading the files by the **system.read_lammps()** method.
 
 ```python
     molec = system.read_lammps('c2h4.lmps')
@@ -49,8 +48,7 @@ The pysimm system is passed to the constructor of the main cassandra simulation 
 
 ### Creating/changing the simulation properties
 
-The properties of the Cassandra simulation for the pysimm.cassandra module are provided in the form of a dictionary in which 
-the key is the property name and the value (depending on the property itself) can be integer, float, string or another dictionary. 
+The properties of the Cassandra simulation for the pysimm.cassandra module are provided by the dictionary in which the key is the property name and the value (depending on the property itself) can be integer, float, string or another dictionary. 
 Thus, all required Cassandra simulation properties can be specified directly in the Python script file by creating the dictionary. 
 Alternatively, the cassandra object can read and interpret the proper Cassandra input file. 
 If the file does not specify all properties required for certain type of simulations, they will be set to the default ones.
@@ -90,9 +88,9 @@ The method `css.run()` will trigger the simulations from the run queue. In our c
 
 ### Working with simulation results
 
-The results of Cassandra simulations are written to the **cassandra.system** field that is object of **pysimm.system** type. 
+The results of Cassandra simulations are written to the **cassandra.system** field that is the object of **pysimm.system** type. 
 The **pysimm.system** has few methods to write itself to the text-formatted files (such as .lmps or .xyz) for further 
-molecular simulation/visualisation treating.
+molecular simulation/ visualization treating.
 
 ```python
     lmps.check_lmps_attr(cs.system)
