@@ -49,6 +49,10 @@ try:
     import numpy as np
 except ImportError:
     np = None
+try:
+    import pandas as pd
+except ImportError:
+    pd = None
 
 from pysimm import calc
 from pysimm import error_print
@@ -872,6 +876,21 @@ class System(object):
                 return False
 
         return True
+        
+    def particles_df(self, columns=['tag', 'x', 'y', 'z', 'q'], index='tag', extras=[]):
+        if pd is None:
+            raise PysimmError('pysimm.system.System.particles_df function requires pandas')
+        data = [{c: getattr(p, c) for c in columns} for p in self.particles]
+        if extras:
+            for d in data:
+                if 'type.name' in extras:
+                    d['type.name'] = self.particles[d['tag']].type.name
+                if 'type.tag' in extras:
+                    d['type.tag'] = self.particles[d['tag']].type.tag
+        df = pd.DataFrame(data=data)
+        if index in columns:
+            df = df.set_index(index)
+        return df
         
     def unite_atoms(self):
         for p in self.particles:
