@@ -711,7 +711,7 @@ class McSystem(object):
             for bt in sst.bond_types:
                 bt.is_fixed = True
             for at in sst.angle_types:
-                if at.k > 70:
+                if at.k > 0:
                     at.is_fixed = True
 
         self.file_store = os.getcwd()
@@ -1332,7 +1332,7 @@ class McfWriter(object):
                 if hasattr(angle.type, 'is_fixed') and angle.type.is_fixed:
                     addon = ['fixed', angle.type.theta0]
                 else:
-                    addon = ['harmonic', KCALMOL_2_K * angle.type.k, angle.type.theta0]
+                    addon = ['harmonic', angle.type.k, angle.type.theta0]
                     line_template += '{l[6]:<13.3f}'
                 count += 1
                 out.write(line_template.format(l=line + addon) + '\n')
