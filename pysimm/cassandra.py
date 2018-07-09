@@ -1216,11 +1216,11 @@ class Cassandra(object):
         else:
             return cells[1]
 
-    def check_system(self):
-        """pysimm.cassandra.check_system
+    def unwrap_gas(self):
+        """pysimm.cassandra.Cassandra.unwrap_gas
 
         Ensures that all particles that are not fixed are unwrapped, otherwise CASSANDRA might not interpret
-        them correctely
+        them correctly
         """
         gas_system = self.system.copy()
         for p in gas_system.particles:
