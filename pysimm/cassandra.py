@@ -129,7 +129,7 @@ class MCSimulation(object):
 
         # Multiple-value one/many line dynamic properties
         self.props['Run_Type'] = InpSpec('Run_Type', kwargs.get('Run_Type'), def_dat['Run_Type'])
-        self.props['Charge_Style'] = InpSpec('Charge_Style', kwargs.get('Charge_Stylemc'), def_dat['Charge_Style'])
+        self.props['Charge_Style'] = InpSpec('Charge_Style', kwargs.get('Charge_Style'), def_dat['Charge_Style'])
         self.props['VDW_Style'] = InpSpec('VDW_Style', kwargs.get('VDW_Style'), def_dat['VDW_Style'])
         self.props['Simulation_Length_Info'] = InpSpec('Simulation_Length_Info', kwargs.get('Simulation_Length_Info'),
                                                        def_dat['Simulation_Length_Info'],
