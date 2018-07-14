@@ -90,7 +90,7 @@ def psd(s, **kwargs):
         f.write('%s\n' % psd_save)
         f.write('%s\n' % psd_range)
 
-    with open('ff.atoms', 'w+') as f:
+    with open(atoms, 'w+') as f:
         f.write('%s\n\n' % s.particle_types.count)
         for pt in s.particle_types:
             f.write('%s\t%f\n' % (pt.tag, pt.sigma))
@@ -105,9 +105,9 @@ def psd(s, **kwargs):
     if nanohub:
         print('%s: sending pore size distribution simulation to computer cluster' % strftime('%H:%M:%S'))
         sys.stdout.flush()
-        cmd = ('submit -n 1 -w %s -i psd.in -i ff.atoms -i data.xyz '
+        cmd = ('submit -n 1 -w %s -i psd.in -i %s -i data.xyz '
                'poreblazer-2.0.0_psd < psd.in'
-               % (24*60))
+               % (24*60, atoms))
         stdo, stde = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE, shell=True).communicate()
     else:
         stdin = open('psd.in')
@@ -158,7 +158,7 @@ def surface(s, **kwargs):
         f.write('%s\n' % randint(10000, 99999))
         f.write('%s\n' % vis)
 
-    with open('ff.atoms', 'w+') as f:
+    with open(atoms, 'w+') as f:
         f.write('%s\n\n' % s.particle_types.count)
         for pt in s.particle_types:
             f.write('%s\t%f\t%f\n' % (pt.tag, pt.sigma, pt.mass))
@@ -218,7 +218,7 @@ def pore(s, **kwargs):
         f.write('%s\n' % pore_probe)
         f.write('%s\n' % randint(10000, 99999))
 
-    with open('ff.atoms', 'w+') as f:
+    with open(atoms, 'w+') as f:
         f.write('%s\n\n' % s.particle_types.count)
         for pt in s.particle_types:
             f.write('%s\t%f\t%f\t%f\n' % (pt.tag, pt.sigma,
@@ -279,7 +279,7 @@ def void(s, **kwargs):
         f.write('%s\n' % pore_probe)
         f.write('%s\n' % randint(10000, 99999))
 
-    with open('ff.atoms', 'w+') as f:
+    with open(v, 'w+') as f:
         f.write('%s\n\n' % s.particle_types.count)
         for pt in s.particle_types:
             f.write('%s\t%f\t%f\t%f\n' % (pt.tag, pt.sigma,
