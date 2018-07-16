@@ -91,9 +91,9 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         css.run()
 
         # >>> 2N: MD (LAMMPS) step:
-        sim_sst = css.run_queue[0].tot_sst.copy()
+        sim_sst = css.system
         sim_sst.write_lammps(os.path.join(sim_folder, str(l) + '.before_md.lmps'))
-        sim = lmps.Simulation(sim_sst, print_to_screen=mdp.get('print_to_screen', False),
+        sim = lmps.Simulation(sim_sst, debug=True,
                               log=os.path.join(sim_folder, str(l) + '.md.log'))
 
         sim.add(lmps.Init(cutoff=mdp.get('cutoff')))
