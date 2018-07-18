@@ -177,6 +177,40 @@ def angle(p1, p2, p3, radians=False):
     if not radians:
         theta = theta * 180 / pi
     return theta
+    
+    
+def dihedral(p1, p2, p3, p4, radians=False):
+    b1 = np.array([
+        p2.x-p1.x,
+        p2.y-p1.y,
+        p2.z-p1.z
+    ])
+    b2 = np.array([
+        p3.x-p2.x,
+        p3.y-p2.y,
+        p3.z-p2.z
+    ])
+    b3 = np.array([
+        p4.x-p3.x,
+        p4.y-p3.y,
+        p4.z-p3.z
+    ])
+    
+    n1 = np.cross(b1, b2)
+    n1 /= np.linalg.norm(n1)
+    n2 = np.cross(b2, b3)
+    n2 /= np.linalg.norm(n2)
+    
+    m1 = np.cross(n1, b2/np.linalg.norm(b2))
+    
+    x = np.dot(n1, n2)
+    y = np.dot(m1, n2)
+    
+    theta = np.arctan2(y, x)
+    
+    if not radians:
+        theta = theta * 180 / pi
+    return theta
 
 
 def chiral_angle(a, b, c, d):
@@ -339,3 +373,56 @@ def pbc_distance(s, p1, p2):
     dz = frac_d[2] * s.dim.dz
 
     return np.linalg.norm([dx, dy, dz])
+
+def LJ_12_6(pt, d):
+    return 4*pt.epsilon*(pow(pt.sigma/d,12)-pow(pt.sigma/d, 6))
+    
+def LJ_9_6(pt, d):
+    return pt.epsilon*(2*pow(pt.sigma/d,12)-3*pow(pt.sigma/d, 6))
+    
+def buckingham(pt, d):
+    return pt.a*np.exp(-d/pt.rho)-(pt.c/pow(d, 6))
+    
+def harmonic_bond(bt, d):
+    return bt.k*pow(d-bt.r0, 2)
+    
+def class2_bond(bt, d):
+    return bt.k2*pow(d-bt.r0, 2) + bt.k3*pow(d-bt.r0, 3) + bt.k4*pow(d-bt.r0, 4)
+    
+def harmonic_angle(at, d):
+    return at.k*pow(d-at.theta0, 2)
+    
+def class2_angle(at, d):
+    return at.k2*pow(d-at.theta0, 2) + at.k3*pow(d-at.theta0, 3) + at.k4*pow(d-at.theta0, 4)
+    
+def harmonic_dihedral(dt, d):
+    return dt.k*(1+dt.d*np.cos(dt.n*np.radians(d)))
+    
+def class2_dihedral(dt, d):
+    return (
+        dt.k1*(1-np.cos(np.radians(d)-np.radians(dt.phi1))) +
+        dt.k2*(1-np.cos(np.radians(d)-np.radians(dt.phi2))) +
+        dt.k3*(1-np.cos(np.radians(d)-np.radians(dt.phi3)))
+    )
+    
+def opls_dihedral(dt, d):
+    return (
+        0.5*dt.k1*(1+np.cos(np.radians(d))) +
+        0.5*dt.k2*(1-np.cos(2*np.radians(d))) +
+        0.5*dt.k3*(1+np.cos(3*np.radians(d))) +
+        0.5*dt.k4*(1-np.cos(4*np.radians(d)))
+    )
+    
+def fourier_dihedral(dt, d):
+    return np.sum(
+        [k*(1 + np.cos(n*np.radians(d)-d_)) for k, n, d_ in zip(dt.k, dt.n, dt.d)]
+    )
+    
+def harmonic_improper(it, d):
+    return it.k*pow(d-it.x0, 2)
+    
+def cvff_improper(it, d):
+    return it.k*(1+it.d*np.cos(it.n*np.radians(d)))
+
+def umbrella_improper(it, d):
+    return it.k*(1-np.cos(np.radians(d)))
