@@ -28,7 +28,7 @@
 # THE SOFTWARE.
 
 from StringIO import StringIO
-from subprocess import call
+from subprocess import call, Popen, PIPE
 import os
 import re
 import numpy as np
@@ -40,7 +40,7 @@ from pysimm import system
 from string import ascii_uppercase
 from pydoc import locate
 
-DATA_PATH = os.path.relpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dat/csndra_data'))
+DATA_PATH = os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dat/csndra_data'))
 
 KCALMOL_2_K = 503.22271716452
 
@@ -166,7 +166,12 @@ class MCSimulation(object):
         self.fxd_sst_mcfile = None
         self.fxd_sst = kwargs.get('fixed_sst')
         if self.tot_sst.particles:
-            self.fxd_sst = self.tot_sst.copy()
+            tmp = self.tot_sst.copy()
+            for p in tmp.particles:
+                if not p.is_fixed:
+                    tmp.particles.remove(p.tag)
+            tmp.remove_spare_bonding()
+            self.fxd_sst = tmp
             self.fxd_sst_mcfile = os.path.join(self.out_folder, 'fixed_syst.mcf')
             mol_files['file1'] = [self.fxd_sst_mcfile, 1]
 
@@ -307,8 +312,15 @@ class MCSimulation(object):
                     start_ind = lines.find('coordinates for all the boxes')
                     all_coord_lines = lines[start_ind:-1].split('\n')
                     inp.close()
-                self.tot_sst.add(self.mc_sst.make_system(all_coord_lines[offset:]), change_dim=False)
-                self.logger.info('Simulation system successfully updated')
+
+                gas_lines = all_coord_lines[offset:]
+                if len(gas_lines) > 0:
+                    self.tot_sst = self.fxd_sst.copy()
+                    self.tot_sst.add(self.mc_sst.make_system(gas_lines), change_dim=False)
+                    # self.tot_sst.add(self.mc_sst.make_system(gas_lines), change_dim=False)
+                    self.logger.info('Simulation system successfully updated')
+                else:
+                    self.logger.info('Final MC configuration has 0 new particles the initial system remains the same')
 
             except IndexError:
                 self.logger.error('Cannot fit the molecules from the CASSANDRA file to the PySIMM system')
@@ -322,9 +334,7 @@ class MCSimulation(object):
         Private method designed for update the fields of the simulation object to make them conformed with each other
         """
         # Sync the simulation box parameters
-        dx = self.tot_sst.dim.xhi - self.tot_sst.dim.xlo
-        dy = self.tot_sst.dim.yhi - self.tot_sst.dim.ylo
-        dz = self.tot_sst.dim.zhi - self.tot_sst.dim.zlo
+        dx, dy, dz = self.tot_sst.dim.size()
         if (dx == dy) and (dy == dz):
             box_type = 'cubic'
             box_dims = str(dx)
@@ -345,7 +355,7 @@ class MCSimulation(object):
             tmp = [tmp] * 3
         self.tot_sst.dim = system.Dimension(dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
 
-        # Sync of the volume change frecuency in equilibration regime
+        # Sync of the volume change frequency in equilibration regime
         if 'Prob_Volume' in self.props.keys():
             if self.props['Prob_Volume'] is None:
                 self.props['Run_Type'].value['steps'] = self.props['Run_Type'].value['steps'][0]
@@ -693,9 +703,10 @@ class McSystem(object):
         self.logger = logging.getLogger('MC_SYSTEM')
         self.sst = make_iterable(sst)
         for sst in self.sst:
-            sst.zero_charge()
             # Checking that the force-field of the input system is of the class-1 as it is direct CASSANDRA restriction
             if isinstance(sst, system.System):
+                sst.zero_charge()
+                sst.add_particle_bonding()
                 if sst.ff_class:
                     if not (sst.ff_class == '1'):
                         self.logger.error('Currently cassandra supports only with **Type-I** force fields. '
@@ -776,7 +787,7 @@ class McSystem(object):
                 out.write('{:>21f}{:>21f}\n'.format(self.temperature, 0))
                 tmplte = '{:<10}{:<24f}{:<24f}{:<24f}\n'
                 for prt in sstm.particles:
-                    out.write(tmplte.format(prt.type.name, prt.x, prt.y, prt.z))
+                    out.write(tmplte.format(prt.type.elem, prt.x, prt.y, prt.z))
             self.frag_file.append(fullfile)
         # Generating the files list
         for (frags, count) in zip(self.frag_file, range(1, len(self.frag_file) + 1)):
@@ -804,10 +815,10 @@ class McSystem(object):
         Returns:
             :class:`~pysimm.system.System` : object containing all newly inserted molecules
         """
-        sstm = None
+        tmp_sst = None
         count = 0  # counter of the lines in the input file
         sys_idx = 0  # counter of the gas molecules to lookup
-        while count < len(text_output) - 1:
+        while count < len(text_output):
             tmp = self.sst[sys_idx].copy()
             dictn = text_output[count:(len(tmp.particles) + count)]
             if self.__fit_atoms__(tmp, dictn):
@@ -821,10 +832,10 @@ class McSystem(object):
                 if self.is_rigid[sys_idx]:
                     for p in tmp.particles:
                         p.is_rigid = True
-                if sstm:
-                    sstm.add(tmp)
+                if tmp_sst:
+                    tmp_sst.add(tmp)
                 else:
-                    sstm = tmp.copy()
+                    tmp_sst = tmp.copy()
                 self.made_ins[sys_idx] += 1
                 count += len(tmp.particles)
                 sys_idx = 0
@@ -835,9 +846,10 @@ class McSystem(object):
                                       'Please check either MC-simulation provided to PySIMM or the CASSANDRA '
                                       'checkpoint file ')
                     exit(1)
-        sstm.update_tags()
-        sstm.objectify()
-        return sstm
+        if tmp_sst:
+            tmp_sst.update_tags()
+            tmp_sst.objectify()
+        return tmp_sst
 
     def __fit_atoms__(self, molec, text_lines):
         """pysimm.cassandra.McSystem.__fit_atoms__
@@ -877,12 +889,11 @@ class Cassandra(object):
     def __init__(self, init_sst):
         self.logger = logging.getLogger('CSNDRA')
 
-        # Assume all particles in initial sysrem are fixed
+        # Assume all particles in initial system are fixed
         self.system = init_sst
         if init_sst.particles:
             for p in init_sst.particles:
                 p.is_fixed = True
-
         self.run_queue = []
 
     def run(self):
@@ -906,7 +917,10 @@ class Cassandra(object):
                 try:
                     self.logger.info('Starting the GCMC simulations with CASSANDRA')
                     print('{:.^60}'.format(''))
-                    call([CASSANDRA_EXEC, task.props_file])
+                    p = Popen([CASSANDRA_EXEC, task.props_file], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+                    stout, sterr = p.communicate()
+                    print(stout)
+                    print(sterr)
                     task.upd_simulation()
                     self.system = task.tot_sst.copy()
 
@@ -915,7 +929,8 @@ class Cassandra(object):
                     exit(1)
                 except IOError as ioe:
                     if check_cs_exec():
-                        self.logger.error('There was a problem running CASSANDRA. The process started but did not finish')
+                        self.logger.error('There was a problem running CASSANDRA. '
+                                          'The process started but did not finish')
                         exit(1)
         else:
             self.logger.error('There was a problem running CASSANDRA: seems it is not configured properly.\n'
@@ -1217,6 +1232,30 @@ class Cassandra(object):
 
         else:
             return cells[1]
+
+    def unwrap_gas(self):
+        """pysimm.cassandra.Cassandra.unwrap_gas
+
+        Ensures that all particles that are not fixed are unwrapped, otherwise CASSANDRA might not interpret
+        them correctly
+        """
+        gas_system = self.system.copy()
+        for p in gas_system.particles:
+            if p.is_fixed:
+                gas_system.particles.remove(p.tag, update=False)
+            else:
+                self.system.particles.remove(p.tag, update=False)
+
+        for m in gas_system.molecules:
+            if any([t.is_fixed for t in m.particles]):
+                gas_system.molecules.remove(m.tag, update=False)
+            else:
+                self.system.molecules.remove(m.tag, update=False)
+
+        gas_system.remove_spare_bonding()
+        self.system.remove_spare_bonding()
+        gas_system.unwrap()
+        self.system.add(gas_system, change_dim=False)
 
 
 class McfWriter(object):
