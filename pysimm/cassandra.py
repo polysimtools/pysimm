@@ -28,7 +28,7 @@
 # THE SOFTWARE.
 
 from StringIO import StringIO
-from subprocess import call
+from subprocess import call, Popen, PIPE
 import os
 import re
 import numpy as np
@@ -40,7 +40,7 @@ from pysimm import system
 from string import ascii_uppercase
 from pydoc import locate
 
-DATA_PATH = os.path.relpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dat/csndra_data'))
+DATA_PATH = os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dat/csndra_data'))
 
 KCALMOL_2_K = 503.22271716452
 
@@ -917,7 +917,10 @@ class Cassandra(object):
                 try:
                     self.logger.info('Starting the GCMC simulations with CASSANDRA')
                     print('{:.^60}'.format(''))
-                    call([CASSANDRA_EXEC, task.props_file])
+                    p = Popen([CASSANDRA_EXEC, task.props_file], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+                    stout, sterr = p.communicate()
+                    print(stout)
+                    print(sterr)
                     task.upd_simulation()
                     self.system = task.tot_sst.copy()
 
