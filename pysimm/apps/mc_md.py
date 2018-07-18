@@ -146,8 +146,11 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         sim.run(np=mdp.get('np', 1))
 
         # Updating the size of the fixed system from the MD simulations and saving the coordinates for the next MC
-        css.system.dim = sim.system.dim
-        sim.system.write_xyz(xyz_fname.format(l))
+        # css.system.dim = sim.system.dim
+        css.system = sim.system.copy()
+        css.unwrap_gas()
+        css.system.write_xyz(xyz_fname.format(l))
+
         mcp['Start_Type']['file_name'] = xyz_fname.format(l)
         mcp['Start_Type']['species'] = [1] + [0] * len(CHEM_POT)
         l += 1

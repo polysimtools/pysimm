@@ -322,9 +322,7 @@ class MCSimulation(object):
         Private method designed for update the fields of the simulation object to make them conformed with each other
         """
         # Sync the simulation box parameters
-        dx = self.tot_sst.dim.xhi - self.tot_sst.dim.xlo
-        dy = self.tot_sst.dim.yhi - self.tot_sst.dim.ylo
-        dz = self.tot_sst.dim.zhi - self.tot_sst.dim.zlo
+        dx, dy, dz = self.tot_sst.dim.size()
         if (dx == dy) and (dy == dz):
             box_type = 'cubic'
             box_dims = str(dx)
@@ -345,7 +343,7 @@ class MCSimulation(object):
             tmp = [tmp] * 3
         self.tot_sst.dim = system.Dimension(dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
 
-        # Sync of the volume change frecuency in equilibration regime
+        # Sync of the volume change frequency in equilibration regime
         if 'Prob_Volume' in self.props.keys():
             if self.props['Prob_Volume'] is None:
                 self.props['Run_Type'].value['steps'] = self.props['Run_Type'].value['steps'][0]
@@ -693,9 +691,10 @@ class McSystem(object):
         self.logger = logging.getLogger('MC_SYSTEM')
         self.sst = make_iterable(sst)
         for sst in self.sst:
-            sst.zero_charge()
             # Checking that the force-field of the input system is of the class-1 as it is direct CASSANDRA restriction
             if isinstance(sst, system.System):
+                sst.zero_charge()
+                sst.add_particle_bonding()
                 if sst.ff_class:
                     if not (sst.ff_class == '1'):
                         self.logger.error('Currently cassandra supports only with **Type-I** force fields. '
@@ -882,7 +881,6 @@ class Cassandra(object):
         if init_sst.particles:
             for p in init_sst.particles:
                 p.is_fixed = True
-
         self.run_queue = []
 
     def run(self):
@@ -1217,6 +1215,30 @@ class Cassandra(object):
 
         else:
             return cells[1]
+
+    def unwrap_gas(self):
+        """pysimm.cassandra.Cassandra.unwrap_gas
+
+        Ensures that all particles that are not fixed are unwrapped, otherwise CASSANDRA might not interpret
+        them correctly
+        """
+        gas_system = self.system.copy()
+        for p in gas_system.particles:
+            if p.is_fixed:
+                gas_system.particles.remove(p.tag, update=False)
+            else:
+                self.system.particles.remove(p.tag, update=False)
+
+        for m in gas_system.molecules:
+            if any([t.is_fixed for t in m.particles]):
+                gas_system.molecules.remove(m.tag, update=False)
+            else:
+                self.system.molecules.remove(m.tag, update=False)
+
+        gas_system.remove_spare_bonding()
+        self.system.remove_spare_bonding()
+        gas_system.unwrap()
+        self.system.add(gas_system, change_dim=False)
 
 
 class McfWriter(object):
