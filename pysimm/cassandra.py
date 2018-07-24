@@ -204,6 +204,9 @@ class MCSimulation(object):
             start_type = 'read_config'
         start_conf_dict = OrderedDict([('start_type', start_type), ('species', pops_list),
                                        ('file_name', self.fxd_sst_xyz)])
+        if kwargs.get('Start_Type') and kwargs.get('Start_Type')['start_type'] == 'checkpoint':
+            start_conf_dict.pop('species')
+
         self.props['Start_Type'] = InpSpec('Start_Type', kwargs.get('Start_Type'), start_conf_dict)
 
         # Synchronzing Fragment files:
