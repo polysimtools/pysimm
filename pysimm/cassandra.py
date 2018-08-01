@@ -315,9 +315,9 @@ class MCSimulation(object):
 
                 gas_lines = all_coord_lines[offset:]
                 if len(gas_lines) > 0:
-                    self.tot_sst = self.fxd_sst.copy()
+                    if self.fxd_sst:
+                        self.tot_sst = self.fxd_sst.copy()
                     self.tot_sst.add(self.mc_sst.make_system(gas_lines), change_dim=False)
-                    # self.tot_sst.add(self.mc_sst.make_system(gas_lines), change_dim=False)
                     self.logger.info('Simulation system successfully updated')
                 else:
                     self.logger.info('Final MC configuration has 0 new particles the initial system remains the same')
