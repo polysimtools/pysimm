@@ -350,9 +350,9 @@ class MCSimulation(object):
         else:
             self.props['Box_Info'] = upd_vals
 
-        tmp = self.props['Box_Info'].value['box_size']
+        tmp = self.props['Box_Info'].value['box_size'].split()
         if self.props['Box_Info'].value['box_type'] == 'cubic':
-            tmp = [tmp] * 3
+            tmp = tmp + tmp + tmp
         self.tot_sst.dim = system.Dimension(dx=float(tmp[0]), dy=float(tmp[1]), dz=float(tmp[2]))
 
         # Sync of the volume change frequency in equilibration regime

@@ -4,7 +4,7 @@ from pysimm import system, cassandra, lmps
 def run(test=False):
     # In order to run CASSANDRA GCMC one need to create the CASSANDRA object
     sst = system.System()
-    sst.dim = system.Dimension(dx=45, dy=45, dz=45, center=[0, 0, 0])
+    sst.dim = system.Dimension(dx=40, dy=40, dz=45, center=[0, 0, 0])
     sst.forcefield = 'trappe/amber'
     lmps.check_lmps_attr(sst)
 
