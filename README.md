@@ -80,3 +80,5 @@ python pysimm/complete_install.py --pysimm $PWD --lammps $PWD
 Afterwords be sure to source your ~/.bashrc file:
 
 ```source ~/.bashrc```
+
+This material is based upon work supported by the National Science Foundation under Grant No. (ACI-1613155).
