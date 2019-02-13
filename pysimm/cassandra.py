@@ -718,6 +718,13 @@ class McSystem(object):
                                      'Assuming it is **Type-1** force field')
 
                     sst.ff_class = '1'
+
+                if not all([pt.name for pt in sst.particle_types]):
+                    self.logger.error('The name of at least one particle type in MC system is not defined. '
+                                      'Will not be able to map particles back after the CASSANDRA simulations. '
+                                      '\nPlease, setup the names for all particle types for your MC system')
+                    exit(1)
+
             # Decorating the system with bonds_fixed flag and angle_fixed flag
             for bt in sst.bond_types:
                 bt.is_fixed = True
@@ -1275,6 +1282,7 @@ class McfWriter(object):
     def __init__(self, syst, file_ref):
         self.syst = syst
         self.file_ref = file_ref
+        self.logger = logging.getLogger('MCF Writer')
 
     def write(self, typing='all'):
         """pysimm.cassandra.McfWriter.write
@@ -1315,26 +1323,32 @@ class McfWriter(object):
             count = 0
             line_template = '{l[0]:<6}{l[1]:<7}{l[2]:<5}{l[3]:<8.3f}{l[4]:<10.6f}' \
                             '{l[5]:<6}{l[6]:<11.3f}{l[7]:<9.3f}\n'
+            warn_flag = False
             for item in self.syst.particles:
-                line = [count + 1, '', '', '', 0, 'LJ', 0, 0]
-                if hasattr(item, 'charge'):
+                line = [count + 1, '', '', 0, 0, 'LJ', 0, 0]
+                if item.charge:
                     line[4] = item.charge
-                else:
-                    line[4] = 0
-                if hasattr(item, 'type'):
-                    if hasattr(item.type, 'name'):
+                if item.type:
+                    line[1] = item.type.tag
+                    line[2] = item.type.tag
+                    if item.type.name:
                         line[1] = item.type.name
-                    if hasattr(item.type, 'elem'):
                         line[2] = item.type.elem
-                    if hasattr(item.type, 'mass'):
+                    else:
+                        warn_flag = True
+                    if item.type.mass:
                         line[3] = item.type.mass
-                    if hasattr(item.type, 'epsilon'):
+                    if item.type.epsilon:
                         line[6] = KCALMOL_2_K * item.type.epsilon
+                    if item.type.sigma:
                         line[7] = item.type.sigma
                 else:
                     continue
                 out.write(line_template.format(l=line))
                 count += 1
+            if warn_flag:
+                self.logger.warning('Some particle type names (and/or element names) inside the system are not defined.'
+                                    ' Will use type identifiers instead')
         else:
             self.__write_empty__(out, text_tag)
         out.write('\n')
