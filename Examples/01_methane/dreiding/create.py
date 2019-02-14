@@ -48,7 +48,7 @@ def run(test=False):
     # before we optimize our structure, LAMMPS needs to know what type of 
     # pair, bond, and angle interactions we are using
     # these are determined by the forcefield being used
-    s.pair_style='buck'
+    s.pair_style='lj/cut'
     s.bond_style='harmonic'
     s.angle_style='harmonic'
     

@@ -29,7 +29,7 @@ def monomer():
             
     s.remove_spare_bonding()
     
-    s.pair_style = 'buck'
+    s.pair_style = 'lj/cut'
     
     lmps.quick_min(s, min_style='fire')
     

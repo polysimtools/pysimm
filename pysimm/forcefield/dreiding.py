@@ -43,20 +43,20 @@ class Dreiding(Forcefield):
 
     Attributes:
         ff_name: dreiding
-        pair_style: buck
+        pair_style: lj
         ff_class: 1
     """
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
             db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   os.pardir, os.pardir, 'dat', 'forcefields', 'dreiding.xml')
+                                   os.pardir, os.pardir, 'dat', 'forcefields', 'dreiding.json')
         Forcefield.__init__(self, db_file)
         self.name = 'dreiding'
-        self.pair_style = 'buck'
+        self.pair_style = 'lj'
         self.bond_style = 'harmonic'
         self.angle_style = 'harmonic'
         self.dihedral_style = 'harmonic'
-        self.improper_style = 'harmonic'
+        self.improper_style = 'umbrella'
         self.ff_class = '1'
 
     def assign_ptypes(self, s):
