@@ -63,10 +63,10 @@ def cleanup_antechamber():
             print('problem removing {} during cleanup'.format(fname))
 
 
-def calc_charges(s, charge_method='bcc', cleanup=True):
+def calc_charges(s, charge_method='bcc', net_charge='0', cleanup=True):
     """pysimm.amber.calc_charges
 
-    Calculates charges using antechamber. Defaults to am1-bcc charges. 
+    Calculates charges using antechamber. Defaults to am1-bcc charges and neutral charge. 
 
     Args:
         s: System for which to calculate charges. System object is updated in place
@@ -77,7 +77,7 @@ def calc_charges(s, charge_method='bcc', cleanup=True):
         None
     """
     s.write_pdb('pysimm.tmp.pdb')
-    cl = '{} -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -c {}'.format(ANTECHAMBER_EXEC, charge_method)
+    cl = '{} -fi pdb -i pysimm.tmp.pdb -fo ac -o pysimm.tmp.ac -c {} -nc {}'.format(ANTECHAMBER_EXEC, charge_method, net_charge)
     p = Popen(cl.split(), stdin=PIPE, stdout=PIPE, stderr=PIPE)
     p.communicate()
     with file('pysimm.tmp.ac') as f:
