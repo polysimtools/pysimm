@@ -433,6 +433,10 @@ class MCSimulation(object):
                 continue
         out_stream.close()
 
+    def get_prp(self):
+        tmp_data = np.loadtxt(self.props['Run_Name'].value + '.prp', skiprows=3)
+        return np.transpose(tmp_data)
+
 
 class GCMC(MCSimulation):
     """pysimm.cassandra.GCMC
