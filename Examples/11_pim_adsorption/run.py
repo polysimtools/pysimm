@@ -143,8 +143,8 @@ elif graphing.lower() == 'toscreen':
     mplp.show()
 
 with open('iast_loadings.dat', 'w') as pntr:
-    pntr.write('{:}\t\t{:}'.format(pk, lk))
-    pntr.write('{:}-{:} 1-to-1'.format(gas_names[0], gas_names[1]))
-    for p in gas_press:
-        pntr.write({}       )
+    pntr.write('{:}\t\t{:}\n'.format(pk, lk))
+    pntr.write('{:}-{:} 1-to-1\n'.format(gas_names[0], gas_names[1]))
+    for p, ml in zip(gas_press, mix_loadings):
+        pntr.write('{:}\t\t{:}\n'.format(p, ml))
 
