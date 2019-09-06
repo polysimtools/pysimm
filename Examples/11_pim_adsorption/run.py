@@ -2,13 +2,29 @@ from pysimm import cassandra
 from pysimm import system
 from os import path as osp
 import numpy
-import pyiast
-import pandas as pd
+import re
+from matplotlib import pyplot as mplp
+
+try:
+    import pyiast
+    import pandas as pd
+except ImportError:
+    print('Either PyIAST or Pandas (that is PyIAST dependence) packages are not installed or cannot be found by this '
+          'Python setup. \nThis example will not work properly. \nExiting...')
+    exit(1)
+
+# Set to False if you **do not** want to recalculate pure gas adsorption isotherms
+is_simulate_loadings = False
+loadings_file = 'loadings.dat'
+
+# Option to draw the isotherms: it is either 'ToFile' or 'ToScreen' (case insensetive).
+# Any other value will be interpreted as no graphics
+graphing = 'ToFile'
 
 # Gas names as they will be referred through simulations
 gas_names = ['ch4', 'co2']
 
-# Corresponding mole fractions of gases that will allow us to calculate their partial pressures through Dalton's law
+# Corresponding mole fractions of gases that will allow us to calculate their partial pressures through the Dalton's law
 mol_frac = [0.5, 0.5]
 
 # Calibrated previously functional forms of chemical potentials of gases for GCMC simulations as a functions of pressure
@@ -28,11 +44,15 @@ for gn in gas_names:
 frame = system.read_lammps('pim.lmps')
 frame.forcefield = 'trappe/amber'
 
+# Constant for loadings calculations
+molec2mmols_g = 1e+3 / frame.mass
+
 # Setup of the GCMC simulations
 css = cassandra.Cassandra(frame)
 sim_settings = css.read_input('run_props.inp')
 
-# This function in given context will
+
+# This function in given context will calculate the loading from short GCMC simulations
 def calculate_isotherm_point(gas_name, press):
     run_fldr = osp.join(gas_name, str(press))
     idx = gas_names.index(gas_name)
@@ -41,7 +61,18 @@ def calculate_isotherm_point(gas_name, press):
                  out_folder=run_fldr, props_file='gcmc.inp', **sim_settings)
     css.run()
     full_prp = css.run_queue[0].get_prp()
-    return numpy.average(full_prp[3][int(len(2 * full_prp[3]) / 3):])
+    return molec2mmols_g * numpy.average(full_prp[3][int(len(2 * full_prp[3]) / 3):])
+
+
+# This function in given context will load the pre-calculated loading value from previously done GCMC simulations
+def load_isotherm_point(gas_name, press):
+    with open(loadings_file, 'r') as pntr:
+        stream = pntr.read()
+        tmp = stream.split('\n' + gas_name)[1]
+        idx = re.search('[a-zA-Z]|\Z', tmp)
+        value = re.findall('\n{:}\s+\d+\.\d+'.format(press), tmp[:idx.start()])[0]
+        return float(re.split('\s+', value)[-1])
+
 
 # Calculation of adsorption isotherms for pure CH4 and CO2 gases for further usage in IAST simulations.
 # This is the **MOST TIME CONSUMING STEP** in this example, if you want to skip it switch the key is_simulated to False
@@ -50,41 +81,62 @@ gas_press = [0.1, 1, 5, 10, 25, 50]
 lk = 'Loading(mmol/g)'
 pk = 'Pressure(bar)'
 isotherms = []
+loadings = dict.fromkeys(gas_names)
 for gn in gas_names:
-    loadings = []
+    loadings[gn] = []
     for p in gas_press:
-        data = calculate_isotherm_point(gn, p)
-        loadings.append(data)
-    isotherms.append(pyiast.ModelIsotherm(pd.DataFrame(zip(gas_press, loadings),
+        if is_simulate_loadings:
+            data = calculate_isotherm_point(gn, p)
+        else:
+            data = load_isotherm_point(gn, p)
+        loadings[gn].append(data)
+    isotherms.append(pyiast.ModelIsotherm(pd.DataFrame(zip(gas_press, loadings[gn]),
                                           columns=[pk, lk]),  loading_key=lk, pressure_key=pk,
                                           model='BET', optimization_method='L-BFGS-B'))
 
-# The PyIAST run for calculating of
+# The PyIAST run for calculating of mixed adsorption isotherm
 # Initial guesses of adsorbed mole fractions do span broad range of values, because PyIAST might not find
 #  solution at certain values of mole fractions and through an exception
 guesses = [[a, 1 - a] for a in numpy.linspace(0.01, 0.99, 50)]
 for in_g in guesses:
-    mix_isotherm = []
+    mix_loadings = []
     try:
         for p in gas_press:
-            mix_isotherm.append(list(pyiast.iast(numpy.array([p] * 2), isotherms,
+            mix_loadings.append(list(pyiast.iast(p * numpy.array(mol_frac), isotherms,
                                                  verboseflag=False, adsorbed_mole_fraction_guess=in_g)))
-        mix_isotherm = numpy.array(mix_isotherm)
+        mix_loadings = numpy.array(mix_loadings)
         break
     except:
         print('Initial guess {:} had failed to converge'.format(in_g))
         continue
 
-print(mix_isotherm)
+mix_loadings = numpy.sum(mix_loadings, axis=1)
+mix_isotherm = pyiast.ModelIsotherm(pd.DataFrame(zip(gas_press, mix_loadings),
+                                                 columns=[pk, lk]),  loading_key=lk, pressure_key=pk,
+                                    model='BET', optimization_method='L-BFGS-B')
+
+fig, ax = mplp.subplots(1, 1, figsize=(10, 5))
+if graphing.lower() == 'tofile':
+    rng = numpy.linspace(min(gas_press), max(gas_press), 100)
+    ax.plot(gas_press, loadings[gas_names[0]], 'og', lw=2.5, label='{:} loadings'.format(gas_names[0]))
+    ax.plot(rng, [isotherms[0].loading(t) for t in rng], '--g', lw=2, label='BET fit of {:} loadings'.format(gas_names[0]))
+    ax.plot(gas_press, loadings[gas_names[1]], 'or', lw=2.5, label='{:} loadings'.format(gas_names[1]))
+    ax.plot(rng,  [isotherms[1].loading(t) for t in rng], '--r', lw=2, label='BET fit of {:} loadings'.format(gas_names[1]))
+    ax.plot(gas_press, mix_loadings, 'ob', lw=2.5, label='1-to-1 mixture loadings')
+    ax.plot(rng, [mix_isotherm.loading(t) for t in rng], '--b', lw=2,  label='BET fit of 1-to-1 mixture loadings')
+
+    ax.set_xlabel('Gas pressure [bar]', fontsize=20)
+    ax.set_ylabel('Loading [mmol / g]', fontsize=20)
+    ax.tick_params(axis='both', labelsize=16)
+    ax.grid(True)
+    ax.legend(fontsize=16)
+    mplp.tight_layout()
+    mplp.savefig('pim1_mix_adsorption.png', dpi=192)
+elif graphing.lower() == 'toscreen':
+    pass
+    # pyiast.plot_isotherm(isotherms[-1])
+    # print(mix_isotherm)
 
 
-'''
-prefix = gas_names[0] + '.prod'
-prod_sim_settings = css.read_input('prod_props.inp')
-prod_sim_settings.update({'Run_Name': prefix + '.gcmc',
-                          'Start_Type': {'start_type': 'checkpoint', 'file_name': equil_prefix + '.gcmc.chk'}})
-css.add_gcmc(species=gases[0], is_new=True, chem_pot=chem_pots[0],
-             props_file=prefix + '.gcmc.inp', **prod_sim_settings)
-css.run()
-'''
+
 

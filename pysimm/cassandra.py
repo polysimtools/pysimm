@@ -434,7 +434,11 @@ class MCSimulation(object):
         out_stream.close()
 
     def get_prp(self):
-        tmp_data = np.loadtxt(self.props['Run_Name'].value + '.prp', skiprows=3)
+        tmp_data = []
+        try:
+            tmp_data = np.loadtxt(self.props['Run_Name'].value + '.prp', skiprows=3)
+        except OSError:
+            self.logger.error('Cannot find .prp simulations result file. Probably simulations failed.')
         return np.transpose(tmp_data)
 
 
