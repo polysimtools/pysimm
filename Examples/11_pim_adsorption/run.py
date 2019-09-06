@@ -115,28 +115,36 @@ mix_isotherm = pyiast.ModelIsotherm(pd.DataFrame(zip(gas_press, mix_loadings),
                                                  columns=[pk, lk]),  loading_key=lk, pressure_key=pk,
                                     model='BET', optimization_method='L-BFGS-B')
 
-fig, ax = mplp.subplots(1, 1, figsize=(10, 5))
-if graphing.lower() == 'tofile':
-    rng = numpy.linspace(min(gas_press), max(gas_press), 100)
-    ax.plot(gas_press, loadings[gas_names[0]], 'og', lw=2.5, label='{:} loadings'.format(gas_names[0]))
-    ax.plot(rng, [isotherms[0].loading(t) for t in rng], '--g', lw=2, label='BET fit of {:} loadings'.format(gas_names[0]))
-    ax.plot(gas_press, loadings[gas_names[1]], 'or', lw=2.5, label='{:} loadings'.format(gas_names[1]))
-    ax.plot(rng,  [isotherms[1].loading(t) for t in rng], '--r', lw=2, label='BET fit of {:} loadings'.format(gas_names[1]))
-    ax.plot(gas_press, mix_loadings, 'ob', lw=2.5, label='1-to-1 mixture loadings')
-    ax.plot(rng, [mix_isotherm.loading(t) for t in rng], '--b', lw=2,  label='BET fit of 1-to-1 mixture loadings')
 
+# Output: Graphing of constructed isotherms
+def _plot_isotherms(ax, loc_gp, loc_isoth, loc_mix_load, loc_mix_isoth):
+    rng = numpy.linspace(min(loc_gp), max(loc_gp), 100)
+    ax.plot(loc_gp, loadings[gas_names[0]], 'og', lw=2.5, label='{:} loadings'.format(gas_names[0]))
+    ax.plot(rng, [loc_isoth[0].loading(t) for t in rng], '--g', lw=2, label='BET fit of {:} loadings'.format(gas_names[0]))
+    ax.plot(loc_gp, loadings[gas_names[1]], 'or', lw=2.5, label='{:} loadings'.format(gas_names[1]))
+    ax.plot(rng,  [loc_isoth[1].loading(t) for t in rng], '--r', lw=2, label='BET fit of {:} loadings'.format(gas_names[1]))
+    ax.plot(loc_gp, loc_mix_load, 'ob', lw=2.5, label='1-to-1 mixture loadings')
+    ax.plot(rng, [loc_mix_isoth.loading(t) for t in rng], '--b', lw=2,  label='BET fit of 1-to-1 mixture loadings')
     ax.set_xlabel('Gas pressure [bar]', fontsize=20)
     ax.set_ylabel('Loading [mmol / g]', fontsize=20)
     ax.tick_params(axis='both', labelsize=16)
     ax.grid(True)
     ax.legend(fontsize=16)
     mplp.tight_layout()
+
+if graphing.lower() == 'tofile':
+    fig, axs = mplp.subplots(1, 1, figsize=(10, 5))
+    _plot_isotherms(axs, gas_press, isotherms, mix_loadings, mix_isotherm)
     mplp.savefig('pim1_mix_adsorption.png', dpi=192)
 elif graphing.lower() == 'toscreen':
-    pass
-    # pyiast.plot_isotherm(isotherms[-1])
-    # print(mix_isotherm)
+    mplp.figure()
+    axs = mplp.gca()
+    _plot_isotherms(axs, gas_press, isotherms, mix_loadings, mix_isotherm)
+    mplp.show()
 
-
-
+with open('iast_loadings.dat', 'w') as pntr:
+    pntr.write('{:}\t\t{:}'.format(pk, lk))
+    pntr.write('{:}-{:} 1-to-1'.format(gas_names[0], gas_names[1]))
+    for p in gas_press:
+        pntr.write({}       )
 
