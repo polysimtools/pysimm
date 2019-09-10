@@ -7,7 +7,7 @@ from matplotlib import pyplot as mplp
 
 try:
     import pyiast
-    import pandas as pd
+    import pandas
 except ImportError:
     print('Either PyIAST or Pandas (that is PyIAST dependence) packages are not installed or cannot be found by this '
           'Python setup. \nThis example will not work properly. \nExiting...')
@@ -90,7 +90,7 @@ for gn in gas_names:
         else:
             data = load_isotherm_point(gn, p)
         loadings[gn].append(data)
-    isotherms.append(pyiast.ModelIsotherm(pd.DataFrame(zip(gas_press, loadings[gn]),
+    isotherms.append(pyiast.ModelIsotherm(pandas.DataFrame(zip(gas_press, loadings[gn]),
                                           columns=[pk, lk]),  loading_key=lk, pressure_key=pk,
                                           model='BET', optimization_method='L-BFGS-B'))
 
@@ -111,7 +111,7 @@ for in_g in guesses:
         continue
 
 mix_loadings = numpy.sum(mix_loadings, axis=1)
-mix_isotherm = pyiast.ModelIsotherm(pd.DataFrame(zip(gas_press, mix_loadings),
+mix_isotherm = pyiast.ModelIsotherm(pandas.DataFrame(zip(gas_press, mix_loadings),
                                                  columns=[pk, lk]),  loading_key=lk, pressure_key=pk,
                                     model='BET', optimization_method='L-BFGS-B')
 
@@ -119,10 +119,10 @@ mix_isotherm = pyiast.ModelIsotherm(pd.DataFrame(zip(gas_press, mix_loadings),
 # Output: Graphing of constructed isotherms
 def _plot_isotherms(ax, loc_gp, loc_isoth, loc_mix_load, loc_mix_isoth):
     rng = numpy.linspace(min(loc_gp), max(loc_gp), 100)
-    ax.plot(loc_gp, loadings[gas_names[0]], 'og', lw=2.5, label='{:} loadings'.format(gas_names[0]))
-    ax.plot(rng, [loc_isoth[0].loading(t) for t in rng], '--g', lw=2, label='BET fit of {:} loadings'.format(gas_names[0]))
-    ax.plot(loc_gp, loadings[gas_names[1]], 'or', lw=2.5, label='{:} loadings'.format(gas_names[1]))
-    ax.plot(rng,  [loc_isoth[1].loading(t) for t in rng], '--r', lw=2, label='BET fit of {:} loadings'.format(gas_names[1]))
+    ax.plot(loc_gp, loadings[gas_names[0]], 'og', lw=2.5, label='{:} loadings'.format(gas_names[0].capitalize()))
+    ax.plot(rng, [loc_isoth[0].loading(t) for t in rng], '--g', lw=2, label='BET fit of {:} loadings'.format(gas_names[0].capitalize()))
+    ax.plot(loc_gp, loadings[gas_names[1]], 'or', lw=2.5, label='{:} loadings'.format(gas_names[1].capitalize()))
+    ax.plot(rng,  [loc_isoth[1].loading(t) for t in rng], '--r', lw=2, label='BET fit of {:} loadings'.format(gas_names[1].capitalize()))
     ax.plot(loc_gp, loc_mix_load, 'ob', lw=2.5, label='1-to-1 mixture loadings')
     ax.plot(rng, [loc_mix_isoth.loading(t) for t in rng], '--b', lw=2,  label='BET fit of 1-to-1 mixture loadings')
     ax.set_xlabel('Gas pressure [bar]', fontsize=20)
