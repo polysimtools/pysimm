@@ -279,7 +279,7 @@ def void(s, **kwargs):
         f.write('%s\n' % pore_probe)
         f.write('%s\n' % randint(10000, 99999))
 
-    with open(v, 'w+') as f:
+    with open(atoms, 'w+') as f:
         f.write('%s\n\n' % s.particle_types.count)
         for pt in s.particle_types:
             f.write('%s\t%f\t%f\t%f\n' % (pt.tag, pt.sigma,
