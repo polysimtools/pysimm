@@ -1,4 +1,4 @@
-Example 11: Simulation of binary mixture adsorption isotherm of CO<sub>2</sub>-CH<sub>4</sub> ideal gas mixture with CASSNADRA and PyIAST
+Example 11: Simulation of binary mixture adsorption isotherm of CO<sub>2</sub>-CH<sub>4</sub> ideal gas mixture with CASSANDRA and PyIAST
 =========================================================================================================================================  
 by Alexander Demidov
     
@@ -70,7 +70,7 @@ that describes simulated loadings using Bernauer-Emmet-Taller (BET) adsorption m
 
 ```python
 isotherms.append(pyiast.ModelIsotherm(pd.DataFrame(zip(gas_press, loadings[gn]), columns=[pk, lk]), 
-                                      loading_key=lk, pressure_key=pk, model='BET', optimization_method='L-BFGS-B'))
+                                      loading_key=lk, pressure_key=pk, model='BET', optimization_method='Powell'))
 ```
  
 ### Binary mixture adsorption isotherm calculation
