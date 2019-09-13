@@ -3,6 +3,7 @@ Example 11: Simulation of binary mixture adsorption isotherm of CO<sub>2</sub>-C
 by Alexander Demidov
     
 ### Requirements
+ * Note: in case you work with multiple Python versions, all additional Python packages (particularly PyIAST, and Pandas) should be installed for Python 2.7+.   
  * [PyIAST](https://github.com/CorySimon/pyIAST) -- Python package for simulation of Ideal Adsorption Solution Theory. <br>
      Can be easily installed with pip. For other installation options please refer to [PyIAST documentation](https://pyiast.readthedocs.io/en/latest/).  
  * [Pandas](https://pandas.pydata.org/) -- requirement of PyIAST used for advanced work with tabulated data (the package also can be easily installed with pip).
