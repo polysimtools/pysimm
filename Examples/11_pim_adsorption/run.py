@@ -17,9 +17,9 @@ except ImportError:
 is_simulate_loadings = False
 loadings_file = 'loadings.dat'
 
-# Option to draw the isotherms: it is either 'ToFile' or 'ToScreen' (case insensetive).
+# Option to draw the isotherms: it is either **'ToFile'** or **'ToScreen'** (case insensitive).
 # Any other value will be interpreted as no graphics
-graphing = 'ToFile'
+graphing = 'none'
 
 # Gas names as they will be referred through simulations
 gas_names = ['ch4', 'co2']
@@ -92,7 +92,7 @@ for gn in gas_names:
         loadings[gn].append(data)
     isotherms.append(pyiast.ModelIsotherm(pandas.DataFrame(zip(gas_press, loadings[gn]),
                                           columns=[pk, lk]),  loading_key=lk, pressure_key=pk,
-                                          model='BET', optimization_method='L-BFGS-B'))
+                                          model='BET', optimization_method='Powell'))
 
 # The PyIAST run for calculating of mixed adsorption isotherm
 # Initial guesses of adsorbed mole fractions do span broad range of values, because PyIAST might not find
