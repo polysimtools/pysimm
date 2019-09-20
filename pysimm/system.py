@@ -3302,6 +3302,91 @@ class System(object):
         with file(file_, 'w') as f:
             f.write(json.dumps(s, indent=4, separators=(',', ': ')))
 
+    def write_cssr(self, outfile='data.cssr', **kwargs):
+        """pysimm.system.System.write_cssr
+
+        Write :class:`~pysimm.system.System` data in cssr format
+        file format: line, format, contents
+        1: 38X, 3F8.3 :	- length of the three cell parameters (a, b, and c) in angstroms.  
+        2: 21X, 3F8.3, 4X, 'SPGR =', I3, 1X, A11 : - a, b, g in degrees, space group number, space group name.  
+        3: 2I4, 1X, A60 : - Number of atoms stored, coordinate system flag (0=fractional, 1=orthogonal coordinates in Angstrom), first title.  
+        4: A53 : - A line of text that can be used to describe the file.  
+        5-: I4, 1X, A4, 2X, 3(F9.5.1X), 8I4, 1X, F7.3 : - Atom serial number, atom name, x, y, z coordinates, bonding connectivities (max 8), charge.
+        Note: The atom name is a concatenation of the element symbol and the atom serial number.  
+
+        Args:
+            outfile: where to write data, file name or 'string'
+            frac: 0 for using fractional coordinates
+            aname: 0 for using element as atom name; else using atom type name
+
+        Returns:
+            None or string of data file if out_data='string'
+        """
+        if outfile == 'string':
+            out = StringIO()
+        else:
+            out = open(outfile, 'w+')
+
+        frac = kwargs.get('frac', 1)
+        aname = kwargs.get('aname', 0)
+
+        out.write('%s%8.3f%8.3f%8.3f\n' % (38*' ', self.dim.dx, self.dim.dy, self.dim.dz))
+        out.write('%s%8.3f%8.3f%8.3f     SPGR= %3d %s\n' % (21*' ', 90.0, 90.0, 90.0, 1, 'P 1'))
+        out.write('%4d%4d %s\n' % (self.particles.count, frac, 'CSSR written using pySIMM system module'))
+        out.write('%s\n' % self.name)
+
+        for p in self.particles:
+            if not p.charge:
+                p.charge = 0.0
+
+            if p.type:
+                if aname == 0:
+                    if p.type.elem:
+                        name = p.type.elem
+                    elif p.elem:
+                        name = p.elem
+                    else:
+                        name = p.type.tag
+                else:
+                    if p.type.name:
+                        name = p.type.name
+                    else:
+                        name = p.type.tag
+            else:
+                name = p.tag
+
+            if frac == 0:
+                x = p.x/self.dim.dx
+                y = p.y/self.dim.dy
+                z = p.z/self.dim.dz
+            else:
+                x = p.x
+                y = p.y
+                z = p.z
+
+            bonds = ''
+            n_bonds = 0
+            for b in p.bonds:
+                if p is b.a:
+                    bonds += ' {:4d}'.format(b.b.tag)
+                else:
+                    bonds += ' {:4d}'.format(b.a.tag)
+                n_bonds += 1
+ 
+            for i in range(n_bonds+1, 9):
+                bonds = bonds + ' {:4d}'.format(0)
+ 
+            out.write('%4d %4s  %9.5f %9.5f %9.5f %s %7.3f\n' 
+                     % (p.tag, name, x, y, z, bonds, p.charge))
+
+        out.write('\n')
+        if outfile == 'string':
+            s = out.getvalue()
+            out.close()
+            return s
+        else:
+            out.close()
+
     def consolidate_types(self):
         """pysimm.system.System.consolidate_types
 
