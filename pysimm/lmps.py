@@ -30,14 +30,14 @@
 import shlex
 import shutil
 from subprocess import call, Popen, PIPE
-from Queue import Queue, Empty
+from queue import Queue, Empty
 from threading import Thread
 import os
 import sys
 import json
 from random import randint
 from time import strftime
-from StringIO import StringIO
+from io import StringIO
 
 try:
     import pandas as pd
@@ -138,7 +138,7 @@ FF_SETTINGS = {
 
 def check_lmps_exec():
     if LAMMPS_EXEC is None:
-        print 'you must set environment variable LAMMPS_EXEC'
+        print('you must set environment variable LAMMPS_EXEC')
         return False
     else:
         try:
@@ -146,10 +146,10 @@ def check_lmps_exec():
                                    stdin=PIPE, stdout=PIPE,
                                    stderr=PIPE).communicate()
             if verbose:
-                print 'using %s LAMMPS machine' % LAMMPS_EXEC
+                print('using %s LAMMPS machine' % LAMMPS_EXEC)
             return True
         except OSError:
-            print 'LAMMPS is not configured properly for one reason or another'
+            print('LAMMPS is not configured properly for one reason or another')
             return False
 
 
@@ -265,8 +265,8 @@ class Init(object):
                 lammps_input += '/coul/long'
                 self.pair_style += '/coul/long'
         else:
-            raise PysimmError('A pair_style must be defined during initialization'), None, sys.exc_info()[2]
-            
+            raise PysimmError('A pair_style must be defined during initialization')
+
         if self.cutoff:
             if self.forcefield == ['charmm'] and self.cutoff.get('inner_lj'):
                 lammps_input += ' {} '.format(self.cutoff['inner_lj'])
@@ -954,13 +954,13 @@ class Simulation(object):
                 f.write(self.input)
         try:
             call_lammps(self, np, nanohub, prefix=prefix)
-        except OSError as ose:
-            raise PysimmError('There was a problem calling LAMMPS with {}'.format(prefix)), None, sys.exc_info()[2]
-        except IOError as ioe:
+        except OSError:
+            raise PysimmError('There was a problem calling LAMMPS with {}'.format(prefix))
+        except IOError:
             if check_lmps_exec():
-                raise PysimmError('There was a problem running LAMMPS. The process started but did not finish successfully. Check the log file, or rerun the simulation with debug=True to debug issue from LAMMPS output'), None, sys.exc_info()[2]
+                raise PysimmError('There was a problem running LAMMPS. The process started but did not finish successfully. Check the log file, or rerun the simulation with debug=True to debug issue from LAMMPS output')
             else:
-                raise PysimmError('There was a problem running LAMMPS. LAMMPS is not configured properly. Make sure the LAMMPS_EXEC environment variable is set to the correct LAMMPS executable path. The current path is set to:\n\n{}'.format(LAMMPS_EXEC)), None, sys.exc_info()[2]
+                raise PysimmError('There was a problem running LAMMPS. LAMMPS is not configured properly. Make sure the LAMMPS_EXEC environment variable is set to the correct LAMMPS executable path. The current path is set to:\n\n{}'.format(LAMMPS_EXEC))
 
 
 def enqueue_output(out, queue):
@@ -1048,7 +1048,7 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
     try:
         os.remove('temp.lmps')
     except OSError as e:
-        print e
+        print(str(e))
         
     if os.path.isfile('pysimm.qeq.tmp'):
         os.remove('pysimm.qeq.tmp')

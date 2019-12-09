@@ -29,11 +29,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from pysimm import error_print
-from pysimm import warning_print
-from pysimm import verbose_print
-from pysimm import debug_print
-from pysimm.utils import Item, ItemContainer
+from .. import error_print
+from .. import warning_print
+from .. import verbose_print
+from .. import debug_print
+from ..utils import Item, ItemContainer
 
 element_names_by_mass = {1: 'H', 4: 'He', 7: 'Li', 9: 'Be', 11: 'B', 12: 'C',
                          14: 'N', 16: 'O', 19: 'F', 20: 'Ne', 23: 'Na',

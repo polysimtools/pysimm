@@ -30,10 +30,10 @@
 import os
 from itertools import permutations, combinations
 
-import gasteiger
-from pysimm.utils import compare
-from pysimm.system import Angle, Dihedral, Improper
-from forcefield import Forcefield
+from . import gasteiger
+from ..utils import compare
+from ..system import Angle, Dihedral, Improper
+from .forcefield import Forcefield
 
 
 class Pcff(Forcefield):
@@ -95,7 +95,7 @@ class Pcff(Forcefield):
                 elif 'S' in p.bond_elements:
                     p.type_name = 'hs'
                 else:
-                    print 'dont think I can type this one'
+                    print('dont think I can type this one')
                     return p
             elif p.elem == 'C':
                 if p.nbonds == 4:
@@ -129,7 +129,7 @@ class Pcff(Forcefield):
                 elif 2 in p.bond_orders:
                     p.type_name = 'c=2'
                 else:
-                    print 'dont think I can type this one'
+                    print('dont think I can type this one')
                     return p
             elif p.elem == 'N':
                 if 3 in p.bond_orders:
@@ -141,7 +141,7 @@ class Pcff(Forcefield):
                 elif p.nbonds == 3:
                     p.type_name = 'n'
                 else:
-                    print 'dont think I can type this one'
+                    print('dont think I can type this one')
                     return p
             elif p.elem == 'O':
                 ester = False
@@ -166,7 +166,7 @@ class Pcff(Forcefield):
                     else:
                         p.type_name = 'o='
                 else:
-                    print 'dont think I can type this one'
+                    print('dont think I can type this one')
                     return p
             elif p.elem == 'Cl':
                 p.type_name = 'cl'
@@ -185,7 +185,7 @@ class Pcff(Forcefield):
                 elif p.nbonds == 4:
                     p.type_name = "s'"
             else:
-                print 'dont think I can type this one'
+                print('dont think I can type this one')
                 return p
             all_types.add(self.particle_types.get(p.type_name)[0])
 
@@ -218,7 +218,7 @@ class Pcff(Forcefield):
             if bt:
                 b.type_name = bt[0].name
             else:
-                print ('couldnt type this bond %s,%s'
+                print('couldnt type this bond %s,%s'
                        % (b.a.type.name, b.b.type.name))
                 return b
             all_types.add(self.bond_types.get(b.type_name)[0])
@@ -366,7 +366,7 @@ class Pcff(Forcefield):
                                          b.b.type.name,
                                          p2.type.name))
                         else:
-                            print ('I cant type this dihedral %s,%s,%s,%s'
+                            print('I cant type this dihedral %s,%s,%s,%s'
                                    % (p1_name, a_name, b_name, p2_name))
 
         for dt in all_types:

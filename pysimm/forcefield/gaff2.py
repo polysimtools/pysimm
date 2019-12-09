@@ -30,9 +30,9 @@
 import os
 from itertools import permutations, combinations
 
-import gasteiger
-from pysimm.system import Angle, Dihedral, Improper
-from forcefield import Forcefield
+from . import gasteiger
+from ..system import Angle, Dihedral, Improper
+from .forcefield import Forcefield
 
 
 class Gaff2(Forcefield):
@@ -220,7 +220,7 @@ class Gaff2(Forcefield):
                     elif p.nbonds == 2:
                         p.type_name = 'ss'
             else:
-                print 'cant type particle %s' % p.tag
+                print('cant type particle %s' % p.tag)
                 return p
 
             type_ = self.particle_types.get(p.type_name)
@@ -258,7 +258,7 @@ class Gaff2(Forcefield):
             if bt:
                 b.type_name = bt[0].name
             else:
-                print ('couldnt type this bond %s,%s'
+                print('couldnt type this bond %s,%s'
                        % (b.a.type.name, b.b.type.name))
                 return b
             all_types.add(self.bond_types.get(b.type_name)[0])
@@ -307,7 +307,7 @@ class Gaff2(Forcefield):
                                                    a=p1, b=p, c=p2))
                                 all_types.add(at[0])
                             else:
-                                print ('I cant type this angle %s,%s,%s'
+                                print('I cant type this angle %s,%s,%s'
                                        % (p1.type.name,
                                           p.type.name,
                                           p2.type.name))
@@ -375,7 +375,7 @@ class Gaff2(Forcefield):
                                                          a=p1, b=b.a,
                                                          c=b.b, d=p2))
                         else:
-                            print ('I cant type this dihedral %s,%s,%s,%s'
+                            print('I cant type this dihedral %s,%s,%s,%s'
                                    % (p1_name, a_name, b_name, p2_name))
 
         for dt in all_types:
