@@ -35,11 +35,11 @@ import sys
 import json
 from xml.etree import ElementTree as Et
 from random import random
-from StringIO import StringIO
-from urllib2 import urlopen, HTTPError, URLError
+from io import StringIO
+from urllib.request import urlopen
+from urllib.error import HTTPError, URLError
 from itertools import permutations
 from math import sin, cos, sqrt, pi, acos, floor, ceil
-
 
 try:
     from subprocess import call
@@ -4543,7 +4543,7 @@ def read_pubchem_smiles(smiles, quiet=False, type_with=None):
     try:
         resp = urlopen(req)
         return read_mol(resp.read(), type_with=type_with)
-    except HTTPError, URLError:
+    except (HTTPError, URLError):
         print('Could not retrieve pubchem entry for smiles %s' % smiles)
         
         
@@ -4568,7 +4568,7 @@ def read_pubchem_cid(cid, type_with=None):
     try:
         resp = urlopen(req)
         return read_mol(resp.read(), type_with=type_with)
-    except HTTPError, URLError:
+    except (HTTPError, URLError):
         print('Could not retrieve pubchem entry for cid %s' % cid)
 
 

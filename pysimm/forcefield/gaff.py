@@ -30,9 +30,9 @@
 import os
 from itertools import permutations, combinations
 
-import gasteiger
-from pysimm.system import Angle, Dihedral, Improper
-from forcefield import Forcefield
+from . import gasteiger
+from ..system import Angle, Dihedral, Improper
+from .forcefield import Forcefield
 
 
 class Gaff(Forcefield):
@@ -216,7 +216,7 @@ class Gaff(Forcefield):
                     elif p.nbonds == 2:
                         p.type_name = 'ss'
             else:
-                print 'cant type particle %s' % p.tag
+                print('cant type particle %s' % p.tag)
                 return p
 
             type_ = self.particle_types.get(p.type_name)
