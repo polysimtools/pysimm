@@ -1623,7 +1623,7 @@ class System(object):
             None
         """
         self.particle_types.remove('all')
-        with file(acname) as f:
+        with open(acname) as f:
             for line in f:
                 if line.startswith('ATOM'):
                     tag = int(line.split()[1])
@@ -1946,30 +1946,30 @@ class System(object):
         itypes = dict()
 
         if os.path.isfile(types_file):
-            f = file(types_file)
-        elif isinstance(types_file, basestring):
+            f = open(types_file)
+        elif isinstance(types_file, str):
             f = StringIO(types_file)
         for line in f:
             line = line.split()
             if line and line[0].lower() == 'atom':
                 for i in range(self.particle_types.count):
-                    line = f.next().split()
+                    line = next(f).split()
                     ptypes[int(line[0])] = line[1]
             elif line and line[0].lower() == 'bond':
                 for i in range(self.bond_types.count):
-                    line = f.next().split()
+                    line = next(f).split()
                     btypes[int(line[0])] = line[1]
             elif line and line[0].lower() == 'angle':
                 for i in range(self.angle_types.count):
-                    line = f.next().split()
+                    line = next(f).split()
                     atypes[int(line[0])] = line[1]
             elif line and line[0].lower() == 'dihedral':
                 for i in range(self.dihedral_types.count):
-                    line = f.next().split()
+                    line = next(f).split()
                     dtypes[int(line[0])] = line[1]
             elif line and line[0].lower() == 'improper':
                 for i in range(self.improper_types.count):
-                    line = f.next().split()
+                    line = next(f).split()
                     itypes[int(line[0])] = line[1]
 
         for t in self.particle_types:
@@ -3299,7 +3299,7 @@ class System(object):
             f.close()
             return yaml_
 
-        with file(file_, 'w') as f:
+        with open(file_, 'w') as f:
             f.write(json.dumps(s, indent=4, separators=(',', ': ')))
 
     def write_cssr(self, outfile='data.cssr', **kwargs):
@@ -3788,7 +3788,7 @@ def read_yaml(file_, **kwargs):
     """
 
     if os.path.isfile(file_):
-        dict_ = json.loads(file(file_).read())
+        dict_ = json.loads(open(file_).read())
     else:
         dict_ = json.loads(file_)
 
@@ -3960,17 +3960,17 @@ def read_xyz(file_, **kwargs):
 
     if os.path.isfile(file_):
         debug_print('reading file')
-        f = file(file_)
-    elif isinstance(file_, basestring):
+        f = open(file_)
+    elif isinstance(file_, str):
         debug_print('reading string')
         f = StringIO(file_)
 
     s = System()
-    nparticles = int(f.next().strip())
-    name = f.next().strip()
+    nparticles = int(next(f).strip())
+    name = next(f).strip()
     s.name = name
     for _ in range(nparticles):
-        elem, x, y, z = f.next().split()
+        elem, x, y, z = next(f).split()
         x = float(x)
         y = float(y)
         z = float(z)
@@ -4009,8 +4009,8 @@ def read_chemdoodle_json(file_, **kwargs):
 
     if os.path.isfile(file_):
         debug_print('reading file')
-        f = file(file_)
-    elif isinstance(file_, basestring):
+        f = open(file_)
+    elif isinstance(file_, str):
         debug_print('reading string')
         f = StringIO(file_)
         
@@ -4069,8 +4069,8 @@ def read_lammps(data_file, **kwargs):
     if os.path.isfile(data_file):
         if not quiet:
             verbose_print('reading lammps data file "%s"' % data_file)
-        f = file(data_file)
-    elif isinstance(data_file, basestring):
+        f = open(data_file)
+    elif isinstance(data_file, str):
         if not quiet:
             verbose_print('reading lammps data file from string')
         f = StringIO(data_file)
@@ -4084,7 +4084,7 @@ def read_lammps(data_file, **kwargs):
                       % name)
         s = System(name=name)
     else:
-        s = System(name=f.next().strip())
+        s = System(name=next(f).strip())
 
     nparticles = nparticle_types = nbonds = nbond_types = 0
     nangles = nangle_types = ndihedrals = ndihedral_types = 0
@@ -4122,9 +4122,9 @@ def read_lammps(data_file, **kwargs):
             s.dim.zlo = float(line[0])
             s.dim.zhi = float(line[1])
         elif len(line) > 0 and line[0] == 'Masses':
-            f.next()
+            next(f)
             for i in range(nparticle_types):
-                pt = ParticleType.parse_lammps(f.next(), 'mass')
+                pt = ParticleType.parse_lammps(next(f), 'mass')
                 if s.particle_types[pt.tag]:
                     s.particle_types[pt.tag].mass = pt.mass
                 else:
@@ -4136,9 +4136,9 @@ def read_lammps(data_file, **kwargs):
             if '#' in line and not pair_style:
                 line = ' '.join(line).split('#')
                 pair_style = line[1].strip()
-            f.next()
+            next(f)
             for i in range(nparticle_types):
-                line = f.next()
+                line = next(f)
                 if not pair_style:
                     warning_print('unknown pair style - infering from number of parameters (2=lj 3=buck 4=charmm)')
                     pair_style = ParticleType.guess_style(
@@ -4154,9 +4154,9 @@ def read_lammps(data_file, **kwargs):
                           'for %s ParticleTypes'
                           % (pair_style, s.particle_types.count))
         elif len(line) > 0 and line[0] == 'Bond':
-            f.next()
+            next(f)
             for i in range(nbond_types):
-                line = f.next()
+                line = next(f)
                 if not bond_style:
                     warning_print('unknown bond_style - infering from number of parameters (2=harmonic 4=class2)')
                     bond_style = BondType.guess_style(
@@ -4168,9 +4168,9 @@ def read_lammps(data_file, **kwargs):
                           'for %s BondTypes'
                           % (bond_style, s.bond_types.count))
         elif len(line) > 0 and line[0] == 'Angle':
-            f.next()
+            next(f)
             for i in range(nangle_types):
-                line = f.next()
+                line = next(f)
                 if not angle_style:
                     warning_print('unknown angle_style - infering from number of parameters (2=harmonic)')
                     angle_style = AngleType.guess_style(
@@ -4182,9 +4182,9 @@ def read_lammps(data_file, **kwargs):
                           'for %s AngleTypes'
                           % (angle_style, s.angle_types.count))
         elif len(line) > 0 and line[0] == 'BondBond':
-            f.next()
+            next(f)
             for i in range(nangle_types):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 s.angle_types[tag].m = float(line[1])
                 s.angle_types[tag].r1 = float(line[2])
@@ -4193,9 +4193,9 @@ def read_lammps(data_file, **kwargs):
                           'parameters for %s AngleTypes'
                           % (angle_style, s.angle_types.count))
         elif len(line) > 0 and line[0] == 'BondAngle':
-            f.next()
+            next(f)
             for i in range(nangle_types):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 s.angle_types[tag].n1 = float(line[1])
                 s.angle_types[tag].n2 = float(line[2])
@@ -4206,9 +4206,9 @@ def read_lammps(data_file, **kwargs):
                               'parameters for %s AngleTypes'
                               % (angle_style, s.angle_types.count))
         elif len(line) > 0 and line[0] == 'Dihedral':
-            f.next()
+            next(f)
             for i in range(ndihedral_types):
-                line = f.next()
+                line = next(f)
                 if not dihedral_style:
                     warning_print('unknown dihedral_style - infering from number of parameters (3=harmonic 6=class2 [7, 10]=fourier)')
                     dihedral_style = DihedralType.guess_style(
@@ -4222,9 +4222,9 @@ def read_lammps(data_file, **kwargs):
                           % (dihedral_style, s.dihedral_types.count))
         
         elif len(line) > 0 and line[0] == 'MiddleBondTorsion':
-            f.next()
+            next(f)
             for i in range(ndihedral_types):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 s.dihedral_types[tag].a1 = float(line[1])
                 s.dihedral_types[tag].a2 = float(line[2])
@@ -4236,9 +4236,9 @@ def read_lammps(data_file, **kwargs):
                               '%s DihedralTypes'
                               % (dihedral_style, ndihedral_types))
         elif len(line) > 0 and line[0] == 'EndBondTorsion':
-            f.next()
+            next(f)
             for i in range(ndihedral_types):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 s.dihedral_types[tag].b1 = float(line[1])
                 s.dihedral_types[tag].b2 = float(line[2])
@@ -4254,9 +4254,9 @@ def read_lammps(data_file, **kwargs):
                               '%s DihedralTypes'
                               % (dihedral_style, ndihedral_types))
         elif len(line) > 0 and line[0] == 'AngleTorsion':
-            f.next()
+            next(f)
             for i in range(ndihedral_types):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 s.dihedral_types[tag].d1 = float(line[1])
                 s.dihedral_types[tag].d2 = float(line[2])
@@ -4272,9 +4272,9 @@ def read_lammps(data_file, **kwargs):
                                   '%s DihedralTypes'
                                   % (dihedral_style, ndihedral_types))
         elif len(line) > 0 and line[0] == 'AngleAngleTorsion':
-            f.next()
+            next(f)
             for i in range(ndihedral_types):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 s.dihedral_types[tag].m = float(line[1])
                 s.dihedral_types[tag].theta1 = float(line[2])
@@ -4285,9 +4285,9 @@ def read_lammps(data_file, **kwargs):
                               '%s DihedralTypes'
                               % (dihedral_style, ndihedral_types))
         elif len(line) > 0 and line[0] == 'BondBond13':
-            f.next()
+            next(f)
             for i in range(ndihedral_types):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 s.dihedral_types[tag].n = float(line[1])
                 s.dihedral_types[tag].r1 = float(line[2])
@@ -4298,9 +4298,9 @@ def read_lammps(data_file, **kwargs):
                               '%s DihedralTypes'
                               % (dihedral_style, ndihedral_types))
         elif len(line) > 0 and line[0] == 'Improper':
-            f.next()
+            next(f)
             for i in range(nimproper_types):
-                line = f.next()
+                line = next(f)
                 if not improper_style:
                     warning_print('unknown improper_style - infering from number of parameters (3=cvff)')
                     improper_style = ImproperType.guess_style(
@@ -4315,9 +4315,9 @@ def read_lammps(data_file, **kwargs):
                           % (improper_style, s.improper_types.count))
         elif len(line) > 0 and line[0] == 'AngleAngle':
             improper_style = 'class2'
-            f.next()
+            next(f)
             for i in range(nimproper_types):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 s.improper_types[tag].m1 = float(line[1])
                 s.improper_types[tag].m2 = float(line[2])
@@ -4331,9 +4331,9 @@ def read_lammps(data_file, **kwargs):
                               '%s ImproperTypes'
                               % (improper_style, nimproper_types))
         elif len(line) > 0 and line[0] == 'Atoms':
-            f.next()
+            next(f)
             for i in range(nparticles):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 if not atom_style:
                     if len(line) == 7:
@@ -4370,9 +4370,9 @@ def read_lammps(data_file, **kwargs):
             if not quiet:
                 verbose_print('read %s particles' % nparticles)
         elif len(line) > 0 and line[0] == 'Velocities':
-            f.next()
+            next(f)
             for i in range(nparticles):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 if s.particles[tag]:
                     p = s.particles[tag]
@@ -4386,9 +4386,9 @@ def read_lammps(data_file, **kwargs):
             if not quiet:
                 verbose_print('read velocities for %s particles' % nparticles)
         elif len(line) > 0 and line[0] == 'Bonds':
-            f.next()
+            next(f)
             for i in range(nbonds):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 b = Bond(tag=tag, type=int(line[1]),
                          a=int(line[2]), b=int(line[3]))
@@ -4396,9 +4396,9 @@ def read_lammps(data_file, **kwargs):
             if not quiet:
                 verbose_print('read %s bonds' % nbonds)
         elif len(line) > 0 and line[0] == 'Angles':
-            f.next()
+            next(f)
             for i in range(nangles):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 a = Angle(tag=tag, type=int(line[1]),
                           a=int(line[2]), b=int(line[3]), c=int(line[4]))
@@ -4406,9 +4406,9 @@ def read_lammps(data_file, **kwargs):
             if not quiet:
                 verbose_print('read %s angles' % nangles)
         elif len(line) > 0 and line[0] == 'Dihedrals':
-            f.next()
+            next(f)
             for i in range(ndihedrals):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 d = Dihedral(tag=tag, type=int(line[1]),
                              a=int(line[2]), b=int(line[3]),
@@ -4417,9 +4417,9 @@ def read_lammps(data_file, **kwargs):
             if not quiet:
                 verbose_print('read %s dihedrals' % ndihedrals)
         elif len(line) > 0 and line[0] == 'Impropers':
-            f.next()
+            next(f)
             for i in range(nimpropers):
-                line = f.next().strip().split()
+                line = next(f).strip().split()
                 tag = int(line[0])
                 if (s.ff_class == '2' or improper_style == 'class2' or (s.improper_types[1] and s.improper_types[1].m1
                         is not None)):
@@ -4589,7 +4589,7 @@ def read_cml(cml_file, **kwargs):
     if os.path.isfile(cml_file):
         debug_print('reading file')
         iter_parse = Et.iterparse(cml_file)
-    elif isinstance(cml_file, basestring):
+    elif isinstance(cml_file, str):
         debug_print('reading string')
         iter_parse = Et.iterparse(StringIO(cml_file))
     else:
@@ -4652,8 +4652,8 @@ def read_mol(mol_file, type_with=None, version='V2000'):
     """
     if os.path.isfile(mol_file):
         debug_print('reading file')
-        f = file(mol_file)
-    elif isinstance(mol_file, basestring):
+        f = open(mol_file)
+    elif isinstance(mol_file, str):
         debug_print('reading string')
         f = StringIO(mol_file)
     else:
@@ -4662,9 +4662,9 @@ def read_mol(mol_file, type_with=None, version='V2000'):
 
     s = System(name='read using pysimm.system.read_mol')
     for n in range(3):
-        f.next()
+        next(f)
 
-    line = f.next()
+    line = next(f)
 
     nparticles = int(line.split()[0])
     nbonds = int(line.split()[1])
@@ -4673,7 +4673,7 @@ def read_mol(mol_file, type_with=None, version='V2000'):
 
     if version == 'V2000':
         for n in range(nparticles):
-            line = f.next()
+            line = next(f)
             x, y, z, elem, something, charge = line.split()[:6]
             p = Particle(x=float(x), y=float(y), z=float(z), molecule=1,
                          elem=elem, charge=float(charge))
@@ -4686,29 +4686,29 @@ def read_mol(mol_file, type_with=None, version='V2000'):
                 p.charge = 0
 
         for n in range(nbonds):
-            line = f.next()
+            line = next(f)
             a, b, order = map(int, line.split()[:3])
             new_bond = s.bonds.add(Bond(a=a, b=b, order=order))
 
     elif version == 'V3000':
-        f.next()
-        line = f.next()
+        next(f)
+        line = next(f)
         nparticles = int(line.split()[3])
         nbonds = int(line.split()[4])
-        f.next()
+        next(f)
 
         for n in range(nparticles):
-            line = f.next()
+            line = next(f)
             id_, elem, x, y, z, charge = line.split()[2:8]
             p = Particle(x=float(x), y=float(y), z=float(z), molecule=1,
                          elem=elem, charge=float(charge))
             s.particles.add(p)
 
-        f.next()
-        f.next()
+        next(f)
+        next(f)
 
         for n in range(nbonds):
-            line = f.next()
+            line = next(f)
             id_, order, a, b = map(int, line.split()[2:6])
             s.bonds.add(Bond(a=a, b=b, order=order))
 
@@ -4737,8 +4737,8 @@ def read_prepc(prec_file):
     """
     if os.path.isfile(prec_file):
         debug_print('reading file')
-        f = file(prec_file)
-    elif isinstance(prec_file, basestring):
+        f = open(prec_file)
+    elif isinstance(prec_file, str):
         debug_print('reading string')
         f = StringIO(prec_file)
     else:
@@ -4749,7 +4749,7 @@ def read_prepc(prec_file):
 
     for line in f:
         for _ in range(10):
-            line = f.next()
+            line = next(f)
         while line.split():
             tag = int(line.split()[0])
             name = line.split()[1]
@@ -4762,7 +4762,7 @@ def read_prepc(prec_file):
             p = Particle(tag=tag, name=name, type_name=type_name, x=x, y=y, z=z, elem=elem, charge=charge)
             if not s.particles[tag]:
                 s.particles.add(p)
-            line = f.next()
+            line = next(f)
         break
 
     f.close()
@@ -4782,8 +4782,8 @@ def read_ac(ac_file):
     """
     if os.path.isfile(ac_file):
         debug_print('reading file')
-        f = file(ac_file)
-    elif isinstance(ac_file, basestring):
+        f = open(ac_file)
+    elif isinstance(ac_file, str):
         debug_print('reading string')
         f = StringIO(ac_file)
     else:
@@ -4834,8 +4834,8 @@ def read_pdb(pdb_file):
     """
     if os.path.isfile(pdb_file):
         debug_print('reading file')
-        f = file(pdb_file)
-    elif isinstance(pdb_file, basestring):
+        f = open(pdb_file)
+    elif isinstance(pdb_file, str):
         debug_print('reading string')
         f = StringIO(pdb_file)
     else:

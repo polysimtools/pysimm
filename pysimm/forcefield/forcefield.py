@@ -161,7 +161,7 @@ class Forcefield(object):
     
     
     def from_json(self, json_file):
-        with file(json_file) as f:
+        with open(json_file) as f:
             j = json.loads(f.read())
         self.ff_name = j.get('ff_name')
         self.ff_class = j.get('ff_class')

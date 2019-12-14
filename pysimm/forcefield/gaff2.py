@@ -52,8 +52,12 @@ class Gaff2(Forcefield):
     """
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
-            db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   os.pardir, os.pardir, 'dat', 'forcefields', 'gaff2.json')
+            db_file = os.path.join(
+                os.path.dirname(
+                    os.path.realpath(__file__)
+                ),
+                os.pardir, 'data', 'forcefields', 'gaff2.json'
+            )
         Forcefield.__init__(self, db_file)
         self.name = 'gaff2'
         self.pair_style = 'lj'

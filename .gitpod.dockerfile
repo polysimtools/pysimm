@@ -8,6 +8,8 @@ COPY requirements.txt requirements.txt
 
 RUN apt-get update && \
     apt-get install -y libopenmpi-dev openmpi-bin && \
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
     
 USER gitpod
+
+ENV LAMMPS_EXEC='lmp_mpi'

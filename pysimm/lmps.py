@@ -472,7 +472,7 @@ class OutputSettings(object):
             self.dump['args'] = self.dump.get('args', ['id', 'type', 'mol', 'x', 'y', 'z', 'vx', 'vy', 'vz'])
             self.dump['modify'] = self.dump.get('modify')
         
-        if isinstance(self.dump, dict) and isinstance(self.dump['group'], basestring):
+        if isinstance(self.dump, dict) and isinstance(self.dump['group'], str):
             self.dump['group'] = Group(name=self.dump['group'])
             
     def write(self, sim=None):
@@ -540,9 +540,9 @@ class Qeq(object):
         if self.qfile is None:
             param_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                       os.pardir, 'dat', 'qeq', 'hcno.json')
-            with file(param_file) as f:
+            with open(param_file) as f:
                 qeq_params = json.loads(f.read())
-            with file('pysimm.qeq.tmp', 'w') as f:
+            with open('pysimm.qeq.tmp', 'w') as f:
                 for pt in sim.system.particle_types:
                     f.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format(pt.tag, 
                                                   qeq_params[pt.elem]['chi'],
@@ -595,7 +595,7 @@ class MolecularDynamics(object):
         if kwargs.get('temp') is not None:
             print('temp keyword argument is deprecated for MolecularDynamics, please use temperature instead')
         
-        if isinstance(self.group, basestring):
+        if isinstance(self.group, str):
             self.group = Group(name=self.group)
         
         if isinstance(self.temperature, int) or isinstance(self.temperature, float):
@@ -835,7 +835,7 @@ class Simulation(object):
         
     def add(self, *args):
         for item in args:
-            if isinstance(item, basestring):
+            if isinstance(item, str):
                 self.sim.append(CustomInput(item))
             else:
                 self.sim.append(item)
@@ -947,10 +947,10 @@ class Simulation(object):
             prefix: prefix for running LAMMPS (i.e. - mpiexec)
         """
         if isinstance(save_input, str):
-            with file(save_input, 'w') as f:
+            with open(save_input, 'w') as f:
                 f.write(self.input)
         elif save_input is True:
-            with file('pysimm.sim.in', 'w') as f:
+            with open('pysimm.sim.in', 'w') as f:
                 f.write(self.input)
         try:
             call_lammps(self, np, nanohub, prefix=prefix)
@@ -991,7 +991,7 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
     log_name = simulation.log or 'log.lammps'
     
     if nanohub:
-        with file('temp.in', 'w') as f:
+        with open('temp.in', 'w') as f:
             f.write(simulation.input)
         if simulation.name:
             print('%s: sending %s simulation to computer cluster at nanoHUB' % (strftime('%H:%M:%S'), simulation.name))
@@ -1038,7 +1038,7 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
                         sys.stdout.write(line)
                         sys.stdout.flush()
         else:
-            stdo, stde = p.communicate(simulation.input)
+            stdo, stde = p.communicate(simulation.input.encode('utf-8'))
             if simulation.print_to_screen:
                 print(stdo)
                 print(stde)

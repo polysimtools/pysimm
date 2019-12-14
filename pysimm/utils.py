@@ -63,7 +63,7 @@ class ItemContainer(Sequence):
         return len(self._dict)
 
     def __iter__(self):
-        for v in self._dict.values():
+        for v in list(self._dict.values()):
             yield v
 
     def __getitem__(self, slice_):
@@ -75,7 +75,7 @@ class ItemContainer(Sequence):
         elif isinstance(slice_, slice):
             data = []
             start, stop, step = slice_.indices(len(self._dict))
-            for i in xrange(start+1, stop+1, step):
+            for i in range(start+1, stop+1, step):
                 item = self._dict.get(i)
                 if item:
                     data.append(item)
@@ -108,7 +108,7 @@ class ItemContainer(Sequence):
         if len(args) == 1:
             name = args[0]
             if name == 'all':
-                return self._dict.values()
+                return list(self._dict.values())
         if (len(args) != 1 and kwargs.get('startswith') is None or
                 kwargs.get('startswith') and kwargs.get('tags')):
             print('improper usage of system.ItemContainer.get')
@@ -151,7 +151,7 @@ class ItemContainer(Sequence):
             if not update or index == self.count:
                 del self._dict[index]
             else:
-                for i in xrange(index, self.count):
+                for i in range(index, self.count):
                     assert self._dict[i+1] is not None
                     self._dict[i] = self._dict[i+1]
                     self._dict[i].tag = i
@@ -202,7 +202,7 @@ def compare(query, item, query_wildcard=None, item_wildcard='X', order=False,
                 if compare(','.join(q_perm), ','.join(i_perm)):
                     return True
     else:
-        for q, i in itertools.izip(query, item):
+        for q, i in zip(query, item):
             if q == i:
                 match.append(True)
             elif (item_wildcard and i == item_wildcard) or \
@@ -216,7 +216,7 @@ def compare(query, item, query_wildcard=None, item_wildcard='X', order=False,
         if not order:
             match = []
             rquery = list(reversed(query))
-            for q, i in itertools.izip(rquery, item):
+            for q, i in zip(rquery, item):
                 if q == i:
                     match.append(True)
                 elif (item_wildcard and i == item_wildcard) or \

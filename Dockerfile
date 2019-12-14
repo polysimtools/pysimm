@@ -8,3 +8,5 @@ RUN apt-get update && \
     apt-get install -y libopenmpi-dev openmpi-bin && \
     pip install -r /usr/local/pysimm/requirements.txt && \
     pip install -e /usr/local/pysimm
+
+ENV LAMMPS_EXEC="lmp_mpi"

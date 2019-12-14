@@ -31,7 +31,7 @@
 
 
 from time import strftime
-from itertools import permutations, izip
+from itertools import permutations
 
 import numpy as np
 
@@ -309,7 +309,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
 
         backbone_vector = np.array(find_last_backbone_vector(s, m))
 
-        for p, p_ in izip(s.particles[-1*m.particles.count:], m.particles):
+        for p, p_ in zip(s.particles[-1*m.particles.count:], m.particles):
                 p_.x = p.x + 3*backbone_vector[0]
                 p_.y = p.y + 3*backbone_vector[1]
                 p_.z = p.z + 3*backbone_vector[2]
@@ -353,7 +353,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
             s.make_new_bonds(head, tail, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
         elif extra_bonds and len(heads) == len(tails):
-            for h, t in izip(heads, tails):
+            for h, t in zip(heads, tails):
                 s.make_new_bonds(h, t, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
         else:
