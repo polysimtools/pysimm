@@ -10,10 +10,6 @@ result.out
 -33.58
 !^^^^^^^^^^^^^^^^^^^^
 
-# Average_Info
-1
-!^^^^^^^^^^^^^^^^^^^^
-
 # Pair_Energy
 true
 !^^^^^^^^^^^^^^^^^^^^
@@ -27,7 +23,7 @@ lb
 !^^^^^^^^^^^^^^^^^^^^
 
 # Run_Type
-Equilibration 500 100
+Equilibration 500
 !^^^^^^^^^^^^^^^^^^^^
 
 # Charge_Style
@@ -41,7 +37,7 @@ lj cut_tail 12.0
 # Simulation_Length_Info
 units   steps
 prop_freq   500
-coord_freq   10000
+coord_freq   500
 run   10000
 !^^^^^^^^^^^^^^^^^^^^
 
