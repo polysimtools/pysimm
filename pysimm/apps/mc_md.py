@@ -82,6 +82,11 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         print('Missing the MD Simulation settings\nExiting...')
         exit(1)
 
+    # De-syncronizing type names of the framework and the gases to avoid consolidation of types that PySIMM system does
+    for gi, g in enumerate(gases):
+        for pt in g.particle_types:
+            pt.name += '_g' + str(gi + 1)
+
     while l < n_iter + 1:
         # >>> MC (CASSANDRA) step:
         mcp['Run_Name'] = str(l) + '.gcmc'

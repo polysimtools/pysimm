@@ -34,7 +34,6 @@ import re
 import numpy as np
 import random
 import logging
-import types
 from collections import Iterable, OrderedDict
 from pysimm import system
 from string import ascii_uppercase
@@ -395,7 +394,7 @@ class MCSimulation(object):
         tmp = self.props['Box_Info'].value['box_size']
         x, y, z = 0, 0, 0
         bx_type = None
-        if isinstance(tmp, types.ListType):
+        if isinstance(tmp, list):
             if len(tmp) > 3:
                 x, y, z = tmp[0], tmp[1], tmp[2]
         elif isinstance(tmp, int) or isinstance(tmp, float):
