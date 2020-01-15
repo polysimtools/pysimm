@@ -19,6 +19,9 @@ class CassExamplesTestCase(AbstractExamplesTestCase):
         for p in self.path_generator(osp.join('10_mof_swelling'), script_mask='run.py'):
             self.assertEqual(self.run_example(p), True)
 
+    def test_example11(self):
+        pth = self.path_generator(osp.join('11_pim_adsorption'), script_mask='run.py')
+        self.assertEqual(self.run_example(pth), True)
 
 if __name__ == '__main__':
     my_tl = unittest.TestLoader()
