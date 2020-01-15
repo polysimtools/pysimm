@@ -28,7 +28,7 @@
 # THE SOFTWARE.
 
 from __future__ import print_function
-from collections import Sequence
+from collections.abc import Sequence
 import itertools
 from pprint import pprint
 

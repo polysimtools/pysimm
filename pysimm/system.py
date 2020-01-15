@@ -1814,7 +1814,7 @@ class System(object):
                             id_, x, y, z = map(float, line)
                         elif len(line) == 5:
                             id_, type_, x, y, z = map(float, line)
-                        elif len(line) == 7:
+                        elif len(line) == 8:
                             id_, type_, x, y, z, ix, iy, iz = map(float, line)
                         else:
                             error_print('cannot understand lammpstrj formatting; exiting')
@@ -3994,12 +3994,12 @@ def read_xyz(file_, **kwargs):
     return s
     
 def read_chemdoodle_json(file_, **kwargs):
-    """pysimm.system.read_xyz
+    """pysimm.system.read_chemdoodle_json
 
-    Interprets xyz file and creates :class:`~pysimm.system.System` object
+    Interprets ChemDoodle JSON (Java Script Object Notation) file and creates :class:`~pysimm.system.System` object
 
     Args:
-        file_: xyz file name
+        file_: json file name
         quiet(optional): if False, print status
 
     Returns:
@@ -4542,7 +4542,7 @@ def read_pubchem_smiles(smiles, quiet=False, type_with=None):
 
     try:
         resp = urlopen(req)
-        return read_mol(resp.read(), type_with=type_with)
+        return read_mol(resp.read().decode('utf-8'), type_with=type_with)
     except (HTTPError, URLError):
         print('Could not retrieve pubchem entry for smiles %s' % smiles)
         
@@ -4567,7 +4567,7 @@ def read_pubchem_cid(cid, type_with=None):
 
     try:
         resp = urlopen(req)
-        return read_mol(resp.read(), type_with=type_with)
+        return read_mol(resp.read().decode('utf-8'), type_with=type_with)
     except (HTTPError, URLError):
         print('Could not retrieve pubchem entry for cid %s' % cid)
 
@@ -4745,7 +4745,7 @@ def read_prepc(prec_file):
         raise PysimmError('pysimm.system.read_pdb requires either '
                           'file or string as argument')
 
-    s = System(name='read using pysimm.system.read_ac')
+    s = System(name='read using pysimm.system.read_prepc')
 
     for line in f:
         for _ in range(10):
@@ -4814,10 +4814,7 @@ def read_ac(ac_file):
             b = Bond(tag=tag, a=a, b=b)
             if not s.bonds[tag]:
                 s.bonds.add(b)
-
-
     f.close()
-    
     return s
 
 
