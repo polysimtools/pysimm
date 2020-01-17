@@ -1,6 +1,8 @@
 import unittest
 import os
 from pysimm import system
+from pysimm import forcefield
+
 
 class SystemReadTestCase(unittest.TestCase):
     TEST_DATA_PATH = 'test_data'
@@ -100,6 +102,60 @@ class SystemReadTestCase(unittest.TestCase):
         self.assertNotEqual(tmp_coords_before[0], tmp_coords_after[0]) and \
         self.assertNotEqual(tmp_coords_before[1], tmp_coords_after[1]) and \
         self.assertNotEqual(tmp_coords_before[2], tmp_coords_after[2])
+
+
+class SystemWriteTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.sst = system.read_pubchem_cid(6360)
+        self.sst.dim = system.Dimension(xlo=-10, ylo=-10, zlo=-10, xhi=10, yhi=10, zhi=10)
+        self.sst.apply_forcefield(forcefield.Pcff(), charges='gasteiger')
+        self.fname_temp = 'testfile.output.{}'
+        self.fname = ''
+
+    def test_write_lammps(self):
+        self.fname = self.fname_temp.format('lmps')
+        self.sst.write_lammps(self.fname)
+        self.assertTrue(os.path.isfile(self.fname))
+        self.assertGreater(os.path.getsize(self.fname), 0)
+
+    def test_write_lammps_empty(self):
+        for p in self.sst.particles:
+            self.sst.particles.remove(p.tag, update=False)
+        self.sst.remove_spare_bonding()
+        self.fname = self.fname_temp.format('empty.lmps')
+        self.sst.write_lammps(self.fname)
+        self.assertTrue(os.path.isfile(self.fname))
+        self.assertGreater(os.path.getsize(self.fname), 0)
+
+    def test_write_lammps_mol(self):
+        self.fname = self.fname_temp.format('lmps')
+        self.sst.write_lammps_mol(self.fname)
+        self.assertTrue(os.path.isfile(self.fname))
+        self.assertGreater(os.path.getsize(self.fname), 0)
+
+    def test_write_mol(self):
+        self.fname = self.fname_temp.format('mol')
+        self.sst.write_mol(self.fname)
+        self.assertTrue(os.path.isfile(self.fname))
+        self.assertGreater(os.path.getsize(self.fname), 0)
+
+    def test_write_pdb(self):
+        self.fname = self.fname_temp.format('pdb')
+        self.sst.write_pdb(self.fname)
+        self.assertTrue(os.path.isfile(self.fname))
+        self.assertGreater(os.path.getsize(self.fname), 0)
+
+    def test_write_cssr(self):
+        self.fname = self.fname_temp.format('cssr')
+        self.sst.write_cssr(self.fname)
+        self.assertTrue(os.path.isfile(self.fname))
+        self.assertGreater(os.path.getsize(self.fname), 0)
+
+    def tearDown(self):
+        if len(self.fname) > 0:
+            os.remove(self.fname)
+
 
 if __name__ == '__main__':
     unittest.main()
