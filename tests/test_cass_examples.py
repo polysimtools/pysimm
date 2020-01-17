@@ -1,8 +1,8 @@
 import unittest
 import os
 from os import path as osp
-from testing import AbstractExamplesTestCase
-from testing import example_tests_sort
+from examples_tester_env import AbstractExamplesTestCase
+from examples_tester_env import example_tests_sort
 
 
 class CassExamplesTestCase(AbstractExamplesTestCase):
