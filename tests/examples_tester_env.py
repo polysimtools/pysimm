@@ -1,7 +1,7 @@
 from os import path as osp
 from os import chdir
 from glob import glob
-from imp import load_source
+from importlib.machinery import SourceFileLoader
 
 import unittest
 import shutil
@@ -31,10 +31,10 @@ class AbstractExamplesTestCase(unittest.TestCase):
     def run_example(self, script_path):
         is_passed = True
         chdir(osp.dirname(script_path))
-        src = load_source('create', osp.basename(script_path))
+        src = SourceFileLoader('create', osp.basename(script_path)).load_module()
         try:
             src.run(test=True)
-        except:
+        except :
             is_passed = False
         chdir(self.loc_path)
         return is_passed
