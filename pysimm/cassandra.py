@@ -1286,8 +1286,8 @@ class McfWriter(object):
         file_ref (str) : full relative path to the file that will be created
     """
     # Section names in any .mcf file
-    mcf_tags = ['# Atom_Info', '# Bond_Info', '# Angle_Info', '# Dihedral_Info',
-                '# Improper_Info', '# Intra_Scaling', '# Fragment_Info', '# Fragment_Connectivity']
+    mcf_tags = ['# Bond_Info', '# Angle_Info', '# Dihedral_Info', '# Improper_Info',
+                '# Intra_Scaling', '# Fragment_Info', '# Fragment_Connectivity', '# Atom_Info']
     empty_line = '0'
 
     def __init__(self, syst, file_ref):
