@@ -692,7 +692,7 @@ class DihedralType(Item):
                 d.append(data.pop(0))
             return cls(
                 tag=tag, name=name,
-                m=m, k=map(float, k), n=map(int, n), d=map(float, d)
+                m=m, k=list(map(float, k)), n=list(map(int, n)), d=list(map(float, d))
             )
         elif style.startswith('class2'):
             if len(data) != 7:
