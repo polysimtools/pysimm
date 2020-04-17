@@ -22,7 +22,7 @@ copyright = '2019, Mike Fortunato'
 author = 'Mike Fortunato'
 
 # The full version, including alpha/beta/rc tags
-release = '0.2.3'
+release = '0.3'
 
 
 # -- General configuration ---------------------------------------------------
