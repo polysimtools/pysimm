@@ -1,0 +1,57 @@
+<molecule  title="2-(Dimethylamino)ethyl 3-imino-2-methylpropanoate" id="m1">
+ <atomArray>
+  <atom id="a1" elementType="C" x3="-5.494000" y3="0.667000" z3="-0.390000"/>
+  <atom id="a2" elementType="C" x3="-5.164000" y3="-0.802000" z3="-0.602000"/>
+  <atom id="a3" elementType="C" x3="-6.671000" y3="0.787000" z3="0.598000"/>
+  <atom id="a4" elementType="C" x3="-5.885000" y3="1.298000" z3="-1.740000"/>
+  <atom id="a5" elementType="H" x3="-6.935000" y3="1.854000" z3="0.765000"/>
+  <atom id="a6" elementType="H" x3="-6.405000" y3="0.335000" z3="1.578000"/>
+  <atom id="a7" elementType="O" x3="-6.014000" y3="-1.554000" z3="-1.063000"/>
+  <atom id="a8" elementType="O" x3="-3.931000" y3="-1.280000" z3="-0.282000"/>
+  <atom id="a9" elementType="C" x3="-3.542000" y3="-2.587000" z3="-0.493000"/>
+  <atom id="a10" elementType="C" x3="-2.101000" y3="-2.770000" z3="-0.006000"/>
+  <atom id="a11" elementType="H" x3="-3.594000" y3="-2.816000" z3="-1.581000"/>
+  <atom id="a12" elementType="H" x3="-4.229000" y3="-3.262000" z3="0.059000"/>
+  <atom id="a13" elementType="N" x3="-1.570000" y3="-4.118000" z3="-0.308000"/>
+  <atom id="a14" elementType="H" x3="-2.039000" y3="-2.552000" z3="1.085000"/>
+  <atom id="a15" elementType="H" x3="-1.488000" y3="-2.010000" z3="-0.542000"/>
+  <atom id="a16" elementType="C" x3="-2.237000" y3="-5.171000" z3="0.480000"/>
+  <atom id="a17" elementType="H" x3="-2.161000" y3="-4.968000" z3="1.571000"/>
+  <atom id="a18" elementType="H" x3="-1.778000" y3="-6.161000" z3="0.265000"/>
+  <atom id="a19" elementType="H" x3="-3.303000" y3="-5.264000" z3="0.193000"/>
+  <atom id="a20" elementType="C" x3="-0.122000" y3="-4.152000" z3="-0.041000"/>
+  <atom id="a21" elementType="H" x3="0.404000" y3="-3.398000" z3="-0.665000"/>
+  <atom id="a22" elementType="H" x3="0.297000" y3="-5.145000" z3="-0.312000"/>
+  <atom id="a23" elementType="H" x3="0.094000" y3="-3.946000" z3="1.032000"/>
+  <atom id="a24" elementType="H" x3="-5.047000" y3="1.216000" z3="-2.466000"/>
+  <atom id="a25" elementType="H" x3="-6.135000" y3="2.373000" z3="-1.614000"/>
+  <atom id="a26" elementType="H" x3="-6.772000" y3="0.786000" z3="-2.173000"/>
+ </atomArray>
+ <bondArray>
+  <bond atomRefs2="a1 a2" order="1"/>
+  <bond atomRefs2="a1 a3" order="1"/>
+  <bond atomRefs2="a1 a4" order="1"/>
+  <bond atomRefs2="a2 a7" order="2"/>
+  <bond atomRefs2="a2 a8" order="1"/>
+  <bond atomRefs2="a3 a5" order="1"/>
+  <bond atomRefs2="a3 a6" order="1"/>
+  <bond atomRefs2="a4 a24" order="1"/>
+  <bond atomRefs2="a4 a25" order="1"/>
+  <bond atomRefs2="a4 a26" order="1"/>
+  <bond atomRefs2="a8 a9" order="1"/>
+  <bond atomRefs2="a9 a10" order="1"/>
+  <bond atomRefs2="a9 a11" order="1"/>
+  <bond atomRefs2="a9 a12" order="1"/>
+  <bond atomRefs2="a10 a13" order="1"/>
+  <bond atomRefs2="a10 a14" order="1"/>
+  <bond atomRefs2="a10 a15" order="1"/>
+  <bond atomRefs2="a13 a16" order="1"/>
+  <bond atomRefs2="a13 a20" order="1"/>
+  <bond atomRefs2="a16 a17" order="1"/>
+  <bond atomRefs2="a16 a18" order="1"/>
+  <bond atomRefs2="a16 a19" order="1"/>
+  <bond atomRefs2="a20 a21" order="1"/>
+  <bond atomRefs2="a20 a22" order="1"/>
+  <bond atomRefs2="a20 a23" order="1"/>
+ </bondArray>
+</molecule>

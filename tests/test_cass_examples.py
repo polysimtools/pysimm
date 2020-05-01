@@ -1,8 +1,9 @@
 import unittest
+import pytest
 import os
 from os import path as osp
-from testing import AbstractExamplesTestCase
-from testing import example_tests_sort
+from examples_tester_env import AbstractExamplesTestCase
+from examples_tester_env import example_tests_sort
 
 
 class CassExamplesTestCase(AbstractExamplesTestCase):
@@ -15,10 +16,14 @@ class CassExamplesTestCase(AbstractExamplesTestCase):
         for p in self.path_generator(osp.join('09_cassandra_simulations', '*')):
             self.assertEqual(self.run_example(p), True)
 
+    @pytest.mark.slow()
     def test_example10(self):
         for p in self.path_generator(osp.join('10_mof_swelling'), script_mask='run.py'):
             self.assertEqual(self.run_example(p), True)
 
+    def test_example11(self):
+        for p in self.path_generator(osp.join('11_pim_adsorption'), script_mask='run.py'):
+            self.assertEqual(self.run_example(p), True)
 
 if __name__ == '__main__':
     my_tl = unittest.TestLoader()

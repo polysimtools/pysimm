@@ -28,7 +28,6 @@
 # THE SOFTWARE.
 
 from random import random
-from itertools import izip
 from math import sin, cos, pi, acos
 try:
     import numpy as np
@@ -294,10 +293,10 @@ def tacticity(s, a_tag=None, b_tag=None, c_tag=None, d_tag=None, offset=None, re
     stereochem_angles = []
 
     if skip_first:
-        for a, b, c, d in izip(a_[1:], b_[1:], c_[1:], d_[1:]):
+        for a, b, c, d in zip(a_[1:], b_[1:], c_[1:], d_[1:]):
             stereochem_angles.append(chiral_angle(a, b, c, d))
     else:
-        for a, b, c, d in izip(a_, b_, c_, d_):
+        for a, b, c, d in zip(a_, b_, c_, d_):
             stereochem_angles.append(chiral_angle(a, b, c, d))
 
     last = None

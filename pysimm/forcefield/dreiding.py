@@ -30,9 +30,9 @@
 import os
 from itertools import permutations, combinations
 
-import gasteiger
-from pysimm.system import Angle, Dihedral, Improper
-from forcefield import Forcefield
+from . import gasteiger
+from ..system import Angle, Dihedral, Improper
+from .forcefield import Forcefield
 
 
 class Dreiding(Forcefield):
@@ -48,8 +48,12 @@ class Dreiding(Forcefield):
     """
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
-            db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   os.pardir, os.pardir, 'dat', 'forcefields', 'dreiding.json')
+            db_file = os.path.join(
+                os.path.dirname(
+                    os.path.realpath(__file__)
+                ),
+                os.pardir, 'data', 'forcefields', 'dreiding.json'
+            )
         Forcefield.__init__(self, db_file)
         self.name = 'dreiding'
         self.pair_style = 'lj'
@@ -97,7 +101,7 @@ class Dreiding(Forcefield):
                 elif p.nbonds == 2:
                     p.type_name = 'C_1'
                 else:
-                    print 'cant type particle %s' % p.tag
+                    print('cant type particle %s' % p.tag)
                     return p
             elif p.elem == 'N':
                 if 4 in p.bond_orders or 'A' in p.bond_orders:
@@ -113,7 +117,7 @@ class Dreiding(Forcefield):
                     if not p.type_name:
                         p.type_name = 'N_3'
                 else:
-                    print 'cant type particle %s' % p.tag
+                    print('cant type particle %s' % p.tag)
                     return p
             elif p.elem == 'O':
                 if 4 in p.bond_orders or 'A' in p.bond_orders:
@@ -125,7 +129,7 @@ class Dreiding(Forcefield):
                 elif 1 in p.bond_orders and len(set(p.bond_orders)) == 1:
                     p.type_name = 'O_3'
                 else:
-                    print 'cant type particle %s' % p.tag
+                    print('cant type particle %s' % p.tag)
                     return p
             elif p.elem == 'F':
                 p.type_name = 'F_'
@@ -136,7 +140,7 @@ class Dreiding(Forcefield):
             elif p.elem == 'Cl':
                 p.type_name = 'Cl'
             else:
-                print 'cant type particle %s' % p.tag
+                print('cant type particle %s' % p.tag)
                 return p
             all_types.add(self.particle_types.get(p.type_name)[0])
 
@@ -169,8 +173,9 @@ class Dreiding(Forcefield):
             if bt:
                 b.type_name = bt[0].name
             else:
-                print ('couldnt type this bond %s,%s'
-                       % (b.a.type.name, b.b.type.name))
+                print('couldnt type this bond {},{}'.format(
+                    b.a.type.name, b.b.type.name)
+                )
                 return b
             all_types.add(self.bond_types.get(b.type_name)[0])
 
@@ -218,10 +223,11 @@ class Dreiding(Forcefield):
                                                    a=p1, b=p, c=p2))
                                 all_types.add(at[0])
                             else:
-                                print ('I cant type this angle %s,%s,%s'
-                                       % (p1.type.name,
-                                          p.type.name,
-                                          p2.type.name))
+                                print('I cant type this angle {},{},{}'.format(
+                                    p1.type.name,
+                                    p.type.name,
+                                    p2.type.name
+                                ))
 
         for at in all_types:
             at = at.copy()
@@ -290,8 +296,9 @@ class Dreiding(Forcefield):
                                                          a=p1, b=b.a,
                                                          c=b.b, d=p2))
                         else:
-                            print ('I cant type this dihedral %s,%s,%s,%s'
-                                   % (p1_name, a_name, b_name, p2_name))
+                            print('I cant type this dihedral {},{},{},{}'.format(
+                                p1_name, a_name, b_name, p2_name
+                            ))
 
         for dt in all_types:
             dt = dt.copy()
