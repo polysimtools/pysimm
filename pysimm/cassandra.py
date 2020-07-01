@@ -27,20 +27,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from StringIO import StringIO
+from io import StringIO
 from subprocess import call, Popen, PIPE
 import os
 import re
 import numpy as np
 import random
 import logging
-import types
 from collections import Iterable, OrderedDict
 from pysimm import system
 from string import ascii_uppercase
 from pydoc import locate
 
-DATA_PATH = os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dat/csndra_data'))
+DATA_PATH = os.path.realpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/csndra_data'))
 
 KCALMOL_2_K = 503.22271716452
 
@@ -110,7 +109,7 @@ class MCSimulation(object):
         else:
             self.out_folder = os.getcwd()
         if not os.path.exists(self.out_folder):
-            os.makedirs(self.out_folder, mode=0755)
+            os.makedirs(self.out_folder, mode=0o755)
         prefix = kwargs.get('Run_Name', def_dat['Run_Name'])
         self.props['Run_Name'] = InpSpec('Run_Name', os.path.join(self.out_folder, prefix), '')
 
@@ -204,6 +203,10 @@ class MCSimulation(object):
             start_type = 'read_config'
         start_conf_dict = OrderedDict([('start_type', start_type), ('species', pops_list),
                                        ('file_name', self.fxd_sst_xyz)])
+        if kwargs.get('Start_Type') and ('start_type' in kwargs.get('Start_Type').keys()) and \
+                (kwargs.get('Start_Type')['start_type'] == 'checkpoint'):
+            start_conf_dict.pop('species')
+
         self.props['Start_Type'] = InpSpec('Start_Type', kwargs.get('Start_Type'), start_conf_dict)
 
         # Synchronzing Fragment files:
@@ -391,7 +394,7 @@ class MCSimulation(object):
         tmp = self.props['Box_Info'].value['box_size']
         x, y, z = 0, 0, 0
         bx_type = None
-        if isinstance(tmp, types.ListType):
+        if isinstance(tmp, list):
             if len(tmp) > 3:
                 x, y, z = tmp[0], tmp[1], tmp[2]
         elif isinstance(tmp, int) or isinstance(tmp, float):
@@ -432,6 +435,14 @@ class MCSimulation(object):
             except:
                 continue
         out_stream.close()
+
+    def get_prp(self):
+        tmp_data = []
+        try:
+            tmp_data = np.loadtxt(self.props['Run_Name'].value + '.prp', skiprows=3)
+        except OSError:
+            self.logger.error('Cannot find .prp simulations result file. Probably simulations failed.')
+        return np.transpose(tmp_data)
 
 
 class GCMC(MCSimulation):
@@ -593,7 +604,7 @@ class InpSpec(object):
 
         self.value = value
         if value:
-            if isinstance(default, types.DictType):
+            if isinstance(default, dict):
                 # Add from default structure all properties that were not defined by user
                 for ky in value.keys():
                     default[ky] = value[ky]
@@ -618,16 +629,16 @@ class InpSpec(object):
         if self.value is not None:
             result = '# {:}\n'.format(self.key)
             # Strings
-            if isinstance(self.value, types.StringTypes):
+            if isinstance(self.value, str):
                 result += str(self.value)
             # Dictionaries
-            elif isinstance(self.value, types.DictType):
+            elif isinstance(self.value, dict):
                 for ks in list(self.value.keys()):
                     if self.write_headers:
                         result += ks + '  '
 
                     tmp = self.value[ks]
-                    if (isinstance(tmp, Iterable)) & (not isinstance(tmp, types.StringTypes)):
+                    if (isinstance(tmp, Iterable)) & (not isinstance(tmp, str)):
                         result += '   '.join(str(p) for p in tmp)
                     else:
                         result += str(tmp)
@@ -926,8 +937,8 @@ class Cassandra(object):
                     print('{:.^60}'.format(''))
                     p = Popen([CASSANDRA_EXEC, task.props_file], stdin=PIPE, stdout=PIPE, stderr=PIPE)
                     stout, sterr = p.communicate()
-                    print(stout)
-                    print(sterr)
+                    print(stout.decode('utf-8'))
+                    print(sterr.decode('utf-8'))
                     task.upd_simulation()
                     self.system = task.tot_sst.copy()
 
@@ -1134,7 +1145,7 @@ class Cassandra(object):
     def __parse_value__(self, cells):
         title = cells[0].lower()
         if title == 'run_type':
-            return OrderedDict([('type', cells[1]), ('steps', map(int, cells[2:]))])
+            return OrderedDict([('type', cells[1]), ('steps', list(map(int, cells[2:])))])
 
         elif title == 'charge_style':
             return OrderedDict([('type', cells[1]),
@@ -1275,8 +1286,8 @@ class McfWriter(object):
         file_ref (str) : full relative path to the file that will be created
     """
     # Section names in any .mcf file
-    mcf_tags = ['# Atom_Info', '# Bond_Info', '# Angle_Info', '# Dihedral_Info',
-                '# Improper_Info', '# Intra_Scaling', '# Fragment_Info', '# Fragment_Connectivity']
+    mcf_tags = ['# Bond_Info', '# Angle_Info', '# Dihedral_Info', '# Improper_Info',
+                '# Intra_Scaling', '# Fragment_Info', '# Fragment_Connectivity', '# Atom_Info']
     empty_line = '0'
 
     def __init__(self, syst, file_ref):
@@ -1416,7 +1427,7 @@ class McfWriter(object):
         # writing indexing
         out.write('{:}\n'.format(1))
         n = len(self.syst.particles)
-        out.write('  '.join('{}'.format(item) for item in [1, n] + range(1, n + 1)))
+        out.write('  '.join('{}'.format(item) for item in [1, n] + list(range(1, n + 1))))
         out.write('\n\n')
 
     def __write_fragment_connectivity__(self, out):

@@ -30,14 +30,14 @@
 import shlex
 import shutil
 from subprocess import call, Popen, PIPE
-from Queue import Queue, Empty
+from queue import Queue, Empty
 from threading import Thread
 import os
 import sys
 import json
 from random import randint
 from time import strftime
-from StringIO import StringIO
+from io import StringIO
 
 try:
     import pandas as pd
@@ -138,7 +138,7 @@ FF_SETTINGS = {
 
 def check_lmps_exec():
     if LAMMPS_EXEC is None:
-        print 'you must set environment variable LAMMPS_EXEC'
+        print('you must set environment variable LAMMPS_EXEC')
         return False
     else:
         try:
@@ -146,10 +146,10 @@ def check_lmps_exec():
                                    stdin=PIPE, stdout=PIPE,
                                    stderr=PIPE).communicate()
             if verbose:
-                print 'using %s LAMMPS machine' % LAMMPS_EXEC
+                print('using %s LAMMPS machine' % LAMMPS_EXEC)
             return True
         except OSError:
-            print 'LAMMPS is not configured properly for one reason or another'
+            print('LAMMPS is not configured properly for one reason or another')
             return False
 
 
@@ -265,8 +265,8 @@ class Init(object):
                 lammps_input += '/coul/long'
                 self.pair_style += '/coul/long'
         else:
-            raise PysimmError('A pair_style must be defined during initialization'), None, sys.exc_info()[2]
-            
+            raise PysimmError('A pair_style must be defined during initialization')
+
         if self.cutoff:
             if self.forcefield == ['charmm'] and self.cutoff.get('inner_lj'):
                 lammps_input += ' {} '.format(self.cutoff['inner_lj'])
@@ -472,7 +472,7 @@ class OutputSettings(object):
             self.dump['args'] = self.dump.get('args', ['id', 'type', 'mol', 'x', 'y', 'z', 'vx', 'vy', 'vz'])
             self.dump['modify'] = self.dump.get('modify')
         
-        if isinstance(self.dump, dict) and isinstance(self.dump['group'], basestring):
+        if isinstance(self.dump, dict) and isinstance(self.dump['group'], str):
             self.dump['group'] = Group(name=self.dump['group'])
             
     def write(self, sim=None):
@@ -540,9 +540,9 @@ class Qeq(object):
         if self.qfile is None:
             param_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                       os.pardir, 'dat', 'qeq', 'hcno.json')
-            with file(param_file) as f:
+            with open(param_file) as f:
                 qeq_params = json.loads(f.read())
-            with file('pysimm.qeq.tmp', 'w') as f:
+            with open('pysimm.qeq.tmp', 'w') as f:
                 for pt in sim.system.particle_types:
                     f.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format(pt.tag, 
                                                   qeq_params[pt.elem]['chi'],
@@ -595,7 +595,7 @@ class MolecularDynamics(object):
         if kwargs.get('temp') is not None:
             print('temp keyword argument is deprecated for MolecularDynamics, please use temperature instead')
         
-        if isinstance(self.group, basestring):
+        if isinstance(self.group, str):
             self.group = Group(name=self.group)
         
         if isinstance(self.temperature, int) or isinstance(self.temperature, float):
@@ -835,7 +835,7 @@ class Simulation(object):
         
     def add(self, *args):
         for item in args:
-            if isinstance(item, basestring):
+            if isinstance(item, str):
                 self.sim.append(CustomInput(item))
             else:
                 self.sim.append(item)
@@ -947,20 +947,20 @@ class Simulation(object):
             prefix: prefix for running LAMMPS (i.e. - mpiexec)
         """
         if isinstance(save_input, str):
-            with file(save_input, 'w') as f:
+            with open(save_input, 'w') as f:
                 f.write(self.input)
         elif save_input is True:
-            with file('pysimm.sim.in', 'w') as f:
+            with open('pysimm.sim.in', 'w') as f:
                 f.write(self.input)
         try:
             call_lammps(self, np, nanohub, prefix=prefix)
-        except OSError as ose:
-            raise PysimmError('There was a problem calling LAMMPS with {}'.format(prefix)), None, sys.exc_info()[2]
-        except IOError as ioe:
+        except OSError:
+            raise PysimmError('There was a problem calling LAMMPS with {}'.format(prefix))
+        except IOError:
             if check_lmps_exec():
-                raise PysimmError('There was a problem running LAMMPS. The process started but did not finish successfully. Check the log file, or rerun the simulation with debug=True to debug issue from LAMMPS output'), None, sys.exc_info()[2]
+                raise PysimmError('There was a problem running LAMMPS. The process started but did not finish successfully. Check the log file, or rerun the simulation with debug=True to debug issue from LAMMPS output')
             else:
-                raise PysimmError('There was a problem running LAMMPS. LAMMPS is not configured properly. Make sure the LAMMPS_EXEC environment variable is set to the correct LAMMPS executable path. The current path is set to:\n\n{}'.format(LAMMPS_EXEC)), None, sys.exc_info()[2]
+                raise PysimmError('There was a problem running LAMMPS. LAMMPS is not configured properly. Make sure the LAMMPS_EXEC environment variable is set to the correct LAMMPS executable path. The current path is set to:\n\n{}'.format(LAMMPS_EXEC))
 
 
 def enqueue_output(out, queue):
@@ -991,7 +991,7 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
     log_name = simulation.log or 'log.lammps'
     
     if nanohub:
-        with file('temp.in', 'w') as f:
+        with open('temp.in', 'w') as f:
             f.write(simulation.input)
         if simulation.name:
             print('%s: sending %s simulation to computer cluster at nanoHUB' % (strftime('%H:%M:%S'), simulation.name))
@@ -1038,7 +1038,7 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
                         sys.stdout.write(line)
                         sys.stdout.flush()
         else:
-            stdo, stde = p.communicate(simulation.input)
+            stdo, stde = p.communicate(simulation.input.encode('utf-8'))
             if simulation.print_to_screen:
                 print(stdo)
                 print(stde)
@@ -1048,7 +1048,7 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
     try:
         os.remove('temp.lmps')
     except OSError as e:
-        print e
+        print(str(e))
         
     if os.path.isfile('pysimm.qeq.tmp'):
         os.remove('pysimm.qeq.tmp')

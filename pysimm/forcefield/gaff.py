@@ -30,9 +30,9 @@
 import os
 from itertools import permutations, combinations
 
-import gasteiger
-from pysimm.system import Angle, Dihedral, Improper
-from forcefield import Forcefield
+from . import gasteiger
+from ..system import Angle, Dihedral, Improper
+from .forcefield import Forcefield
 
 
 class Gaff(Forcefield):
@@ -48,8 +48,12 @@ class Gaff(Forcefield):
     """
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
-            db_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                   os.pardir, os.pardir, 'dat', 'forcefields', 'gaff.json')
+            db_file = os.path.join(
+                os.path.dirname(
+                    os.path.realpath(__file__)
+                ),
+                os.pardir, 'data', 'forcefields', 'gaff.json'
+            )
         Forcefield.__init__(self, db_file)
         self.name = 'gaff'
         self.pair_style = 'lj'
@@ -216,7 +220,7 @@ class Gaff(Forcefield):
                     elif p.nbonds == 2:
                         p.type_name = 'ss'
             else:
-                print 'cant type particle %s' % p.tag
+                print('cant type particle %s' % p.tag)
                 return p
 
             type_ = self.particle_types.get(p.type_name)

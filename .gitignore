@@ -1,0 +1,4 @@
+*.pyc
+build
+pysimm.egg-info
+*.egg
