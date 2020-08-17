@@ -7,6 +7,8 @@ def monomer(**kwargs):
         import os
         if isomer == 'endo':
             s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'NbTMS_H2_endo.mol'))
+        elif isomer == 'exoexo':
+            s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'NbTMS_H2_exo_exo.mol'))
         else:
             s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'NbTMS_H2_exo.mol'))
     except:
