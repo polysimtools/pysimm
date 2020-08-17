@@ -1,5 +1,5 @@
 from pysimm import system, lmps, forcefield
-from pysimm.apps.random_walk_tacticity import random_walk_tacticity
+from pysimm.apps.random_walk import random_walk_tacticity
 from pysimm.models.monomers.dreiding.NbTMS_H2_tacticity import monomer as NbTMS
 
 def run(test=False):
