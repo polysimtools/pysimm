@@ -12,7 +12,7 @@ def monomer(**kwargs):
         else:
             s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'NbTMS_H2_exo.mol'))
     except:
-        print "!!!could not read mol!!!"
+        print("!!!could not read mol!!!")
     m = s.molecules[1]
     f = forcefield.Dreiding()
     
