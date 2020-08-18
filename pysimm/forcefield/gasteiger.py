@@ -84,6 +84,34 @@ gasteiger_parameters.add(Item(tag='br', name='br', a=10.08, b=8.47,
 gasteiger_parameters.add(Item(tag='i', name='i', a=9.90, b=7.96, c=0.96))
 gasteiger_parameters.add(Item(tag='s', name='s', a=10.14, b=9.13, c=1.38))
 
+#silicon values calculated from pymol source code
+#https://github.com/Pymol-Scripts/Pymol-script-repo/blob/master/modules/ADT/PyBabel/gasteiger.py
+#Silicon (4)
+#energyParms['Si'] = {}
+#energyParms['Si']['sp3'] = hybridD ={}     
+#hybridD['I0'] = 11.82                #tetetete
+#hybridD['E0'] =  2.78                #tetetete
+#hybridD['I+'] = 18.97                #tetete, sigma
+#hybridD['E+'] = 10.08                #tetete, sigma
+#  for element, elementD in energyParms.items():
+#       print 'Element = ', element
+#       for hybrid, hybridD in elementD.items():
+#           I0 = hybridD['I0']
+#           E0 = hybridD['E0']
+#           IPLUS = hybridD['I+']
+#           EPLUS = hybridD['E+']
+#           a = 0.5 * (I0 + E0)
+#           b = 0.25 * (IPLUS + EPLUS - E0)
+#           c = 0.25 * (IPLUS - 2 * I0 + EPLUS - E0)
+#           print '    ',hybrid, ' hybridization:'
+#           print '        a =', a,
+#           print 'b =', b,
+#           print 'c =', c
+#       print '\n',
+gasteiger_parameters.add(Item(tag='si', name='si', a=7.3, b=6.5675, c=0.6575))
+
+
+
 
 def set_charges(s, maxiter=100, tol=1e-6):
     global gasteiger_parameters
