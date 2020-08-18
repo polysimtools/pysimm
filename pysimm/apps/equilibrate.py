@@ -85,7 +85,7 @@ def equil(s, **kwargs):
     sim.add(lmps.Velocity(temperature=tfinal))
 
     step = 0
-    for p, l in izip(p_list, length_list):
+    for p, l in zip(p_list, length_list):
         step += 1
         if l:
             sim.add_md(length=l/2, ensemble='nvt', temperature=tmax, **kwargs)
