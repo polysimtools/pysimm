@@ -156,7 +156,7 @@ def set_charges(s, maxiter=100, tol=1e-6):
                     p.type.elem = elem
             if not p.type.elem or p.type.elem not in ['H', 'N', 'C', 'O',
                                                       'F', 'Cl', 'Br', 'I',
-                                                      'S']:
+                                                      'S', 'Si']:
                 error_print('cannot find gastieger paramater for particle %s'
                             % p.tag)
             else:
