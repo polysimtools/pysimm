@@ -191,7 +191,9 @@ def set_charges(s, maxiter=100, tol=1e-6):
                     gast_type = gasteiger_parameters.get('i')[0]
                 elif p.type.elem == 'S':
                     gast_type = gasteiger_parameters.get('s')[0]
-
+                elif p.type.elem == 'Si':
+                    gast_type = gasteiger_parameters.get('si')[0]
+                    
                 gast_type = gast_type
                 p.gast_conv = False
                 p.qn = 0.0
