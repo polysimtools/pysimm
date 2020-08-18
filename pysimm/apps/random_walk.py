@@ -40,6 +40,10 @@ from pysimm import error_print
 
 import math
 from scipy.spatial.transform import Rotation as R
+try:
+    from itertools import izip as zip
+except ImportError: # will be 3.x series
+    pass
 
 def find_last_backbone_vector(s, m):
     """pysimm.apps.random_walk.find_last_backbone_vector
