@@ -73,15 +73,15 @@ def find_last_tail_vector(s, m, **kwargs):
     """
     capped = kwargs.get('isCapped',False)
     if not capped:
-        print "Error: find_last_tail_vector() requires a capped monomer!"
+        print("Error: find_last_tail_vector() requires a capped monomer!")
         return
     headCap = s.particles[-1]
     for p in s.particles[-1*m.particles.count:]:
         if p.linker == 'head':
-            #print "found headAtom @ " + str(p.coords())
-            #print "found headCap  @ " + str(headCap.coords()) 
+            #print("found headAtom @ " + str(p.coords()))
+            #print("found headCap  @ " + str(headCap.coords()) )
             return [headCap.x - p.x, headCap.y - p.y, headCap.z - p.z]
-    print "no head atom found in system! check your monomer definition!"
+    print("no head atom found in system! check your monomer definition!")
     return
 
 def copolymer(m, nmon, s_=None, **kwargs):
@@ -422,15 +422,15 @@ def find_last_tail_vector(s, m, **kwargs):
     """
     capped = kwargs.get('isCapped',False)
     if not capped:
-        print "Error: find_last_tail_vector() requires a capped monomer!"
+        print("Error: find_last_tail_vector() requires a capped monomer!")
         return
     headCap = s.particles[-1]
     for p in s.particles[-1*m.particles.count:]:
         if p.linker == 'head':
-            #print "found headAtom @ " + str(p.coords())
-            #print "found headCap  @ " + str(headCap.coords()) 
+            #print("found headAtom @ " + str(p.coords()))
+            #print("found headCap  @ " + str(headCap.coords())) 
             return [headCap.x - p.x, headCap.y - p.y, headCap.z - p.z]
-    print "no head atom found in system! check your monomer definition!"
+    print("no head atom found in system! check your monomer definition!")
     return
 
 def rotMatAboutAxis(v,theta):
@@ -445,7 +445,7 @@ def rotMatAboutAxis(v,theta):
     """
     theta = theta * 2* math.pi / 180
     r = R.from_rotvec(theta * v)
-    print "Rotating vector: " + str(r.as_rotvec())
+    print("Rotating vector: " + str(r.as_rotvec()))
     return r.as_dcm()
 
 def definePlane(a1,a2,a3):
@@ -490,7 +490,7 @@ def reflectCoordsThruPlane(atom,plane):
     x3 = 2*x2 - x1
     y3 = 2*y2 - y1
     z3 = 2*z2 - z1
-    #print "reflected to: " + str(atom)
+    #print("reflected to: " + str(atom))
     return x3,y3,z3
     
 def scaleMonomer(atom,origin,scale):
@@ -537,7 +537,7 @@ def redoMonomerInsertion(s_,m,i):
     s.wrap()
     while successfulInsertion == False:
         scale = scale * 0.8
-        print "scale = " + str(scale)
+        print("scale = " + str(scale))
         for p in s.particles[-1*n.particles.count:]:
             p.x,p.y,p.z = scaleMonomer(p,tail,scale)
         #simulation with fixed latest monomer
@@ -546,7 +546,7 @@ def redoMonomerInsertion(s_,m,i):
         s.write_xyz('bad_insertion_' + str(i) + '.xyz', append=True)
         s.wrap()
         quality = s.quality(tolerance=0.3)
-        print "Quality: " + str(quality)
+        print("Quality: " + str(quality))
         if quality == 0:
             successfulInsertion = True
     #now, reexpand the monomer
@@ -556,7 +556,7 @@ def redoMonomerInsertion(s_,m,i):
     s_ = s.copy()
     while scaleMin*scale*1.05 < 0.9:
         scale = scale*1.05
-        print "Scaling up from %s to %s" % (str(scaleMin), str(scale*scaleMin))
+        print("Scaling up from %s to %s" % (str(scaleMin), str(scale*scaleMin)))
         for p in s.particles[-1*n.particles.count:]:
             p.x,p.y,p.z = scaleMonomer(p,tail,scale)
         #simulation with fixed latest monomer
@@ -565,7 +565,7 @@ def redoMonomerInsertion(s_,m,i):
         s.write_xyz('bad_insertion_' + str(i) + '.xyz', append=True)
         s.wrap()
         if s.quality(tolerance=0.3) > 0:
-            print "system is broken upon monomer reexpansion"
+            print("system is broken upon monomer reexpansion")
             break
     s_ = s.copy()
     
@@ -579,7 +579,7 @@ def constrainedOpt(s,m):
     Returns:
         nothing; all changes to the polymer chain are written to the argument s_ 
     """
-    print "Constrained Opt..."
+    print("Constrained Opt...")
     sim=lmps.Simulation(s,name='constrainedOpt')
     totalAtoms = s.particles.count
     monomerAtoms = m.particles.count
@@ -633,7 +633,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
     elif tacticity == 'syndiotactic':
         tacticity = 0
     elif not ( 0 <= tacticity <= 1):
-        print "tacticity must be a number between 0 and 1, or 'atactic' (0.5), 'isotactic' (1), or 'syndiotactic' (0)"
+        print("tacticity must be a number between 0 and 1, or 'atactic' (0.5), 'isotactic' (1), or 'syndiotactic' (0)")
     rotation = kwargs.get('rotation',0)
     errorCheck = kwargs.get('errorCheck',False)
     m.add_particle_bonding()
@@ -655,7 +655,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
     if traj:
         s.write_xyz('random_walk.xyz')
     if not capped:
-        print "random_walk_tacticity() requires capped monomers (i.e. to model polyethylene, the monomer should be ethane, where the first and last atoms in the .mol file are hydrogen atoms)"
+        print("random_walk_tacticity() requires capped monomers (i.e. to model polyethylene, the monomer should be ethane, where the first and last atoms in the .mol file are hydrogen atoms)")
         return
     
     for p in m.particles:
@@ -689,13 +689,13 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
             p_.y = p.y + a*backbone_vector[1] + b*tail_vector[1]
             p_.z = p.z + a*backbone_vector[2] + b*tail_vector[2]
         if np.random.rand() > tacticity: #if syndiotactic insertion, reflect monomer
-            print "syndiotactic insertion..."
+            print("syndiotactic insertion...")
             mirrorPlane = definePlane(head, tail, mirrorAtom)
             for p in n.particles:
                 p.x,p.y,p.z = reflectCoordsThruPlane([p.x,p.y,p.z],mirrorPlane)
             
         else: #else isotatic insertion, rotate monomer if necessary
-            print "isotatic insertion..."
+            print("isotatic insertion...")
             if rotation != 0: #rotate monomer, if necessary                                               
                 rotMat = rotMatAboutAxis(backbone_vector,rotation)
                 n.rotate(around=head,rot_matrix=rotMat)
@@ -751,12 +751,12 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
             sim.name = 'relax_%03d' % (insertion+2)
             sim.run(np=settings.get('np'))
             energy = lmps.energy(s)
-            print "LAMMPS Energy = " + str(energy)
-            print "LAMMPS Energy/#ofAtoms = " + str(energy/s.particles.count)
+            print("LAMMPS Energy = " + str(energy))
+            print("LAMMPS Energy/#ofAtoms = " + str(energy/s.particles.count))
             if errorCheck == True: #check for hardcoreOverlap
-                print "checking for hardcore Overlap"
+                print("checking for hardcore Overlap")
                 if s.quality(tolerance=0.3) > 0:
-                    print "Found bad quality monomer insertion. Redoing last insertion..."
+                    print("Found bad quality monomer insertion. Redoing last insertion...")
                     s.unwrap()
                     s.write_xyz('bad_insertion_' + str(insertion+2) + '.xyz')
                     s.wrap()
