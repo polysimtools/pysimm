@@ -469,7 +469,7 @@ def definePlane(a1,a2,a3):
     return np.array([a,b,c,d])
   
 def reflectCoordsThruPlane(atom,plane):
-     """pysimm.apps.random_walk.reflectCoordsThruPlane
+    """pysimm.apps.random_walk.reflectCoordsThruPlane
     This function reflects an atom through a plane, and is used for implementing syndiotactic insertions of monomers
     
     Args:
@@ -494,7 +494,7 @@ def reflectCoordsThruPlane(atom,plane):
     return x3,y3,z3
     
 def scaleMonomer(atom,origin,scale):
-    """pysimm.apps.random_walk.scaleMonomer
+  """pysimm.apps.random_walk.scaleMonomer
     This function scales the atom--origin vector. It is used by redoMonomerInsertion to scale the last monomer relative to its attachment point to the polymer chain
     
     Args:
@@ -503,7 +503,7 @@ def scaleMonomer(atom,origin,scale):
         scale: the factor by which the atom--origin vector should be scaled. 
     Returns:
         scaled atom--origin vector
-    """
+  """
   try:
     x1,y1,z1 = atom.coords()
     x0,y0,z0 = origin.coords()
