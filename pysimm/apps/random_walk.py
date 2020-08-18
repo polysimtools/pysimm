@@ -686,7 +686,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
         backbone_vector = np.array(find_last_backbone_vector(s, m))
         tail_vector = np.array(find_last_tail_vector(s,m,isCapped=capped))
                 
-        for p, p_ in izip(s.particles[-1*n.particles.count:], n.particles): #translate monomer
+        for p, p_ in zip(s.particles[-1*n.particles.count:], n.particles): #translate monomer
             a=1
             b=1.4 #scale to convert C-H bond to C-C bond
             p_.x = p.x + a*backbone_vector[0] + b*tail_vector[0]
@@ -740,7 +740,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
             s.make_new_bonds(head, tail, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
         elif extra_bonds and len(heads) == len(tails):
-            for h, t in izip(heads, tails):
+            for h, t in zip(heads, tails):
                 s.make_new_bonds(h, t, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
         else:
