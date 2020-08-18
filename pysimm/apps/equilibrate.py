@@ -29,7 +29,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from itertools import izip
+try:
+    from itertools import izip as zip
+except ImportError: # will be 3.x series
+    pass
 
 from pysimm import system, lmps
 
