@@ -1022,7 +1022,7 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
             print(simulation.input)
             warning_print('debug setting involves streaming output from LAMMPS process and can degrade performance')
             warning_print('only use debug for debugging purposes, use print_to_screen to collect stdout after process finishes')
-            p.stdin.write(simulation.input)
+            p.stdin.write(simulation.input.encode('utf-8'))
             q = Queue()
             t = Thread(target=enqueue_output, args=(p.stdout, q))
             t.daemon = True
