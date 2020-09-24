@@ -65,29 +65,6 @@ def find_last_backbone_vector(s, m):
             tail_pos = [p.x, p.y, p.z]
     return [head_pos[0] - tail_pos[0], head_pos[1] - tail_pos[1], head_pos[2] - tail_pos[2]]
 
-def find_last_tail_vector(s, m, **kwargs):
-    """pysimm.apps.random_walk.find_last_tail_vector
-    Finds vector defined by bond in the system between the tail atom and its capping atom. Requires current system s and reference monomer m. The monomer must be capped.
-    
-    Args:
-        s: :class:`~pysimm.system.System` object
-        m: :class:`~pysimm.system.System` object
-    Returns:
-        list of vector components
-    """
-    capped = kwargs.get('isCapped',False)
-    if not capped:
-        print("Error: find_last_tail_vector() requires a capped monomer!")
-        return
-    headCap = s.particles[-1]
-    for p in s.particles[-1*m.particles.count:]:
-        if p.linker == 'head':
-            #print("found headAtom @ " + str(p.coords()))
-            #print("found headCap  @ " + str(headCap.coords()) )
-            return [headCap.x - p.x, headCap.y - p.y, headCap.z - p.z]
-    print("no head atom found in system! check your monomer definition!")
-    return
-
 def copolymer(m, nmon, s_=None, **kwargs):
     """pysimm.apps.random_walk.copolymer
 
