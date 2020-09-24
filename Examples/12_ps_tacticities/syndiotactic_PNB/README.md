@@ -21,7 +21,7 @@ Compared to the standard random_walk function, the random_walk_tacticity functio
 
 The monomer (A) must be *capped* (meaning that the head and tail atoms of the monomer are bonded to sacrificial atoms that will be removed when adding the monomer to a growing oligomer).
 
-The *tacticity* of the polymer is a float, between 0 and 1. The special keywords "isotatic" and "syndiotactic" are mapped to values of 1 and 0, respectively. A value of 0.4 would give 40% syndiotactic insertions and 60% isotactic insertions. 
+The *tacticity* of the polymer is a float, between 0 and 1. The special keywords "isotatic" and "syndiotactic" are mapped to values of 1 and 0, respectively. A value of 0.4 would give 40% isotactic insertions (and 60% syndiotactic insertions). 
 
 For small monomers such as styrene, isotatic polymer chains can be built up by simply (a) copying the last monomer, (b) translating this copy, and (d) removing the capping atoms and defining a new bond between the copy and the previous monomer. However, with very large monomers such as vinyl-type norbornene, such an algorithm would result in hardcore overlaps. So a step must be inserted between (b) and (d): (c) a *rotation* of 180 degrees is applied to the new monomer along its bond to the previous monomer. For small monomers or purely syndiotactic chains, rotation does not need to be specified (and will default to 0).
 
