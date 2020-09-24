@@ -592,6 +592,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
             0 = 100% syndiotactic insertions
             0.5 = equal changes of isotactic or syndiotactic insertions (i.e. atactic)
         rotation: degrees to rotate monomer per insertion
+        md_spacing: how many monomer insertion steps to perform between MD relaxation steps (1)
         errorCheck: True/False for if monomers should be checked for hardcore overlaps after insertion
     Returns:
         new polymer :class:`~pysimm.system.System`
@@ -616,6 +617,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
     elif not ( 0 <= tacticity <= 1):
         print("tacticity must be a number between 0 and 1, or 'atactic' (0.5), 'isotactic' (1), or 'syndiotactic' (0)")
     rotation = kwargs.get('rotation',0)
+    md_spacing = kwargs.get('md_spacing',1)
     errorCheck = kwargs.get('errorCheck',False)
     m.add_particle_bonding()
     if errorCheck:
@@ -724,7 +726,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
             print('cannot find head and tail')
         if sim is None:
             sim = lmps.Simulation(s, name='relax_%03d' % (insertion+2), log='relax.log', **settings)
-            if (insertion+2)%10 == 0:
+            if (insertion+2)%md_spacing == 0:
                 sim.add_md(ensemble='nve', limit=limit, **settings)
             sim.add_min(**settings)
         if isinstance(sim, lmps.Simulation):
