@@ -3,7 +3,7 @@ from pysimm.apps.random_walk import random_walk
 
 def monomer():
     import os
-    s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'PS_tacticity_2.mol'))
+    s = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'PS_tacticity.mol'))
     m = s.molecules[1]
     f = forcefield.Dreiding()
     
