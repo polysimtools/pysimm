@@ -1530,6 +1530,7 @@ class System(object):
                 bad_bonds += 1
         verbose_print('%s of %s bonds found to be outside of tolerance' % (bad_bonds, self.bonds.count))
         self.wrap()
+        return bad_bonds
 
     def shift_to_origin(self):
         """pysimm.system.System.shift_to_origin
