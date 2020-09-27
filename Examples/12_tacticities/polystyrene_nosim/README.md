@@ -1,17 +1,15 @@
-Example 12: Tacticity control (isotactic polystyrene)
+Example 12: Tacticity control (polystyrene)
 =========================================================================================================================================  
 by Sibo Lin
     
-### Requirements
- * Note: in case you work with multiple Python versions, all additional Python packages should be installed for Python 3+.   
+### Requirements.   
  * [NumPy](https://numpy.org/) -- Can be easily installed with pip. 
  * [SciPy](https://www.scipy.org/scipylib/index.html) -- Can be easily installed with pip. 
  
  
- 
 ### Summary
 
-This example shows the ability of random_walk_tacticity function to build syndiotactic vinyl-type polynorbornene chains.
+This example shows the ability of random_walk_tacticity function to build syndiotactic, isotactic, and mixed tacticity polystyrene chains.
 
 ### Differences from standard random_walk function
 
