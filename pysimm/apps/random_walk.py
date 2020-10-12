@@ -86,7 +86,7 @@ def displ_next_unit_default(m, s):
         p_.x = p.x + displ[0] + bnd_lngth * displ_dir[0]
         p_.y = p.y + displ[1] + bnd_lngth * displ_dir[1]
         p_.z = p.z + displ[2] + bnd_lngth * displ_dir[2]
-
+    return True
 
 
 def copolymer(m, nmon, s_=None, **kwargs):
@@ -336,7 +336,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
         head = None
         tail = None
 
-        displ_next_unit(m, s.particles[-1 * m.particles.count:])
+        info = displ_next_unit(m, s.particles[-1 * m.particles.count:])
         n = m.copy()
 
         if capped:
@@ -374,10 +374,22 @@ def random_walk(m, nmon, s_=None, **kwargs):
         if head and tail:
             s.make_new_bonds(head, tail, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
-        elif extra_bonds and (len(heads) == len(tails)) and (len(heads) == len(extra_bonds)):
+        elif extra_bonds and (len(heads) == len(tails)):
+
+            # heads_dir = np.array([heads[0].x - heads[1].x, heads[0].y - heads[1].y, heads[0].z - heads[1].z])
+            # tails_dir = np.array([tails[0].x - tails[1].x, tails[0].y - tails[1].y, tails[0].z - tails[1].z])
+            order = [(0,0), (1,1)]
+            if len(info) == 2:
+                order = [(0, info[0]), (1, info[1])]
+            for elm in order:
+                s.make_new_bonds(heads[elm[0]], tails[elm[1]], f)
+
+            '''
             for h, t, ord in zip(heads, tails, extra_bonds):
                 s.make_new_bonds(h, tails[ord], f)
+            '''
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
+            s.write_lammps('curr_progress.lmps')
         else:
             print('cannot find head and tail')
 
@@ -391,6 +403,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
             sim.run(np=settings.get('np'))
 
         s.unwrap()
+        s.write_lammps('curr_progress.lmps')
 
         if traj:
             s.write_xyz('random_walk.xyz', append=True)
