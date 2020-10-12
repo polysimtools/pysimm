@@ -50,14 +50,43 @@ def find_last_backbone_vector(s, m):
     Returns:
         list of vector components
     """
-    head_pos = [0, 0, 0]
-    tail_pos = [0, 0, 0]
+    head_pos = np.zeros(3)
+    tail_pos = np.zeros(3)
+    hcount = 0
+    tcount = 0
     for p in s.particles[-1*m.particles.count:]:
         if p.linker == 'head':
-            head_pos = [p.x, p.y, p.z]
+            hcount += 1
+            head_pos += np.array([p.x, p.y, p.z])
         elif p.linker == 'tail':
-            tail_pos = [p.x, p.y, p.z]
-    return [head_pos[0] - tail_pos[0], head_pos[1] - tail_pos[1], head_pos[2] - tail_pos[2]]
+            tcount += 1
+            tail_pos += np.array([p.x, p.y, p.z])
+    return head_pos / hcount - tail_pos / tcount
+
+
+def displ_next_unit_default(m, s):
+    head_pos = np.zeros(3)
+    tail_pos = np.zeros(3)
+    hcount = 0
+    tcount = 0
+    bnd_lngth = 1.8
+
+    for p in s:
+        if p.linker == 'head':
+            hcount += 1
+            head_pos += np.array([p.x, p.y, p.z])
+        elif p.linker == 'tail':
+            tcount += 1
+            tail_pos += np.array([p.x, p.y, p.z])
+
+    displ = head_pos / hcount - tail_pos / tcount
+    displ_dir = displ / np.linalg.norm(displ)
+
+    for p, p_ in zip(s, m.particles):
+        p_.x = p.x + displ[0] + bnd_lngth * displ_dir[0]
+        p_.y = p.y + displ[1] + bnd_lngth * displ_dir[1]
+        p_.z = p.z + displ[2] + bnd_lngth * displ_dir[2]
+
 
 
 def copolymer(m, nmon, s_=None, **kwargs):
@@ -267,7 +296,8 @@ def random_walk(m, nmon, s_=None, **kwargs):
     """
     m = m.copy()
 
-    extra_bonds = kwargs.get('extra_bonds', False)
+    extra_bonds = kwargs.get('extra_bonds', [])
+    displ_next_unit = kwargs.get('geometry_rule', displ_next_unit_default)
 
     settings = kwargs.get('settings', {})
     density = kwargs.get('density', 0.3)
@@ -303,17 +333,10 @@ def random_walk(m, nmon, s_=None, **kwargs):
         m.add_particle_bonding()
 
     for insertion in range(nmon - 1):
-
         head = None
         tail = None
 
-        backbone_vector = np.array(find_last_backbone_vector(s, m))
-
-        for p, p_ in zip(s.particles[-1*m.particles.count:], m.particles):
-                p_.x = p.x + 3*backbone_vector[0]
-                p_.y = p.y + 3*backbone_vector[1]
-                p_.z = p.z + 3*backbone_vector[2]
-
+        displ_next_unit(m, s.particles[-1 * m.particles.count:])
         n = m.copy()
 
         if capped:
@@ -332,7 +355,6 @@ def random_walk(m, nmon, s_=None, **kwargs):
                     head = p
 
         s.add(n, change_dim=False)
-
         s.add_particle_bonding()
 
         if extra_bonds:
@@ -352,9 +374,9 @@ def random_walk(m, nmon, s_=None, **kwargs):
         if head and tail:
             s.make_new_bonds(head, tail, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
-        elif extra_bonds and len(heads) == len(tails):
-            for h, t in zip(heads, tails):
-                s.make_new_bonds(h, t, f)
+        elif extra_bonds and (len(heads) == len(tails)) and (len(heads) == len(extra_bonds)):
+            for h, t, ord in zip(heads, tails, extra_bonds):
+                s.make_new_bonds(h, tails[ord], f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
         else:
             print('cannot find head and tail')
