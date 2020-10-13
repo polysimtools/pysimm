@@ -2,7 +2,7 @@ from pysimm import system
 from pysimm import lmps
 from pysimm.apps.random_walk import random_walk
 import numpy as np
-
+import os
 
 def position_rule_pim1(new, prev):
 
@@ -72,7 +72,7 @@ mono = system.read_lammps('pim_unit.lmps', pair_style='lj/cut', bond_style='harm
                           angle_style='harmonic', dihedral_style='harmonic')
 mono.forcefield = 'trappe/amber'
 lmps.FF_SETTINGS['trappe/amber']['dihedral_style'] = 'harmonic'
-
+lmps.FF_SETTINGS['trappe/amber']['special_bonds'] = 'amber'
 
 ptittles = [pt.name for pt in mono.particle_types]
 
@@ -86,16 +86,63 @@ for t in heads:
     mono.particles[t].linker = 'head'
     mono.particles[t].type = mono.particle_types[ptittles.index(mono.particles[t].type.name[1:]) + 1]
 
-sngl_chain = random_walk(mono, 50, density=0.01,
-                         geometry_rule=position_rule_pim1, extra_bonds=[1, 0], traj=False, unwrap=True,
-                         settings={'length': 10000, 'min_style': 'cg', 'etol': 1e-5, 'ftol': 1e-5, 'maxiter': int(1e+4), 'maxeval': int(1e+5)})
+nchains = 10
+chains = []
+mono.zero_charge()
+
+x = np.linspace(-32, 32, 3)
+X, Y, Z = np.meshgrid(x, x, x)
+displ = [[x, y, z] for x, y, z in zip(np.ndarray.flatten(X), np.ndarray.flatten(Y), np.ndarray.flatten(Z))]
+
+for ch in range(1, nchains + 1):
+
+    mloc = mono.copy()
+    mloc.dim.translate(*displ[2 * ch])
+    mloc.shift_particles(*displ[2 * ch])
+    
+    sngl_chain = random_walk(mloc, 10, density=0.01,
+                             geometry_rule=position_rule_pim1, extra_bonds=[1, 0], traj=False, unwrap=True,
+                             settings={'np': 6, 'length': 25000, 'min_style': 'cg', 'etol': 1e-5, 'ftol': 1e-5,
+                                       'maxiter': int(1e+5), 'maxeval': int(1e+6)})
+
+    chains.append(sngl_chain)
+    # remove litter
+    os.remove('polymer.xyz')
+    os.remove('polymer.lmps')
 
 
-mimi = lmps.Simulation(sngl_chain, print_to_screen=False, log='mimimization.log')
-mimi.add(lmps.Init(cutoff=14.0, special_bonds='lj 0.0 0.0 0.0 coul 0.0 0.0 0.0', pair_modify={'mix': 'arithmetic'}))
-mimi.add_min(min_style='sd', eol=1e-5, ftol=1e-5, maxiter=int(1e+4), maxeval=int(1e+5))
-mimi.add_min(min_style='cg', eol=1e-5, ftol=1e-5, maxiter=int(1e+4), maxeval=int(1e+5))
-mimi.run(np=4)
 
-sngl_chain.write_lammps('test_ladder.lmps')
+pim1_ld = system.System()
+pim1_ld.ff_class = sngl_chain.ff_class
+pim1_ld.forcefield = sngl_chain.forcefield
+pim1_ld.pair_style = sngl_chain.pair_style
+pim1_ld.bond_style = sngl_chain.bond_style
+pim1_ld.angle_style = sngl_chain.angle_style
+pim1_ld.dihedral_style = sngl_chain.dihedral_style
+pim1_ld.improper_style = sngl_chain.improper_style
+
+pim1_ld.dim.dx = 65
+pim1_ld.dim.dy = 65
+pim1_ld.dim.dz = 65
+
+for idx in range(10):
+    tmp = chains[idx].copy()
+    tmp.shift_particles(*displ[2 * idx])
+    pim1_ld.add(tmp, change_dim=False)
+
+
+pim1_ld.wrap()
+pim1_ld.set_density()
+print(pim1_ld.density)
+# pim1_ld = system.replicate(new_chains, [1] * len(new_chains), density=0.05, rand=False)
+
+
+mimi = lmps.Simulation(pim1_ld, print_to_screen=False, log='mimimization.log')
+mimi.add(lmps.Init(cutoff=14.0, special_bonds='amber', pair_modify={'mix': 'arithmetic'}))
+mimi.add_min(min_style='sd', eol=1e-5, ftol=1e-5, maxiter=int(1e+5), maxeval=int(1e+6))
+mimi.add_min(min_style='cg', eol=1e-5, ftol=1e-5, maxiter=int(1e+5), maxeval=int(1e+6))
+mimi.run(np=6)
+
+
+pim1_ld.write_lammps('pim1.smpl5.rndwlk.lmps')
 

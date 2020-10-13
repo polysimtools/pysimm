@@ -39,32 +39,18 @@ from pysimm import system, lmps, forcefield, calc
 from pysimm import error_print
 
 
-def find_last_backbone_vector(s, m):
-    """pysimm.apps.random_walk.find_last_backbone_vector
+def displ_next_unit_default(m, s):
+    """pysimm.apps.random_walk.displ_next_unit_default
 
-    Finds vector between backbone atoms in terminal monomer. Requires current system s, and reference monomer m.
+    Default implementation of displacement of next repetitive unit in random walk method for a polymer growth
 
     Args:
-        s: :class:`~pysimm.system.System` object
-        m: :class:`~pysimm.system.System` object
+        m: :class:`~pysimm.system.System` object -- updated
+        s: :class:`~pysimm.utils.ItemContainer` of `~pysimm.system.Particle` objects
     Returns:
-        list of vector components
+        empty list: general placeholder for connectivity order of linker atoms; default implementation assumes
+        work with polymers with a single linkage bond, thus no connectivity order is needed
     """
-    head_pos = np.zeros(3)
-    tail_pos = np.zeros(3)
-    hcount = 0
-    tcount = 0
-    for p in s.particles[-1*m.particles.count:]:
-        if p.linker == 'head':
-            hcount += 1
-            head_pos += np.array([p.x, p.y, p.z])
-        elif p.linker == 'tail':
-            tcount += 1
-            tail_pos += np.array([p.x, p.y, p.z])
-    return head_pos / hcount - tail_pos / tcount
-
-
-def displ_next_unit_default(m, s):
     head_pos = np.zeros(3)
     tail_pos = np.zeros(3)
     hcount = 0
@@ -86,7 +72,7 @@ def displ_next_unit_default(m, s):
         p_.x = p.x + displ[0] + bnd_lngth * displ_dir[0]
         p_.y = p.y + displ[1] + bnd_lngth * displ_dir[1]
         p_.z = p.z + displ[2] + bnd_lngth * displ_dir[2]
-    return True
+    return []
 
 
 def copolymer(m, nmon, s_=None, **kwargs):
@@ -296,7 +282,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
     """
     m = m.copy()
 
-    extra_bonds = kwargs.get('extra_bonds', [])
+    extra_bonds = kwargs.get('extra_bonds', False)
     displ_next_unit = kwargs.get('geometry_rule', displ_next_unit_default)
 
     settings = kwargs.get('settings', {})
@@ -375,9 +361,6 @@ def random_walk(m, nmon, s_=None, **kwargs):
             s.make_new_bonds(head, tail, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
         elif extra_bonds and (len(heads) == len(tails)):
-
-            # heads_dir = np.array([heads[0].x - heads[1].x, heads[0].y - heads[1].y, heads[0].z - heads[1].z])
-            # tails_dir = np.array([tails[0].x - tails[1].x, tails[0].y - tails[1].y, tails[0].z - tails[1].z])
             order = [(0,0), (1,1)]
             if len(info) == 2:
                 order = [(0, info[0]), (1, info[1])]
