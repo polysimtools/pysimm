@@ -4,13 +4,13 @@ from pysimm.apps.random_walk import random_walk
 import numpy as np
 import os
 
+
 def position_rule_pim1(new, prev):
 
     head_pos = np.zeros(3)
     tail_pos = np.zeros(3)
-    hcount = 0
-    tcount = 0
-    bnd_lngth = 1.8
+    hcount = tcount = 0
+    bnd_lngth = 2
 
     for p in prev:
         if p.linker == 'head':
@@ -28,22 +28,20 @@ def position_rule_pim1(new, prev):
         p_.z = p.z + displ[2] + bnd_lngth * displ_dir[2]
 
     is_rotation = np.random.random() > 0.5
-    # is_rotation = True
     ordr = [1, 0]
     if is_rotation:
         ordr = [0, 1]
-        # Creating an arbitrary rotation of added monomer around the common backbone direction
+
+        # Creating an arbitrary rotation around one specific (near spirocenter) atom
         rot_pnt_tag = 4
 
-        theta = np.pi
-        Rth = np.eye(3)
-        Rth[0][0] = np.cos(theta)
-        Rth[1][1] = np.cos(theta)
-        Rth[0][1] = -np.sin(theta)
-        Rth[1][0] = np.sin(theta)
+        Rth = np.eye(3) # Rotation matrix by \pi over the Oz
+        Rth[0][0] = -1
+        Rth[1][1] = -1
+        # Rth[0][1] = -np.sin(theta)
+        # Rth[1][0] = np.sin(theta)
 
         Tz = np.eye(3)
-
         new.add_particle_bonding()
         rot_vect = [0, 0, 0]
         for p in new.particles:
@@ -133,9 +131,8 @@ for idx in range(10):
 
 pim1_ld.wrap()
 pim1_ld.set_density()
-print(pim1_ld.density)
+print('Density of the system is: {:} g/cc'.format(pim1_ld.density))
 # pim1_ld = system.replicate(new_chains, [1] * len(new_chains), density=0.05, rand=False)
-
 
 mimi = lmps.Simulation(pim1_ld, print_to_screen=False, log='mimimization.log')
 mimi.add(lmps.Init(cutoff=14.0, special_bonds='amber', pair_modify={'mix': 'arithmetic'}))
@@ -144,5 +141,5 @@ mimi.add_min(min_style='cg', eol=1e-5, ftol=1e-5, maxiter=int(1e+5), maxeval=int
 mimi.run(np=6)
 
 
-pim1_ld.write_lammps('pim1.smpl5.rndwlk.lmps')
+pim1_ld.write_lammps('pim1.smpl1.rndwlk.lmps')
 
