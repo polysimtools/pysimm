@@ -282,3 +282,58 @@ class Charmm(Forcefield):
             None
         """
         pass
+
+
+def _parse_charmm():
+    with open('/pysimm/pysimm/data/forcefields/charmm/ffbonded.itp') as f:
+        ff_file = f.readlines()
+    i = 0
+    obj = {'angle_types':[], 'improper_types':[], 'bond_types':[], 'particle_types':[], 'dihedral_types':[]}
+    curr_type = ''
+    while i < len(ff_file):
+        line = ff_file[i].split()
+        if ff_file[i][0] == '[':
+            curr_type = line[1]
+            if ff_file[i+1].split()[1] == "'improper'":
+                curr_type = 'impropertypes'
+                i+=1
+            print(curr_type)
+            i+=1
+            
+        elif line != []:
+            try:
+                if curr_type == 'bondtypes':
+                    k = float(line[4])/(2*4.18*100)
+                    b = float(line[3])*10
+                    name = ','.join(line[0:2])
+                    rname = ','.join(reversed(line[0:2]))
+                    obj['bond_types'].append({'k':k, 'tag':name, 'r0':b, 'name':name, 'rname':rname})
+
+                elif curr_type == 'angletypes':
+                    theta0 = float(line[4])
+                    ktheta = float(line[5])/(2*4.18)
+                    ub0 = float(line[6])
+                    kub = float(line[7])
+                    name = ','.join(line[0:3])
+                    rname = ','.join(reversed(line[0:3]))
+                    obj['angle_types'].append({'theta0':theta0, 'tag':name, 'k':ktheta, 'ub0': ub0, 'kub': kub, 'name':name, 'rname':rname})
+
+                elif curr_type == 'impropertypes':
+                    k = float(line[6])/(2*4.18)
+                    x0 = float(line[5])
+                    name = ','.join(line[0:4])
+                    rname = ','.join(reversed(line[0:4]))
+                    obj['improper_types'].append({'k':k, 'tag':name, 'x0':x0, 'name':name, 'rname':rname})
+                
+                elif curr_type == 'dihedraltypes':
+                    d = float(line[5])
+                    k = float(line[6])/(4.18)
+                    n = int(line[7])
+                    name = ','.join(line[0:4])
+                    rname = ','.join(reversed(line[0:4]))
+                    obj['dihedral_types'].append({'d':d, 'k':k, 'tag':name, 'n':n, 'name':name, 'rname':rname})
+            except ValueError:
+                print('improper value at line', i)
+            except IndexError:
+                print('missing value at line', i)
+        i+=1
