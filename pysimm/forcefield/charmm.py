@@ -390,7 +390,6 @@ def __parse_charmm__():
               'cannot be opened or read. \nExiting...'.format(nonbnded_lib))
         sys.exit(1)
 
-
     # Adding meta-information about FF styles and creating an output file
     chrm_type = Charmm()
     attr = ['pair_style', 'bond_style', 'angle_style', 'dihedral_style', 'improper_style']
@@ -400,4 +399,3 @@ def __parse_charmm__():
     with open(out_file, 'w') as pntr:
         pntr.write(json.dumps(obj, indent=2))
 
-    # stream.write(os.path.join(DATA_PATH, os.path.pardir, 'charmm.json'))
