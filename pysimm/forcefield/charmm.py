@@ -28,7 +28,9 @@
 # THE SOFTWARE.
 
 import os
-from itertools import permutations, combinations
+import re
+import sys
+from itertools import permutations
 
 from . import gasteiger
 from ..system import Angle, Dihedral, Improper
@@ -46,27 +48,28 @@ class Charmm(Forcefield):
         pair_style: lj
         ff_class: 1
     """
+
     def __init__(self, db_file=None):
         if not db_file and db_file is not False:
             db_file = os.path.join(
                 os.path.dirname(
                     os.path.realpath(__file__)
                 ),
-                os.pardir, 'data', 'forcefields', 'gaff.json'
+                os.pardir, 'data', 'forcefields', 'charmm.json'
             )
         Forcefield.__init__(self, db_file)
-        self.name = 'gaff'
-        self.pair_style = 'lj'
+        self.name = 'charmm'
+        self.pair_style = 'lj/charmm'
         self.bond_style = 'harmonic'
-        self.angle_style = 'harmonic'
-        self.dihedral_style = 'fourier'
-        self.improper_style = 'cvff'
+        self.angle_style = 'charmm'
+        self.dihedral_style = 'charmm'
+        self.improper_style = 'harmonic'
         self.ff_class = '1'
 
     def assign_ptypes(self, s):
-        """pysimm.forcefield.Gaff.assign_ptypes
+        """pysimm.forcefield.Charmm.assign_ptypes
 
-        Gaff specific particle typing rules.
+        Charmm specific particle typing rules.
         Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds defined.
         *** use System.add_particle_bonding() to ensure this ***
 
@@ -81,7 +84,7 @@ class Charmm(Forcefield):
         pass
 
     def assign_btypes(self, s):
-        """pysimm.forcefield.Gaff.assign_btypes
+        """pysimm.forcefield.Charmm.assign_btypes
 
         Gaff specific bond typing rules.
         Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
@@ -100,8 +103,8 @@ class Charmm(Forcefield):
             if bt:
                 b.type_name = bt[0].name
             else:
-                print ('couldnt type this bond %s,%s'
-                       % (b.a.type.name, b.b.type.name))
+                print('couldnt type this bond %s,%s'
+                      % (b.a.type.name, b.b.type.name))
                 return b
             all_types.add(self.bond_types.get(b.type_name)[0])
 
@@ -115,7 +118,7 @@ class Charmm(Forcefield):
                 b.type = bt[0]
 
     def assign_atypes(self, s):
-        """pysimm.forcefield.Gaff.assign_atypes
+        """pysimm.forcefield.Charmm.assign_atypes
 
         Gaff specific boanglend typing rules.
         Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
@@ -149,10 +152,10 @@ class Charmm(Forcefield):
                                                    a=p1, b=p, c=p2))
                                 all_types.add(at[0])
                             else:
-                                print ('I cant type this angle %s,%s,%s'
-                                       % (p1.type.name,
-                                          p.type.name,
-                                          p2.type.name))
+                                print('I cant type this angle %s,%s,%s'
+                                      % (p1.type.name,
+                                         p.type.name,
+                                         p2.type.name))
 
         for at in all_types:
             at = at.copy()
@@ -164,7 +167,7 @@ class Charmm(Forcefield):
                 a.type = at[0]
 
     def assign_dtypes(self, s):
-        """pysimm.forcefield.Gaff.assign_dtypes
+        """pysimm.forcefield.Charmm.assign_dtypes
 
         Gaff specific dihedral typing rules.
         Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
@@ -186,9 +189,9 @@ class Charmm(Forcefield):
                     unique = True
                     for d in s.dihedrals:
                         if ((d.a == p1 and d.b == b.a and
-                                d.c == b.b and d.d == p2) or
-                            (d.a == p2 and d.b == b.b and
-                                d.c == b.a and d.d == p1)):
+                             d.c == b.b and d.d == p2) or
+                                (d.a == p2 and d.b == b.b and
+                                 d.c == b.a and d.d == p1)):
                             unique = False
                     if unique:
                         p1_name = p1.type.name
@@ -217,8 +220,8 @@ class Charmm(Forcefield):
                                                          a=p1, b=b.a,
                                                          c=b.b, d=p2))
                         else:
-                            print ('I cant type this dihedral %s,%s,%s,%s'
-                                   % (p1_name, a_name, b_name, p2_name))
+                            print('I cant type this dihedral %s,%s,%s,%s'
+                                  % (p1_name, a_name, b_name, p2_name))
 
         for dt in all_types:
             dt = dt.copy()
@@ -230,7 +233,7 @@ class Charmm(Forcefield):
                 d.type = dt[0]
 
     def assign_itypes(self, s):
-        """pysimm.forcefield.Gaff.assign_itypes
+        """pysimm.forcefield.Charmm.assign_itypes
 
         Gaff specific improper typing rules.
         There are none.
@@ -270,7 +273,7 @@ class Charmm(Forcefield):
                 i.type = it[0]
 
     def assign_charges(self, s, charges='gasteiger'):
-        """pysimm.forcefield.Gaff.assign_charges
+        """pysimm.forcefield.Charmm.assign_charges
 
         Charge assignment. Gasteiger is default for now.
 
@@ -284,56 +287,117 @@ class Charmm(Forcefield):
         pass
 
 
-def _parse_charmm():
-    with open('/pysimm/pysimm/data/forcefields/charmm/ffbonded.itp') as f:
-        ff_file = f.readlines()
+def __parse_charmm__():
+    import json
+    from io import StringIO
+
+    kj2kcal = 4.18
+    bnded_lib = 'ffbonded.itp'
+    atmtype_lib = 'atomtypes.atp'
+    nonbnded_lib = 'ffnonbonded.itp'
+
+    DATA_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'data', 'forcefields', 'charmm')
+    obj = {'angle_types': [], 'improper_types': [], 'bond_types': [], 'particle_types': [], 'dihedral_types': []}
+
+    # Parsing bonded parameters of the FF
+    try:
+        with open(os.path.join(DATA_PATH, bnded_lib), 'r') as f:
+            ff_file = f.readlines()
+    except OSError:
+        print('Required library file with CHARMM bonded parametrs \"{:}\" '
+              'cannot be opened or read. \nExiting...'.format(bnded_lib))
+        sys.exit(1)
+
     i = 0
-    obj = {'angle_types':[], 'improper_types':[], 'bond_types':[], 'particle_types':[], 'dihedral_types':[]}
     curr_type = ''
     while i < len(ff_file):
         line = ff_file[i].split()
         if ff_file[i][0] == '[':
             curr_type = line[1]
-            if ff_file[i+1].split()[1] == "'improper'":
+            if ff_file[i + 1].split()[1] == "'improper'":
                 curr_type = 'impropertypes'
-                i+=1
+                i += 1
             print(curr_type)
-            i+=1
-            
-        elif line != []:
+            i += 1
+
+        elif line:
             try:
                 if curr_type == 'bondtypes':
-                    k = float(line[4])/(2*4.18*100)
-                    b = float(line[3])*10
+                    k = float(line[4]) / (2 * kj2kcal * 100)
+                    b = float(line[3]) * 10
                     name = ','.join(line[0:2])
                     rname = ','.join(reversed(line[0:2]))
-                    obj['bond_types'].append({'k':k, 'tag':name, 'r0':b, 'name':name, 'rname':rname})
+                    obj['bond_types'].append({'k': k, 'tag': name, 'r0': b, 'name': name, 'rname': rname})
 
                 elif curr_type == 'angletypes':
                     theta0 = float(line[4])
-                    ktheta = float(line[5])/(2*4.18)
+                    ktheta = float(line[5]) / (2 * kj2kcal)
                     ub0 = float(line[6])
                     kub = float(line[7])
                     name = ','.join(line[0:3])
                     rname = ','.join(reversed(line[0:3]))
-                    obj['angle_types'].append({'theta0':theta0, 'tag':name, 'k':ktheta, 'ub0': ub0, 'kub': kub, 'name':name, 'rname':rname})
+                    obj['angle_types'].append(
+                        {'theta0': theta0, 'tag': name, 'k': ktheta, 'ub0': ub0, 'kub': kub, 'name': name,
+                         'rname': rname})
 
                 elif curr_type == 'impropertypes':
-                    k = float(line[6])/(2*4.18)
+                    k = float(line[6]) / (2 * kj2kcal)
                     x0 = float(line[5])
                     name = ','.join(line[0:4])
                     rname = ','.join(reversed(line[0:4]))
-                    obj['improper_types'].append({'k':k, 'tag':name, 'x0':x0, 'name':name, 'rname':rname})
-                
+                    obj['improper_types'].append({'k': k, 'tag': name, 'x0': x0, 'name': name, 'rname': rname})
+
                 elif curr_type == 'dihedraltypes':
                     d = float(line[5])
-                    k = float(line[6])/(4.18)
+                    k = float(line[6]) / kj2kcal
                     n = int(line[7])
                     name = ','.join(line[0:4])
                     rname = ','.join(reversed(line[0:4]))
-                    obj['dihedral_types'].append({'d':d, 'k':k, 'tag':name, 'n':n, 'name':name, 'rname':rname})
+                    obj['dihedral_types'].append({'d': d, 'k': k, 'tag': name, 'n': n, 'name': name, 'rname': rname})
             except ValueError:
                 print('improper value at line', i)
             except IndexError:
                 print('missing value at line', i)
-        i+=1
+        i += 1
+
+    # Parsing non-bonded parameters of the FF
+    try:
+        with open(os.path.join(DATA_PATH, nonbnded_lib), 'r') as nb_file:
+            try:
+                with open(os.path.join(DATA_PATH, atmtype_lib), 'r') as f:
+                    atp_data = f.read()
+            except OSError:
+                print('Required library file with CHARMM atom types \"{:}\" '
+                      'cannot be opened or read. \nExiting...'.format(atmtype_lib))
+                sys.exit(1)
+
+            fields = ['name', 'epsilon', 'sigma', 'elem', 'tag', 'mass', 'desc']
+            for line in nb_file:
+                if not (line[0] in [';', '#', '[', '\n']):
+                    line = line.strip().split()
+                    if len(line) > 6:
+                        descr = re.findall('(?<=' + '{:>6}    '.format(line[0]) + '[\d| ][\d| ]\d\.\d{5} ; ).*', atp_data)
+                        if len(descr) > 0:
+                            descr = descr[0]
+                        else:
+                            descr = ''
+                        tmp = [line[0], float(re.match('-?\d{1,}\.\d{1,}', line[6]).group(0)),
+                               float(re.match('-?\d{1,}\.\d{1,}', line[5]).group(0)), int(line[1]), line[0],
+                               float(line[2]), descr]
+                        obj['particle_types'].append(dict(zip(fields, tmp)))
+    except OSError:
+        print('Required library file with CHARMM non-bonded parametrs \"{:}\" '
+              'cannot be opened or read. \nExiting...'.format(nonbnded_lib))
+        sys.exit(1)
+
+
+    # Adding meta-information about FF styles and creating an output file
+    chrm_type = Charmm()
+    attr = ['pair_style', 'bond_style', 'angle_style', 'dihedral_style', 'improper_style']
+    obj.update(dict(zip(attr, [getattr(chrm_type, t) for t in attr])))
+
+    out_file = os.path.join(DATA_PATH, os.path.pardir, 'charmm.json')
+    with open(out_file, 'w') as pntr:
+        pntr.write(json.dumps(obj, indent=2))
+
+    # stream.write(os.path.join(DATA_PATH, os.path.pardir, 'charmm.json'))
