@@ -33,6 +33,7 @@ import sys
 from itertools import permutations
 
 from . import gasteiger
+from .. import error_print
 from ..system import Angle, Dihedral, Improper
 from .forcefield import Forcefield
 
@@ -81,7 +82,46 @@ class Charmm(Forcefield):
         Returns:
             None
         """
-        pass
+        all_types = set()
+        s.pair_style = self.pair_style
+        s.add_particle_bonding()
+        for p in s.particles:
+            p.bond_orders = [x.order for x in p.bonds]
+            if None in p.bond_orders:
+                error_print('error: bond orders are not set')
+            p.bond_elements = [x.a.elem if p is x.b else x.b.elem for x in p.bonds]
+            p.nbonds = len(p.bond_elements)
+            if p.linker:
+                p.nbonds += 1
+
+        for p in s.particles:
+            if not p.type_name:
+
+                if p.elem == 'C':
+
+                    # General definition of a carbon in ethers
+                    if (all(p.bond_orders) == 1) and (p.nbonds == 4):
+                        rng_count = __detect_rings__(p, [5, 6])
+                        if rng_count > 0 : # tetrahydrofuran (THF) or tetrahydropyran (THP)
+                            p.type_name = 'CC32{}B'.format(rng_count)
+                            for sb_p in p.bonded_to: # type all hydrogens connected to this atom
+                                if sb_p.elem == 'H':
+                                    sb_p.type_name = 'HCA25A'
+                        else: # it is linear ether
+                            hcount = len([True for l in p.bond_elements if l == 'H'])
+                            p.type_name = 'CC3{}A'.format(hcount)
+                            for sb_p in p.bonded_to: # type all hydrogens connected to this atom
+                                if sb_p.elem == 'H':
+                                    sb_p.type_name = 'HCA{}A'.format(hcount)
+
+                if p.elem == 'O':
+                    if (p.nbonds == 2) and (all(p.bond_orders) == 1) and (all(p.bond_elements) == 'C'):
+                        p.type_name = 'OC30A'
+                        if __detect_rings__(p, [5, 6]):
+                            p.type_name = 'OC305A'
+
+
+
 
     def assign_btypes(self, s):
         """pysimm.forcefield.Charmm.assign_btypes
@@ -399,3 +439,28 @@ def __parse_charmm__():
     with open(out_file, 'w') as pntr:
         pntr.write(json.dumps(obj, indent=2))
 
+
+def __detect_rings__(particle, orders):
+    rng_count = 0
+    neighb_list = []
+    ordr_count = 2
+    to_exclude = set(particle)
+
+    neighb = []
+    for p in to_exclude:
+        neighb += [x.a if particle is x.b else x.b for x in p.bonds]
+
+    while ordr_count < max(orders):
+        to_include = []
+        for p in neighb:
+            to_include += [x.a if particle is x.b else x.b for x in p.bonds]
+
+        neighb_list.append(set(to_include) - to_exclude)
+        to_exclude = neighb
+        ordr_count += 1
+
+    for o in orders:
+        if particle in neighb_list[o - 2]:
+            rng_count = o
+
+    return rng_count
