@@ -23,7 +23,7 @@ def run(test=False):
     monomer.pair_style = 'lj/cut'
     
     # run the polymer random walk tacticity method with 10 total repeat units
-    polymer = random_walk_tacticity(monomer, 10, forcefield=f, capped=True, tacticity='isotactic', sim='no')
+    polymer = random_walk_tacticity(monomer, 10, forcefield=f, tacticity='isotactic', sim='no')
 
     # write a few different file formats
     polymer.write_xyz('isotactic.xyz')
@@ -32,7 +32,7 @@ def run(test=False):
     polymer.write_chemdoodle_json('isotactic.json')
 
     # run the polymer random walk tacticity method with 10 total repeat units
-    polymer = random_walk_tacticity(monomer, 10, forcefield=f, capped=True, tacticity='syndiotactic', sim='no')
+    polymer = random_walk_tacticity(monomer, 10, forcefield=f, tacticity='syndiotactic', sim='no')
 
     # write a few different file formats
     polymer.write_xyz('syndiotactic.xyz')
@@ -41,7 +41,7 @@ def run(test=False):
     polymer.write_chemdoodle_json('syndiotactic.json')
     
     # run the polymer random walk tacticity method with 10 total repeat units
-    polymer = random_walk_tacticity(monomer, 10, forcefield=f, capped=True, tacticity=0.2, sim='no')
+    polymer = random_walk_tacticity(monomer, 10, forcefield=f, tacticity=0.2, sim='no')
 
     # write a few different file formats
     polymer.write_xyz('iso_20_syndio_80.xyz')
