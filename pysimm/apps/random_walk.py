@@ -299,10 +299,20 @@ def random_walk(m, nmon, s_=None, **kwargs):
     if traj:
         s.write_xyz('random_walk.xyz')
 
+    # Remove tail-cap if it exists
     if capped:
-        m.particles.remove(1)
-        m.remove_spare_bonding()
-        m.add_particle_bonding()
+        if __check_tags__(m, req_tags=['tail', 'tail_cap']):
+            for p in m.particles:
+                if p.linker == 'tail':
+                    for p_ in p.bonded_to:
+                        if p_.rnd_wlk_tag == 'tail_cap':
+                            p.charge += p_.charge  # unite charge of tailcap into head
+                            m.particles.remove(p_.tag)  # remove tailcap of monomer
+                    m.remove_spare_bonding()
+                    break
+            m.add_particle_bonding()
+        else:
+            sys.exit("The capped flag is on, however, the 'tail_cap' atom is not defined")
 
     for insertion in range(nmon - 1):
 
@@ -312,16 +322,11 @@ def random_walk(m, nmon, s_=None, **kwargs):
         backbone_vector = np.array(find_last_backbone_vector(s, m))
 
         for p, p_ in zip(s.particles[-1*m.particles.count:], m.particles):
-                p_.x = p.x + 3*backbone_vector[0]
-                p_.y = p.y + 3*backbone_vector[1]
-                p_.z = p.z + 3*backbone_vector[2]
+                p_.x = p.x + 3 * backbone_vector[0]
+                p_.y = p.y + 3 * backbone_vector[1]
+                p_.z = p.z + 3 * backbone_vector[2]
 
         n = m.copy()
-
-        if capped:
-            s.particles.remove(s.particles.count)
-            s.remove_spare_bonding()
-            s.add_particle_bonding()
 
         if extra_bonds:
             heads = []
@@ -332,6 +337,19 @@ def random_walk(m, nmon, s_=None, **kwargs):
             for p in s.particles[-1*n.particles.count:]:
                 if p.linker == 'head':
                     head = p
+
+        # Remove head-cap if it exists
+        if capped:
+            if __check_tags__(m, req_tags=['head_cap']):
+                for p_ in s.particles[-m.particles.count:]:
+                    if p_.rnd_wlk_tag == 'head_cap':
+                        head.charge += p_.charge  # unite charge of head_cap into tail atom
+                        s.particles.remove(p_.tag)  # Removing head_cap atom from growing chain
+                        s.remove_spare_bonding()
+                        break
+                s.add_particle_bonding()
+            else:
+                sys.exit("The capped flag is on, however, the 'head_cap' atom is not defined")
 
         s.add(n, change_dim=False)
 
@@ -457,42 +475,43 @@ def reflect_coords_thru_plane(atom, plane):
         new coordinates after reflection through plane
     """
     try:
-        x1,y1,z1 = atom.coords()
+        x1, y1, z1 = atom.coords()
     except:
-        x1,y1,z1 = atom
-    a,b,c,d = plane
-    k = (-a*x1 - b*y1 -c*z1 - d)/float((a*a + b*b + c*c))
-    x2 = a*k + x1
-    y2 = b*k + y1
-    z2 = c*k + z1
-    x3 = 2*x2 - x1
-    y3 = 2*y2 - y1
-    z3 = 2*z2 - z1
-    #print("reflected to: " + str(atom))
-    return x3,y3,z3
+        x1, y1, z1 = atom
+    a, b, c, d = plane
+    k = (-a * x1 - b * y1 - c * z1 - d) / float((a * a + b * b + c * c))
+    x2 = a * k + x1
+    y2 = b * k + y1
+    z2 = c * k + z1
+    x3 = 2 * x2 - x1
+    y3 = 2 * y2 - y1
+    z3 = 2 * z2 - z1
+    # print("reflected to: " + str(atom))
+    return x3, y3, z3
 
 
-def scale_monomer(atom,origin,scale):
-  """pysimm.apps.random_walk.scale_monomer
-    This function scales the atom--origin vector. It is used by redo_monomer_insertion to scale the last monomer relative to its attachment point to the polymer chain
-    
-    Args:
-        atom: either an atom or an array containing x,y,z coordinates for an atom, to be scaled relative to the origin
-        origin: either an atom or an array containing x,y,z coordinates for where the "atom" argument should be scaled to
-        scale: the factor by which the atom--origin vector should be scaled. 
-    Returns:
-        scaled atom--origin vector
-  """
-  try:
-    x1,y1,z1 = atom.coords()
-    x0,y0,z0 = origin.coords()
-  except:
-    x1,y1,z1 = atom
-    x0,y0,z0 = origin
-  return np.array([x0+(x1-x0)*scale,y0+(y1-y0)*scale,z0+(z1-z0)*scale])
+def scale_monomer(atom, origin, scale):
+    """pysimm.apps.random_walk.scale_monomer
+      This function scales the atom--origin vector. It is used by redo_monomer_insertion to scale the last monomer
+      relative to its attachment point to the polymer chain
+
+      Args:
+          atom: either an atom or an array containing x,y,z coordinates for an atom, to be scaled relative to the origin
+          origin: either an atom or an array containing x,y,z coordinates for where the "atom" argument should be scaled to
+          scale: the factor by which the atom--origin vector should be scaled.
+      Returns:
+          scaled atom--origin vector
+    """
+    try:
+        x1, y1, z1 = atom.coords()
+        x0, y0, z0 = origin.coords()
+    except:
+        x1, y1, z1 = atom
+        x0, y0, z0 = origin
+    return np.array([x0 + (x1 - x0) * scale, y0 + (y1 - y0) * scale, z0 + (z1 - z0) * scale])
 
 
-def redo_monomer_insertion(s,m,i):
+def redo_monomer_insertion(s, m, i):
     """pysimm.apps.random_walk.redo_monomer_insertion
     This function is called by random_walk_tacticity if the latest capped monomer insertion resulted in hardcore overlaps. 
     1) The hardcore overlap is resolved by shrinking the last monomer by a factor of 0.8, iteratively, until there are no more hardcore overlaps.
@@ -506,35 +525,35 @@ def redo_monomer_insertion(s,m,i):
     Returns:
         nothing; all changes to the polymer chain are written to the argument s_ 
     """
-    for p in s.particles[-1*m.particles.count:]:
+    for p in s.particles[-1 * m.particles.count:]:
         if p.linker == 'tail':
             tail = p
     scale_min = 0.1
     s.unwrap()
     s.set_box(padding=10)
     s.wrap()
-    #shrink last monomer
-    for p in s.particles[-1*m.particles.count:]:
-        p.x,p.y,p.z = scale_monomer(p,tail,scale_min)    
-    #now, reexpand the monomer and relax polymer, step-wise
+    # shrink last monomer
+    for p in s.particles[-1 * m.particles.count:]:
+        p.x, p.y, p.z = scale_monomer(p, tail, scale_min)
+        # now, reexpand the monomer and relax polymer, step-wise
     scale = 1
-    while scale_min*scale*1.05 < 0.91:
-        print("Scaling up from %s to %s" % (str(scale_min*scale), str(scale*scale_min*1.05)))
-        scale = scale*1.05
-        for p in s.particles[-1*m.particles.count:]:
-            p.x,p.y,p.z = scale_monomer(p,tail,1.05)
-        #simulation with fixed latest monomer
-        constrained_opt(s,m,"nearby") #system-wide constrained optimization is too slow
+    while scale_min * scale * 1.05 < 0.91:
+        print("Scaling up from %s to %s" % (str(scale_min * scale), str(scale * scale_min * 1.05)))
+        scale = scale * 1.05
+        for p in s.particles[-1 * m.particles.count:]:
+            p.x, p.y, p.z = scale_monomer(p, tail, 1.05)
+        # simulation with fixed latest monomer
+        constrained_opt(s, m, "nearby")  # system-wide constrained optimization is too slow
         s.unwrap()
         s.write_xyz('bad_insertion_' + str(i) + '.xyz', append=True)
         s.wrap()
     if s.quality(tolerance=0.2) > 0:
         error_print("system is broken upon monomer reexpansion")
-    #now relax the last monomer
-    constrained_opt(s,m,"monomer")
+    # now relax the last monomer
+    constrained_opt(s, m, "monomer")
 
 
-def constrained_opt(s,m,active):
+def constrained_opt(s, m, active):
     """pysimm.apps.random_walk.constrained_opt
     This function is called by redo_monomer_insertion and optimizes polymer chain s while keeping the last monomer fixed.
     
@@ -545,21 +564,22 @@ def constrained_opt(s,m,active):
         nothing; all changes to the polymer chain are written to the argument s_ 
     """
     print("Constrained Opt...")
-    sim=lmps.Simulation(s,name='constrained_opt')
+    sim = lmps.Simulation(s, name='constrained_opt')
     total_atoms = s.particles.count
     monomer_atoms = m.particles.count
     p = s.particles[total_atoms]
-    sim.add_custom("group last_monomer id " + str(total_atoms-monomer_atoms) + ":" + str(total_atoms))
-    sim.add_custom("group prev_two_monomers id " + str(total_atoms-3*monomer_atoms) + ":" + str(total_atoms-monomer_atoms))
+    sim.add_custom("group last_monomer id " + str(total_atoms - monomer_atoms) + ":" + str(total_atoms))
+    sim.add_custom(
+        "group prev_two_monomers id " + str(total_atoms - 3 * monomer_atoms) + ":" + str(total_atoms - monomer_atoms))
     sim.add_custom("group non_last_monomers subtract all last_monomer")
     sim.add_custom("region insertion_area sphere {0} {1} {2} 20 side out units box".format(p.x, p.y, p.z))
     sim.add_custom("group 20_ang_away region insertion_area")
     sim.add_custom("group last_monomer_and_far union 20_ang_away last_monomer")
-    if(active=="system"):
+    if (active == "system"):
         sim.add_custom("fix freeze last_monomer setforce 0.0 0.0 0.0")
-    elif(active=="monomer"):
-        sim.add_custom("fix freeze non_last_monomers setforce 0.0 0.0 0.0")        
-    elif(active=="nearby"):
+    elif (active == "monomer"):
+        sim.add_custom("fix freeze non_last_monomers setforce 0.0 0.0 0.0")
+    elif (active == "nearby"):
         sim.add_custom("fix freeze last_monomer_and_far setforce 0.0 0.0 0.0")
     sim.add_min(min_style="cg")
     sim.run()
@@ -659,9 +679,9 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
     # Main polymerisation loop
     for insertion in range(nmon - 1):
         n = m.copy()
-        # head = None
-        # tail = None
-        # mirror_atom = None
+        head = None
+        tail = None
+        mirror_atom = None
         for p in n.particles:
             if p.linker == 'head':
                 head = p
@@ -692,8 +712,8 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
 
         for p_ in s.particles[-n.particles.count:]:
             if p_.rnd_wlk_tag == 'head_cap':
-                head.charge += p_.charge  # unite charge of tail_cap into tail atom
-                s.particles.remove(p_.tag)  # Removing tail_cap atom from growing chain
+                head.charge += p_.charge  # unite charge of head_cap into tail atom
+                s.particles.remove(p_.tag)  # Removing head_cap atom from growing chain
                 s.remove_spare_bonding()
                 break
 
