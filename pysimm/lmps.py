@@ -1028,14 +1028,14 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
             t.daemon = True
             t.start()
     
-            while t.isAlive() or not q.empty():
+            while t.is_alive() or not q.empty():
                 try:
                     line = q.get_nowait()
                 except Empty:
                     pass
                 else:
                     if simulation.debug:
-                        sys.stdout.write(line)
+                        sys.stdout.write(line.decode('utf-8'))
                         sys.stdout.flush()
         else:
             stdo, stde = p.communicate(simulation.input.encode('utf-8'))
