@@ -48188,7 +48188,7 @@
       "name": "AG",
       "epsilon": 19.07904,
       "sigma": 0.26326057121,
-      "elem": 47,
+      "elem": "Ag",
       "tag": "AG",
       "mass": 107.8682,
       "desc": "Silver metal (HH et al. 2008)"
@@ -48197,7 +48197,7 @@
       "name": "AL",
       "epsilon": 16.81968,
       "sigma": 0.260587875056,
-      "elem": 13,
+      "elem": "Al",
       "tag": "AL",
       "mass": 26.98154,
       "desc": "Aluminium metal (HH et al. 2008)"
@@ -48206,7 +48206,7 @@
       "name": "ALG1",
       "epsilon": 2.7196,
       "sigma": 0.356359487256,
-      "elem": 13,
+      "elem": "Al",
       "tag": "ALG1",
       "mass": 26.98154,
       "desc": "Aluminum, for ALF4, AlF4-"
@@ -48215,7 +48215,7 @@
       "name": "ALSI",
       "epsilon": 2.7196,
       "sigma": 0.391995435982,
-      "elem": 13,
+      "elem": "Al",
       "tag": "ALSI",
       "mass": 26.98154,
       "desc": "Aluminum Atom;"
@@ -48224,7 +48224,7 @@
       "name": "AU",
       "epsilon": 22.13336,
       "sigma": 0.262904211723,
-      "elem": 79,
+      "elem": "Au",
       "tag": "AU",
       "mass": 196.9665,
       "desc": "Gold metal (HH et al. 2008)"
@@ -48233,7 +48233,7 @@
       "name": "BAR",
       "epsilon": 0.6276,
       "sigma": 0.336759715457,
-      "elem": 56,
+      "elem": "Ba",
       "tag": "BAR",
       "mass": 137.327,
       "desc": "Barium Ion"
@@ -48242,7 +48242,7 @@
       "name": "BG201",
       "epsilon": 0.15899,
       "sigma": 0.454358346252,
-      "elem": 5,
+      "elem": "B",
       "tag": "BG201",
       "mass": 10.811,
       "desc": "Boronic acid B"
@@ -48251,7 +48251,7 @@
       "name": "BRGA1",
       "epsilon": 2.00832,
       "sigma": 0.351014094947,
-      "elem": 35,
+      "elem": "Br",
       "tag": "BRGA1",
       "mass": 79.904,
       "desc": "BRET, bromoethane"
@@ -48260,7 +48260,7 @@
       "name": "BRGA2",
       "epsilon": 2.21752,
       "sigma": 0.365268474438,
-      "elem": 35,
+      "elem": "Br",
       "tag": "BRGA2",
       "mass": 79.904,
       "desc": "DBRE, 1,1-dibromoethane"
@@ -48269,7 +48269,7 @@
       "name": "BRGA3",
       "epsilon": 2.25936,
       "sigma": 0.356359487256,
-      "elem": 35,
+      "elem": "Br",
       "tag": "BRGA3",
       "mass": 79.904,
       "desc": "TBRE, 1,1,1-dibromoethane"
@@ -48278,7 +48278,7 @@
       "name": "BRGR1",
       "epsilon": 1.33888,
       "sigma": 0.352795892384,
-      "elem": 35,
+      "elem": "Br",
       "tag": "BRGR1",
       "mass": 79.904,
       "desc": "BROB, bromobenzene"
@@ -48287,7 +48287,7 @@
       "name": "C",
       "epsilon": 0.46024,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "C",
       "mass": 12.011,
       "desc": "carbonyl C, peptide backbone"
@@ -48296,7 +48296,7 @@
       "name": "C3",
       "epsilon": 0.08368,
       "sigma": 0.405358916754,
-      "elem": 6,
+      "elem": "C",
       "tag": "C3",
       "mass": 12.011,
       "desc": "cyclopropane carbo"
@@ -48305,7 +48305,7 @@
       "name": "CA",
       "epsilon": 0.29288,
       "sigma": 0.355005321205,
-      "elem": 6,
+      "elem": "C",
       "tag": "CA",
       "mass": 12.011,
       "desc": "aromatic C"
@@ -48314,7 +48314,7 @@
       "name": "CAD",
       "epsilon": 0.50208,
       "sigma": 0.241789912103,
-      "elem": 48,
+      "elem": "Cd",
       "tag": "CAD",
       "mass": 112.411,
       "desc": "cadmium (II) cation"
@@ -48323,7 +48323,7 @@
       "name": "CAI",
       "epsilon": 0.30543,
       "sigma": 0.35457768982,
-      "elem": 6,
+      "elem": "C",
       "tag": "CAI",
       "mass": 12.011,
       "desc": "aromatic C next to CPT in trp"
@@ -48332,7 +48332,7 @@
       "name": "CAL",
       "epsilon": 0.50208,
       "sigma": 0.24357170954,
-      "elem": 20,
+      "elem": "Ca",
       "tag": "CAL",
       "mass": 40.08,
       "desc": "Calcium Ion"
@@ -48341,7 +48341,7 @@
       "name": "CC",
       "epsilon": 0.29288,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC",
       "mass": 12.011,
       "desc": "carbonyl C, asn,asp,gln,glu,cter,ct2"
@@ -48350,7 +48350,7 @@
       "name": "CC1A",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC1A",
       "mass": 12.011,
       "desc": "alkene conjugation"
@@ -48359,7 +48359,7 @@
       "name": "CC1B",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC1B",
       "mass": 12.011,
       "desc": "alkene conjugation"
@@ -48368,7 +48368,7 @@
       "name": "CC2",
       "epsilon": 0.26778,
       "sigma": 0.370613866746,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC2",
       "mass": 12.011,
       "desc": "alkene conjugation"
@@ -48377,7 +48377,7 @@
       "name": "CC2O1",
       "epsilon": 0.46024,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC2O1",
       "mass": 12.011,
       "desc": "sp2 carbon in amides, aldoses"
@@ -48386,7 +48386,7 @@
       "name": "CC2O2",
       "epsilon": 0.29288,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC2O2",
       "mass": 12.011,
       "desc": "sp2 carbon in carboxylates"
@@ -48395,7 +48395,7 @@
       "name": "CC2O3",
       "epsilon": 0.37656,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC2O3",
       "mass": 12.011,
       "desc": "sp2 carbon in acetone, ketoses"
@@ -48404,7 +48404,7 @@
       "name": "CC2O4",
       "epsilon": 0.25104,
       "sigma": 0.320723538531,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC2O4",
       "mass": 12.011,
       "desc": "c22 CD"
@@ -48413,7 +48413,7 @@
       "name": "CC2O5",
       "epsilon": 0.41003,
       "sigma": 0.302905564168,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC2O5",
       "mass": 12.011,
       "desc": "carbonyl C on acetyl"
@@ -48422,7 +48422,7 @@
       "name": "CC301",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC301",
       "mass": 12.011,
       "desc": "aliphatic C, no H's"
@@ -48431,7 +48431,7 @@
       "name": "CC3051",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC3051",
       "mass": 12.011,
       "desc": "furan ring carbon; C2 fructose"
@@ -48440,7 +48440,7 @@
       "name": "CC3062",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC3062",
       "mass": 12.011,
       "desc": "C2 on NE5AC"
@@ -48449,7 +48449,7 @@
       "name": "CC30A",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC30A",
       "mass": 12.011,
       "desc": "-C(sp3)   Carbon (eq. CT)"
@@ -48458,7 +48458,7 @@
       "name": "CC311",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC311",
       "mass": 12.011,
       "desc": "generic acyclic CH carbon"
@@ -48467,7 +48467,7 @@
       "name": "CC311C",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC311C",
       "mass": 12.011,
       "desc": "patch C1 in model compound"
@@ -48476,7 +48476,7 @@
       "name": "CC311D",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC311D",
       "mass": 12.011,
       "desc": "patch C1 in model compound"
@@ -48485,7 +48485,7 @@
       "name": "CC312",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC312",
       "mass": 12.011,
       "desc": "CH carbon in linear polyols"
@@ -48494,7 +48494,7 @@
       "name": "CC312C",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC312C",
       "mass": 12.011,
       "desc": "tf2m CH1"
@@ -48503,7 +48503,7 @@
       "name": "CC312D",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC312D",
       "mass": 12.011,
       "desc": "from CC322C; THF anomeric carbon"
@@ -48512,7 +48512,7 @@
       "name": "CC3151",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC3151",
       "mass": 12.011,
       "desc": "furan ring carbon"
@@ -48521,7 +48521,7 @@
       "name": "CC3152",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC3152",
       "mass": 12.011,
       "desc": "furan ring carbon"
@@ -48530,7 +48530,7 @@
       "name": "CC3153",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC3153",
       "mass": 12.011,
       "desc": "furan ring carbon"
@@ -48539,7 +48539,7 @@
       "name": "CC3161",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC3161",
       "mass": 12.011,
       "desc": "C2, C3, C4 CH bound to OH"
@@ -48548,7 +48548,7 @@
       "name": "CC3162",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC3162",
       "mass": 12.011,
       "desc": "C1 (anomeric) CH bound to OH"
@@ -48557,7 +48557,7 @@
       "name": "CC3163",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC3163",
       "mass": 12.011,
       "desc": "C5 CH bound to exocylic CH2OH"
@@ -48566,7 +48566,7 @@
       "name": "CC31A",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC31A",
       "mass": 12.011,
       "desc": "-C(sp3)H  Carbon (eq. CT1)"
@@ -48575,7 +48575,7 @@
       "name": "CC321",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC321",
       "mass": 12.011,
       "desc": "generic acyclic CH2 carbon (hexopyranose C6)"
@@ -48584,7 +48584,7 @@
       "name": "CC321C",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC321C",
       "mass": 12.011,
       "desc": "cyclohexane, thp CH2"
@@ -48593,7 +48593,7 @@
       "name": "CC321D",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC321D",
       "mass": 12.011,
       "desc": "cyclohexane, thp CH2 model for 1-1 linkage"
@@ -48602,7 +48602,7 @@
       "name": "CC322",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC322",
       "mass": 12.011,
       "desc": "CH2 carbon in linear polyols erh"
@@ -48611,7 +48611,7 @@
       "name": "CC322C",
       "epsilon": 0.25104,
       "sigma": 0.359923082129,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC322C",
       "mass": 12.011,
       "desc": "cyclopentane, thf CH2"
@@ -48620,7 +48620,7 @@
       "name": "CC3251",
       "epsilon": 0.25104,
       "sigma": 0.359923082129,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC3251",
       "mass": 12.011,
       "desc": "furan ring carbon; C2 deoxy"
@@ -48629,7 +48629,7 @@
       "name": "CC325A",
       "epsilon": 0.25104,
       "sigma": 0.359923082129,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC325A",
       "mass": 12.011,
       "desc": "-C(sp3)H2 Carbon in 5-membered ring"
@@ -48638,7 +48638,7 @@
       "name": "CC325B",
       "epsilon": 0.25104,
       "sigma": 0.359923082129,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC325B",
       "mass": 12.011,
       "desc": "-C(sp3)H2 Carbon in THF (tetrahydrofuran)"
@@ -48647,7 +48647,7 @@
       "name": "CC3261",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC3261",
       "mass": 12.011,
       "desc": "C3 on NE5AC"
@@ -48656,7 +48656,7 @@
       "name": "CC3263",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC3263",
       "mass": 12.011,
       "desc": "C5 in xylose"
@@ -48665,7 +48665,7 @@
       "name": "CC326A",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC326A",
       "mass": 12.011,
       "desc": "-C(sp3)H2 Carbon in THP (tetrahydropyran)"
@@ -48674,7 +48674,7 @@
       "name": "CC32A",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC32A",
       "mass": 12.011,
       "desc": "-C(sp3)H2 Carbon (eq. CT2)"
@@ -48683,7 +48683,7 @@
       "name": "CC331",
       "epsilon": 0.32635,
       "sigma": 0.363486677001,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC331",
       "mass": 12.011,
       "desc": "generic acyclic CH3 carbon (xyl C6, glcna/galna CT)"
@@ -48692,7 +48692,7 @@
       "name": "CC33A",
       "epsilon": 0.32635,
       "sigma": 0.363486677001,
-      "elem": 6,
+      "elem": "C",
       "tag": "CC33A",
       "mass": 12.011,
       "desc": "-C(sp3)H3 Carbon (eq. CT3)"
@@ -48701,7 +48701,7 @@
       "name": "CCL",
       "epsilon": 0.29288,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CCL",
       "mass": 12.011,
       "desc": "for POPS"
@@ -48710,7 +48710,7 @@
       "name": "CD",
       "epsilon": 0.29288,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CD",
       "mass": 12.011,
       "desc": "carbonyl C, pres aspp,glup,ct1"
@@ -48719,7 +48719,7 @@
       "name": "CE1",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CE1",
       "mass": 12.011,
       "desc": "for alkene; RHC=CR"
@@ -48728,7 +48728,7 @@
       "name": "CE2",
       "epsilon": 0.26778,
       "sigma": 0.370613866746,
-      "elem": 6,
+      "elem": "C",
       "tag": "CE2",
       "mass": 12.011,
       "desc": "for alkene; H2C=CR"
@@ -48737,7 +48737,7 @@
       "name": "CEL1",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CEL1",
       "mass": 12.011,
       "desc": "for alkene; RHC=CR"
@@ -48746,7 +48746,7 @@
       "name": "CEL2",
       "epsilon": 0.26778,
       "sigma": 0.370613866746,
-      "elem": 6,
+      "elem": "C",
       "tag": "CEL2",
       "mass": 12.011,
       "desc": "for alkene; H2C=CR. Currently unused."
@@ -48755,7 +48755,7 @@
       "name": "CEL3",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CEL3",
       "mass": 12.011,
       "desc": ""
@@ -48764,7 +48764,7 @@
       "name": "CES",
       "epsilon": 0.79496,
       "sigma": 0.374177461619,
-      "elem": 55,
+      "elem": "Cs",
       "tag": "CES",
       "mass": 132.90545,
       "desc": "Cesium Ion"
@@ -48773,7 +48773,7 @@
       "name": "CG1N1",
       "epsilon": 0.75312,
       "sigma": 0.333196120584,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG1N1",
       "mass": 12.011,
       "desc": "C for cyano group"
@@ -48782,7 +48782,7 @@
       "name": "CG1T1",
       "epsilon": 0.69873,
       "sigma": 0.327850728276,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG1T1",
       "mass": 12.011,
       "desc": "internal alkyne R-C#C"
@@ -48791,7 +48791,7 @@
       "name": "CG1T2",
       "epsilon": 0.43179,
       "sigma": 0.355023139179,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG1T2",
       "mass": 12.011,
       "desc": "terminal alkyne H-C#C"
@@ -48800,7 +48800,7 @@
       "name": "CG251O",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG251O",
       "mass": 12.011,
       "desc": "same as CG2D1O but in 5-membered ring with exocyclic double bond"
@@ -48809,7 +48809,7 @@
       "name": "CG252O",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG252O",
       "mass": 12.011,
       "desc": "same as CG2D2O but in 5-membered ring with exocyclic double bond"
@@ -48818,7 +48818,7 @@
       "name": "CG25C1",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG25C1",
       "mass": 12.011,
       "desc": "same as CG2DC1 but in 5-membered ring with exocyclic double bond"
@@ -48827,7 +48827,7 @@
       "name": "CG25C2",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG25C2",
       "mass": 12.011,
       "desc": "same as CG2DC2 but in 5-membered ring with exocyclic double bond"
@@ -48836,7 +48836,7 @@
       "name": "CG2D1",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2D1",
       "mass": 12.011,
       "desc": "alkene; RHC= ; imine C"
@@ -48845,7 +48845,7 @@
       "name": "CG2D1O",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2D1O",
       "mass": 12.011,
       "desc": "double bond carbon adjacent to heteroatom. In conjugated systems, the atom to which it is double bonded must be CG2DC1."
@@ -48854,7 +48854,7 @@
       "name": "CG2D2",
       "epsilon": 0.26778,
       "sigma": 0.370613866746,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2D2",
       "mass": 12.011,
       "desc": "alkene; H2C="
@@ -48863,7 +48863,7 @@
       "name": "CG2D2O",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2D2O",
       "mass": 12.011,
       "desc": "double bond carbon adjacent to heteroatom. In conjugated systems, the atom to which it is double bonded must be CG2DC2."
@@ -48872,7 +48872,7 @@
       "name": "CG2DC1",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2DC1",
       "mass": 12.011,
       "desc": "conjugated alkenes, R2C=CR2"
@@ -48881,7 +48881,7 @@
       "name": "CG2DC2",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2DC2",
       "mass": 12.011,
       "desc": "conjugated alkenes, R2C=CR2"
@@ -48890,7 +48890,7 @@
       "name": "CG2DC3",
       "epsilon": 0.26778,
       "sigma": 0.370613866746,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2DC3",
       "mass": 12.011,
       "desc": "conjugated alkenes, H2C="
@@ -48899,7 +48899,7 @@
       "name": "CG2N1",
       "epsilon": 0.46024,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2N1",
       "mass": 12.011,
       "desc": "conjugated C in guanidine/guanidinium"
@@ -48908,7 +48908,7 @@
       "name": "CG2N2",
       "epsilon": 0.46024,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2N2",
       "mass": 12.011,
       "desc": "conjugated C in amidinium cation"
@@ -48917,7 +48917,7 @@
       "name": "CG2O1",
       "epsilon": 0.46024,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2O1",
       "mass": 12.011,
       "desc": "carbonyl C: amides"
@@ -48926,7 +48926,7 @@
       "name": "CG2O2",
       "epsilon": 0.41003,
       "sigma": 0.302905564168,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2O2",
       "mass": 12.011,
       "desc": "carbonyl C: esters, [neutral] carboxylic acids"
@@ -48935,7 +48935,7 @@
       "name": "CG2O3",
       "epsilon": 0.29288,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2O3",
       "mass": 12.011,
       "desc": "carbonyl C: [negative] carboxylates"
@@ -48944,7 +48944,7 @@
       "name": "CG2O4",
       "epsilon": 0.25104,
       "sigma": 0.320723538531,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2O4",
       "mass": 12.011,
       "desc": "carbonyl C: aldehydes"
@@ -48953,7 +48953,7 @@
       "name": "CG2O5",
       "epsilon": 0.37656,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2O5",
       "mass": 12.011,
       "desc": "carbonyl C: ketones"
@@ -48962,7 +48962,7 @@
       "name": "CG2O6",
       "epsilon": 0.29288,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2O6",
       "mass": 12.011,
       "desc": "carbonyl C: urea, carbonate"
@@ -48971,7 +48971,7 @@
       "name": "CG2O7",
       "epsilon": 0.24267,
       "sigma": 0.278494939291,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2O7",
       "mass": 12.011,
       "desc": "CO2 carbon"
@@ -48980,7 +48980,7 @@
       "name": "CG2R51",
       "epsilon": 0.2092,
       "sigma": 0.374177461619,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2R51",
       "mass": 12.011,
       "desc": "5-mem ring, his CG, CD2(0), trp"
@@ -48989,7 +48989,7 @@
       "name": "CG2R52",
       "epsilon": 0.08368,
       "sigma": 0.391995435982,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2R52",
       "mass": 12.011,
       "desc": "5-mem ring, double bound to N, PYRZ, pyrazole"
@@ -48998,7 +48998,7 @@
       "name": "CG2R53",
       "epsilon": 0.08368,
       "sigma": 0.391995435982,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2R53",
       "mass": 12.011,
       "desc": "5-mem ring, double bound to N and adjacent to another heteroatom, purine C8, his CE1 (0,+1), 2PDO, kevo"
@@ -49007,7 +49007,7 @@
       "name": "CG2R57",
       "epsilon": 0.2092,
       "sigma": 0.374177461619,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2R57",
       "mass": 12.011,
       "desc": "5-mem ring, bipyrroles"
@@ -49016,7 +49016,7 @@
       "name": "CG2R61",
       "epsilon": 0.29288,
       "sigma": 0.355005321205,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2R61",
       "mass": 12.011,
       "desc": "6-mem aromatic C"
@@ -49025,7 +49025,7 @@
       "name": "CG2R62",
       "epsilon": 0.37656,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2R62",
       "mass": 12.011,
       "desc": "6-mem aromatic C for protonated pyridine (NIC) and rings containing carbonyls (see CG2R63) (NA)"
@@ -49034,7 +49034,7 @@
       "name": "CG2R63",
       "epsilon": 0.4184,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2R63",
       "mass": 12.011,
       "desc": "6-mem aromatic amide carbon (NA) (and other 6-mem aromatic carbonyls?)"
@@ -49043,7 +49043,7 @@
       "name": "CG2R64",
       "epsilon": 0.16736,
       "sigma": 0.374177461619,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2R64",
       "mass": 12.011,
       "desc": "6-mem aromatic amidine and guanidine carbon (between 2 or 3 Ns and double-bound to one of them), NA, PYRM"
@@ -49052,7 +49052,7 @@
       "name": "CG2R66",
       "epsilon": 0.29288,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2R66",
       "mass": 12.011,
       "desc": "6-mem aromatic carbon bound to F"
@@ -49061,7 +49061,7 @@
       "name": "CG2R67",
       "epsilon": 0.29288,
       "sigma": 0.355005321205,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2R67",
       "mass": 12.011,
       "desc": "6-mem aromatic carbon of biphenyl"
@@ -49070,7 +49070,7 @@
       "name": "CG2R71",
       "epsilon": 0.28033,
       "sigma": 0.355432952589,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2R71",
       "mass": 12.011,
       "desc": "7-mem ring arom C, AZUL, azulene, kevo"
@@ -49079,7 +49079,7 @@
       "name": "CG2RC0",
       "epsilon": 0.41422,
       "sigma": 0.331414323148,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2RC0",
       "mass": 12.011,
       "desc": "6/5-mem ring bridging C, guanine C4,C5, trp"
@@ -49088,7 +49088,7 @@
       "name": "CG2RC7",
       "epsilon": 0.41422,
       "sigma": 0.331414323148,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG2RC7",
       "mass": 12.011,
       "desc": "sp2 ring connection with single bond(!), AZUL, azulene, kevo"
@@ -49097,7 +49097,7 @@
       "name": "CG301",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG301",
       "mass": 12.011,
       "desc": "aliphatic C, no hydrogens, neopentane"
@@ -49106,7 +49106,7 @@
       "name": "CG302",
       "epsilon": 0.08368,
       "sigma": 0.409813410345,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG302",
       "mass": 12.011,
       "desc": "aliphatic C, no hydrogens, trifluoromethyl"
@@ -49115,7 +49115,7 @@
       "name": "CG311",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG311",
       "mass": 12.011,
       "desc": "aliphatic C with 1 H, CH"
@@ -49124,7 +49124,7 @@
       "name": "CG312",
       "epsilon": 0.17573,
       "sigma": 0.365268474438,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG312",
       "mass": 12.011,
       "desc": "aliphatic C with 1 H, difluoromethyl"
@@ -49133,7 +49133,7 @@
       "name": "CG314",
       "epsilon": 0.1297,
       "sigma": 0.385759144955,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG314",
       "mass": 12.011,
       "desc": "aliphatic C with 1 H, adjacent to positive N (PROT NTER) (+)"
@@ -49142,7 +49142,7 @@
       "name": "CG321",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG321",
       "mass": 12.011,
       "desc": "aliphatic C for CH2"
@@ -49151,7 +49151,7 @@
       "name": "CG322",
       "epsilon": 0.25104,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG322",
       "mass": 12.011,
       "desc": "aliphatic C for CH2, monofluoromethyl"
@@ -49160,7 +49160,7 @@
       "name": "CG323",
       "epsilon": 0.46024,
       "sigma": 0.391995435982,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG323",
       "mass": 12.011,
       "desc": "aliphatic C for CH2, thiolate carbon"
@@ -49169,7 +49169,7 @@
       "name": "CG324",
       "epsilon": 0.23012,
       "sigma": 0.387540942391,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG324",
       "mass": 12.011,
       "desc": "aliphatic C for CH2, adjacent to positive N (piperidine) (+)"
@@ -49178,7 +49178,7 @@
       "name": "CG331",
       "epsilon": 0.32635,
       "sigma": 0.365268474438,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG331",
       "mass": 12.011,
       "desc": "aliphatic C for methyl group (-CH3)"
@@ -49187,7 +49187,7 @@
       "name": "CG334",
       "epsilon": 0.32217,
       "sigma": 0.394668132136,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG334",
       "mass": 12.011,
       "desc": "aliphatic C for methyl group (-CH3), adjacent to positive N (PROT NTER) (+)"
@@ -49196,7 +49196,7 @@
       "name": "CG3AM0",
       "epsilon": 0.29288,
       "sigma": 0.351014094947,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG3AM0",
       "mass": 12.011,
       "desc": "aliphatic C for CH3, NEUTRAL trimethylamine methyl carbon (#)"
@@ -49205,7 +49205,7 @@
       "name": "CG3AM1",
       "epsilon": 0.32635,
       "sigma": 0.352795892384,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG3AM1",
       "mass": 12.011,
       "desc": "aliphatic C for CH3, NEUTRAL dimethylamine methyl carbon (#)"
@@ -49214,7 +49214,7 @@
       "name": "CG3AM2",
       "epsilon": 0.33472,
       "sigma": 0.35457768982,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG3AM2",
       "mass": 12.011,
       "desc": "aliphatic C for CH3, NEUTRAL methylamine methyl carbon (#)"
@@ -49223,7 +49223,7 @@
       "name": "CG3C31",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG3C31",
       "mass": 12.011,
       "desc": "cyclopropyl carbon"
@@ -49232,7 +49232,7 @@
       "name": "CG3C41",
       "epsilon": 0.27196,
       "sigma": 0.359923082129,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG3C41",
       "mass": 12.011,
       "desc": "cyclobutyl carbon"
@@ -49241,7 +49241,7 @@
       "name": "CG3C50",
       "epsilon": 0.15062,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG3C50",
       "mass": 12.011,
       "desc": "5-mem ring aliphatic quarternary C (cholesterol, bile acids)"
@@ -49250,7 +49250,7 @@
       "name": "CG3C51",
       "epsilon": 0.15062,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG3C51",
       "mass": 12.011,
       "desc": "5-mem ring aliphatic CH  (proline CA, furanoses)"
@@ -49259,7 +49259,7 @@
       "name": "CG3C52",
       "epsilon": 0.25104,
       "sigma": 0.359923082129,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG3C52",
       "mass": 12.011,
       "desc": "5-mem ring aliphatic CH2 (proline CB/CG/CD, THF, deoxyribose)"
@@ -49268,7 +49268,7 @@
       "name": "CG3C53",
       "epsilon": 0.14644,
       "sigma": 0.387540942391,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG3C53",
       "mass": 12.011,
       "desc": "5-mem ring aliphatic CH  adjacent to positive N (proline.H+ CA) (+)"
@@ -49277,7 +49277,7 @@
       "name": "CG3C54",
       "epsilon": 0.24686,
       "sigma": 0.389322739827,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG3C54",
       "mass": 12.011,
       "desc": "5-mem ring aliphatic CH2 adjacent to positive N (proline.H+ CD) (+)"
@@ -49286,7 +49286,7 @@
       "name": "CG3RC1",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CG3RC1",
       "mass": 12.011,
       "desc": "bridgehead in bicyclic systems containing at least one 5-membered or smaller ring"
@@ -49295,7 +49295,7 @@
       "name": "CL",
       "epsilon": 0.29288,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CL",
       "mass": 12.011,
       "desc": "carbonyl C (acetic acid/methyl acetate)"
@@ -49304,7 +49304,7 @@
       "name": "CLA",
       "epsilon": 0.6276,
       "sigma": 0.404468018036,
-      "elem": 17,
+      "elem": "Cl",
       "tag": "CLA",
       "mass": 35.45,
       "desc": "Chloride Ion"
@@ -49313,7 +49313,7 @@
       "name": "CLGA1",
       "epsilon": 1.43511,
       "sigma": 0.34032331033,
-      "elem": 17,
+      "elem": "Cl",
       "tag": "CLGA1",
       "mass": 35.453,
       "desc": "CLET, DCLE, chloroethane, 1,1-dichloroethane"
@@ -49322,7 +49322,7 @@
       "name": "CLGA3",
       "epsilon": 1.29704,
       "sigma": 0.34032331033,
-      "elem": 17,
+      "elem": "Cl",
       "tag": "CLGA3",
       "mass": 35.453,
       "desc": "TCLE, 1,1,1-trichloroethane"
@@ -49331,7 +49331,7 @@
       "name": "CLGR1",
       "epsilon": 0.96232,
       "sigma": 0.331414323148,
-      "elem": 17,
+      "elem": "Cl",
       "tag": "CLGR1",
       "mass": 35.453,
       "desc": "CHLB, chlorobenzene"
@@ -49340,7 +49340,7 @@
       "name": "CM",
       "epsilon": 0.46024,
       "sigma": 0.374177461619,
-      "elem": 6,
+      "elem": "C",
       "tag": "CM",
       "mass": 12.011,
       "desc": "heme CO carbon"
@@ -49349,7 +49349,7 @@
       "name": "CN1",
       "epsilon": 0.4184,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN1",
       "mass": 12.011,
       "desc": "Nucleic acid carbonyl carbon"
@@ -49358,7 +49358,7 @@
       "name": "CN1A",
       "epsilon": 0.29288,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN1A",
       "mass": 12.011,
       "desc": "NAD+/NADH amide carbonyl carbon"
@@ -49367,7 +49367,7 @@
       "name": "CN1T",
       "epsilon": 0.4184,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN1T",
       "mass": 12.011,
       "desc": "Nucleic acid carbonyl carbon (T/U C2)"
@@ -49376,7 +49376,7 @@
       "name": "CN2",
       "epsilon": 0.4184,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN2",
       "mass": 12.011,
       "desc": "Nucleic acid aromatic carbon to amide"
@@ -49385,7 +49385,7 @@
       "name": "CN3",
       "epsilon": 0.37656,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN3",
       "mass": 12.011,
       "desc": "Nucleic acid aromatic carbon"
@@ -49394,7 +49394,7 @@
       "name": "CN3A",
       "epsilon": 0.75312,
       "sigma": 0.320723538531,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN3A",
       "mass": 12.011,
       "desc": "NAD+ aromatic carbon"
@@ -49403,7 +49403,7 @@
       "name": "CN3B",
       "epsilon": 0.75312,
       "sigma": 0.320723538531,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN3B",
       "mass": 12.011,
       "desc": "NAD+ aromatic carbon"
@@ -49412,7 +49412,7 @@
       "name": "CN3C",
       "epsilon": 0.75312,
       "sigma": 0.320723538531,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN3C",
       "mass": 12.011,
       "desc": "NADH aromatic carbon"
@@ -49421,7 +49421,7 @@
       "name": "CN3D",
       "epsilon": 0.37656,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN3D",
       "mass": 12.011,
       "desc": "Nucleic acid aromatic carbon for 5MC"
@@ -49430,7 +49430,7 @@
       "name": "CN3T",
       "epsilon": 0.37656,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN3T",
       "mass": 12.011,
       "desc": "Nucleic acid aromatic carbon, Thy C5"
@@ -49439,7 +49439,7 @@
       "name": "CN4",
       "epsilon": 0.3138,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN4",
       "mass": 12.011,
       "desc": "Nucleic acid purine C8 and ADE C2"
@@ -49448,7 +49448,7 @@
       "name": "CN5",
       "epsilon": 0.3138,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN5",
       "mass": 12.011,
       "desc": "Nucleic acid purine C4 and C5"
@@ -49457,7 +49457,7 @@
       "name": "CN5G",
       "epsilon": 0.3138,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN5G",
       "mass": 12.011,
       "desc": "Nucleic acid guanine C5"
@@ -49466,7 +49466,7 @@
       "name": "CN6",
       "epsilon": 0.08368,
       "sigma": 0.405358916754,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN6",
       "mass": 12.011,
       "desc": "carbocylic NA modifications (numbering is correct)"
@@ -49475,7 +49475,7 @@
       "name": "CN7",
       "epsilon": 0.08368,
       "sigma": 0.405358916754,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN7",
       "mass": 12.011,
       "desc": "Nucleic acid carbon (equivalent to protein CT1)"
@@ -49484,7 +49484,7 @@
       "name": "CN7B",
       "epsilon": 0.08368,
       "sigma": 0.405358916754,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN7B",
       "mass": 12.011,
       "desc": "Nucleic acid aliphatic carbon for C1'"
@@ -49493,7 +49493,7 @@
       "name": "CN7E",
       "epsilon": 0.08368,
       "sigma": 0.405358916754,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN7E",
       "mass": 12.011,
       "desc": "cabocyclic NA modifications"
@@ -49502,7 +49502,7 @@
       "name": "CN8",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN8",
       "mass": 12.011,
       "desc": "Nucleic acid carbon (equivalent to protein CT2)"
@@ -49511,7 +49511,7 @@
       "name": "CN8B",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN8B",
       "mass": 12.011,
       "desc": "Nucleic acid carbon (equivalent to protein CT2)"
@@ -49520,7 +49520,7 @@
       "name": "CN9",
       "epsilon": 0.32635,
       "sigma": 0.363486677001,
-      "elem": 6,
+      "elem": "C",
       "tag": "CN9",
       "mass": 12.011,
       "desc": "Nucleic acid carbon (equivalent to protein CT3)"
@@ -49529,7 +49529,7 @@
       "name": "CNA",
       "epsilon": 0.29288,
       "sigma": 0.355005321205,
-      "elem": 6,
+      "elem": "C",
       "tag": "CNA",
       "mass": 12.011,
       "desc": "pure aromatic carbon"
@@ -49538,7 +49538,7 @@
       "name": "CNA2",
       "epsilon": 0.29288,
       "sigma": 0.338541512893,
-      "elem": 6,
+      "elem": "C",
       "tag": "CNA2",
       "mass": 12.011,
       "desc": "pure aromatic carbon bound to F"
@@ -49547,7 +49547,7 @@
       "name": "CNE1",
       "epsilon": 0.28451,
       "sigma": 0.372395664183,
-      "elem": 6,
+      "elem": "C",
       "tag": "CNE1",
       "mass": 12.011,
       "desc": "for alkene; RHC=CR (modified thy patch Sasha)"
@@ -49556,7 +49556,7 @@
       "name": "CNE2",
       "epsilon": 0.26778,
       "sigma": 0.370613866746,
-      "elem": 6,
+      "elem": "C",
       "tag": "CNE2",
       "mass": 12.011,
       "desc": "for alkene; H2C=CR (modified thy patch Sasha)"
@@ -49565,7 +49565,7 @@
       "name": "CNG",
       "epsilon": 0.46024,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CNG",
       "mass": 12.011,
       "desc": "guanidinium type carbon"
@@ -49574,7 +49574,7 @@
       "name": "CP1",
       "epsilon": 0.08368,
       "sigma": 0.405358916754,
-      "elem": 6,
+      "elem": "C",
       "tag": "CP1",
       "mass": 12.011,
       "desc": "tetrahedral C (proline CA)"
@@ -49583,7 +49583,7 @@
       "name": "CP2",
       "epsilon": 0.23012,
       "sigma": 0.387540942391,
-      "elem": 6,
+      "elem": "C",
       "tag": "CP2",
       "mass": 12.011,
       "desc": "tetrahedral C (proline CB/CG)"
@@ -49592,7 +49592,7 @@
       "name": "CP3",
       "epsilon": 0.23012,
       "sigma": 0.387540942391,
-      "elem": 6,
+      "elem": "C",
       "tag": "CP3",
       "mass": 12.011,
       "desc": "tetrahedral C (proline CD)"
@@ -49601,7 +49601,7 @@
       "name": "CPA",
       "epsilon": 0.37656,
       "sigma": 0.320723538531,
-      "elem": 6,
+      "elem": "C",
       "tag": "CPA",
       "mass": 12.011,
       "desc": "heme alpha-C"
@@ -49610,7 +49610,7 @@
       "name": "CPB",
       "epsilon": 0.37656,
       "sigma": 0.320723538531,
-      "elem": 6,
+      "elem": "C",
       "tag": "CPB",
       "mass": 12.011,
       "desc": "heme beta-C"
@@ -49619,7 +49619,7 @@
       "name": "CPD1",
       "epsilon": 0.08368,
       "sigma": 0.405358916754,
-      "elem": 6,
+      "elem": "C",
       "tag": "CPD1",
       "mass": 12.011,
       "desc": "added for D-proline"
@@ -49628,7 +49628,7 @@
       "name": "CPH1",
       "epsilon": 0.2092,
       "sigma": 0.320723538531,
-      "elem": 6,
+      "elem": "C",
       "tag": "CPH1",
       "mass": 12.011,
       "desc": "his CG and CD2 carbons"
@@ -49637,7 +49637,7 @@
       "name": "CPH2",
       "epsilon": 0.2092,
       "sigma": 0.320723538531,
-      "elem": 6,
+      "elem": "C",
       "tag": "CPH2",
       "mass": 12.011,
       "desc": "his CE1 carbon"
@@ -49646,7 +49646,7 @@
       "name": "CPM",
       "epsilon": 0.37656,
       "sigma": 0.320723538531,
-      "elem": 6,
+      "elem": "C",
       "tag": "CPM",
       "mass": 12.011,
       "desc": "heme meso-C"
@@ -49655,7 +49655,7 @@
       "name": "CPT",
       "epsilon": 0.41422,
       "sigma": 0.331414323148,
-      "elem": 6,
+      "elem": "C",
       "tag": "CPT",
       "mass": 12.011,
       "desc": "trp C between rings"
@@ -49664,7 +49664,7 @@
       "name": "CRL1",
       "epsilon": 0.15062,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CRL1",
       "mass": 12.011,
       "desc": "sp3 carbon with 1 H on a ring  (-CH1-) for sterols"
@@ -49673,7 +49673,7 @@
       "name": "CRL2",
       "epsilon": 0.25104,
       "sigma": 0.359923082129,
-      "elem": 6,
+      "elem": "C",
       "tag": "CRL2",
       "mass": 12.011,
       "desc": "carbon of methylene group on a ring (-CH2-) for sterols"
@@ -49682,7 +49682,7 @@
       "name": "CS",
       "epsilon": 0.46024,
       "sigma": 0.391995435982,
-      "elem": 6,
+      "elem": "C",
       "tag": "CS",
       "mass": 12.011,
       "desc": "thiolate carbon"
@@ -49691,7 +49691,7 @@
       "name": "CST",
       "epsilon": 0.24267,
       "sigma": 0.278494939291,
-      "elem": 6,
+      "elem": "C",
       "tag": "CST",
       "mass": 12.011,
       "desc": "CO2 carbon"
@@ -49700,7 +49700,7 @@
       "name": "CT",
       "epsilon": 0.08368,
       "sigma": 0.405358916754,
-      "elem": 6,
+      "elem": "C",
       "tag": "CT",
       "mass": 12.011,
       "desc": "aliphatic sp3 C, new LJ params, no hydrogens"
@@ -49709,7 +49709,7 @@
       "name": "CT1",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CT1",
       "mass": 12.011,
       "desc": "aliphatic sp3 C for CH"
@@ -49718,7 +49718,7 @@
       "name": "CT2",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CT2",
       "mass": 12.011,
       "desc": "aliphatic sp3 C for CH2"
@@ -49727,7 +49727,7 @@
       "name": "CT2A",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CT2A",
       "mass": 12.011,
       "desc": "from CT2 (asp, glu, hsp chi1/chi2 fitting)"
@@ -49736,7 +49736,7 @@
       "name": "CT2P",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CT2P",
       "mass": 12.011,
       "desc": "(sp3)H2 Carbon in PNA backbone (eq. CT2)"
@@ -49745,7 +49745,7 @@
       "name": "CT3",
       "epsilon": 0.32635,
       "sigma": 0.363486677001,
-      "elem": 6,
+      "elem": "C",
       "tag": "CT3",
       "mass": 12.011,
       "desc": "aliphatic sp3 C for CH3"
@@ -49754,7 +49754,7 @@
       "name": "CTD1",
       "epsilon": 0.13389,
       "sigma": 0.356359487256,
-      "elem": 6,
+      "elem": "C",
       "tag": "CTD1",
       "mass": 12.011,
       "desc": "added for D-amino acids"
@@ -49763,7 +49763,7 @@
       "name": "CTL1",
       "epsilon": 0.08368,
       "sigma": 0.405358916754,
-      "elem": 6,
+      "elem": "C",
       "tag": "CTL1",
       "mass": 12.011,
       "desc": "sp3 carbon with 1 H  (-CH1-)"
@@ -49772,7 +49772,7 @@
       "name": "CTL2",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CTL2",
       "mass": 12.011,
       "desc": "carbon of methylene group (-CH2-)"
@@ -49781,7 +49781,7 @@
       "name": "CTL3",
       "epsilon": 0.32635,
       "sigma": 0.363486677001,
-      "elem": 6,
+      "elem": "C",
       "tag": "CTL3",
       "mass": 12.011,
       "desc": "carbon of methyl group (-CH3)"
@@ -49790,7 +49790,7 @@
       "name": "CTL5",
       "epsilon": 0.33472,
       "sigma": 0.367050271874,
-      "elem": 6,
+      "elem": "C",
       "tag": "CTL5",
       "mass": 12.011,
       "desc": "carbon of methyl group (-CH3) for tetramethylammonium"
@@ -49799,7 +49799,7 @@
       "name": "CTO1",
       "epsilon": 0.08368,
       "sigma": 0.405358916754,
-      "elem": 6,
+      "elem": "C",
       "tag": "CTO1",
       "mass": 12.011,
       "desc": ""
@@ -49808,7 +49808,7 @@
       "name": "CTO2",
       "epsilon": 0.2343,
       "sigma": 0.358141284692,
-      "elem": 6,
+      "elem": "C",
       "tag": "CTO2",
       "mass": 12.011,
       "desc": ""
@@ -49817,7 +49817,7 @@
       "name": "CU",
       "epsilon": 19.74848,
       "sigma": 0.233059104666,
-      "elem": 29,
+      "elem": "Cu",
       "tag": "CU",
       "mass": 63.546,
       "desc": "Copper metal (HH et al. 2008)"
@@ -49826,7 +49826,7 @@
       "name": "CY",
       "epsilon": 0.30543,
       "sigma": 0.35457768982,
-      "elem": 6,
+      "elem": "C",
       "tag": "CY",
       "mass": 12.011,
       "desc": "TRP C in pyrrole ring"
@@ -49835,7 +49835,7 @@
       "name": "DUM",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 1,
+      "elem": "H",
       "tag": "DUM",
       "mass": 1.008,
       "desc": "dummy atom"
@@ -49844,7 +49844,7 @@
       "name": "FE",
       "epsilon": -0.0,
       "sigma": 0.115816833358,
-      "elem": 26,
+      "elem": "Fe",
       "tag": "FE",
       "mass": 55.847,
       "desc": "heme iron 56"
@@ -49853,7 +49853,7 @@
       "name": "FGA1",
       "epsilon": 0.56484,
       "sigma": 0.290432982114,
-      "elem": 9,
+      "elem": "F",
       "tag": "FGA1",
       "mass": 18.998,
       "desc": "aliphatic fluorine, monofluoro"
@@ -49862,7 +49862,7 @@
       "name": "FGA2",
       "epsilon": 0.43932,
       "sigma": 0.290432982114,
-      "elem": 9,
+      "elem": "F",
       "tag": "FGA2",
       "mass": 18.998,
       "desc": "aliphatic fluorine, difluoro"
@@ -49871,7 +49871,7 @@
       "name": "FGA3",
       "epsilon": 0.40585,
       "sigma": 0.285087589805,
-      "elem": 9,
+      "elem": "F",
       "tag": "FGA3",
       "mass": 18.998,
       "desc": "aliphatic fluorine, trifluoro"
@@ -49880,7 +49880,7 @@
       "name": "FGP1",
       "epsilon": 0.40585,
       "sigma": 0.285087589805,
-      "elem": 9,
+      "elem": "F",
       "tag": "FGP1",
       "mass": 18.998,
       "desc": "anionic F, for ALF4 AlF4-"
@@ -49889,7 +49889,7 @@
       "name": "FGR1",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 9,
+      "elem": "F",
       "tag": "FGR1",
       "mass": 18.998,
       "desc": "aromatic flourine"
@@ -49898,7 +49898,7 @@
       "name": "FNA",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 9,
+      "elem": "F",
       "tag": "FNA",
       "mass": 18.9984,
       "desc": "Aromatic fluorine"
@@ -49907,7 +49907,7 @@
       "name": "H",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "H",
       "mass": 1.008,
       "desc": "polar H"
@@ -49916,7 +49916,7 @@
       "name": "HA",
       "epsilon": 0.09205,
       "sigma": 0.235197261589,
-      "elem": 1,
+      "elem": "H",
       "tag": "HA",
       "mass": 1.008,
       "desc": "nonpolar H"
@@ -49925,7 +49925,7 @@
       "name": "HA1",
       "epsilon": 0.18828,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HA1",
       "mass": 1.008,
       "desc": "alkane, CH, new LJ params (see toppar_all22_prot_aliphatic_c27.str)"
@@ -49934,7 +49934,7 @@
       "name": "HA2",
       "epsilon": 0.14226,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HA2",
       "mass": 1.008,
       "desc": "alkane, CH2, new LJ params (see toppar_all22_prot_aliphatic_c27.str)"
@@ -49943,7 +49943,7 @@
       "name": "HA3",
       "epsilon": 0.10042,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HA3",
       "mass": 1.008,
       "desc": "alkane, CH3, new LJ params (see toppar_all22_prot_aliphatic_c27.str)"
@@ -49952,7 +49952,7 @@
       "name": "HAL",
       "epsilon": 0.09205,
       "sigma": 0.235197261589,
-      "elem": 1,
+      "elem": "H",
       "tag": "HAL",
       "mass": 1.008,
       "desc": "Si aliphatic hydrogen;"
@@ -49961,7 +49961,7 @@
       "name": "HAL1",
       "epsilon": 0.09205,
       "sigma": 0.235197261589,
-      "elem": 1,
+      "elem": "H",
       "tag": "HAL1",
       "mass": 1.008,
       "desc": "alphatic proton"
@@ -49970,7 +49970,7 @@
       "name": "HAL2",
       "epsilon": 0.11715,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HAL2",
       "mass": 1.008,
       "desc": "alphatic proton"
@@ -49979,7 +49979,7 @@
       "name": "HAL3",
       "epsilon": 0.10042,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HAL3",
       "mass": 1.008,
       "desc": "alphatic proton"
@@ -49988,7 +49988,7 @@
       "name": "HB1",
       "epsilon": 0.09205,
       "sigma": 0.235197261589,
-      "elem": 1,
+      "elem": "H",
       "tag": "HB1",
       "mass": 1.008,
       "desc": "backbone H"
@@ -49997,7 +49997,7 @@
       "name": "HB2",
       "epsilon": 0.11715,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HB2",
       "mass": 1.008,
       "desc": "aliphatic backbone H, to CT2"
@@ -50006,7 +50006,7 @@
       "name": "HBL",
       "epsilon": 0.09205,
       "sigma": 0.235197261589,
-      "elem": 1,
+      "elem": "H",
       "tag": "HBL",
       "mass": 1.008,
       "desc": "POPS SER backbone H"
@@ -50015,7 +50015,7 @@
       "name": "HC",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HC",
       "mass": 1.008,
       "desc": "N-ter H"
@@ -50024,7 +50024,7 @@
       "name": "HCA1",
       "epsilon": 0.18828,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCA1",
       "mass": 1.008,
       "desc": "aliphatic proton, CH"
@@ -50033,7 +50033,7 @@
       "name": "HCA1A",
       "epsilon": 0.18828,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCA1A",
       "mass": 1.008,
       "desc": "Alkane H attached to C(sp3)H  (eq. HA1)"
@@ -50042,7 +50042,7 @@
       "name": "HCA1C2",
       "epsilon": 0.18828,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCA1C2",
       "mass": 1.008,
       "desc": "tf2m aliphatic proton, CH1"
@@ -50051,7 +50051,7 @@
       "name": "HCA2",
       "epsilon": 0.14644,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCA2",
       "mass": 1.008,
       "desc": "aliphatic proton, CH2"
@@ -50060,7 +50060,7 @@
       "name": "HCA25A",
       "epsilon": 0.14644,
       "sigma": 0.231633666716,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCA25A",
       "mass": 1.008,
       "desc": "Alkane H attached to C(sp3)H2 in 5-membered ring"
@@ -50069,7 +50069,7 @@
       "name": "HCA2A",
       "epsilon": 0.14644,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCA2A",
       "mass": 1.008,
       "desc": "Alkane H attached to C(sp3)H2 (eq. HA2)"
@@ -50078,7 +50078,7 @@
       "name": "HCA2C2",
       "epsilon": 0.14644,
       "sigma": 0.231633666716,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCA2C2",
       "mass": 1.008,
       "desc": "cyclopentane, thp aliphatic proton, CH2"
@@ -50087,7 +50087,7 @@
       "name": "HCA3",
       "epsilon": 0.10042,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCA3",
       "mass": 1.008,
       "desc": "aliphatic proton, CH3"
@@ -50096,7 +50096,7 @@
       "name": "HCA3A",
       "epsilon": 0.10042,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCA3A",
       "mass": 1.008,
       "desc": "Alkane H attached to C(sp3)H3 (eq. HA3)"
@@ -50105,7 +50105,7 @@
       "name": "HCA3M",
       "epsilon": 0.10042,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCA3M",
       "mass": 1.008,
       "desc": "alcohol aliphatic proton, CH3"
@@ -50114,7 +50114,7 @@
       "name": "HCL",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCL",
       "mass": 1.008,
       "desc": "charged H for PE (equivalent to protein HC)"
@@ -50123,7 +50123,7 @@
       "name": "HCP1",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCP1",
       "mass": 1.008,
       "desc": "polar H"
@@ -50132,7 +50132,7 @@
       "name": "HCP1M",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCP1M",
       "mass": 1.008,
       "desc": "EGLY hydroxyl H"
@@ -50141,7 +50141,7 @@
       "name": "HCR1",
       "epsilon": 0.19246,
       "sigma": 0.142543794902,
-      "elem": 1,
+      "elem": "H",
       "tag": "HCR1",
       "mass": 1.008,
       "desc": "c22 HR1"
@@ -50150,7 +50150,7 @@
       "name": "HE1",
       "epsilon": 0.1297,
       "sigma": 0.222724679535,
-      "elem": 1,
+      "elem": "H",
       "tag": "HE1",
       "mass": 1.008,
       "desc": "for alkene; RHC=CR"
@@ -50159,7 +50159,7 @@
       "name": "HE2",
       "epsilon": 0.10878,
       "sigma": 0.224506476971,
-      "elem": 1,
+      "elem": "H",
       "tag": "HE2",
       "mass": 1.008,
       "desc": "for alkene; H2C=CR"
@@ -50168,7 +50168,7 @@
       "name": "HEL1",
       "epsilon": 0.1297,
       "sigma": 0.222724679535,
-      "elem": 1,
+      "elem": "H",
       "tag": "HEL1",
       "mass": 1.008,
       "desc": "for alkene; RHC=CR"
@@ -50177,7 +50177,7 @@
       "name": "HEL2",
       "epsilon": 0.10878,
       "sigma": 0.224506476971,
-      "elem": 1,
+      "elem": "H",
       "tag": "HEL2",
       "mass": 1.008,
       "desc": "for alkene; H2C=CR. Currently unused."
@@ -50186,7 +50186,7 @@
       "name": "HGA1",
       "epsilon": 0.18828,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGA1",
       "mass": 1.008,
       "desc": "alphatic proton, CH"
@@ -50195,7 +50195,7 @@
       "name": "HGA2",
       "epsilon": 0.14644,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGA2",
       "mass": 1.008,
       "desc": "alphatic proton, CH2"
@@ -50204,7 +50204,7 @@
       "name": "HGA3",
       "epsilon": 0.10042,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGA3",
       "mass": 1.008,
       "desc": "alphatic proton, CH3"
@@ -50213,7 +50213,7 @@
       "name": "HGA4",
       "epsilon": 0.1297,
       "sigma": 0.222724679535,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGA4",
       "mass": 1.008,
       "desc": "alkene proton; RHC="
@@ -50222,7 +50222,7 @@
       "name": "HGA5",
       "epsilon": 0.10878,
       "sigma": 0.224506476971,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGA5",
       "mass": 1.008,
       "desc": "alkene proton; H2C=CR"
@@ -50231,7 +50231,7 @@
       "name": "HGA6",
       "epsilon": 0.11715,
       "sigma": 0.235197261589,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGA6",
       "mass": 1.008,
       "desc": "aliphatic H on fluorinated C, monofluoro"
@@ -50240,7 +50240,7 @@
       "name": "HGA7",
       "epsilon": 0.12552,
       "sigma": 0.231633666716,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGA7",
       "mass": 1.008,
       "desc": "aliphatic H on fluorinated C, difluoro"
@@ -50249,7 +50249,7 @@
       "name": "HGAAM0",
       "epsilon": 0.11715,
       "sigma": 0.228070071844,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGAAM0",
       "mass": 1.008,
       "desc": "aliphatic H, NEUTRAL trimethylamine (#)"
@@ -50258,7 +50258,7 @@
       "name": "HGAAM1",
       "epsilon": 0.11715,
       "sigma": 0.228070071844,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGAAM1",
       "mass": 1.008,
       "desc": "aliphatic H, NEUTRAL dimethylamine (#)"
@@ -50267,7 +50267,7 @@
       "name": "HGAAM2",
       "epsilon": 0.16736,
       "sigma": 0.224506476971,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGAAM2",
       "mass": 1.008,
       "desc": "aliphatic H, NEUTRAL methylamine (#)"
@@ -50276,7 +50276,7 @@
       "name": "HGP1",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGP1",
       "mass": 1.008,
       "desc": "polar H"
@@ -50285,7 +50285,7 @@
       "name": "HGP2",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGP2",
       "mass": 1.008,
       "desc": "polar H, +ve charge"
@@ -50294,7 +50294,7 @@
       "name": "HGP3",
       "epsilon": 0.4184,
       "sigma": 0.080180884633,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGP3",
       "mass": 1.008,
       "desc": "polar H, thiol"
@@ -50303,7 +50303,7 @@
       "name": "HGP4",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGP4",
       "mass": 1.008,
       "desc": "polar H, neutral conjugated -NH2 group (NA bases)"
@@ -50312,7 +50312,7 @@
       "name": "HGP5",
       "epsilon": 0.19246,
       "sigma": 0.12472582054,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGP5",
       "mass": 1.008,
       "desc": "polar H on quarternary ammonium salt (choline)"
@@ -50321,7 +50321,7 @@
       "name": "HGPAM1",
       "epsilon": 0.03766,
       "sigma": 0.155907275675,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGPAM1",
       "mass": 1.008,
       "desc": "polar H, NEUTRAL dimethylamine (#), terminal alkyne H"
@@ -50330,7 +50330,7 @@
       "name": "HGPAM2",
       "epsilon": 0.04184,
       "sigma": 0.155907275675,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGPAM2",
       "mass": 1.008,
       "desc": "polar H, NEUTRAL methylamine (#)"
@@ -50339,7 +50339,7 @@
       "name": "HGPAM3",
       "epsilon": 0.05021,
       "sigma": 0.155016376956,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGPAM3",
       "mass": 1.008,
       "desc": "polar H, NEUTRAL ammonia (#)"
@@ -50348,7 +50348,7 @@
       "name": "HGR51",
       "epsilon": 0.12552,
       "sigma": 0.242003727796,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGR51",
       "mass": 1.008,
       "desc": "nonpolar H, neutral 5-mem planar ring C, LJ based on benzene"
@@ -50357,7 +50357,7 @@
       "name": "HGR52",
       "epsilon": 0.19246,
       "sigma": 0.160361769265,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGR52",
       "mass": 1.008,
       "desc": "Aldehyde H, formamide H (RCOH); nonpolar H, neutral 5-mem planar ring C adjacent to heteroatom or + charge"
@@ -50366,7 +50366,7 @@
       "name": "HGR53",
       "epsilon": 0.19246,
       "sigma": 0.12472582054,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGR53",
       "mass": 1.008,
       "desc": "nonpolar H, +ve charge HIS he1(+1)"
@@ -50375,7 +50375,7 @@
       "name": "HGR61",
       "epsilon": 0.12552,
       "sigma": 0.242003727796,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGR61",
       "mass": 1.008,
       "desc": "aromatic H"
@@ -50384,7 +50384,7 @@
       "name": "HGR62",
       "epsilon": 0.19246,
       "sigma": 0.195997717991,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGR62",
       "mass": 1.008,
       "desc": "nonpolar H, neutral 6-mem planar ring C adjacent to heteroatom"
@@ -50393,7 +50393,7 @@
       "name": "HGR63",
       "epsilon": 0.19246,
       "sigma": 0.160361769265,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGR63",
       "mass": 1.008,
       "desc": "nonpolar H, NAD+ nicotineamide all ring CH hydrogens"
@@ -50402,7 +50402,7 @@
       "name": "HGR71",
       "epsilon": 0.12552,
       "sigma": 0.242003727796,
-      "elem": 1,
+      "elem": "H",
       "tag": "HGR71",
       "mass": 1.008,
       "desc": "nonpolar H, neutral 7-mem arom ring, AZUL, azulene, kevo"
@@ -50411,7 +50411,7 @@
       "name": "HL",
       "epsilon": 0.19246,
       "sigma": 0.12472582054,
-      "elem": 1,
+      "elem": "H",
       "tag": "HL",
       "mass": 1.008,
       "desc": "polar H (equivalent to protein H)"
@@ -50420,7 +50420,7 @@
       "name": "HN1",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HN1",
       "mass": 1.008,
       "desc": "Nucleic acid amine proton"
@@ -50429,7 +50429,7 @@
       "name": "HN2",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HN2",
       "mass": 1.008,
       "desc": "Nucleic acid ring nitrogen proton"
@@ -50438,7 +50438,7 @@
       "name": "HN3",
       "epsilon": 0.19246,
       "sigma": 0.195997717991,
-      "elem": 1,
+      "elem": "H",
       "tag": "HN3",
       "mass": 1.008,
       "desc": "Nucleic acid aromatic carbon proton"
@@ -50447,7 +50447,7 @@
       "name": "HN3B",
       "epsilon": 0.19246,
       "sigma": 0.160361769265,
-      "elem": 1,
+      "elem": "H",
       "tag": "HN3B",
       "mass": 1.008,
       "desc": "NAD+ aromatic hydrogen"
@@ -50456,7 +50456,7 @@
       "name": "HN4",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HN4",
       "mass": 1.008,
       "desc": "Nucleic acid phosphate hydroxyl proton"
@@ -50465,7 +50465,7 @@
       "name": "HN5",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HN5",
       "mass": 1.008,
       "desc": "Nucleic acid ribose hydroxyl proton"
@@ -50474,7 +50474,7 @@
       "name": "HN6",
       "epsilon": 0.09205,
       "sigma": 0.235197261589,
-      "elem": 1,
+      "elem": "H",
       "tag": "HN6",
       "mass": 1.008,
       "desc": "Nucleic acid ribose aliphatic proton"
@@ -50483,7 +50483,7 @@
       "name": "HN7",
       "epsilon": 0.09205,
       "sigma": 0.235197261589,
-      "elem": 1,
+      "elem": "H",
       "tag": "HN7",
       "mass": 1.008,
       "desc": "Nucleic acid proton (equivalent to protein HA)"
@@ -50492,7 +50492,7 @@
       "name": "HN8",
       "epsilon": 0.11715,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HN8",
       "mass": 1.008,
       "desc": "Bound to CN8 in nucleic acids/model compounds"
@@ -50501,7 +50501,7 @@
       "name": "HN9",
       "epsilon": 0.10042,
       "sigma": 0.238760856462,
-      "elem": 1,
+      "elem": "H",
       "tag": "HN9",
       "mass": 1.008,
       "desc": "Bound to CN9 in nucleic acids/model compounds"
@@ -50510,7 +50510,7 @@
       "name": "HNE1",
       "epsilon": 0.1297,
       "sigma": 0.222724679535,
-      "elem": 1,
+      "elem": "H",
       "tag": "HNE1",
       "mass": 1.008,
       "desc": "for alkene; RHC=CR (modified thy patch Sasha)"
@@ -50519,7 +50519,7 @@
       "name": "HNE2",
       "epsilon": 0.10878,
       "sigma": 0.224506476971,
-      "elem": 1,
+      "elem": "H",
       "tag": "HNE2",
       "mass": 1.008,
       "desc": "for alkene; H2C=CR (modified thy patch Sasha)"
@@ -50528,7 +50528,7 @@
       "name": "HNP",
       "epsilon": 0.12552,
       "sigma": 0.242003727796,
-      "elem": 1,
+      "elem": "H",
       "tag": "HNP",
       "mass": 1.008,
       "desc": "pure aromatic H"
@@ -50537,7 +50537,7 @@
       "name": "HOL",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HOL",
       "mass": 1.008,
       "desc": "Nucleic acid phosphate hydroxyl proton"
@@ -50546,7 +50546,7 @@
       "name": "HP",
       "epsilon": 0.12552,
       "sigma": 0.242003727796,
-      "elem": 1,
+      "elem": "H",
       "tag": "HP",
       "mass": 1.008,
       "desc": "aromatic H"
@@ -50555,7 +50555,7 @@
       "name": "HR1",
       "epsilon": 0.19246,
       "sigma": 0.160361769265,
-      "elem": 1,
+      "elem": "H",
       "tag": "HR1",
       "mass": 1.008,
       "desc": "his he1, (+) his HG,HD2"
@@ -50564,7 +50564,7 @@
       "name": "HR2",
       "epsilon": 0.19246,
       "sigma": 0.12472582054,
-      "elem": 1,
+      "elem": "H",
       "tag": "HR2",
       "mass": 1.008,
       "desc": "(+) his HE1"
@@ -50573,7 +50573,7 @@
       "name": "HR3",
       "epsilon": 0.03264,
       "sigma": 0.261567863646,
-      "elem": 1,
+      "elem": "H",
       "tag": "HR3",
       "mass": 1.008,
       "desc": "neutral his HG, HD2"
@@ -50582,7 +50582,7 @@
       "name": "HS",
       "epsilon": 0.4184,
       "sigma": 0.080180884633,
-      "elem": 1,
+      "elem": "H",
       "tag": "HS",
       "mass": 1.008,
       "desc": "thiol hydrogen"
@@ -50591,7 +50591,7 @@
       "name": "HSIA",
       "epsilon": 0.09205,
       "sigma": 0.235197261589,
-      "elem": 1,
+      "elem": "H",
       "tag": "HSIA",
       "mass": 1.008,
       "desc": "Si aliphatic hydrogen;"
@@ -50600,7 +50600,7 @@
       "name": "HSIO",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HSIO",
       "mass": 1.008,
       "desc": "Si hydroxyl hydrogen;"
@@ -50609,7 +50609,7 @@
       "name": "HT",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 1,
+      "elem": "H",
       "tag": "HT",
       "mass": 4.032,
       "desc": "TIPS3P WATER HYDROGEN"
@@ -50618,7 +50618,7 @@
       "name": "HT",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 1,
+      "elem": "H",
       "tag": "HT",
       "mass": 1.008,
       "desc": "TIPS3P WATER HYDROGEN"
@@ -50627,7 +50627,7 @@
       "name": "HT",
       "epsilon": 0.192464,
       "sigma": 0.0400013524445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HT",
       "mass": 4.032,
       "desc": "TIPS3P WATER HYDROGEN"
@@ -50636,7 +50636,7 @@
       "name": "HT",
       "epsilon": 0.192464,
       "sigma": 0.0400013524445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HT",
       "mass": 1.008,
       "desc": "TIPS3P WATER HYDROGEN"
@@ -50645,7 +50645,7 @@
       "name": "HX",
       "epsilon": 0.19246,
       "sigma": 0.040001352445,
-      "elem": 1,
+      "elem": "H",
       "tag": "HX",
       "mass": 1.008,
       "desc": "hydroxide hydrogen"
@@ -50654,7 +50654,7 @@
       "name": "IGR1",
       "epsilon": 2.17568,
       "sigma": 0.399122625727,
-      "elem": 53,
+      "elem": "I",
       "tag": "IGR1",
       "mass": 126.90447,
       "desc": "IODB, iodobenzene"
@@ -50663,7 +50663,7 @@
       "name": "LIT",
       "epsilon": 0.00975,
       "sigma": 0.231188217357,
-      "elem": 3,
+      "elem": "Li",
       "tag": "LIT",
       "mass": 6.941,
       "desc": "Lithium ion"
@@ -50672,7 +50672,7 @@
       "name": "LPH",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 1,
+      "elem": "H",
       "tag": "LPH",
       "mass": 0.0,
       "desc": "Lone pair for halogens, change name to LPG for training"
@@ -50681,7 +50681,7 @@
       "name": "MG",
       "epsilon": 0.06276,
       "sigma": 0.211142996199,
-      "elem": 12,
+      "elem": "Mg",
       "tag": "MG",
       "mass": 24.305,
       "desc": "Magnesium Ion"
@@ -50690,7 +50690,7 @@
       "name": "N",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "N",
       "mass": 14.007,
       "desc": "proline N"
@@ -50699,7 +50699,7 @@
       "name": "NC2",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NC2",
       "mass": 14.007,
       "desc": "guanidinium nitrogen"
@@ -50708,7 +50708,7 @@
       "name": "NC2D1",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NC2D1",
       "mass": 14.007,
       "desc": "peptide, NMA, IPAA nitrogen (C=NHR)"
@@ -50717,7 +50717,7 @@
       "name": "NC311",
       "epsilon": 0.18828,
       "sigma": 0.356359487256,
-      "elem": 7,
+      "elem": "N",
       "tag": "NC311",
       "mass": 14.007,
       "desc": "Sulfamate nitrogen"
@@ -50726,7 +50726,7 @@
       "name": "NG1T1",
       "epsilon": 0.75312,
       "sigma": 0.318941741094,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG1T1",
       "mass": 14.007,
       "desc": "N for cyano group"
@@ -50735,7 +50735,7 @@
       "name": "NG2D1",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2D1",
       "mass": 14.007,
       "desc": "N for neutral imine/Schiff's base (C=N-R, acyclic amidine, gunaidine)"
@@ -50744,7 +50744,7 @@
       "name": "NG2O1",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2O1",
       "mass": 14.007,
       "desc": "NITB, nitrobenzene"
@@ -50753,7 +50753,7 @@
       "name": "NG2P1",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2P1",
       "mass": 14.007,
       "desc": "N for protonated imine/Schiff's base (C=N(+)H-R, acyclic amidinium, guanidinium)"
@@ -50762,7 +50762,7 @@
       "name": "NG2R43",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2R43",
       "mass": 14.007,
       "desc": "amide in 4-memebered ring (planar), AZDO, lsk"
@@ -50771,7 +50771,7 @@
       "name": "NG2R50",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2R50",
       "mass": 14.007,
       "desc": "double bound neutral 5-mem planar ring, purine N7"
@@ -50780,7 +50780,7 @@
       "name": "NG2R51",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2R51",
       "mass": 14.007,
       "desc": "single bound neutral 5-mem planar (all atom types sp2) ring, his, trp pyrrole (fused)"
@@ -50789,7 +50789,7 @@
       "name": "NG2R52",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2R52",
       "mass": 14.007,
       "desc": "protonated schiff base, amidinium, guanidinium in 5-membered ring, HIS, 2HPP, kevo"
@@ -50798,7 +50798,7 @@
       "name": "NG2R53",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2R53",
       "mass": 14.007,
       "desc": "amide in 5-memebered NON-SP2 ring (slightly pyramidized), 2PDO, kevo"
@@ -50807,7 +50807,7 @@
       "name": "NG2R57",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2R57",
       "mass": 14.007,
       "desc": "5-mem ring, bipyrroles"
@@ -50816,7 +50816,7 @@
       "name": "NG2R60",
       "epsilon": 0.25104,
       "sigma": 0.336759715457,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2R60",
       "mass": 14.007,
       "desc": "double bound neutral 6-mem planar ring, pyr1, pyzn"
@@ -50825,7 +50825,7 @@
       "name": "NG2R61",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2R61",
       "mass": 14.007,
       "desc": "single bound neutral 6-mem planar ring imino nitrogen; glycosyl linkage"
@@ -50834,7 +50834,7 @@
       "name": "NG2R62",
       "epsilon": 0.2092,
       "sigma": 0.367050271874,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2R62",
       "mass": 14.007,
       "desc": "double bound 6-mem planar ring with heteroatoms in o or m, pyrd, pyrm"
@@ -50843,7 +50843,7 @@
       "name": "NG2R67",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2R67",
       "mass": 14.007,
       "desc": "6-mem planar ring substituted with 6-mem planar ring (N-phenyl pyridinones etc.)"
@@ -50852,7 +50852,7 @@
       "name": "NG2RC0",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2RC0",
       "mass": 14.007,
       "desc": "6/5-mem ring bridging N, indolizine, INDZ, kevo"
@@ -50861,7 +50861,7 @@
       "name": "NG2S0",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2S0",
       "mass": 14.007,
       "desc": "N,N-disubstituted amide, proline N (CO=NRR')"
@@ -50870,7 +50870,7 @@
       "name": "NG2S1",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2S1",
       "mass": 14.007,
       "desc": "peptide nitrogen (CO=NHR)"
@@ -50879,7 +50879,7 @@
       "name": "NG2S2",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2S2",
       "mass": 14.007,
       "desc": "terminal amide nitrogen (CO=NH2)"
@@ -50888,7 +50888,7 @@
       "name": "NG2S3",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG2S3",
       "mass": 14.007,
       "desc": "external amine ring nitrogen (planar/aniline), phosphoramidate"
@@ -50897,7 +50897,7 @@
       "name": "NG301",
       "epsilon": 0.14644,
       "sigma": 0.356359487256,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG301",
       "mass": 14.007,
       "desc": "neutral trimethylamine nitrogen"
@@ -50906,7 +50906,7 @@
       "name": "NG311",
       "epsilon": 0.18828,
       "sigma": 0.356359487256,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG311",
       "mass": 14.007,
       "desc": "neutral dimethylamine nitrogen"
@@ -50915,7 +50915,7 @@
       "name": "NG321",
       "epsilon": 0.25104,
       "sigma": 0.35457768982,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG321",
       "mass": 14.007,
       "desc": "neutral methylamine nitrogen"
@@ -50924,7 +50924,7 @@
       "name": "NG331",
       "epsilon": 0.29288,
       "sigma": 0.352795892384,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG331",
       "mass": 14.007,
       "desc": "neutral ammonia nitrogen"
@@ -50933,7 +50933,7 @@
       "name": "NG3C51",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG3C51",
       "mass": 14.007,
       "desc": "secondary sp3 amine in 5-membered ring"
@@ -50942,7 +50942,7 @@
       "name": "NG3N1",
       "epsilon": 0.25104,
       "sigma": 0.365268474438,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG3N1",
       "mass": 14.007,
       "desc": "N in hydrazine, HDZN"
@@ -50951,7 +50951,7 @@
       "name": "NG3P0",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG3P0",
       "mass": 14.007,
       "desc": "quarternary N+, choline"
@@ -50960,7 +50960,7 @@
       "name": "NG3P1",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG3P1",
       "mass": 14.007,
       "desc": "tertiary NH+ (PIP)"
@@ -50969,7 +50969,7 @@
       "name": "NG3P2",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG3P2",
       "mass": 14.007,
       "desc": "secondary NH2+ (proline)"
@@ -50978,7 +50978,7 @@
       "name": "NG3P3",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NG3P3",
       "mass": 14.007,
       "desc": "primary NH3+, phosphatidylethanolamine"
@@ -50987,7 +50987,7 @@
       "name": "NH1",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NH1",
       "mass": 14.007,
       "desc": "peptide nitrogen"
@@ -50996,7 +50996,7 @@
       "name": "NH2",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NH2",
       "mass": 14.007,
       "desc": "amide nitrogen"
@@ -51005,7 +51005,7 @@
       "name": "NH3",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NH3",
       "mass": 14.007,
       "desc": "ammonium nitrogen"
@@ -51014,7 +51014,7 @@
       "name": "NH3L",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NH3L",
       "mass": 14.007,
       "desc": "nitrogen phosphatidylethanolamine"
@@ -51023,7 +51023,7 @@
       "name": "NHL",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NHL",
       "mass": 14.007,
       "desc": ""
@@ -51032,7 +51032,7 @@
       "name": "NI",
       "epsilon": 23.6396,
       "sigma": 0.227357352869,
-      "elem": 28,
+      "elem": "Ni",
       "tag": "NI",
       "mass": 58.6934,
       "desc": "Nickel metal (HH et al. 2008)"
@@ -51041,7 +51041,7 @@
       "name": "NN1",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN1",
       "mass": 14.007,
       "desc": "Nucleic acid amide nitrogen"
@@ -51050,7 +51050,7 @@
       "name": "NN1C",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN1C",
       "mass": 14.007,
       "desc": "Nucleic acid imino nitrogen (cyt taut Sasha)"
@@ -51059,7 +51059,7 @@
       "name": "NN2",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN2",
       "mass": 14.007,
       "desc": "Nucleic acid protonated ring nitrogen"
@@ -51068,7 +51068,7 @@
       "name": "NN2B",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN2B",
       "mass": 14.007,
       "desc": "From NN2, for N9 in GUA different from ADE"
@@ -51077,7 +51077,7 @@
       "name": "NN2C",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN2C",
       "mass": 14.007,
       "desc": "Nucleic acid protonated ring nitrogen (cyt taut Sasha)"
@@ -51086,7 +51086,7 @@
       "name": "NN2G",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN2G",
       "mass": 14.007,
       "desc": "Nucleic acid protonated ring nitrogen, gua N1"
@@ -51095,7 +51095,7 @@
       "name": "NN2U",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN2U",
       "mass": 14.007,
       "desc": "Nucleic acid protonated ring nitrogen, ura N3"
@@ -51104,7 +51104,7 @@
       "name": "NN3",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN3",
       "mass": 14.007,
       "desc": "Nucleic acid unprotonated ring nitrogen"
@@ -51113,7 +51113,7 @@
       "name": "NN3A",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN3A",
       "mass": 14.007,
       "desc": "Nucleic acid unprotonated ring nitrogen, ade N1 and N3"
@@ -51122,7 +51122,7 @@
       "name": "NN3G",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN3G",
       "mass": 14.007,
       "desc": "Nucleic acid unprotonated ring nitrogen, gua N3"
@@ -51131,7 +51131,7 @@
       "name": "NN3I",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN3I",
       "mass": 14.007,
       "desc": "Nucleic acid unprotonated ring nitrogen, inosine N3"
@@ -51140,7 +51140,7 @@
       "name": "NN4",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN4",
       "mass": 14.007,
       "desc": "Nucleic acid purine N7"
@@ -51149,7 +51149,7 @@
       "name": "NN6",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NN6",
       "mass": 14.007,
       "desc": "Nucleic acid sp3 amine nitrogen (equiv to protein nh3)"
@@ -51158,7 +51158,7 @@
       "name": "NNG",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NNG",
       "mass": 14.007,
       "desc": "guanidinium type nitrogen"
@@ -51167,7 +51167,7 @@
       "name": "NP",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NP",
       "mass": 14.007,
       "desc": "Proline ring NH2+ (N-terminal)"
@@ -51176,7 +51176,7 @@
       "name": "NPH",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NPH",
       "mass": 14.007,
       "desc": "heme pyrrole N"
@@ -51185,7 +51185,7 @@
       "name": "NR1",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NR1",
       "mass": 14.007,
       "desc": "neutral his protonated ring nitrogen"
@@ -51194,7 +51194,7 @@
       "name": "NR2",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NR2",
       "mass": 14.007,
       "desc": "neutral his unprotonated ring nitrogen"
@@ -51203,7 +51203,7 @@
       "name": "NR3",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NR3",
       "mass": 14.007,
       "desc": "charged his ring nitrogen"
@@ -51212,7 +51212,7 @@
       "name": "NS1",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NS1",
       "mass": 14.007,
       "desc": "N for deprotonated Schiff's base"
@@ -51221,7 +51221,7 @@
       "name": "NS2",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NS2",
       "mass": 14.007,
       "desc": "N for protonated Schiff's base"
@@ -51230,7 +51230,7 @@
       "name": "NTL",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NTL",
       "mass": 14.007,
       "desc": "ammonium nitrogen"
@@ -51239,7 +51239,7 @@
       "name": "NY",
       "epsilon": 0.8368,
       "sigma": 0.329632525712,
-      "elem": 7,
+      "elem": "N",
       "tag": "NY",
       "mass": 14.007,
       "desc": "TRP N in pyrrole ring"
@@ -51248,7 +51248,7 @@
       "name": "O",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "O",
       "mass": 15.999,
       "desc": "carbonyl oxygen"
@@ -51257,7 +51257,7 @@
       "name": "O2L",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "O2L",
       "mass": 15.9994,
       "desc": "Nucleic acid =O in phosphate or sulfate"
@@ -51266,7 +51266,7 @@
       "name": "OAL",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "OAL",
       "mass": 15.999,
       "desc": "Si Hydroxyl Oxygen;"
@@ -51275,7 +51275,7 @@
       "name": "OB",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OB",
       "mass": 15.999,
       "desc": "carbonyl oxygen in acetic acid"
@@ -51284,7 +51284,7 @@
       "name": "OBL",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OBL",
       "mass": 15.9994,
       "desc": "acetic acid carboxyl oxygen (e. to protein OB)"
@@ -51293,7 +51293,7 @@
       "name": "OC",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC",
       "mass": 15.999,
       "desc": "carboxylate oxygen"
@@ -51302,7 +51302,7 @@
       "name": "OC2D1",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC2D1",
       "mass": 15.9994,
       "desc": "sp2 oxygen in amides, aldoses"
@@ -51311,7 +51311,7 @@
       "name": "OC2D2",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC2D2",
       "mass": 15.9994,
       "desc": "sp2 oxygen in carboxylates"
@@ -51320,7 +51320,7 @@
       "name": "OC2D3",
       "epsilon": 0.2092,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC2D3",
       "mass": 15.9994,
       "desc": "sp2 oxygen in acetone, ketoses"
@@ -51329,7 +51329,7 @@
       "name": "OC2D4",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC2D4",
       "mass": 15.9994,
       "desc": "par22 O"
@@ -51338,7 +51338,7 @@
       "name": "OC2DP",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC2DP",
       "mass": 15.9994,
       "desc": "=0 in P03H (phosphate) || O2L in top_all27_lipid.rtf"
@@ -51347,7 +51347,7 @@
       "name": "OC301",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC301",
       "mass": 15.9994,
       "desc": "generic linear ether"
@@ -51356,7 +51356,7 @@
       "name": "OC302",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC302",
       "mass": 15.9994,
       "desc": "linear ether in 1-1 glycosidic linkage"
@@ -51365,7 +51365,7 @@
       "name": "OC303",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC303",
       "mass": 15.9994,
       "desc": "from OC301; linear ether in P1->F3 pyranose-furanose glycosidic linkage"
@@ -51374,7 +51374,7 @@
       "name": "OC305A",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC305A",
       "mass": 15.9994,
       "desc": "Ether Oxygen in THF"
@@ -51383,7 +51383,7 @@
       "name": "OC30A",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC30A",
       "mass": 15.9994,
       "desc": "Ether Oxygen"
@@ -51392,7 +51392,7 @@
       "name": "OC30P",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC30P",
       "mass": 15.9994,
       "desc": "ester O in PO3H (phosphate) || OSL in top_all27_lipid.rtf"
@@ -51401,7 +51401,7 @@
       "name": "OC311",
       "epsilon": 0.80375,
       "sigma": 0.314487247504,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC311",
       "mass": 15.9994,
       "desc": "hydroxyl oxygen"
@@ -51410,7 +51410,7 @@
       "name": "OC311M",
       "epsilon": 0.80375,
       "sigma": 0.314487247504,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC311M",
       "mass": 15.9994,
       "desc": "MEOH, ETOH, PRO2, EGLY hydroxyl O"
@@ -51419,7 +51419,7 @@
       "name": "OC312",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC312",
       "mass": 15.9994,
       "desc": "OH in PO3H (phosphate) || OHL in top_all27_lipid.rtf"
@@ -51428,7 +51428,7 @@
       "name": "OC3C51",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC3C51",
       "mass": 15.9994,
       "desc": "furan ring oxygen"
@@ -51437,7 +51437,7 @@
       "name": "OC3C5M",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC3C5M",
       "mass": 15.9994,
       "desc": "thf ring oxygen"
@@ -51446,7 +51446,7 @@
       "name": "OC3C61",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OC3C61",
       "mass": 15.9994,
       "desc": "ether in six membered ring"
@@ -51455,7 +51455,7 @@
       "name": "OCL",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OCL",
       "mass": 15.9994,
       "desc": "acetate oxygen"
@@ -51464,7 +51464,7 @@
       "name": "OG2D1",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG2D1",
       "mass": 15.9994,
       "desc": "carbonyl O: amides, esters, [neutral] carboxylic acids, aldehydes, urea"
@@ -51473,7 +51473,7 @@
       "name": "OG2D2",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG2D2",
       "mass": 15.9994,
       "desc": "carbonyl O: negative groups: carboxylates, carbonate"
@@ -51482,7 +51482,7 @@
       "name": "OG2D3",
       "epsilon": 0.2092,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG2D3",
       "mass": 15.9994,
       "desc": "carbonyl O: ketones"
@@ -51491,7 +51491,7 @@
       "name": "OG2D4",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG2D4",
       "mass": 15.9994,
       "desc": "6-mem aromatic carbonyl oxygen (nucleic bases)"
@@ -51500,7 +51500,7 @@
       "name": "OG2D5",
       "epsilon": 0.69036,
       "sigma": 0.301480126219,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG2D5",
       "mass": 15.9994,
       "desc": "CO2 oxygen"
@@ -51509,7 +51509,7 @@
       "name": "OG2N1",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG2N1",
       "mass": 15.9994,
       "desc": "NITB, nitrobenzene"
@@ -51518,7 +51518,7 @@
       "name": "OG2P1",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG2P1",
       "mass": 15.9994,
       "desc": "=O in phosphate or sulfate"
@@ -51527,7 +51527,7 @@
       "name": "OG2R50",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG2R50",
       "mass": 15.9994,
       "desc": "FURA, furan"
@@ -51536,7 +51536,7 @@
       "name": "OG2S1",
       "epsilon": 0.59538,
       "sigma": 0.299270697398,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG2S1",
       "mass": 15.9994,
       "desc": "mono-thio S-P bond modulated oxygen"
@@ -51545,7 +51545,7 @@
       "name": "OG301",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG301",
       "mass": 15.9994,
       "desc": "ether -O- !SHOULD WE HAVE A SEPARATE ENOL ETHER??? IF YES, SHOULD WE MERGE IT WITH OG3R60???"
@@ -51554,7 +51554,7 @@
       "name": "OG302",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG302",
       "mass": 15.9994,
       "desc": "ester -O-"
@@ -51563,7 +51563,7 @@
       "name": "OG303",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG303",
       "mass": 15.9994,
       "desc": "phosphate/sulfate ester oxygen"
@@ -51572,7 +51572,7 @@
       "name": "OG304",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG304",
       "mass": 15.9994,
       "desc": "linkage oxygen in pyrophosphate/pyrosulphate"
@@ -51581,7 +51581,7 @@
       "name": "OG311",
       "epsilon": 0.80375,
       "sigma": 0.314487247504,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG311",
       "mass": 15.9994,
       "desc": "hydroxyl oxygen"
@@ -51590,7 +51590,7 @@
       "name": "OG312",
       "epsilon": 0.50208,
       "sigma": 0.311814551349,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG312",
       "mass": 15.9994,
       "desc": "ionized alcohol oxygen"
@@ -51599,7 +51599,7 @@
       "name": "OG3C31",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG3C31",
       "mass": 15.9994,
       "desc": "epoxide oxygen, 1EOX, 1BOX, sc"
@@ -51608,7 +51608,7 @@
       "name": "OG3C51",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG3C51",
       "mass": 15.9994,
       "desc": "5-mem furanose ring oxygen (ether)"
@@ -51617,7 +51617,7 @@
       "name": "OG3C61",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG3C61",
       "mass": 15.9994,
       "desc": "DIOX, dioxane, ether in 6-membered ring !SHOULD WE MERGE THIS WITH OG3R60???"
@@ -51626,7 +51626,7 @@
       "name": "OG3R60",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OG3R60",
       "mass": 15.9994,
       "desc": "O in 6-mem cyclic enol ether (PY01, PY02) or ester"
@@ -51635,7 +51635,7 @@
       "name": "OH1",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "OH1",
       "mass": 15.999,
       "desc": "hydroxyl oxygen"
@@ -51644,7 +51644,7 @@
       "name": "OHL",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "OHL",
       "mass": 15.9994,
       "desc": "Nucleic acid phosphate hydroxyl oxygen"
@@ -51653,7 +51653,7 @@
       "name": "OM",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OM",
       "mass": 15.999,
       "desc": "heme CO/O2 oxygen"
@@ -51662,7 +51662,7 @@
       "name": "ON1",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "ON1",
       "mass": 15.9994,
       "desc": "Nucleic acid carbonyl oxygen"
@@ -51671,7 +51671,7 @@
       "name": "ON1C",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "ON1C",
       "mass": 15.9994,
       "desc": "Nucleic acid carbonyl oxygen, cyt O2"
@@ -51680,7 +51680,7 @@
       "name": "ON2",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "ON2",
       "mass": 15.9994,
       "desc": "Nucleic acid phosphate ester oxygen"
@@ -51689,7 +51689,7 @@
       "name": "ON2M",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "ON2M",
       "mass": 15.9994,
       "desc": "ether oxygen for methylated C2' of ribose"
@@ -51698,7 +51698,7 @@
       "name": "ON3",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "ON3",
       "mass": 15.9994,
       "desc": "Nucleic acid =O in phosphate"
@@ -51707,7 +51707,7 @@
       "name": "ON4",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "ON4",
       "mass": 15.9994,
       "desc": "Nucleic acid phosphate hydroxyl oxygen"
@@ -51716,7 +51716,7 @@
       "name": "ON5",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "ON5",
       "mass": 15.9994,
       "desc": "Nucleic acid ribose hydroxyl oxygen"
@@ -51725,7 +51725,7 @@
       "name": "ON6",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "ON6",
       "mass": 15.9994,
       "desc": "Nucleic acid deoxyribose ring oxygen"
@@ -51734,7 +51734,7 @@
       "name": "ON6B",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "ON6B",
       "mass": 15.9994,
       "desc": "Nucleic acid ribose ring oxygen"
@@ -51743,7 +51743,7 @@
       "name": "OS",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "OS",
       "mass": 15.9994,
       "desc": "ester oxygen"
@@ -51752,7 +51752,7 @@
       "name": "OSIA",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "OSIA",
       "mass": 15.999,
       "desc": "Si Ester Oxygen;"
@@ -51761,7 +51761,7 @@
       "name": "OSIE",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "OSIE",
       "mass": 15.999,
       "desc": "Si Ester Oxygen;"
@@ -51770,7 +51770,7 @@
       "name": "OSIH",
       "epsilon": 0.63639,
       "sigma": 0.315378146222,
-      "elem": 8,
+      "elem": "O",
       "tag": "OSIH",
       "mass": 15.999,
       "desc": "Si Hydroxyl Oxygen;"
@@ -51779,7 +51779,7 @@
       "name": "OSL",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OSL",
       "mass": 15.9994,
       "desc": "ester oxygen"
@@ -51788,7 +51788,7 @@
       "name": "OSLP",
       "epsilon": 0.4184,
       "sigma": 0.293996576986,
-      "elem": 8,
+      "elem": "O",
       "tag": "OSLP",
       "mass": 15.9994,
       "desc": "Phosphate oxygen, to avoid conflict with methylacetate type O"
@@ -51797,7 +51797,7 @@
       "name": "OST",
       "epsilon": 0.69036,
       "sigma": 0.301480126219,
-      "elem": 8,
+      "elem": "O",
       "tag": "OST",
       "mass": 15.999,
       "desc": "CO2 oxygen"
@@ -51806,7 +51806,7 @@
       "name": "OT",
       "epsilon": 0.63639,
       "sigma": 0.315057422683,
-      "elem": 8,
+      "elem": "O",
       "tag": "OT",
       "mass": 15.9994,
       "desc": "TIPS3P WATER OXYGEN"
@@ -51815,7 +51815,7 @@
       "name": "OT",
       "epsilon": 0.6363864,
       "sigma": 0.315057422683,
-      "elem": 8,
+      "elem": "O",
       "tag": "OT",
       "mass": 9.9514,
       "desc": "TIPS3P WATER OXYGEN"
@@ -51824,7 +51824,7 @@
       "name": "OX",
       "epsilon": 0.50208,
       "sigma": 0.302905564168,
-      "elem": 8,
+      "elem": "O",
       "tag": "OX",
       "mass": 15.9994,
       "desc": "hydroxide oxygen"
@@ -51833,7 +51833,7 @@
       "name": "P",
       "epsilon": 2.44764,
       "sigma": 0.3830864488,
-      "elem": 15,
+      "elem": "P",
       "tag": "P",
       "mass": 30.974,
       "desc": "phosphorus"
@@ -51842,7 +51842,7 @@
       "name": "P2",
       "epsilon": 2.44764,
       "sigma": 0.3830864488,
-      "elem": 15,
+      "elem": "P",
       "tag": "P2",
       "mass": 30.974,
       "desc": "phosphorus, adm, 2011 DNA update"
@@ -51851,7 +51851,7 @@
       "name": "P3",
       "epsilon": 2.44764,
       "sigma": 0.3830864488,
-      "elem": 15,
+      "elem": "P",
       "tag": "P3",
       "mass": 30.974,
       "desc": "pyrophosphate phosphorus"
@@ -51860,7 +51860,7 @@
       "name": "P4",
       "epsilon": 2.44764,
       "sigma": 0.3830864488,
-      "elem": 15,
+      "elem": "P",
       "tag": "P4",
       "mass": 30.974,
       "desc": "protonated pyrophosphate phosphorus"
@@ -51869,7 +51869,7 @@
       "name": "PB",
       "epsilon": 12.25912,
       "sigma": 0.317605393017,
-      "elem": 82,
+      "elem": "Pb",
       "tag": "PB",
       "mass": 207.2,
       "desc": "Lead metal (HH et al. 2008)"
@@ -51878,7 +51878,7 @@
       "name": "PC",
       "epsilon": 2.44764,
       "sigma": 0.3830864488,
-      "elem": 15,
+      "elem": "P",
       "tag": "PC",
       "mass": 30.974,
       "desc": "phosphorus || PL in top_all27_lipid.rtf"
@@ -51887,7 +51887,7 @@
       "name": "PD",
       "epsilon": 25.7316,
       "sigma": 0.251144348644,
-      "elem": 46,
+      "elem": "Pd",
       "tag": "PD",
       "mass": 106.42,
       "desc": "Palladium metal (HH et al. 2008)"
@@ -51896,7 +51896,7 @@
       "name": "PG0",
       "epsilon": 2.44764,
       "sigma": 0.3830864488,
-      "elem": 15,
+      "elem": "P",
       "tag": "PG0",
       "mass": 30.9738,
       "desc": "neutral phosphate"
@@ -51905,7 +51905,7 @@
       "name": "PG1",
       "epsilon": 2.44764,
       "sigma": 0.3830864488,
-      "elem": 15,
+      "elem": "P",
       "tag": "PG1",
       "mass": 30.9738,
       "desc": "phosphate -1"
@@ -51914,7 +51914,7 @@
       "name": "PG2",
       "epsilon": 2.44764,
       "sigma": 0.3830864488,
-      "elem": 15,
+      "elem": "P",
       "tag": "PG2",
       "mass": 30.9738,
       "desc": "phosphate -2"
@@ -51923,7 +51923,7 @@
       "name": "PL",
       "epsilon": 2.44764,
       "sigma": 0.3830864488,
-      "elem": 15,
+      "elem": "P",
       "tag": "PL",
       "mass": 30.974,
       "desc": "phosphorus"
@@ -51932,7 +51932,7 @@
       "name": "POT",
       "epsilon": 0.36401,
       "sigma": 0.314264522824,
-      "elem": 19,
+      "elem": "K",
       "tag": "POT",
       "mass": 39.0983,
       "desc": "Potassium Ion"
@@ -51941,7 +51941,7 @@
       "name": "PT",
       "epsilon": 32.6352,
       "sigma": 0.253460685311,
-      "elem": 78,
+      "elem": "Pt",
       "tag": "PT",
       "mass": 195.084,
       "desc": "Platinum metal (HH et al. 2008)"
@@ -51950,7 +51950,7 @@
       "name": "RUB",
       "epsilon": 0.6276,
       "sigma": 0.338541512893,
-      "elem": 37,
+      "elem": "Rb",
       "tag": "RUB",
       "mass": 85.4678,
       "desc": "Rubidium Ion"
@@ -51959,7 +51959,7 @@
       "name": "S",
       "epsilon": 1.8828,
       "sigma": 0.356359487256,
-      "elem": 16,
+      "elem": "S",
       "tag": "S",
       "mass": 32.06,
       "desc": "sulphur"
@@ -51968,7 +51968,7 @@
       "name": "SC",
       "epsilon": 1.96648,
       "sigma": 0.374177461619,
-      "elem": 16,
+      "elem": "S",
       "tag": "SC",
       "mass": 32.06,
       "desc": "Sulfate sulfur"
@@ -51977,7 +51977,7 @@
       "name": "SEGD1",
       "epsilon": 2.60663,
       "sigma": 0.387540942391,
-      "elem": 34,
+      "elem": "Se",
       "tag": "SEGD1",
       "mass": 78.96,
       "desc": "selenocarbonyl Se"
@@ -51986,7 +51986,7 @@
       "name": "SG2D1",
       "epsilon": 2.36396,
       "sigma": 0.365268474438,
-      "elem": 16,
+      "elem": "S",
       "tag": "SG2D1",
       "mass": 32.06,
       "desc": "thiocarbonyl S"
@@ -51995,7 +51995,7 @@
       "name": "SG2P1",
       "epsilon": 2.63927,
       "sigma": 0.373054929234,
-      "elem": 16,
+      "elem": "S",
       "tag": "SG2P1",
       "mass": 32.06,
       "desc": "mono-thio S-P bond"
@@ -52004,7 +52004,7 @@
       "name": "SG2P2",
       "epsilon": 2.59366,
       "sigma": 0.366088101258,
-      "elem": 16,
+      "elem": "S",
       "tag": "SG2P2",
       "mass": 32.06,
       "desc": "di-thio S-P bond"
@@ -52013,7 +52013,7 @@
       "name": "SG2R50",
       "epsilon": 1.8828,
       "sigma": 0.356359487256,
-      "elem": 16,
+      "elem": "S",
       "tag": "SG2R50",
       "mass": 32.06,
       "desc": "THIP, thiophene"
@@ -52022,7 +52022,7 @@
       "name": "SG301",
       "epsilon": 1.58992,
       "sigma": 0.351904993665,
-      "elem": 16,
+      "elem": "S",
       "tag": "SG301",
       "mass": 32.06,
       "desc": "sulfur C-S-S-C type"
@@ -52031,7 +52031,7 @@
       "name": "SG302",
       "epsilon": 1.96648,
       "sigma": 0.391995435982,
-      "elem": 16,
+      "elem": "S",
       "tag": "SG302",
       "mass": 32.06,
       "desc": "thiolate sulfur (-1)"
@@ -52040,7 +52040,7 @@
       "name": "SG311",
       "epsilon": 1.8828,
       "sigma": 0.356359487256,
-      "elem": 16,
+      "elem": "S",
       "tag": "SG311",
       "mass": 32.06,
       "desc": "sulphur, SH, -S-"
@@ -52049,7 +52049,7 @@
       "name": "SG3O1",
       "epsilon": 1.96648,
       "sigma": 0.374177461619,
-      "elem": 16,
+      "elem": "S",
       "tag": "SG3O1",
       "mass": 32.06,
       "desc": "sulfate -1 sulfur"
@@ -52058,7 +52058,7 @@
       "name": "SG3O2",
       "epsilon": 1.4644,
       "sigma": 0.356359487256,
-      "elem": 16,
+      "elem": "S",
       "tag": "SG3O2",
       "mass": 32.06,
       "desc": "neutral sulfone/sulfonamide sulfur"
@@ -52067,7 +52067,7 @@
       "name": "SG3O3",
       "epsilon": 1.4644,
       "sigma": 0.356359487256,
-      "elem": 16,
+      "elem": "S",
       "tag": "SG3O3",
       "mass": 32.06,
       "desc": "neutral sulfoxide sulfur"
@@ -52076,7 +52076,7 @@
       "name": "SI",
       "epsilon": 2.5104,
       "sigma": 0.391995435982,
-      "elem": 14,
+      "elem": "Si",
       "tag": "SI",
       "mass": 28.0855,
       "desc": "Si Atom;"
@@ -52085,7 +52085,7 @@
       "name": "SIH3",
       "epsilon": 2.5104,
       "sigma": 0.391995435982,
-      "elem": 14,
+      "elem": "Si",
       "tag": "SIH3",
       "mass": 28.0855,
       "desc": "Si Atom;"
@@ -52094,7 +52094,7 @@
       "name": "SL",
       "epsilon": 1.96648,
       "sigma": 0.374177461619,
-      "elem": 16,
+      "elem": "S",
       "tag": "SL",
       "mass": 32.06,
       "desc": "Sulfate sulfur"
@@ -52103,7 +52103,7 @@
       "name": "SM",
       "epsilon": 1.58992,
       "sigma": 0.351904993665,
-      "elem": 16,
+      "elem": "S",
       "tag": "SM",
       "mass": 32.06,
       "desc": "sulfur C-S-S-C type"
@@ -52112,7 +52112,7 @@
       "name": "SOD",
       "epsilon": 0.19623,
       "sigma": 0.251367073323,
-      "elem": 11,
+      "elem": "Na",
       "tag": "SOD",
       "mass": 22.98977,
       "desc": "Sodium Ion"
@@ -52121,7 +52121,7 @@
       "name": "SS",
       "epsilon": 1.96648,
       "sigma": 0.391995435982,
-      "elem": 16,
+      "elem": "S",
       "tag": "SS",
       "mass": 32.06,
       "desc": "thiolate sulfur"
@@ -52130,7 +52130,7 @@
       "name": "ZN",
       "epsilon": 1.046,
       "sigma": 0.194215920555,
-      "elem": 30,
+      "elem": "Zn",
       "tag": "ZN",
       "mass": 65.37,
       "desc": "zinc (II) cation"
@@ -52139,7 +52139,7 @@
       "name": "ON2B",
       "epsilon": 0.6363864,
       "sigma": 0.3153781462,
-      "elem": 8,
+      "elem": "O",
       "tag": "ON2B",
       "mass": 15.9994,
       "desc": ""
@@ -52148,7 +52148,7 @@
       "name": "SP",
       "epsilon": 1.8828,
       "sigma": 0.391995436,
-      "elem": 16,
+      "elem": "S",
       "tag": "SP",
       "mass": 32.06,
       "desc": ""
@@ -52157,7 +52157,7 @@
       "name": "OWT4",
       "epsilon": 6.4852,
       "sigma": 3.15365,
-      "elem": 8,
+      "elem": "O",
       "tag": "OWT4",
       "mass": 9.9514,
       "desc": ""
@@ -52166,7 +52166,7 @@
       "name": "HWT4",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 1,
+      "elem": "H",
       "tag": "HWT4",
       "mass": 4.032,
       "desc": ""
@@ -52175,7 +52175,7 @@
       "name": "MWT4",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 0,
+      "elem": "0",
       "tag": "MWT4",
       "mass": 0.0,
       "desc": ""
@@ -52184,7 +52184,7 @@
       "name": "OW",
       "epsilon": 6.50194,
       "sigma": 3.16557,
-      "elem": 8,
+      "elem": "O",
       "tag": "OW",
       "mass": 9.9514,
       "desc": ""
@@ -52193,7 +52193,7 @@
       "name": "HW",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 1,
+      "elem": "H",
       "tag": "HW",
       "mass": 4.032,
       "desc": ""
@@ -52202,7 +52202,7 @@
       "name": "OWT4",
       "epsilon": 6.4852,
       "sigma": 3.15365,
-      "elem": 8,
+      "elem": "O",
       "tag": "OWT4",
       "mass": 15.9994,
       "desc": ""
@@ -52211,7 +52211,7 @@
       "name": "HWT4",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 1,
+      "elem": "H",
       "tag": "HWT4",
       "mass": 1.008,
       "desc": ""
@@ -52220,7 +52220,7 @@
       "name": "MWT4",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 0,
+      "elem": "0",
       "tag": "MWT4",
       "mass": 0.0,
       "desc": ""
@@ -52229,7 +52229,7 @@
       "name": "OW",
       "epsilon": 6.50194,
       "sigma": 3.16557,
-      "elem": 8,
+      "elem": "O",
       "tag": "OW",
       "mass": 15.9994,
       "desc": ""
@@ -52238,7 +52238,7 @@
       "name": "HW",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 1,
+      "elem": "H",
       "tag": "HW",
       "mass": 1.008,
       "desc": ""
@@ -52247,7 +52247,7 @@
       "name": "MNH3",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 0,
+      "elem": "0",
       "tag": "MNH3",
       "mass": 0.0,
       "desc": ""
@@ -52256,7 +52256,7 @@
       "name": "MNH2",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 0,
+      "elem": "0",
       "tag": "MNH2",
       "mass": 0.0,
       "desc": ""
@@ -52265,7 +52265,7 @@
       "name": "MCH3",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 0,
+      "elem": "0",
       "tag": "MCH3",
       "mass": 0.0,
       "desc": ""
@@ -52274,7 +52274,7 @@
       "name": "MCH3S",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 0,
+      "elem": "0",
       "tag": "MCH3S",
       "mass": 0.0,
       "desc": ""
@@ -52283,7 +52283,7 @@
       "name": "MW",
       "epsilon": 0.0,
       "sigma": 0.0,
-      "elem": 0,
+      "elem": "0",
       "tag": "MW",
       "mass": 0.0,
       "desc": ""
@@ -52292,7 +52292,7 @@
       "name": "MGA",
       "epsilon": 0.0123428,
       "sigma": 0.277,
-      "elem": 12,
+      "elem": "Mg",
       "tag": "MGA",
       "mass": 24.305,
       "desc": ""

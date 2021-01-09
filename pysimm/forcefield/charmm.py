@@ -401,6 +401,10 @@ def __parse_charmm__():
         i += 1
 
     # Parsing non-bonded parameters of the FF
+
+    with open('../data/elements_by_mass.json', 'r') as pntr:
+        elemsDict = json.load(pntr)
+
     try:
         with open(os.path.join(DATA_PATH, nonbnded_lib), 'r') as nb_file:
             try:
@@ -416,14 +420,23 @@ def __parse_charmm__():
                 if not (line[0] in [';', '#', '[', '\n']):
                     line = line.strip().split()
                     if len(line) > 6:
+
+                        # checking validity of the description field
                         descr = re.findall('(?<=' + '{:>6}    '.format(line[0]) + '[\d| ][\d| ]\d\.\d{5} ; ).*', atp_data)
                         if len(descr) > 0:
                             descr = descr[0]
                         else:
                             descr = ''
+
+                        # checking validity of the element name field
+                        elemname = line[1]
+                        if len(line[1]) > 0:
+                            if int(line[1]) > 0:
+                                elemname = elemsDict[line[1]]['symbol']
+
                         tmp = [line[0], float(re.match('-?\d{1,}\.\d{1,}', line[6]).group(0)),
-                               float(re.match('-?\d{1,}\.\d{1,}', line[5]).group(0)), int(line[1]), line[0],
-                               float(line[2]), descr]
+                               float(re.match('-?\d{1,}\.\d{1,}', line[5]).group(0)), elemname,
+                               line[0], float(line[2]), descr]
                         obj['particle_types'].append(dict(zip(fields, tmp)))
     except OSError:
         print('Required library file with CHARMM non-bonded parametrs \"{:}\" '
