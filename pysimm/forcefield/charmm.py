@@ -82,7 +82,7 @@ class Charmm(Forcefield):
         Returns:
             None
         """
-        all_types = set()
+
         s.pair_style = self.pair_style
         s.add_particle_bonding()
         for p in s.particles:
@@ -98,7 +98,6 @@ class Charmm(Forcefield):
             if not p.type_name:
 
                 if p.elem == 'C':
-
                     # General definition of a carbon in ethers
                     if (all(p.bond_orders) == 1) and (p.nbonds == 4):
                         rng_count = __detect_rings__(p, [5, 6])
@@ -115,12 +114,22 @@ class Charmm(Forcefield):
                                     sb_p.type_name = 'HCA{}A'.format(hcount)
 
                 if p.elem == 'O':
-                    if (p.nbonds == 2) and (all(p.bond_orders) == 1) and (all(p.bond_elements) == 'C'):
+                    if (p.nbonds == 2) and (all(p.bond_orders) == 1) and all([t == 'C' for t in p.bond_elements]):
                         p.type_name = 'OC30A'
                         if __detect_rings__(p, [5, 6]):
                             p.type_name = 'OC305A'
+        all_types = set()
+        for p in s.particles:
+            all_types.add(self.particle_types.get(p.type_name)[0])
 
+        for pt in all_types:
+            s.particle_types.add(pt.copy())
 
+        for p in s.particles:
+            pt = s.particle_types.get(p.type_name)
+            if pt:
+                p.type = pt[0]
+        print('exit')
 
 
     def assign_btypes(self, s):
@@ -209,8 +218,9 @@ class Charmm(Forcefield):
     def assign_dtypes(self, s):
         """pysimm.forcefield.Charmm.assign_dtypes
 
-        Gaff specific dihedral typing rules.
-        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type and type.name defined.
+        CHARMM specific dihedral typing rules.
+        Requires :class:`~pysimm.system.System` object :class:`~pysimm.system.Particle` objects have bonds, type
+        and type.name defined.
         *** use after assign_ptypes ***
 
         Args:
@@ -265,6 +275,7 @@ class Charmm(Forcefield):
 
         for dt in all_types:
             dt = dt.copy()
+            dt.w = 0.0
             s.dihedral_types.add(dt)
 
         for d in s.dihedrals:
@@ -329,7 +340,6 @@ class Charmm(Forcefield):
 
 def __parse_charmm__():
     import json
-    from io import StringIO
 
     kj2kcal = 4.18
     bnded_lib = 'ffbonded.itp'
@@ -401,7 +411,6 @@ def __parse_charmm__():
         i += 1
 
     # Parsing non-bonded parameters of the FF
-
     with open('../data/elements_by_mass.json', 'r') as pntr:
         elemsDict = json.load(pntr)
 
@@ -457,7 +466,7 @@ def __detect_rings__(particle, orders):
     rng_count = 0
     neighb_list = []
     ordr_count = 2
-    to_exclude = set(particle)
+    to_exclude = set([particle])
 
     neighb = []
     for p in to_exclude:
@@ -469,11 +478,11 @@ def __detect_rings__(particle, orders):
             to_include += [x.a if particle is x.b else x.b for x in p.bonds]
 
         neighb_list.append(set(to_include) - to_exclude)
-        to_exclude = neighb
+        to_exclude = set(neighb)
         ordr_count += 1
 
     for o in orders:
-        if particle in neighb_list[o - 2]:
+        if particle in neighb_list[o - 3]:
             rng_count = o
 
     return rng_count
