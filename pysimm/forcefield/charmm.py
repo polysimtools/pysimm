@@ -32,6 +32,8 @@ import re
 import sys
 from itertools import permutations
 
+import numpy
+
 from . import gasteiger
 from .. import error_print
 from ..system import Angle, Dihedral, Improper
@@ -387,7 +389,7 @@ def __parse_charmm__():
                     name = ','.join(line[0:3])
                     rname = ','.join(reversed(line[0:3]))
                     obj['angle_types'].append(
-                        {'theta0': theta0, 'tag': name, 'k': ktheta, 'ub0': ub0, 'kub': kub, 'name': name,
+                        {'theta0': theta0, 'tag': name, 'k': ktheta, 'r_ub': ub0, 'k_ub': kub, 'name': name,
                          'rname': rname})
 
                 elif curr_type == 'impropertypes':
@@ -447,6 +449,21 @@ def __parse_charmm__():
                                float(re.match('-?\d{1,}\.\d{1,}', line[5]).group(0)), elemname,
                                line[0], float(line[2]), descr]
                         obj['particle_types'].append(dict(zip(fields, tmp)))
+
+            # Parsing **non-diagonal** non-bonded parameters of the FF
+            nb_file.seek(0)
+            obj['nondiagonal_lj'] = []
+            for line in nb_file:
+                if not (line[0] in [';', '#', '[', '\n']):
+                    line = line.strip().split()
+                    if len(line) == 5:
+                        i_name = line[0].strip()
+                        j_name = line[1].strip()
+
+                        obj['nondiagonal_lj'].append({'name': ','.join([i_name, j_name]),
+                                                      'rname': ','.join([j_name, i_name]),
+                                                      'epsilon': float(line[3]),
+                                                      'sigma': float(line[4]) })
     except OSError:
         print('Required library file with CHARMM non-bonded parametrs \"{:}\" '
               'cannot be opened or read. \nExiting...'.format(nonbnded_lib))
