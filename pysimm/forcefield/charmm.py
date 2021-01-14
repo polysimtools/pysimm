@@ -26,7 +26,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-
+import json
 import os
 import re
 import sys
@@ -36,8 +36,9 @@ import numpy
 
 from . import gasteiger
 from .. import error_print
-from ..system import Angle, Dihedral, Improper
+from ..system import Angle, Dihedral, Improper, ParticleType
 from .forcefield import Forcefield
+from ..utils import ItemContainer
 
 
 class Charmm(Forcefield):
@@ -61,6 +62,13 @@ class Charmm(Forcefield):
                 os.pardir, 'data', 'forcefields', 'charmm.json'
             )
         Forcefield.__init__(self, db_file)
+
+        with open(db_file) as f:
+            j = json.loads(f.read())
+        self.nondiag_lj_types = ItemContainer()
+        for elem in j.get('nondiagonal_lj'):
+            self.nondiag_lj_types.add(ParticleType(**elem))
+
         self.name = 'charmm'
         self.pair_style = 'lj/charmm'
         self.bond_style = 'harmonic'
@@ -131,8 +139,23 @@ class Charmm(Forcefield):
             pt = s.particle_types.get(p.type_name)
             if pt:
                 p.type = pt[0]
-        print('exit')
 
+        # Addition to normal FF setup: filling up the nondiagonal pair coefficient
+        loc_lj_types = set()
+        for p in s.particle_types:
+            for p_ in s.particle_types:
+                if p != p_:
+                    atm_type = tuple(sorted([p.tag, p_.tag]))
+                    if not(atm_type in [at.atm_types for at in loc_lj_types]):
+                        tmp = self.nondiag_lj_types.get(','.join([p.name, p_.name]))
+                        if len(tmp) > 0:
+                            to_add = tmp[0].copy()
+                            to_add.atm_types = atm_type
+                            loc_lj_types.add(to_add)
+
+        s.nondiag_lj_types = ItemContainer()
+        for ljt in loc_lj_types:
+            s.nondiag_lj_types.add(ljt)
 
     def assign_btypes(self, s):
         """pysimm.forcefield.Charmm.assign_btypes
@@ -337,7 +360,9 @@ class Charmm(Forcefield):
         Returns:
             None
         """
-        pass
+        if charges == 'gasteiger':
+            print('adding gasteiger charges')
+            gasteiger.set_charges(s)
 
 
 def __parse_charmm__():

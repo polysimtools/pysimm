@@ -268,7 +268,7 @@ class Init(object):
             raise PysimmError('A pair_style must be defined during initialization')
 
         if self.cutoff:
-            if self.forcefield == ['charmm'] and self.cutoff.get('inner_lj'):
+            if (self.forcefield == 'charmm') and self.cutoff.get('inner_lj'):
                 lammps_input += ' {} '.format(self.cutoff['inner_lj'])
             lammps_input += ' {} '.format(self.cutoff['lj'])
             if self.charge and self.cutoff.get('coul'):
