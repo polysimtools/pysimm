@@ -368,7 +368,8 @@ class Charmm(Forcefield):
 def __parse_charmm__():
     import json
 
-    kj2kcal = 4.18
+    kj2kcal = 4.184
+    rounding = 8
     bnded_lib = 'ffbonded.itp'
     atmtype_lib = 'atomtypes.atp'
     nonbnded_lib = 'ffnonbonded.itp'
@@ -400,17 +401,17 @@ def __parse_charmm__():
         elif line:
             try:
                 if curr_type == 'bondtypes':
-                    k = float(line[4]) / (2 * kj2kcal * 100)
-                    b = float(line[3]) * 10
+                    k = round(float(line[4]) / (2 * kj2kcal * 100), rounding)
+                    b = round(float(line[3]) * 10, rounding)
                     name = ','.join(line[0:2])
                     rname = ','.join(reversed(line[0:2]))
                     obj['bond_types'].append({'k': k, 'tag': name, 'r0': b, 'name': name, 'rname': rname})
 
                 elif curr_type == 'angletypes':
-                    theta0 = float(line[4])
-                    ktheta = float(line[5]) / (2 * kj2kcal)
-                    ub0 = float(line[6])
-                    kub = float(line[7])
+                    theta0 = round(float(line[4]), rounding)
+                    ktheta = round(float(line[5]) / (2 * kj2kcal), rounding)
+                    ub0 = round(10 * float(line[6]), rounding)
+                    kub = round(float(line[7]) / (2 * kj2kcal), rounding)
                     name = ','.join(line[0:3])
                     rname = ','.join(reversed(line[0:3]))
                     obj['angle_types'].append(
@@ -418,15 +419,15 @@ def __parse_charmm__():
                          'rname': rname})
 
                 elif curr_type == 'impropertypes':
-                    k = float(line[6]) / (2 * kj2kcal)
-                    x0 = float(line[5])
+                    k = round(float(line[6]) / (2 * kj2kcal), rounding)
+                    x0 = round(float(line[5]), rounding)
                     name = ','.join(line[0:4])
                     rname = ','.join(reversed(line[0:4]))
                     obj['improper_types'].append({'k': k, 'tag': name, 'x0': x0, 'name': name, 'rname': rname})
 
                 elif curr_type == 'dihedraltypes':
-                    d = float(line[5])
-                    k = float(line[6]) / kj2kcal
+                    d = round(float(line[5]), rounding)
+                    k = round(float(line[6]) / kj2kcal, rounding)
                     n = int(line[7])
                     name = ','.join(line[0:4])
                     rname = ','.join(reversed(line[0:4]))
@@ -470,9 +471,10 @@ def __parse_charmm__():
                             if int(line[1]) > 0:
                                 elemname = elemsDict[line[1]]['symbol']
 
-                        tmp = [line[0], float(re.match('-?\d{1,}\.\d{1,}', line[6]).group(0)),
-                               float(re.match('-?\d{1,}\.\d{1,}', line[5]).group(0)), elemname,
-                               line[0], float(line[2]), descr]
+                        tmp = [line[0],
+                               round(float(re.match('-?\d{1,}\.\d{1,}', line[6]).group(0)) / kj2kcal, rounding),
+                               round(10 * float(re.match('-?\d{1,}\.\d{1,}', line[5]).group(0)), rounding),
+                               elemname, line[0], float(line[2]), descr]
                         obj['particle_types'].append(dict(zip(fields, tmp)))
 
             # Parsing **non-diagonal** non-bonded parameters of the FF
@@ -487,8 +489,9 @@ def __parse_charmm__():
 
                         obj['nondiagonal_lj'].append({'name': ','.join([i_name, j_name]),
                                                       'rname': ','.join([j_name, i_name]),
-                                                      'epsilon': float(line[3]),
-                                                      'sigma': float(line[4]) })
+                                                      'epsilon': round(float(line[3]) / kj2kcal, rounding),
+                                                      'sigma': round(10 * float(line[4]), rounding)
+                                                      })
     except OSError:
         print('Required library file with CHARMM non-bonded parametrs \"{:}\" '
               'cannot be opened or read. \nExiting...'.format(nonbnded_lib))
