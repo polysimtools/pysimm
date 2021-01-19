@@ -115,7 +115,7 @@ FF_SETTINGS = {
             'pair_style':       'lj/charmm',
             'bond_style':       'harmonic',
             'angle_style':      'charmm',
-            'dihedral_style':   'charmm',
+            'dihedral_style':   'fourier',
             'improper_style':   'harmonic',
             'pair_modify':      {
                 'mix': 'arithmetic'

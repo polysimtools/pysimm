@@ -35,7 +35,7 @@ from itertools import permutations
 import numpy
 
 from . import gasteiger
-from .. import error_print
+from .. import error_print, verbose_print
 from ..system import Angle, Dihedral, Improper, ParticleType
 from .forcefield import Forcefield
 from ..utils import ItemContainer
@@ -73,7 +73,7 @@ class Charmm(Forcefield):
         self.pair_style = 'lj/charmm'
         self.bond_style = 'harmonic'
         self.angle_style = 'charmm'
-        self.dihedral_style = 'charmm'
+        self.dihedral_style = 'fourier'
         self.improper_style = 'harmonic'
         self.ff_class = '1'
 
@@ -300,8 +300,12 @@ class Charmm(Forcefield):
 
         for dt in all_types:
             dt = dt.copy()
-            dt.w = 0.0
+            dt.w = 1.0
             s.dihedral_types.add(dt)
+        verbose_print('Dihedrals assigned successfully. \nIMPORTANT: all dihedral weighting factors '
+                      '(coefficients to compensate for double counting in rings) are currently set to 1.0.\n'
+                      'If those values are different for your system please multiply corresponding force constants '
+                      'by the weights manually.\n')
 
         for d in s.dihedrals:
             dt = s.dihedral_types.get(d.type_name, item_wildcard=None)
@@ -361,7 +365,7 @@ class Charmm(Forcefield):
             None
         """
         if charges == 'gasteiger':
-            print('adding gasteiger charges')
+            verbose_print('adding gasteiger charges')
             gasteiger.set_charges(s)
 
 
@@ -382,12 +386,13 @@ def __parse_charmm__():
         with open(os.path.join(DATA_PATH, bnded_lib), 'r') as f:
             ff_file = f.readlines()
     except OSError:
-        print('Required library file with CHARMM bonded parametrs \"{:}\" '
-              'cannot be opened or read. \nExiting...'.format(bnded_lib))
+        error_print('Required library file with CHARMM bonded parametrs \"{:}\" '
+                    'cannot be opened or read. \nExiting...'.format(bnded_lib))
         sys.exit(1)
 
     i = 0
     curr_type = ''
+    dig_names_check = []
     while i < len(ff_file):
         line = ff_file[i].split()
         if ff_file[i][0] == '[':
@@ -431,7 +436,18 @@ def __parse_charmm__():
                     n = int(line[7])
                     name = ','.join(line[0:4])
                     rname = ','.join(reversed(line[0:4]))
-                    obj['dihedral_types'].append({'d': d, 'k': k, 'tag': name, 'n': n, 'name': name, 'rname': rname})
+
+                    if name not in dig_names_check:
+                        obj['dihedral_types'].append({'tag': name, 'd': [d], 'k': [k], 'n': [n], 'm': 1,
+                                                      'name': name, 'rname': rname})
+                        dig_names_check.append(name)
+                    else:
+                        to_add = list(filter(lambda fields: fields['name'] == name, obj['dihedral_types']))[0]
+                        to_add['d'].append(d)
+                        to_add['k'].append(k)
+                        to_add['n'].append(n)
+                        to_add['m'] += 1
+
             except ValueError:
                 print('improper value at line', i)
             except IndexError:

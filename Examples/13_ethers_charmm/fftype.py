@@ -4,15 +4,19 @@ from pysimm import forcefield
 
 sst = system.read_mol('ethylpropylether.mol')
 
-print(len(sst.particles))
-
 for b in sst.bonds:
     b.order = 1
 
 sst.apply_forcefield(forcefield.Charmm(), charges='gasteiger')
 sst.set_charge()
 
+sst.dim.dx = 25.0
+sst.dim.dy = 25.0
+sst.dim.dz = 25.0
+sst.center('box', [0.0, 0.0, 0.0], True)
+
 sst.write_lammps('to_sim.lmps')
+
 sim = lmps.Simulation(sst, log='simulation.log', cutoff={'inner_lj': 10.0, 'lj': 12.0})
 
 for nd_lj in sst.nondiag_lj_types:
