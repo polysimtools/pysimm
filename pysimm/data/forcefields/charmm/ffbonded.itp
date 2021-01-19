@@ -1249,8 +1249,6 @@
       SI     HSIA     1   0.14890000    170707.20
     HSIA     SIH3     1   0.14890000    170707.20
       SI      OAL     1   0.16820000    254387.20
-      HT       HT     1   0.15139000         0.00
-      HT       OT     1   0.09572000    376560.00
       SL     CTL2     1   0.18070000    154808.00
        S       CL     1   0.18160000    200832.00
        S    CG321     1   0.18180000    165686.40
@@ -1297,51 +1295,6 @@
       OC       CD     1   0.12940000    263173.60
       C3       C3     1   0.15010000    200832.00
       C3      HB2     1   0.10830000    284512.00
-
-
-[ constrainttypes ]
-; this section is copied from OPLS. In theory we could recalculate
-; optimal geometries from charmm values, but since pratical equilibrium
-; geometries do not correspond exactly to these values anyway it is not
-; worth the effort...
-#ifdef HEAVY_H
-; account for larger inertia with heavy hydrogens
-; constraints for the rigid NH3 groups
-MNH3	 CT1   2	0.191406
-MNH3	 CT2   2	0.191406
-MNH3	 CT3   2	0.191406
-MNH3	MNH3   2	0.165238
-; constraints for rigid ch3
-MCH3	 CT1   2	0.206892
-MCH3	 CT2   2	0.206000
-MCH3	 CT3   2	0.206179
-MCH3	MCH3   2	0.185689
-MCH3	   S   2	0.233335
-#else
-; no heavy hydrogens.
-; constraints for the rigid NH3 groups
-MNH3	 CT1   2	0.159603
-MNH3	 CT2   2	0.159603
-MNH3	 CT3   2	0.159603
-MNH3	MNH3   2	0.082619
-; constraints for rigid ch3
-MCH3	 CT1   2	0.168122
-MCH3	 CT2   2	0.167162
-MCH3	 CT3   2	0.167354
-MCH3	MCH3   2	0.093582
-MCH3	   S   2	0.195314
-#endif
-; angle-derived constraints for OH and SH groups in proteins
-; The constraint A-C is calculated from the angle A-B-C and bonds A-B, B-C.
-CA		  H   2		0.193641
-CD		  H   2		0.200439
-CT1		  H   2		0.192081
-CT2		  H   2		0.192081
-CT3		  H   2		0.192081
-CT2		 HS   2		0.234108
-CT3		 HS   2		0.233942
-
-
 
 [ angletypes ]
 ;      i        j        k  func       theta0       ktheta          ub0          kub
@@ -5334,7 +5287,6 @@ CT3		 HS   2		0.233942
     ALSI     OSIE       SI     5   117.000000   251.040000   0.00000000         0.00
     ALSI     OSIE     ALSI     5   117.000000   251.040000   0.00000000         0.00
     OSIE       SI     HSIA     5   118.000000   368.192000   0.00000000         0.00
-      HT       OT       HT     5   104.520000   460.240000   0.00000000         0.00
      OSL       SL      OSL     5   109.470000  1087.840000   0.24500000     29288.00
      OSL       SL     CTL2     5    99.000000   669.440000   0.00000000         0.00
       SL     CTL2     HAL2     5   109.000000   410.032000   0.00000000         0.00
