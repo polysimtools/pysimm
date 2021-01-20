@@ -128,6 +128,14 @@ class Charmm(Forcefield):
                         p.type_name = 'OC30A'
                         if __detect_rings__(p, [5, 6]):
                             p.type_name = 'OC305A'
+
+                    if(p.nbonds == 2) and all([t == 'H' for t in p.bond_elements]):
+                        p.type_name = 'OT'
+                        for sb_p in p.bonded_to:  # type all hydrogens connected to this atom
+                            if sb_p.elem == 'H':
+                                sb_p.type_name = 'HT'
+
+
         all_types = set()
         for p in s.particles:
             all_types.add(self.particle_types.get(p.type_name)[0])
@@ -139,7 +147,9 @@ class Charmm(Forcefield):
             pt = s.particle_types.get(p.type_name)
             if pt:
                 p.type = pt[0]
+        self.assign_extra_ljtypes(s)
 
+    def assign_extra_ljtypes(self, s):
         # Addition to normal FF setup: filling up the nondiagonal pair coefficient
         loc_lj_types = set()
         for p in s.particle_types:
@@ -153,9 +163,13 @@ class Charmm(Forcefield):
                             to_add.atm_types = atm_type
                             loc_lj_types.add(to_add)
 
-        s.nondiag_lj_types = ItemContainer()
+        if not s.nondiag_lj_types:
+            s.nondiag_lj_types = ItemContainer()
+
         for ljt in loc_lj_types:
-            s.nondiag_lj_types.add(ljt)
+            if not s.nondiag_lj_types.get(ljt.name):
+                s.nondiag_lj_types.add(ljt)
+
 
     def assign_btypes(self, s):
         """pysimm.forcefield.Charmm.assign_btypes
