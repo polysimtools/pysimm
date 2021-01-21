@@ -58,14 +58,14 @@ sim.add(lmps.Velocity(temperature=300.0, style='create'))
 sim.add(lmps.OutputSettings(thermo={'args': ['step', 'time', 'temp', 'density', 'etotal', 'epair']}))
 
 # setup shake for H-O bond and H-O-H angle for the whole simulation system
-sim.add_custom('fix shck_fix all rattle 0.001 20 0 b {:} a {:}\n'.format(sst.bond_types.get('H,O')[0].tag,
+sim.add_custom('fix shck_fix all shake 0.0001 10 0 b {:} a {:}\n'.format(sst.bond_types.get('H,O')[0].tag,
                                                                         sst.angle_types.get('H,O,H')[0].tag))
 sim.add(lmps.MolecularDynamics(name='main',
-                               pressure={'iso': 'iso', 'damp': 500},
+                               pressure={'iso': 'iso', 'damp': 100},
                                ensemble='npt',
                                timestep=1,
                                temperature=300.0,
-                               run=int(6e+4)))
+                               run=int(5e+4)))
 sim.run()
 
 sst.write_lammps('eth_propether.wtr_solution.lmps')
