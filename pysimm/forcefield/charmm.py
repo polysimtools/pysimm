@@ -150,7 +150,21 @@ class Charmm(Forcefield):
         self.assign_extra_ljtypes(s)
 
     def assign_extra_ljtypes(self, s):
-        # Addition to normal FF setup: filling up the nondiagonal pair coefficient
+        """pysimm.forcefield.Charmm.assign_extra_ljtypes
+
+                Addition to normal force field setup: filling up the non-diagonal interaction pair
+                coefficients (coefficients for interaction of particles of different type).
+
+                Assumes that all :class:`~pysimm.system.ParticleType` are defined for all particles in s
+
+        Args:
+            s: :class:`~pysimm.system.System`
+
+        Returns:
+            None
+
+        """
+        #
         loc_lj_types = set()
         for p in s.particle_types:
             for p_ in s.particle_types:
@@ -169,7 +183,6 @@ class Charmm(Forcefield):
         for ljt in loc_lj_types:
             if not s.nondiag_lj_types.get(ljt.name):
                 s.nondiag_lj_types.add(ljt)
-
 
     def assign_btypes(self, s):
         """pysimm.forcefield.Charmm.assign_btypes
@@ -384,6 +397,14 @@ class Charmm(Forcefield):
 
 
 def __parse_charmm__():
+    """
+    Private method to read/convert CHARMM specific FF parameters definition files to .json file which PySIMM works with
+
+    Returns:
+        None
+
+    """
+
     import json
 
     kj2kcal = 4.184
@@ -538,10 +559,21 @@ def __parse_charmm__():
 
 
 def __detect_rings__(particle, orders):
+    """
+    Private method for analysing whether a given particle is a part of a ring structure
+
+    Args:
+        particle: :class:`~pysimm.system.Particle` reference
+        orders: list of integers defining size of the rings which should be checked
+
+    Returns:
+        list of integers subset of orders which defines the sizes of the rings that contain particle;
+        returns 0 if no cyclic structures of size orders are detected
+    """
     rng_count = 0
     neighb_list = []
     ordr_count = 2
-    to_exclude = set([particle])
+    to_exclude = {particle}
 
     neighb = []
     for p in to_exclude:
