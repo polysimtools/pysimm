@@ -108,28 +108,38 @@ class Charmm(Forcefield):
             if not p.type_name:
 
                 if p.elem == 'C':
-                    # General definition of a carbon in ethers
+                    # Some general definition of an -sp3 carbons
                     if (all(p.bond_orders) == 1) and (p.nbonds == 4):
                         rng_count = __detect_rings__(p, [5, 6])
-                        if rng_count > 0 : # tetrahydrofuran (THF) or tetrahydropyran (THP)
-                            p.type_name = 'CC32{}B'.format(rng_count)
-                            for sb_p in p.bonded_to: # type all hydrogens connected to this atom
-                                if sb_p.elem == 'H':
-                                    sb_p.type_name = 'HCA25A'
-                        else: # it is linear ether
+                        if rng_count == 0: # Linear sp3 carbon
                             hcount = len([True for l in p.bond_elements if l == 'H'])
                             p.type_name = 'CC3{}A'.format(hcount)
                             for sb_p in p.bonded_to: # type all hydrogens connected to this atom
                                 if sb_p.elem == 'H':
                                     sb_p.type_name = 'HCA{}A'.format(hcount)
 
+                        elif rng_count > 0 : # tetrahydrofuran (THF) or tetrahydropyran (THP)
+                            p.type_name = 'CC32{}B'.format(rng_count)
+                            for sb_p in p.bonded_to: # type all hydrogens connected to this atom
+                                if sb_p.elem == 'H':
+                                    sb_p.type_name = 'HCA25A'
+
+                    if 'A' in p.bond_orders:
+                        p.type_name = 'CA'
+
                 if p.elem == 'O':
                     if (p.nbonds == 2) and (all(p.bond_orders) == 1) and all([t == 'C' for t in p.bond_elements]):
-                        p.type_name = 'OC30A'
+                        p.type_name = 'OC301'
                         if __detect_rings__(p, [5, 6]):
                             p.type_name = 'OC305A'
 
-                    if(p.nbonds == 2) and all([t == 'H' for t in p.bond_elements]):
+                    if (p.nbonds == 1) and ('C' in p.bond_elements):  # carbonyl oxygen TODO: requires code!
+                        p.type_name = 'O'
+
+                    if (p.nbonds == 2) and (set(p.bond_elements) == {'C', 'H'}):  # hydroxyl oxygen
+                        p.type_name = 'OG311'
+
+                    if(p.nbonds == 2) and all([t == 'H' for t in p.bond_elements]):  # water oxygen
                         p.type_name = 'OT'
                         for sb_p in p.bonded_to:  # type all hydrogens connected to this atom
                             if sb_p.elem == 'H':

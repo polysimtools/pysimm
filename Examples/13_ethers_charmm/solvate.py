@@ -20,11 +20,11 @@ sst.dim.dz = bxSize
 sst.center('box', [0.0, 0.0, 0.0], True)
 
 # read a water molecule from .lmps file that already contains all details
-solute = system.read_lammps('tipS3P.lmps', angle_style='charmm')
+solvnt = system.read_lammps('tipS3P.lmps', angle_style='charmm')
 
 # knowing volume of the box let's find out how many water molecules are needed to feet at each side of a cubic box:
-solute.set_mass()
-ngrid = numpy.floor(((bxSize ** 3) * 0.6022 / solute.mass) ** (1.0 / 3.0))
+solvnt.set_mass()
+ngrid = numpy.floor(((bxSize ** 3) * 0.6022 / solvnt.mass) ** (1.0 / 3.0))
 
 # put water molecules in the nodes of a regular grid
 rng = numpy.linspace(sst.dim.xlo, sst.dim.xhi, int(ngrid) + 1)
@@ -39,7 +39,7 @@ for p in rng[:-1]:
 
             if all(flags):
                 count += 1
-                tmp = solute.copy(dx=p, dy=q, dz=t)
+                tmp = solvnt.copy(dx=p, dy=q, dz=t)
                 sst.add(tmp, change_dim=False, update_properties=False)
 
 # because 2 systems have been combined let's reassign non-diagonal LJ interactions
