@@ -129,7 +129,7 @@ class Charmm(Forcefield):
 
                 if p.elem == 'O':
                     if (p.nbonds == 2) and (all(p.bond_orders) == 1) and all([t == 'C' for t in p.bond_elements]):
-                        p.type_name = 'OC301'
+                        p.type_name = 'OC30A'
                         if __detect_rings__(p, [5, 6]):
                             p.type_name = 'OC305A'
 
