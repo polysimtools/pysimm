@@ -145,6 +145,20 @@ class Charmm(Forcefield):
                             if sb_p.elem == 'H':
                                 sb_p.type_name = 'HT'
 
+                if p.elem == 'N':
+                    if (p.nbonds == 1) and ('C' in p.bond_elements):  # nitrile (or cyano) group
+                        p.type_name = 'NG1T1'
+                    if (p.nbonds == 3) and ({p.bond_elements} == {'H', 'N'}):  # hydrazine
+                        p.type_name = 'NG3N1'
+                    if (p.nbonds == 3) and ({p.bond_elements} == {'C', 'H'}):  # peptide or amide
+                        p.type_name = 'NH1'
+                        for p_ in p.bonded_to:
+                            if (p_.elem == 'C') and (2 in p_.bond_orders):
+                                p.type_name = 'NH2'
+                                break
+                        for p_ in p.bonded_to:
+                            if p_.elem == 'H':
+                                p.type_name = 'HN1'
 
         all_types = set()
         for p in s.particles:
