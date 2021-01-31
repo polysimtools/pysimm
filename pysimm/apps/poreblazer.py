@@ -28,17 +28,20 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-
+import os
 import sys
 from subprocess import Popen, call, PIPE
 from random import randint
 from time import strftime
-import shlex
+
+from pysimm import error_print, verbose_print
 
 try:
     from Rappture.tools import getCommandOutput as RapptureExec
 except ImportError:
     pass
+
+boltzmann_kcal = 0.001987204
 
 
 def psd(s, **kwargs):
@@ -64,7 +67,7 @@ def psd(s, **kwargs):
     """
     atoms = kwargs.get('atoms', 'ff.atoms')
     data = kwargs.get('data', "'data.xyz'")
-    angles = kwargs.get('angles', '90.0 90.0 90.0')
+    angles = kwargs.get('angles', [90.0, 90.0, 90.0])
     insertions = kwargs.get('insertions', 500)
     min_probe = kwargs.get('min_probe', 1.0)
     probe_dr = kwargs.get('probe_dr', 0.2)
@@ -85,7 +88,7 @@ def psd(s, **kwargs):
         f.write('%s\n' % probe_dr)
         f.write('%s\n' % max_probe)
         f.write('%s %s %s\n' % (s.dim.dx, s.dim.dy, s.dim.dz))
-        f.write('%s\n' % angles)
+        f.write('%s %s %s\n' % (angles[0], angles[1], angles[2]))
         f.write('%s\n' % randint(10000, 99999))
         f.write('%s\n' % psd_save)
         f.write('%s\n' % psd_range)
@@ -139,11 +142,11 @@ def surface(s, **kwargs):
     """
     atoms = kwargs.get('atoms', 'ff.atoms')
     data = kwargs.get('data', "'data.xyz'")
-    angles = kwargs.get('angles', '90.0 90.0 90.0')
+    angles = kwargs.get('angles', [90.0, 90.0, 90.0])
     insertions = kwargs.get('insertions', 1000)
     probe = kwargs.get('probe', '3.681')
     probe_type = kwargs.get('probe_type', 'hs')
-    vis = kwargs.get('vis') or 'F'
+    vis = kwargs.get('vis', 'F')
 
     exec_path = kwargs.get('exec_path', 'surface.exe')
 
@@ -153,7 +156,7 @@ def surface(s, **kwargs):
         f.write('%s\n' % probe)
         f.write('%s\n' % insertions)
         f.write('%s %s %s\n' % (s.dim.dx, s.dim.dy, s.dim.dz))
-        f.write('%s\n' % angles)
+        f.write('%s %s %s\n' % (angles[0], angles[1], angles[2]))
         f.write('%s\n' % probe_type)
         f.write('%s\n' % randint(10000, 99999))
         f.write('%s\n' % vis)
@@ -197,11 +200,10 @@ def pore(s, **kwargs):
     Returns:
         None
     """
-    boltzmann_kcal = 0.001987204
 
     atoms = kwargs.get('atoms', 'ff.atoms')
     data = kwargs.get('data', "'data.xyz'")
-    angles = kwargs.get('angles', '90.0 90.0 90.0')
+    angles = kwargs.get('angles', [90.0, 90.0, 90.0])
     insertions = kwargs.get('insertions', 1000)
     temp = kwargs.get('temp', 300)
     pore_probe = kwargs.get('pore_probe', '2.58 10.22 12.8')
@@ -213,7 +215,7 @@ def pore(s, **kwargs):
         f.write('%s\n' % data)
         f.write('%s\n' % insertions)
         f.write('%s %s %s\n' % (s.dim.dx, s.dim.dy, s.dim.dz))
-        f.write('%s\n' % angles)
+        f.write('%s %s %s\n' % (angles[0], angles[1], angles[2]))
         f.write('%s\n' % temp)
         f.write('%s\n' % pore_probe)
         f.write('%s\n' % randint(10000, 99999))
@@ -262,7 +264,7 @@ def void(s, **kwargs):
 
     atoms = kwargs.get('atoms', 'ff.atoms')
     data = kwargs.get('data', "'data.xyz'")
-    angles = kwargs.get('angles', '90.0 90.0 90.0')
+    angles = kwargs.get('angles', [90.0, 90.0, 90.0])
     insertions = kwargs.get('insertions', 1000)
     temp = kwargs.get('temp', 300)
     pore_probe = kwargs.get('pore_probe', '0.0 10.22 12.8')
@@ -302,3 +304,93 @@ def void(s, **kwargs):
     s.set_frac_free_volume()
 
     return s.void_volume, s.frac_free_volume
+
+
+def psd3(s, **kwargs):
+    """pysimm.apps.poreblazer.psd3
+
+    Perform combined pore volume, surface area, pore accessibility calculation using PoreBlazer v3.0 or later.
+    For more detailed description of input parameters please check the Poreblazer GitHub
+    page: https://github.com/SarkisovGroup/PoreBlazer
+
+    Args:
+        atoms: file name to contain ff parameters (ff.atoms)
+        data: file name to write xyz file (data.xyz)
+        angles: angles of simulation box (90.0 90.0 90.0)
+
+        he_params: dictionary containing parameters for the helium atom probe:
+            he_params['sigma']: LJ sigma parameter [in Å] (2.58)
+            he_params['eps']: LJ epsilon parameter [in K] (10.22)
+            he_params['temp']: temperature [in K], required for the Helium porosimetry (300)
+            he_params['cutoff']: cut-off distance [in Å], required for the Helium porosimetry (12.0)
+
+        probe: nitrogen atom probe size [in Å] (3.314)
+        insertions: number of trials per atom for the surface area calculations (500)
+        probe_dr: linear size of a cell of the uniform grid [in Å] (0.2)
+
+        exec_path: full (relative or absolute) path to Poreblazer executable (poreblazer.exe)
+
+    Returns:
+        Exit status: 0 if the Poreblazer finished successfully, and 1 otherwise
+    """
+
+    framework_file = 'input.dat'
+
+    xyz_file = kwargs.get('data', 'data.xyz')
+    atoms = kwargs.get('atoms', 'ff.atoms')
+    angles = kwargs.get('angles', [90.0, 90.0, 90.0])
+
+    default_he_params =  {'sigma': 2.58, 'eps': 10.22, 'temp': 300, 'cutoff': 12.0}
+    default_he_params.update(kwargs.get('he_params', default_he_params))
+    he_params = default_he_params.copy()
+
+    probe = kwargs.get('probe', '3.314')
+    insertions = kwargs.get('insertions', 500)
+    probe_dr = kwargs.get('probe_dr', 0.2)
+    max_probe = kwargs.get('max_probe', 25)
+    psd_bin_size = kwargs.get('max_probe', 0.25)
+
+    psd_save = kwargs.get('psd_save', 2)
+    exec_path = kwargs.get('exec_path', 'poreblazer.exe')
+    if not os.path.exists(exec_path):
+        error_print('Provided path to executable does not exist, please check its correctenrss. Exiting...')
+        sys.exit(1)
+
+    verbose_print('(PoreBlazer) creating input structures and files...')
+    with open('defaults.dat', 'w+') as pntr:
+        pntr.write('{:}\n'
+                   '{:}, {:}, {:}, {:}\n'
+                   '{:}\n'
+                   '{:}\n'
+                   '{:}\n'
+                   '{:}, {:}\n'
+                   '{:}\n'
+                   '{:}\n'.format(atoms,
+                                  he_params['sigma'], he_params['eps'], he_params['temp'], he_params['cutoff'],
+                                  probe,
+                                  insertions,
+                                  probe_dr,
+                                  max_probe, psd_bin_size,
+                                  randint(int(1e+7), int(1e+8 - 1)),
+                                  psd_save))
+
+    s.write_xyz(xyz_file, elem=False)
+
+    with open(framework_file, 'w+') as f:
+        f.write('{:}\n'.format(xyz_file))
+        f.write('{:<10.5f}{:<10.5f}{:<10.5f}\n'.format(s.dim.dx, s.dim.dy, s.dim.dz))
+        f.write('{:<10.2f}{:<10.2f}{:<10.2f}\n'.format(angles[0], angles[1], angles[2]))
+
+    with open(atoms, 'w+') as pntr:
+        pntr.write('%s\n\n' % s.particle_types.count)
+        for pt in s.particle_types:
+            pntr.write('%s\t%f\t%f\t%f\n' % (pt.tag, pt.sigma, pt.epsilon / boltzmann_kcal, pt.mass))
+
+    verbose_print('(PoreBlazer) All input files created sucesesfully; starting PSD calculations...')
+    p = Popen([exec_path, framework_file], stdout=PIPE, stderr=PIPE, bufsize=1)
+    stdo, stde = p.communicate()
+    
+    print(stdo.decode('utf-8'))
+
+    return int(not (len(stde) == 0))
+
