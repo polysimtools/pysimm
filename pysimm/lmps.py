@@ -538,8 +538,7 @@ class Qeq(object):
             input string
         """
         if self.qfile is None:
-            param_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                      os.pardir, 'dat', 'qeq', 'hcno.json')
+            param_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data', 'qeq', 'hcno.json')
             with open(param_file) as f:
                 qeq_params = json.loads(f.read())
             with open('pysimm.qeq.tmp', 'w') as f:
