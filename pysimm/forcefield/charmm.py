@@ -106,64 +106,49 @@ class Charmm(Forcefield):
 
         for p in s.particles:
             if not p.type_name:
-
                 if p.elem == 'C':
                     # Some general definition of an -sp3 carbons
                     if (all(p.bond_orders) == 1) and (p.nbonds == 4):
                         rng_count = __detect_rings__(p, [5, 6])
                         if rng_count == 0: # Linear sp3 carbon
                             hcount = p.bond_elements.count('H')
-                            p.type_name = 'CC3{}1'.format(hcount)
-                            for sb_p in p.bonded_to: # type all hydrogens connected to this atom
-                                if sb_p.elem == 'H':
-                                    sb_p.type_name = 'HCA{}A'.format(hcount)
-
+                            p.type_name = 'CG3{}1'.format(hcount)
                         elif rng_count > 0 : # tetrahydrofuran (THF) or tetrahydropyran (THP)
-                            p.type_name = 'CC32{}B'.format(rng_count)
-                            for sb_p in p.bonded_to: # type all hydrogens connected to this atom
-                                if sb_p.elem == 'H':
-                                    sb_p.type_name = 'HCA25A'
+                            p.type_name = 'CG3C52'.format(rng_count)
 
                     if 'A' in p.bond_orders:
-                        p.type_name = 'CA'
+                        p.type_name = 'CG2R61'
 
                     if (p.nbonds == 3): # carbonyl C condition
                         if set(p.bond_elements) == {'O', 'C', 'N'}:  # in amide
-                            p.type_name = 'CC2O1'
+                            p.type_name = 'CG2O1'
                         if p.bond_elements.count('O') == 2:  # carbonyl C in esters or acids
-                            p.type_name = 'CC2O2'
+                            p.type_name = 'CG2O2'
                         if set(p.bond_elements) == {'O', 'C', 'H'}:  # carbonyl C in aldehyde
-                            p.type_name = 'CC2O4'
-                        if (p.bond_elements.count('O') == 1) and (p.bond_elements.count('C') == 2):  # in acetyl
+                            p.type_name = 'CG2O4'
+                        if (p.bond_elements.count('O') == 1) and (p.bond_elements.count('C') == 2):  # in ketones
                             p.type_name = 'CC2O5'
 
                 elif p.elem == 'O':
-                    if (p.nbonds == 2) and (all(p.bond_orders) == 1) and (p.bond_elements.count('C') == 2):
-                        p.type_name = 'OC301'
-                        if __detect_rings__(p, [5, 6]):
-                            p.type_name = 'OC305A'
+                    if (p.nbonds == 2) and (all(p.bond_orders) == 1) and (p.bond_elements.count('C') == 2): # ethers
+                        p.type_name = 'OG301'
+                        rng_count = __detect_rings__(p, [5, 6])
+                        if rng_count > 0:
+                            p.type_name = 'OG3C{}1'.format(rng_count)
 
                     if (p.nbonds == 1) and ('C' in p.bond_elements):  # sp2 oxygen
                         p_ = [t for t in p.bonded_to][0]
                         if set(p_.bond_elements) == {'O', 'C', 'N'}: # in amide
-                            p.type_name = 'OC2D1'
+                            p.type_name = 'OG2D1'
                         if p_.bond_elements.count('O') == 2:  # in acids
-                            p.type_name = 'OC2D2'
+                            p.type_name = 'OG2D1'
                         if p_.bond_elements.count('C') == 2:  # in ketones
-                            p.type_name = 'OC2D3'
+                            p.type_name = 'OG2D3'
 
                     if (p.nbonds == 2) and (set(p.bond_elements) == {'C', 'H'}):  # hydroxyl oxygen
                         p_ = [t for t in p.bonded_to if t.elem != 'H'][0]
                         if p_.bond_elements.count('O') == 2:
-                            p.type_name = 'OC2D2'
-                            for sb_p in p.bonded_to:  # type hydrogen connected to this atom
-                                if sb_p.elem == 'H':
-                                    sb_p.type_name = 'H'
-                        else:
-                            p.type_name = 'OC311'
-                            for sb_p in p.bonded_to:  # type hydrogen connected to this atom
-                                if sb_p.elem == 'H':
-                                    sb_p.type_name = 'H'
+                            p.type_name = 'OG311'
 
                     if(p.nbonds == 2) and all([t == 'H' for t in p.bond_elements]):  # water oxygen
                         p.type_name = 'OT'
@@ -177,14 +162,16 @@ class Charmm(Forcefield):
                     if (p.nbonds == 3) and (set(p.bond_elements) == {'H', 'N'}):  # hydrazine
                         p.type_name = 'NG3N1'
                     if (p.nbonds == 3) and (set(p.bond_elements) == {'C', 'H'}):  # peptide or amide
-                        p.type_name = 'NH1'
-                        for p_ in p.bonded_to:
-                            if (p_.elem == 'C') and (2 in p_.bond_orders):
-                                p.type_name = 'NH2'
-                                break
-                        for p_ in p.bonded_to:
-                            if p_.elem == 'H':
-                                p_.type_name = 'HN1'
+                        p.type_name = 'NG2S1'
+
+                elif p.elem == 'H':
+                    if p.bond_elements[0] == 'N':
+                        p.type_name = 'HGP1'
+                    if p.bond_elements[0] == 'O':
+                        p.type_name = 'HGP1'
+                    if p.bond_elements[0] == 'C':
+                        hcount = [pt for pt in p.bonded_to][0].bond_elements.count('H')
+                        p.type_name = 'HGA{}'.format(hcount)
                 else:
                     print('cant type particle %s' % p.tag)
                     return p
