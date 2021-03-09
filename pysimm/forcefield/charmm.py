@@ -123,7 +123,10 @@ class Charmm(Forcefield):
                         if set(p.bond_elements) == {'O', 'C', 'N'}:  # in amide
                             p.type_name = 'CG2O1'
                         if p.bond_elements.count('O') == 2:  # carbonyl C in esters or acids
-                            p.type_name = 'CG2O2'
+                            if all([sb_p.bond_elements.count('H') == 0 for sb_p in p.bonded_to if sb_p.elem == 'O']):  # deprotonated
+                                p.type_name = 'CG2O3'
+                            else:  # protonated
+                                p.type_name = 'CG2O2'
                         if set(p.bond_elements) == {'O', 'C', 'H'}:  # carbonyl C in aldehyde
                             p.type_name = 'CG2O4'
                         if (p.bond_elements.count('O') == 1) and (p.bond_elements.count('C') == 2):  # in ketones
@@ -141,13 +144,18 @@ class Charmm(Forcefield):
                         if set(p_.bond_elements) == {'O', 'C', 'N'}: # in amide
                             p.type_name = 'OG2D1'
                         if p_.bond_elements.count('O') == 2:  # in acids
-                            p.type_name = 'OG2D1'
+                            if all([sb_p.bond_elements.count('H') == 0 for sb_p in p_.bonded_to if sb_p.elem == 'O']):
+                                p.type_name = 'OG2D2'
+                            else:
+                                p.type_name = 'OG2D1'
                         if p_.bond_elements.count('C') == 2:  # in ketones
                             p.type_name = 'OG2D3'
 
-                    if (p.nbonds == 2) and (set(p.bond_elements) == {'C', 'H'}):  # hydroxyl oxygen
+                    if (p.nbonds == 2) and (set(p.bond_elements) == {'C', 'H'}):
                         p_ = [t for t in p.bonded_to if t.elem != 'H'][0]
-                        if p_.bond_elements.count('O') == 2:
+                        if p_.bond_elements.count('O') == 2:  # in acids
+                            p.type_name = 'OG2D1'
+                        if p_.bond_elements.count('O') == 1:  # hydroxyl oxygen
                             p.type_name = 'OG311'
 
                     if(p.nbonds == 2) and all([t == 'H' for t in p.bond_elements]):  # water oxygen
@@ -161,8 +169,8 @@ class Charmm(Forcefield):
                         p.type_name = 'NG1T1'
                     if (p.nbonds == 3) and (set(p.bond_elements) == {'H', 'N'}):  # hydrazine
                         p.type_name = 'NG3N1'
-                    if (p.nbonds == 3) and (set(p.bond_elements) == {'C', 'H'}):  # peptide or amide
-                        p.type_name = 'NG2S1'
+                    if (p.nbonds == 3) and ('C' in p.bond_elements):  # amide
+                        p.type_name = 'NG2S{}'.format(p.bond_elements.count('H'))
 
                 elif p.elem == 'H':
                     if p.bond_elements[0] == 'N':
