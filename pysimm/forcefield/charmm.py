@@ -538,7 +538,8 @@ def __parse_charmm__():
         i += 1
 
     # Parsing non-bonded parameters of the FF
-    with open('../data/elements_by_mass.json', 'r') as pntr:
+    elems_json = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'data', 'elements_by_mass.json')
+    with open(elems_json, 'r') as pntr:
         elemsDict = json.load(pntr)
 
     try:
