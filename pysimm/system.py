@@ -4723,7 +4723,45 @@ def read_mol(mol_file, type_with=None, version='V2000'):
 
     return s
     
-    
+
+def read_mol2(mol2_file):
+    if os.path.isfile(mol2_file):
+        debug_print('reading file')
+        f = open(mol2_file)
+    elif isinstance(mol2_file, str):
+        debug_print('reading string')
+        f = StringIO(mol2_file)
+    else:
+        raise PysimmError('pysimm.system.read_mol2 requires either file or string as argument')
+
+    s = System(name='read using pysimm.system.read_mol2')
+    ref_tag = '@<TRIPOS>'
+    while True:
+        line = next(f, False)
+        if line:
+            if not(line.strip().startswith('\\')) and not(line.strip().startswith('#')):
+                tmp = re.findall('(?<=' + ref_tag + ').*', line)
+                if len(tmp) > 0:
+                    if tmp[0].lower() == 'molecule':
+                        debug_print('reading molecule info')
+                        next(f)
+                        line = next(f)
+                        tmp = line.split()
+                        nparticles = int(tmp[0])
+                        if len(tmp) > 1:
+                            nbonds = int(tmp[1])
+                        [next(f) for n in range(3)]
+
+                    elif tmp[0].lower() == 'atom':
+                        debug_print('reading atoms info')
+                    elif tmp[0].lower() == 'bond':
+                        debug_print('reading bonds info')
+        else:
+            break
+
+    return s
+
+
 def read_prepc(prec_file):
     """pysimm.system.read_prepc
 
