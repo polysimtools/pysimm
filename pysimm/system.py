@@ -4723,7 +4723,59 @@ def read_mol(mol_file, type_with=None, version='V2000'):
 
     return s
     
-    
+
+def read_mol2(mol2_file):
+    if os.path.isfile(mol2_file):
+        debug_print('reading file')
+        f = open(mol2_file)
+    elif isinstance(mol2_file, str):
+        debug_print('reading string')
+        f = StringIO(mol2_file)
+    else:
+        raise PysimmError('pysimm.system.read_mol2 requires either file or string as argument')
+
+    s = System(name='read using pysimm.system.read_mol2')
+    ref_tag = '@<TRIPOS>'
+    stream = f.read()
+    tags = list(map(lambda x: x.lower(), re.findall('(?<=' + ref_tag + ').*', stream)))
+    data = re.split(ref_tag, stream)
+
+    # reading molecule related info
+    segm = data[tags.index('molecule') + 1]
+    lines = segm.split('\n')
+    tmp = lines[2].split()
+    nparticles = int(tmp[0])
+    if len(tmp) > 1:
+        nbonds = int(tmp[1])
+
+    # reading atom related info
+    segm = data[tags.index('atom') + 1]
+    lines = segm.split('\n')
+    for l in lines:
+        tmp = l.split()
+        if len(tmp) > 8:
+            s.particles.add(Particle(tag=int(tmp[0]), elem=tmp[1], charge=float(tmp[8]),
+                                     x=float(tmp[2]), y=float(tmp[3]), z=float(tmp[4])))
+
+    segm = data[tags.index('bond') + 1]
+    lines = segm.split('\n')
+    for l in lines:
+        tmp = l.split()
+        if len(tmp) > 3:
+            tmp = l.split()
+            val = re.findall('[123]', tmp[3])
+            if len(val) > 0:
+                ordnung = int(val[0])
+            elif tmp[3].lower() in ['am', 'du']:
+                ordnung = 1
+            elif tmp[3].lower() == 'ar':
+                ordnung = 'A'
+            else:
+                ordnung = None
+            s.bonds.add(Bond(tag=int(tmp[0]), a=int(tmp[1]), b=int(tmp[2]), order=ordnung))
+    return s
+
+
 def read_prepc(prec_file):
     """pysimm.system.read_prepc
 
