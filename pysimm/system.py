@@ -4724,7 +4724,19 @@ def read_mol(mol_file, type_with=None, version='V2000'):
     return s
     
 
-def read_mol2(mol2_file):
+def read_mol2(mol2_file, type_with=None):
+    """pysimm.system.read_mol2
+
+    Interprets .mol2 file and creates :class:`~pysimm.system.System` object
+
+    Args:
+        mol_file2: a full name (including path) of a Tripos Mol2 text file
+        type_with (optional): :class:`~pysimm.forcefield.Forcefield` object to use for attempt to assighn
+        forcefield parameters to the system
+
+    Returns:
+        :class:`~pysimm.system.System` object
+    """
     if os.path.isfile(mol2_file):
         debug_print('reading file')
         f = open(mol2_file)
@@ -4754,7 +4766,7 @@ def read_mol2(mol2_file):
     for l in lines:
         tmp = l.split()
         if len(tmp) > 8:
-            s.particles.add(Particle(tag=int(tmp[0]), elem=tmp[1], charge=float(tmp[8]),
+            s.particles.add(Particle(tag=int(tmp[0]), elem=tmp[1], charge=float(tmp[8]), molecule=1,
                                      x=float(tmp[2]), y=float(tmp[3]), z=float(tmp[4])))
 
     segm = data[tags.index('bond') + 1]
@@ -4773,6 +4785,14 @@ def read_mol2(mol2_file):
             else:
                 ordnung = None
             s.bonds.add(Bond(tag=int(tmp[0]), a=int(tmp[1]), b=int(tmp[2]), order=ordnung))
+
+    s.objectify()
+
+    if type_with:
+        try:
+            s.apply_forcefield(type_with)
+        except Exception:
+            print('forcefield typing with forcefield {} unsuccessful'.format(type_with.name))
     return s
 
 
