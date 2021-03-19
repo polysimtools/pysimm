@@ -262,6 +262,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
         traj: True to build xyz trajectory of polymer growth (True)
         limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)
         sim: :class:`~pysimm.lmps.Simulation` object for relaxation between polymer growth
+        debug: Boolean; print debug extra data
     Returns:
         new polymer :class:`~pysimm.system.System`
     """
@@ -277,6 +278,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
     traj = kwargs.get('traj', True)
     limit = kwargs.get('limit', 0.1)
     sim = kwargs.get('sim')
+    debug = kwargs.get('debug', False)
 
     m.add_particle_bonding()
 
@@ -345,9 +347,10 @@ def random_walk(m, nmon, s_=None, **kwargs):
                 if p.linker == 'tail':
                     tail = p
 
-        for p in s.particles:
-            if not p.bonded_to:
-                print(p.tag)
+        if debug:
+            for p in s.particles:
+                if not p.bonded_to:
+                    print(p.tag)
 
         if head and tail:
             s.make_new_bonds(head, tail, f)
@@ -380,8 +383,11 @@ def random_walk(m, nmon, s_=None, **kwargs):
         if p not in s.molecules[p.molecule.tag].particles:
             s.molecules[p.molecule.tag].particles.add(p)
 
-    s.write_lammps('polymer.lmps')
+    if debug:
+        s.write_lammps('polymer.lmps')
     s.unwrap()
-    s.write_xyz('polymer.xyz')
+
+    if debug:
+        s.write_xyz('polymer.xyz')
 
     return s
