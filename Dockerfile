@@ -22,3 +22,14 @@ RUN cd /usr/local/lib && \
     cd ../../ && \
     rm -rf PoreBlazer
 
+RUN TB_NAME=zeopp.v0p3.tar.gz && DIR_NAME=zeopp.v0p3 && \
+    cd /usr/local/lib && \
+    curl http://www.zeoplusplus.org/zeo++-0.3.tar.gz --output $TB_NAME && \
+    tar -xf $TB_NAME && \
+    rm $TB_NAME && mv zeo++-0.3 $DIR_NAME && \ 
+    cd $DIR_NAME/voro++/src && make && \
+    cd ../.. && make && \ 
+    cp network /usr/local/bin && \ 
+    rm -rf $DIR_NAME
+
+ENV ZEOpp_EXEC="network"
