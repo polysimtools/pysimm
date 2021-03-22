@@ -391,3 +391,67 @@ def random_walk(m, nmon, s_=None, **kwargs):
         s.write_xyz('polymer.xyz')
 
     return s
+
+
+def check_tacticity(s, char_idxs, mon_len):
+    """pysimm.apps.random_walk.check_tacticity
+        Method evaluates the local geometry of the polymer :class:`~pysimm.system.System`.
+        correct input includes
+        Args:
+            char_idxs (list of int): characteristic indexes that define the structure of repetetive unit of the monomer.
+            It is supposed to have 4 elements which define index of (1) first atom in backbone; (2) second atom in the
+            backbone; (3) closest to backbone atom on the fisrt side chain; (4) closest to backbone atom on the second
+            side chain
+            mon_len (int): number of atoms in uncapped rep. unit
+
+        Note: currentely it is assumed that polymerisation does not change local indexing so indexes of corresponding
+        characteristic atoms of the chain can be found by adding a number multiple of mon_len
+
+        Returns:
+            angles (list of float): angles (in deg) between corresponding pairs of backbone vector (1-2) and normal to
+            the plane produced by to side chains (2-3 x 2-4). Those vectors can be either on one half-space of (3-2-4)
+            plane, so the angle will be >90 (deg) or on the opposite half-spaces of the plane, so the angle <90 (deg).
+            orientations (list of boolean): sequence that tracks local geometry of a chain: records True if two
+            consecutive rep.units form a meso dyad, and False if they form a racemo dyad
+
+    """
+
+    offset = 0
+    # backbone vector pnt-1
+    tails = [s.particles[offset + char_idxs[0]]] + \
+            [s.particles[i] for i in range(offset + char_idxs[0] + mon_len, len(s.particles), mon_len)]
+    # backbone vector pnt-2
+    heads = [s.particles[offset + char_idxs[1]]] + \
+            [s.particles[i] for i in range(offset + char_idxs[1] + mon_len, len(s.particles), mon_len)]
+    # start side chain-1
+    sides = [s.particles[offset + char_idxs[2]]] + \
+            [s.particles[i] for i in range(offset + char_idxs[2] + mon_len, len(s.particles), mon_len)]
+    # start side chain-2
+    methyls = [s.particles[offset + char_idxs[3]]] + \
+              [s.particles[i] for i in range(offset + char_idxs[3] + mon_len, len(s.particles), mon_len)]
+
+    angles = []
+    for h, t, s, m in zip(heads, tails, sides, methyls):
+        HT = np.array([h.x - t.x, h.y - t.y, h.z - t.z])
+        HT /= np.linalg.norm(HT)
+
+        Hmethyl = np.array([h.x - m.x, h.y - m.y, h.z - m.z])
+        Hmethyl /= np.linalg.norm(Hmethyl)
+
+        Hside = np.array([h.x - s.x, h.y - s.y, h.z - s.z])
+        Hside /= np.linalg.norm(Hside)
+
+        side_X_methyl = np.cross(Hside, Hmethyl)
+
+        side_dot_methyl = np.dot(Hside, Hmethyl)
+        side_theta_methyl = np.arccos(side_dot_methyl)
+
+        side_X_methyl /= np.sin(side_theta_methyl)
+
+        cos_theta = np.dot(side_X_methyl, HT)
+        angles.append(np.arccos(cos_theta) / np.pi * 180)
+
+    tmp = np.array([2 * int(a >= 90) - 1 for a in angles])
+
+    return angles, [t > 0 for t in tmp[:-1] * tmp[1:]]
+
