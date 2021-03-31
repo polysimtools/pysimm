@@ -95,6 +95,11 @@ class Charmm(Forcefield):
 
         s.pair_style = self.pair_style
         s.add_particle_bonding()
+
+        for b in s.bonds:
+            if not b.order:
+                b.order = 1
+
         for p in s.particles:
             p.bond_orders = [x.order for x in p.bonds]
             if None in p.bond_orders:

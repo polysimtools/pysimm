@@ -3366,16 +3366,17 @@ class System(object):
                 z = p.z
 
             bonds = ''
-            n_bonds = 0
-            for b in p.bonds:
-                if p is b.a:
-                    bonds += ' {:4d}'.format(b.b.tag)
-                else:
-                    bonds += ' {:4d}'.format(b.a.tag)
-                n_bonds += 1
- 
-            for i in range(n_bonds+1, 9):
-                bonds = bonds + ' {:4d}'.format(0)
+            if p.bonds:
+                n_bonds = 0
+                for b in p.bonds:
+                    if p is b.a:
+                        bonds += ' {:4d}'.format(b.b.tag)
+                    else:
+                        bonds += ' {:4d}'.format(b.a.tag)
+                    n_bonds += 1
+
+                for i in range(n_bonds+1, 9):
+                    bonds = bonds + ' {:4d}'.format(0)
  
             out.write('%4d %4s  %9.5f %9.5f %9.5f %s %7.3f\n' 
                      % (p.tag, name, x, y, z, bonds, p.charge))
