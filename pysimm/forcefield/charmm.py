@@ -110,10 +110,13 @@ class Charmm(Forcefield):
                 p.nbonds += 1
 
         for p in s.particles:
-            if not p.type_name:
-                if p.elem == 'C':
-                    # Some general definition of an -sp3 carbons
-                    if (all(p.bond_orders) == 1) and (p.nbonds == 4):
+            if p.elem == 'C':
+                # Some general definition of an -sp3 carbons
+                if (all(p.bond_orders) == 1) and (p.nbonds == 4):
+                    n_partcls = [p_ for p_ in p.bonded_to if p_.elem == 'N']
+                    if len(n_partcls) > 0 and (n_partcls[0].nbonds == 4) and (set(n_partcls[0].bond_elements) == {'C'}):
+                        p.type_name = 'CG324'
+                    else:
                         rng_count = __detect_rings__(p, [5, 6])
                         if rng_count == 0: # Linear sp3 carbon
                             hcount = p.bond_elements.count('H')
@@ -121,73 +124,100 @@ class Charmm(Forcefield):
                         elif rng_count > 0 : # tetrahydrofuran (THF) or tetrahydropyran (THP)
                             p.type_name = 'CG3C52'.format(rng_count)
 
-                    if 'A' in p.bond_orders:
-                        p.type_name = 'CG2R61'
+                if 'A' in p.bond_orders:
+                    p.type_name = 'CG2R61'
 
-                    if (p.nbonds == 3): # carbonyl C condition
-                        if set(p.bond_elements) == {'O', 'C', 'N'}:  # in amide
-                            p.type_name = 'CG2O1'
-                        if p.bond_elements.count('O') == 2:  # carbonyl C in esters or acids
-                            if all([sb_p.bond_elements.count('H') == 0 for sb_p in p.bonded_to if sb_p.elem == 'O']):  # deprotonated
-                                p.type_name = 'CG2O3'
-                            else:  # protonated
-                                p.type_name = 'CG2O2'
-                        if set(p.bond_elements) == {'O', 'C', 'H'}:  # carbonyl C in aldehyde
-                            p.type_name = 'CG2O4'
-                        if (p.bond_elements.count('O') == 1) and (p.bond_elements.count('C') == 2):  # in ketones
-                            p.type_name = 'CC2O5'
+                if (p.nbonds == 3):  # carbonyl C condition
+                    if set(p.bond_elements) == {'O', 'C', 'N'}:  # in amide
+                        p.type_name = 'CG2O1'
+                    if p.bond_elements.count('O') == 2:  # carbonyl C in esters or acids
 
-                elif p.elem == 'O':
-                    if (p.nbonds == 2) and (all(p.bond_orders) == 1) and (p.bond_elements.count('C') == 2): # ethers
-                        p.type_name = 'OG301'
-                        rng_count = __detect_rings__(p, [5, 6])
-                        if rng_count > 0:
-                            p.type_name = 'OG3C{}1'.format(rng_count)
+                        tmp_part = [sb_p for sb_p in p.bonded_to if (sb_p.elem == 'O') and sb_p.nbonds == 2]
+                        if len(tmp_part) > 0:  # deprotonated
+                            p.type_name = 'CG2O2'
+                        else:  # protonated
+                            p.type_name = 'CG2O3'
 
-                    if (p.nbonds == 1) and ('C' in p.bond_elements):  # sp2 oxygen
-                        p_ = [t for t in p.bonded_to][0]
-                        if set(p_.bond_elements) == {'O', 'C', 'N'}: # in amide
+                    if set(p.bond_elements) == {'O', 'C', 'H'}:  # carbonyl C in aldehyde
+                        p.type_name = 'CG2O4'
+                    if (p.bond_elements.count('O') == 1) and (p.bond_elements.count('C') == 2):  # in ketones
+                        p.type_name = 'CC2O5'
+
+            elif p.elem == 'O':
+                if (p.nbonds == 2) and (all(p.bond_orders) == 1):  # ethers, esters
+                    if p.bond_elements.count('C') == 2:
+                        is_ester = False
+                        for p_ in p.bonded_to:
+                            if (p_.bond_elements.count('O') == 2) and (p_.nbonds == 3):
+                                is_ester = True
+                        if is_ester:
+                            p.type_name = 'OG302'
+                        else:
+                            p.type_name = 'OG301'
+                            rng_count = __detect_rings__(p, [5, 6])
+                            if rng_count > 0:
+                                p.type_name = 'OG3C{}1'.format(rng_count)
+
+                if (p.nbonds == 1) and ('C' in p.bond_elements):  # sp2 oxygen
+                    p_ = [t for t in p.bonded_to][0]
+                    if set(p_.bond_elements) == {'O', 'C', 'N'}:  # in amide
+                        p.type_name = 'OG2D1'
+                    if p_.bond_elements.count('O') == 2:  # in acids
+                        tmp_part = [sb_p for sb_p in p_.bonded_to if (sb_p.elem == 'O') and sb_p.nbonds == 2]
+                        if len(tmp_part) > 0:
                             p.type_name = 'OG2D1'
-                        if p_.bond_elements.count('O') == 2:  # in acids
-                            if all([sb_p.bond_elements.count('H') == 0 for sb_p in p_.bonded_to if sb_p.elem == 'O']):
-                                p.type_name = 'OG2D2'
-                            else:
-                                p.type_name = 'OG2D1'
-                        if p_.bond_elements.count('C') == 2:  # in ketones
-                            p.type_name = 'OG2D3'
+                        else:
+                            p.type_name = 'OG2D2'
+                    if p_.bond_elements.count('C') == 2:  # in ketones
+                        p.type_name = 'OG2D3'
 
-                    if (p.nbonds == 2) and (set(p.bond_elements) == {'C', 'H'}):
-                        p_ = [t for t in p.bonded_to if t.elem != 'H'][0]
-                        if p_.bond_elements.count('O') == 2:  # in acids
-                            p.type_name = 'OG2D1'
-                        if p_.bond_elements.count('O') == 1:  # hydroxyl oxygen
-                            p.type_name = 'OG311'
+                if ('S' in p.bond_elements) or ('P' in p.bond_elements):  # phosphate or sulfate
+                    p.type_name = 'OG2P1'
 
-                    if(p.nbonds == 2) and all([t == 'H' for t in p.bond_elements]):  # water oxygen
-                        p.type_name = 'OT'
-                        for sb_p in p.bonded_to:  # type all hydrogens connected to this atom
-                            if sb_p.elem == 'H':
-                                sb_p.type_name = 'HT'
+                if (p.nbonds == 2) and (set(p.bond_elements) == {'C', 'H'}):
+                    p_ = [t for t in p.bonded_to if t.elem != 'H'][0]
+                    if p_.bond_elements.count('O') == 2:  # in acids
+                        p.type_name = 'OG2D1'
+                    if p_.bond_elements.count('O') == 1:  # hydroxyl oxygen
+                        p.type_name = 'OG311'
 
-                elif p.elem == 'N':
-                    if (p.nbonds == 1) and ('C' in p.bond_elements):  # nitrile (or cyano) group
-                        p.type_name = 'NG1T1'
-                    if (p.nbonds == 3) and (set(p.bond_elements) == {'H', 'N'}):  # hydrazine
-                        p.type_name = 'NG3N1'
-                    if (p.nbonds == 3) and ('C' in p.bond_elements):  # amide
-                        p.type_name = 'NG2S{}'.format(p.bond_elements.count('H'))
+                if(p.nbonds == 2) and all([t == 'H' for t in p.bond_elements]):  # water oxygen
+                    p.type_name = 'OT'
+                    for sb_p in p.bonded_to:  # type all hydrogens connected to this atom
+                        if sb_p.elem == 'H':
+                            sb_p.type_name = 'HT'
 
-                elif p.elem == 'H':
-                    if p.bond_elements[0] == 'N':
-                        p.type_name = 'HGP1'
-                    if p.bond_elements[0] == 'O':
-                        p.type_name = 'HGP1'
-                    if p.bond_elements[0] == 'C':
+            elif p.elem == 'N':
+                if (p.nbonds == 1) and ('C' in p.bond_elements):  # nitrile (or cyano) group
+                    p.type_name = 'NG1T1'
+                if (p.nbonds == 3) and (set(p.bond_elements) == {'H', 'N'}):  # hydrazine
+                    p.type_name = 'NG3N1'
+                if (p.nbonds == 3) and ('C' in p.bond_elements):  # amide
+                    p.type_name = 'NG2S{}'.format(p.bond_elements.count('H'))
+                if (p.nbonds == 4):
+                    p.type_name = 'NG3P{}'.format(p.bond_elements.count('H'))
+
+            elif p.elem == 'H':
+                if p.bond_elements[0] == 'N':
+                    p.type_name = 'HGP1'
+                if p.bond_elements[0] == 'O':
+                    p.type_name = 'HGP1'
+                if p.bond_elements[0] == 'C':
+                    host = [p_ for p_ in p.bonded_to][0]
+                    nitrogen = [p_ for p_ in host.bonded_to if p_.elem == 'N']
+                    if len(nitrogen) > 0 and (nitrogen[0].nbonds == 4):
+                        p.type_name = 'HGP5'
+                    else:
                         hcount = [pt for pt in p.bonded_to][0].bond_elements.count('H')
                         p.type_name = 'HGA{}'.format(hcount)
-                else:
-                    print('cant type particle %s' % p.tag)
-                    return p
+
+            elif p.elem == 'S':
+                if p.nbonds == 4:
+                    p.type_name = 'SG3O{}'.format(4 - p.bond_elements.count('O'))
+
+            else:
+                print('cant type particle %s' % p.tag)
+                return p
 
         all_types = set()
         for p in s.particles:

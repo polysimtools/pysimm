@@ -4768,7 +4768,7 @@ def read_mol2(mol2_file, type_with=None):
     for l in lines:
         tmp = l.split()
         if len(tmp) > 8:
-            s.particles.add(Particle(tag=int(tmp[0]), elem=tmp[1], charge=float(tmp[8]), molecule=1,
+            s.particles.add(Particle(tag=int(tmp[0]), elem=tmp[1][0], charge=float(tmp[8]), molecule=1,
                                      x=float(tmp[2]), y=float(tmp[3]), z=float(tmp[4])))
 
     segm = data[tags.index('bond') + 1]
