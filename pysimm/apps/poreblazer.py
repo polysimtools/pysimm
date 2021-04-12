@@ -353,7 +353,7 @@ def psd3(s, **kwargs):
     psd_save = kwargs.get('psd_save', 2)
     exec_path = kwargs.get('exec_path', 'poreblazer.exe')
     if not os.path.exists(exec_path):
-        error_print('Provided path to executable does not exist, please check its correctenrss. Exiting...')
+        error_print('Provided path to executable does not exist, please check its correctness. Exiting...')
         sys.exit(1)
 
     verbose_print('(PoreBlazer) creating input structures and files...')
@@ -389,8 +389,7 @@ def psd3(s, **kwargs):
     verbose_print('(PoreBlazer) All input files created sucesesfully; starting PSD calculations...')
     p = Popen([exec_path, framework_file], stdout=PIPE, stderr=PIPE, bufsize=1)
     stdo, stde = p.communicate()
-    
-    print(stdo.decode('utf-8'))
 
-    return int(not (len(stde) == 0))
+    print(stdo.decode('utf-8'))
+    return int(not(len(stde) == 0))
 
