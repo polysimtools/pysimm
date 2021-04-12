@@ -405,42 +405,42 @@ def random_walk(m, nmon, s_=None, **kwargs):
                 if not p.bonded_to:
                     print(p.tag)
 
-            if head and tail:
-                s.make_new_bonds(head, tail, f)
-                print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion + 2, nmon))
-            elif extra_bonds and (len(heads) == len(tails)):
-                order = [(0, 0), (1, 1)]
-                if len(info) == 2:
-                    order = [(0, info[0]), (1, info[1])]
-                for elm in order:
-                    s.make_new_bonds(heads[elm[0]], tails[elm[1]], f)
+        if head and tail:
+            s.make_new_bonds(head, tail, f)
+            print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion + 2, nmon))
+        elif extra_bonds and (len(heads) == len(tails)):
+            order = [(0, 0), (1, 1)]
+            if len(info) == 2:
+                order = [(0, info[0]), (1, info[1])]
+            for elm in order:
+                s.make_new_bonds(heads[elm[0]], tails[elm[1]], f)
 
-                '''
-                for h, t, ord in zip(heads, tails, extra_bonds):
-                    s.make_new_bonds(h, tails[ord], f)
-                '''
-                print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion + 2, nmon))
-                s.write_lammps('curr_progress.lmps')
-            else:
-                print('cannot find head and tail')
-
-            if sim is None:
-                sim = lmps.Simulation(s, name='relax_%03d' % (insertion + 2), log='relax.log', **settings)
-                sim.add_md(ensemble='nve', limit=limit, **settings)
-                sim.add_min(**settings)
-            if isinstance(sim, lmps.Simulation):
-                sim.system = s
-                sim.name = 'relax_%03d' % (insertion + 2)
-                sim.run(np=settings.get('np'))
-
-            s.unwrap()
+            '''
+            for h, t, ord in zip(heads, tails, extra_bonds):
+                s.make_new_bonds(h, tails[ord], f)
+            '''
+            print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion + 2, nmon))
             s.write_lammps('curr_progress.lmps')
+        else:
+            print('cannot find head and tail')
 
-            if traj:
-                s.write_xyz('random_walk.xyz', append=True)
+        if sim is None:
+            sim = lmps.Simulation(s, name='relax_%03d' % (insertion + 2), log='relax.log', **settings)
+            sim.add_md(ensemble='nve', limit=limit, **settings)
+            sim.add_min(**settings)
+        if isinstance(sim, lmps.Simulation):
+            sim.system = s
+            sim.name = 'relax_%03d' % (insertion + 2)
+            sim.run(np=settings.get('np'))
 
-            if unwrap:
-                s.wrap()
+        s.unwrap()
+        s.write_lammps('curr_progress.lmps')
+
+        if traj:
+            s.write_xyz('random_walk.xyz', append=True)
+
+        if unwrap:
+            s.wrap()
 
         for p in s.particles:
             if p not in s.molecules[p.molecule.tag].particles:
@@ -639,7 +639,8 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
     Builds homopolymer with controllable tacticity from capped monomer structure
 
     Args:
-        m: reference monomer :class:`~pysimm.system.System`. Must be a capped monomer, with headCap and tail_cap as the first and last atoms in the .mol file.
+        m: reference monomer :class:`~pysimm.system.System`. Must be a capped monomer, with headCap and tail_cap
+        as the first and last atoms in the .mol file.
         nmon: total number of monomers to add to chain
         s_: :class:`~pysimm.system.System` in which to build polymer chain (None)
         extra_bonds: EXPERMINTAL, True if making ladder backbone polymer
@@ -839,6 +840,10 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
 
 
 def __check_tags__(m, **kwargs):
+    """pysimm.apps.random_walk.__check_tags__
+        private method to assert the polymerisation-related decorators assigned to the system 'm' that represents the
+        next repetitive unit
+    """
     tags = [p.linker for p in m] + [p.rnd_wlk_tag for p in m]
     req_tags = kwargs.get('req_tags', ['head', 'tail', 'mirror', 'head_cap', 'tail_cap'])
     tmp = True
