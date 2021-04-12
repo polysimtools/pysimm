@@ -2410,9 +2410,9 @@ class System(object):
         """
         if not np:
             raise PysimmError('pysimm.system.System.rotate function requires numpy')
-        theta_x = random() * 2 * pi if theta_x is 'random' else theta_x
-        theta_y = random() * 2 * pi if theta_y is 'random' else theta_y
-        theta_z = random() * 2 * pi if theta_z is 'random' else theta_z
+        theta_x = random() * 2 * pi if theta_x == 'random' else theta_x
+        theta_y = random() * 2 * pi if theta_y == 'random' else theta_y
+        theta_z = random() * 2 * pi if theta_z == 'random' else theta_z
         if around is None:
             around = []
             self.set_cog()
