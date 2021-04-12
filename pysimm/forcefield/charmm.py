@@ -37,6 +37,7 @@ import numpy
 from . import gasteiger
 from .. import error_print, verbose_print
 from ..system import Angle, Dihedral, Improper, ParticleType
+from ..system import BondType, AngleType
 from .forcefield import Forcefield
 from ..utils import ItemContainer
 
@@ -53,7 +54,7 @@ class Charmm(Forcefield):
         ff_class: 1
     """
 
-    def __init__(self, db_file=None):
+    def __init__(self, db_file=None, add_file=None):
         if not db_file and db_file is not False:
             db_file = os.path.join(
                 os.path.dirname(
@@ -68,6 +69,9 @@ class Charmm(Forcefield):
         self.nondiag_lj_types = ItemContainer()
         for elem in j.get('nondiagonal_lj'):
             self.nondiag_lj_types.add(ParticleType(**elem))
+
+        if add_file:
+            self.__parse_add_file__(add_file)
 
         self.name = 'charmm'
         self.pair_style = 'lj/charmm'
@@ -477,6 +481,47 @@ class Charmm(Forcefield):
         if charges == 'gasteiger':
             verbose_print('adding gasteiger charges')
             gasteiger.set_charges(s)
+
+
+    def __parse_add_file__(self, file):
+        headers = ['ATOMS', 'BONDS', 'ANGLES', 'DIHEDRALS', 'IMPROPERS', 'NONBONDED']
+
+        with open(file, 'r') as pntr:
+            stream = pntr.read()
+            tmp_h = re.findall('|'.join(headers), stream)
+            tmp_b = re.split('|'.join(headers), stream)
+            for h,b in zip(tmp_h, tmp_b):
+                if h.lower == 'atoms':
+                    pass
+                if h.lower == 'bonds':
+                    lines = b.split('\n')
+                    for l in lines:
+                        tmp = l.split()
+                        db_record = self.bond_types.get('{},{}}'.format(tmp[0], tmp[1]))
+                        try:
+                            if db_record:
+                                verbose_print('The bond {}-{} is in the DB and will be overriden'.format(tmp[0], tmp[1]))
+                                db_record.setattr('k', float(tmp[3]))
+                                db_record.setattr('b', float(tmp[4]))
+                            else:
+                                self.bond_types.add(BondType(name='{},{}'.format(tmp[0], tmp[1]),
+                                              rname='{},{}'.format(tmp[1], tmp[0]),
+                                              k=float(tmp[3]),
+                                              b=float(tmp[4])
+                                              ))
+                        except ValueError:
+                            verbose_print('Seems data line is corrupted continue with the next one...')
+                            continue
+
+                    pass
+                if h.lower == 'angles':
+                    pass
+                if h.lower == 'dihedrals':
+                    pass
+                if h.lower == 'impropers':
+                    pass
+                if h.lower == 'nonbonded':
+                    pass
 
 
 def __parse_charmm__():
