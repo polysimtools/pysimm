@@ -30,6 +30,8 @@
 # THE SOFTWARE.
 import sys
 from time import strftime
+from itertools import permutations
+
 import numpy as np
 
 from pysimm import system, lmps, calc
@@ -302,6 +304,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
         traj: True to build xyz trajectory of polymer growth (True)
         limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)
         sim: :class:`~pysimm.lmps.Simulation` object for relaxation between polymer growth
+        debug: Boolean; print debug extra data
     Returns:
         new polymer :class:`~pysimm.system.System`
     """
@@ -318,6 +321,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
     traj = kwargs.get('traj', True)
     limit = kwargs.get('limit', 0.1)
     sim = kwargs.get('sim')
+    debug = kwargs.get('debug', False)
 
     m.add_particle_bonding()
 
@@ -396,55 +400,60 @@ def random_walk(m, nmon, s_=None, **kwargs):
                 if p.linker == 'tail':
                     tail = p
 
-        for p in s.particles:
-            if not p.bonded_to:
-                print(p.tag)
+        if debug:
+            for p in s.particles:
+                if not p.bonded_to:
+                    print(p.tag)
 
-        if head and tail:
-            s.make_new_bonds(head, tail, f)
-            print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
-        elif extra_bonds and (len(heads) == len(tails)):
-            order = [(0,0), (1,1)]
-            if len(info) == 2:
-                order = [(0, info[0]), (1, info[1])]
-            for elm in order:
-                s.make_new_bonds(heads[elm[0]], tails[elm[1]], f)
+            if head and tail:
+                s.make_new_bonds(head, tail, f)
+                print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion + 2, nmon))
+            elif extra_bonds and (len(heads) == len(tails)):
+                order = [(0, 0), (1, 1)]
+                if len(info) == 2:
+                    order = [(0, info[0]), (1, info[1])]
+                for elm in order:
+                    s.make_new_bonds(heads[elm[0]], tails[elm[1]], f)
 
-            '''
-            for h, t, ord in zip(heads, tails, extra_bonds):
-                s.make_new_bonds(h, tails[ord], f)
-            '''
-            print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
+                '''
+                for h, t, ord in zip(heads, tails, extra_bonds):
+                    s.make_new_bonds(h, tails[ord], f)
+                '''
+                print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion + 2, nmon))
+                s.write_lammps('curr_progress.lmps')
+            else:
+                print('cannot find head and tail')
+
+            if sim is None:
+                sim = lmps.Simulation(s, name='relax_%03d' % (insertion + 2), log='relax.log', **settings)
+                sim.add_md(ensemble='nve', limit=limit, **settings)
+                sim.add_min(**settings)
+            if isinstance(sim, lmps.Simulation):
+                sim.system = s
+                sim.name = 'relax_%03d' % (insertion + 2)
+                sim.run(np=settings.get('np'))
+
+            s.unwrap()
             s.write_lammps('curr_progress.lmps')
-        else:
-            print('cannot find head and tail')
 
-        if sim is None:
-            sim = lmps.Simulation(s, name='relax_%03d' % (insertion+2), log='relax.log', **settings)
-            sim.add_md(ensemble='nve', limit=limit, **settings)
-            sim.add_min(**settings)
-        if isinstance(sim, lmps.Simulation):
-            sim.system = s
-            sim.name = 'relax_%03d' % (insertion+2)
-            sim.run(np=settings.get('np'))
+            if traj:
+                s.write_xyz('random_walk.xyz', append=True)
 
+            if unwrap:
+                s.wrap()
+
+        for p in s.particles:
+            if p not in s.molecules[p.molecule.tag].particles:
+                s.molecules[p.molecule.tag].particles.add(p)
+
+        if debug:
+            s.write_lammps('polymer.lmps')
         s.unwrap()
-        s.write_lammps('curr_progress.lmps')
 
-        if traj:
-            s.write_xyz('random_walk.xyz', append=True)
+        if debug:
+            s.write_xyz('polymer.xyz')
 
-        if unwrap:
-            s.wrap()
-            
-    for p in s.particles:
-        if p not in s.molecules[p.molecule.tag].particles:
-            s.molecules[p.molecule.tag].particles.add(p)
-
-    s.write_lammps('polymer.lmps')
-    s.unwrap()
-    s.write_xyz('polymer.xyz')
-    return s
+        return s
 
 
 def find_last_tail_vector(s):
@@ -836,4 +845,66 @@ def __check_tags__(m, **kwargs):
     for tg in req_tags:
         tmp *= (tg in tags)
     return bool(tmp)
+
+
+def check_tacticity(s, char_idxs, mon_len):
+    """pysimm.apps.random_walk.check_tacticity
+        Method evaluates the local geometry of the polymer :class:`~pysimm.system.System`.
+        correct input includes
+        Args:
+            char_idxs (list of int): characteristic indexes that define the structure of repetetive unit of the monomer.
+            It is supposed to have 4 elements which define index of (1) first atom in backbone; (2) second atom in the
+            backbone; (3) closest to backbone atom on the fisrt side chain; (4) closest to backbone atom on the second
+            side chain
+            mon_len (int): number of atoms in uncapped rep. unit
+
+        Note: currentely it is assumed that polymerisation does not change local indexing so indexes of corresponding
+        characteristic atoms of the chain can be found by adding a number multiple of mon_len
+
+        Returns:
+            angles (list of float): angles (in deg) between corresponding pairs of backbone vector (1-2) and normal to
+            the plane produced by to side chains (2-3 x 2-4). Those vectors can be either on one half-space of (3-2-4)
+            plane, so the angle will be >90 (deg) or on the opposite half-spaces of the plane, so the angle <90 (deg).
+            orientations (list of boolean): sequence that tracks local geometry of a chain: records True if two
+            consecutive rep.units form a meso dyad, and False if they form a racemo dyad
+    """
+
+    offset = 0
+    # backbone vector pnt-1
+    tails = [s.particles[offset + char_idxs[0]]] + \
+            [s.particles[i] for i in range(offset + char_idxs[0] + mon_len, len(s.particles), mon_len)]
+    # backbone vector pnt-2
+    heads = [s.particles[offset + char_idxs[1]]] + \
+            [s.particles[i] for i in range(offset + char_idxs[1] + mon_len, len(s.particles), mon_len)]
+    # start side chain-1
+    sides = [s.particles[offset + char_idxs[2]]] + \
+            [s.particles[i] for i in range(offset + char_idxs[2] + mon_len, len(s.particles), mon_len)]
+    # start side chain-2
+    methyls = [s.particles[offset + char_idxs[3]]] + \
+              [s.particles[i] for i in range(offset + char_idxs[3] + mon_len, len(s.particles), mon_len)]
+
+    angles = []
+    for h, t, s, m in zip(heads, tails, sides, methyls):
+        HT = np.array([h.x - t.x, h.y - t.y, h.z - t.z])
+        HT /= np.linalg.norm(HT)
+
+        Hmethyl = np.array([h.x - m.x, h.y - m.y, h.z - m.z])
+        Hmethyl /= np.linalg.norm(Hmethyl)
+
+        Hside = np.array([h.x - s.x, h.y - s.y, h.z - s.z])
+        Hside /= np.linalg.norm(Hside)
+
+        side_X_methyl = np.cross(Hside, Hmethyl)
+
+        side_dot_methyl = np.dot(Hside, Hmethyl)
+        side_theta_methyl = np.arccos(side_dot_methyl)
+
+        side_X_methyl /= np.sin(side_theta_methyl)
+
+        cos_theta = np.dot(side_X_methyl, HT)
+        angles.append(np.arccos(cos_theta) / np.pi * 180)
+
+    tmp = np.array([2 * int(a >= 90) - 1 for a in angles])
+
+    return angles, [t > 0 for t in tmp[:-1] * tmp[1:]]
 

@@ -2164,6 +2164,7 @@ class System(object):
                     m.tag = p.molecule
                     self.molecules.add(m)
                 p.molecule = self.molecules[p.molecule]
+            if not self.molecules[p.molecule.tag].particles[p.tag]:
                 self.molecules[p.molecule.tag].particles.add(p)
             p.bonds = ItemContainer()
             p.angles = ItemContainer()
@@ -2410,9 +2411,9 @@ class System(object):
         """
         if not np:
             raise PysimmError('pysimm.system.System.rotate function requires numpy')
-        theta_x = random() * 2 * pi if theta_x is 'random' else theta_x
-        theta_y = random() * 2 * pi if theta_y is 'random' else theta_y
-        theta_z = random() * 2 * pi if theta_z is 'random' else theta_z
+        theta_x = random() * 2 * pi if theta_x == 'random' else theta_x
+        theta_y = random() * 2 * pi if theta_y == 'random' else theta_y
+        theta_z = random() * 2 * pi if theta_z == 'random' else theta_z
         if around is None:
             around = []
             self.set_cog()
@@ -3366,16 +3367,17 @@ class System(object):
                 z = p.z
 
             bonds = ''
-            n_bonds = 0
-            for b in p.bonds:
-                if p is b.a:
-                    bonds += ' {:4d}'.format(b.b.tag)
-                else:
-                    bonds += ' {:4d}'.format(b.a.tag)
-                n_bonds += 1
- 
-            for i in range(n_bonds+1, 9):
-                bonds = bonds + ' {:4d}'.format(0)
+            if p.bonds:
+                n_bonds = 0
+                for b in p.bonds:
+                    if p is b.a:
+                        bonds += ' {:4d}'.format(b.b.tag)
+                    else:
+                        bonds += ' {:4d}'.format(b.a.tag)
+                    n_bonds += 1
+
+                for i in range(n_bonds+1, 9):
+                    bonds = bonds + ' {:4d}'.format(0)
  
             out.write('%4d %4s  %9.5f %9.5f %9.5f %s %7.3f\n' 
                      % (p.tag, name, x, y, z, bonds, p.charge))
@@ -4724,7 +4726,79 @@ def read_mol(mol_file, type_with=None, version='V2000'):
 
     return s
     
-    
+
+def read_mol2(mol2_file, type_with=None):
+    """pysimm.system.read_mol2
+
+    Interprets .mol2 file and creates :class:`~pysimm.system.System` object
+
+    Args:
+        mol_file2: a full name (including path) of a Tripos Mol2 text file
+        type_with (optional): :class:`~pysimm.forcefield.Forcefield` object to use for attempt to assighn
+        forcefield parameters to the system
+
+    Returns:
+        :class:`~pysimm.system.System` object
+    """
+    if os.path.isfile(mol2_file):
+        debug_print('reading file')
+        f = open(mol2_file)
+    elif isinstance(mol2_file, str):
+        debug_print('reading string')
+        f = StringIO(mol2_file)
+    else:
+        raise PysimmError('pysimm.system.read_mol2 requires either file or string as argument')
+
+    s = System(name='read using pysimm.system.read_mol2')
+    ref_tag = '@<TRIPOS>'
+    stream = f.read()
+    tags = list(map(lambda x: x.lower(), re.findall('(?<=' + ref_tag + ').*', stream)))
+    data = re.split(ref_tag, stream)
+
+    # reading molecule related info
+    segm = data[tags.index('molecule') + 1]
+    lines = segm.split('\n')
+    tmp = lines[2].split()
+    nparticles = int(tmp[0])
+    if len(tmp) > 1:
+        nbonds = int(tmp[1])
+
+    # reading atom related info
+    segm = data[tags.index('atom') + 1]
+    lines = segm.split('\n')
+    for l in lines:
+        tmp = l.split()
+        if len(tmp) > 8:
+            s.particles.add(Particle(tag=int(tmp[0]), elem=tmp[1][0], charge=float(tmp[8]), molecule=1,
+                                     x=float(tmp[2]), y=float(tmp[3]), z=float(tmp[4])))
+
+    segm = data[tags.index('bond') + 1]
+    lines = segm.split('\n')
+    for l in lines:
+        tmp = l.split()
+        if len(tmp) > 3:
+            tmp = l.split()
+            val = re.findall('[123]', tmp[3])
+            if len(val) > 0:
+                ordnung = int(val[0])
+            elif tmp[3].lower() in ['am', 'du']:
+                ordnung = 1
+            elif tmp[3].lower() == 'ar':
+                ordnung = 'A'
+            else:
+                ordnung = None
+            s.bonds.add(Bond(tag=int(tmp[0]), a=int(tmp[1]), b=int(tmp[2]), order=ordnung))
+
+    s.objectify()
+
+    if type_with:
+        try:
+            s.apply_forcefield(type_with)
+        except Exception:
+            print('forcefield typing with forcefield {} unsuccessful'.format(type_with.name))
+    return s
+
+
 def read_prepc(prec_file):
     """pysimm.system.read_prepc
 
