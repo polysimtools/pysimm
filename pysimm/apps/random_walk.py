@@ -42,6 +42,7 @@ try:
 except ImportError: # will be 3.x series
     pass
 
+
 def displ_next_unit_default(m, s):
     """pysimm.apps.random_walk.displ_next_unit_default
 
@@ -357,13 +358,6 @@ def random_walk(m, nmon, s_=None, **kwargs):
         tail = None
 
         info = displ_next_unit(m, s.particles[-1 * m.particles.count:])
-        backbone_vector = np.array(find_last_backbone_vector(s, m))
-
-        for p, p_ in zip(s.particles[-1*m.particles.count:], m.particles):
-                p_.x = p.x + 3 * backbone_vector[0]
-                p_.y = p.y + 3 * backbone_vector[1]
-                p_.z = p.z + 3 * backbone_vector[2]
-
         n = m.copy()
 
         if extra_bonds:
@@ -450,7 +444,6 @@ def random_walk(m, nmon, s_=None, **kwargs):
     s.write_lammps('polymer.lmps')
     s.unwrap()
     s.write_xyz('polymer.xyz')
-
     return s
 
 
