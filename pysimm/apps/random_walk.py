@@ -9,7 +9,7 @@
 # ******************************************************************************
 # The MIT License (MIT)
 #
-# Copyright (c) 2016 Michael E. Fortunato, Coray M. Colina, Sibo Lin
+# Copyright (c) 2016 Michael E. Fortunato, Coray M. Colina
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -42,6 +42,42 @@ try:
 except ImportError: # will be 3.x series
     pass
 
+def displ_next_unit_default(m, s):
+    """pysimm.apps.random_walk.displ_next_unit_default
+
+    Default implementation of displacement of next repetitive unit in random walk method for a polymer growth
+
+    Args:
+        m: :class:`~pysimm.system.System` object -- updated
+        s: :class:`~pysimm.utils.ItemContainer` of `~pysimm.system.Particle` objects
+    Returns:
+        empty list: general placeholder for connectivity order of linker atoms; default implementation assumes
+        work with polymers with a single linkage bond, thus no connectivity order is needed
+    """
+    head_pos = np.zeros(3)
+    tail_pos = np.zeros(3)
+    hcount = 0
+    tcount = 0
+    bnd_lngth = 1.8
+
+    for p in s:
+        if p.linker == 'head':
+            hcount += 1
+            head_pos += np.array([p.x, p.y, p.z])
+        elif p.linker == 'tail':
+            tcount += 1
+            tail_pos += np.array([p.x, p.y, p.z])
+
+    displ = head_pos / hcount - tail_pos / tcount
+    displ_dir = displ / np.linalg.norm(displ)
+
+    for p, p_ in zip(s, m.particles):
+        p_.x = p.x + displ[0] + bnd_lngth * displ_dir[0]
+        p_.y = p.y + displ[1] + bnd_lngth * displ_dir[1]
+        p_.z = p.z + displ[2] + bnd_lngth * displ_dir[2]
+    return []
+
+
 def find_last_backbone_vector(s, m):
     """pysimm.apps.random_walk.find_last_backbone_vector
 
@@ -61,6 +97,7 @@ def find_last_backbone_vector(s, m):
         elif p.linker == 'tail':
             tail_pos = [p.x, p.y, p.z]
     return [head_pos[0] - tail_pos[0], head_pos[1] - tail_pos[1], head_pos[2] - tail_pos[2]]
+
 
 def copolymer(m, nmon, s_=None, **kwargs):
     """pysimm.apps.random_walk.copolymer
@@ -270,6 +307,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
     m = m.copy()
 
     extra_bonds = kwargs.get('extra_bonds', False)
+    displ_next_unit = kwargs.get('geometry_rule', displ_next_unit_default)
 
     settings = kwargs.get('settings', {})
     density = kwargs.get('density', 0.3)
@@ -315,10 +353,10 @@ def random_walk(m, nmon, s_=None, **kwargs):
             sys.exit("The capped flag is on, however, the 'tail_cap' atom is not defined")
 
     for insertion in range(nmon - 1):
-
         head = None
         tail = None
 
+        info = displ_next_unit(m, s.particles[-1 * m.particles.count:])
         backbone_vector = np.array(find_last_backbone_vector(s, m))
 
         for p, p_ in zip(s.particles[-1*m.particles.count:], m.particles):
@@ -352,7 +390,6 @@ def random_walk(m, nmon, s_=None, **kwargs):
                 sys.exit("The capped flag is on, however, the 'head_cap' atom is not defined")
 
         s.add(n, change_dim=False)
-
         s.add_particle_bonding()
 
         if extra_bonds:
@@ -372,10 +409,19 @@ def random_walk(m, nmon, s_=None, **kwargs):
         if head and tail:
             s.make_new_bonds(head, tail, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
-        elif extra_bonds and len(heads) == len(tails):
-            for h, t in zip(heads, tails):
-                s.make_new_bonds(h, t, f)
+        elif extra_bonds and (len(heads) == len(tails)):
+            order = [(0,0), (1,1)]
+            if len(info) == 2:
+                order = [(0, info[0]), (1, info[1])]
+            for elm in order:
+                s.make_new_bonds(heads[elm[0]], tails[elm[1]], f)
+
+            '''
+            for h, t, ord in zip(heads, tails, extra_bonds):
+                s.make_new_bonds(h, tails[ord], f)
+            '''
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
+            s.write_lammps('curr_progress.lmps')
         else:
             print('cannot find head and tail')
 
@@ -389,6 +435,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
             sim.run(np=settings.get('np'))
 
         s.unwrap()
+        s.write_lammps('curr_progress.lmps')
 
         if traj:
             s.write_xyz('random_walk.xyz', append=True)
@@ -411,7 +458,7 @@ def find_last_tail_vector(s):
     """pysimm.apps.random_walk.find_last_tail_vector
     Finds vector defined by bond in the system between the tail atom and its capping atom.
     Requires list of particles s that formed a monomer connected on previous step of the polymerisation.
-    
+
     Args:
         s: ItemContainer of :class:`~pysimm.system.Particle` objects
 
@@ -419,7 +466,7 @@ def find_last_tail_vector(s):
         list of vector components
     """
     result = None
-    if not(__check_tags__(s, req_tags=['head', 'head_cap'])):
+    if not (__check_tags__(s, req_tags=['head', 'head_cap'])):
         print("Error: find_last_tail_vector() requires a capped monomer!")
 
     for p in s:
@@ -430,17 +477,17 @@ def find_last_tail_vector(s):
     return result
 
 
-def rot_mat_about_axis(v,theta):
+def rot_mat_about_axis(v, theta):
     """pysimm.apps.random_walk.rot_mat_about_axis
     This function returns the matrix that represents a rotation about vector v by theta degrees. Used for isotactic insertions of monomers
-    
+
     Args:
         v: vector about which to rotate
         theta: degrees to rotate
     Returns:
         matrix representation of rotation
     """
-    theta = theta * 2* math.pi / 180
+    theta = theta * 2 * math.pi / 180
     r = R.from_rotvec(theta * v)
     print("Rotating vector: " + str(r.as_rotvec()))
     return r.as_dcm()
@@ -449,7 +496,7 @@ def rot_mat_about_axis(v,theta):
 def define_plane(a1, a2, a3):
     """pysimm.apps.random_walk.define_plane
     This function returns the mathematical constants defining a plane containing three input particles
-    
+
     Args:
         a1,a2,a3: three atoms or particles
     Returns:
@@ -467,7 +514,7 @@ def define_plane(a1, a2, a3):
 def reflect_coords_thru_plane(atom, plane):
     """pysimm.apps.random_walk.reflect_coords_thru_plane
     This function reflects an atom through a plane, and is used for implementing syndiotactic insertions of monomers
-    
+
     Args:
         atom: either an atom or an array containing x,y,z coordinates for an atom, to be reflected through the plane
         plane: np.array containing a,b,c,d that define a plane, a*x + b*y + c*z + d = 0
@@ -513,17 +560,17 @@ def scale_monomer(atom, origin, scale):
 
 def redo_monomer_insertion(s, m, i):
     """pysimm.apps.random_walk.redo_monomer_insertion
-    This function is called by random_walk_tacticity if the latest capped monomer insertion resulted in hardcore overlaps. 
+    This function is called by random_walk_tacticity if the latest capped monomer insertion resulted in hardcore overlaps.
     1) The hardcore overlap is resolved by shrinking the last monomer by a factor of 0.8, iteratively, until there are no more hardcore overlaps.
     2) Then the shrunken last monomer is frozen while the rest of the polymer chain is optimized, and the last monomer is scaled in size by 1.05
     3) Cycles of contrainedOptimization and regrowth are alternated until a reasonable structure is obtained
-    
+
     Args:
         s_: :class:`~pysimm.system.System` is a polymer chain in which the last monomer insertion has generated a hardcore overlap
         m: reference monomer :class:`~pysimm.system.System`. Must be a capped monomer, with headCap and tail_cap as the first and last atoms in the .mol file.
         i: number of the offending monomer, used for labelling diagnostic .xyz output files
     Returns:
-        nothing; all changes to the polymer chain are written to the argument s_ 
+        nothing; all changes to the polymer chain are written to the argument s_
     """
     for p in s.particles[-1 * m.particles.count:]:
         if p.linker == 'tail':
@@ -556,12 +603,12 @@ def redo_monomer_insertion(s, m, i):
 def constrained_opt(s, m, active):
     """pysimm.apps.random_walk.constrained_opt
     This function is called by redo_monomer_insertion and optimizes polymer chain s while keeping the last monomer fixed.
-    
+
     Args:
         s: :class:`~pysimm.system.System` is a polymer chain in which the last monomer insertion has generated a hardcore overlap
         m: reference monomer :class:`~pysimm.system.System`. Must be a capped monomer, with headCap and tail_cap as the first and last atoms in the .mol file.
     Returns:
-        nothing; all changes to the polymer chain are written to the argument s_ 
+        nothing; all changes to the polymer chain are written to the argument s_
     """
     print("Constrained Opt...")
     sim = lmps.Simulation(s, name='constrained_opt')
@@ -588,7 +635,7 @@ def constrained_opt(s, m, active):
 def random_walk_tacticity(m, nmon, s_=None, **kwargs):
     """pysimm.apps.random_walk.random_walk_tacticity
     Builds homopolymer with controllable tacticity from capped monomer structure
-    
+
     Args:
         m: reference monomer :class:`~pysimm.system.System`. Must be a capped monomer, with headCap and tail_cap as the first and last atoms in the .mol file.
         nmon: total number of monomers to add to chain
@@ -601,7 +648,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
         traj: True to build xyz trajectory of polymer growth (True)
         limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)
         sim: :class:`~pysimm.lmps.Simulation` object for relaxation between polymer growth
-        tacticity: float between 0 and 1. 
+        tacticity: float between 0 and 1.
             1 = 100% isotactic insertions
             0 = 100% syndiotactic insertions
             0.5 = equal changes of isotactic or syndiotactic insertions (i.e. atactic)
@@ -628,7 +675,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
         tacticity = 1
     elif tacticity == 'syndiotactic':
         tacticity = 0
-    elif not ( 0 <= tacticity <= 1):
+    elif not (0 <= tacticity <= 1):
         sys.exit("tacticity must be a number between 0 and 1, or 'atactic' (0.5), "
                  "'isotactic' (1), or 'syndiotactic' (0)")
 
@@ -661,14 +708,14 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
         if p.linker == 'tail':
             for p_ in p.bonded_to:
                 if p_.rnd_wlk_tag == 'tail_cap':
-                    p.charge += p_.charge # unite charge of tailcap into head
+                    p.charge += p_.charge  # unite charge of tailcap into head
                     m.particles.remove(p_.tag)  # remove tailcap of monomer
             m.remove_spare_bonding()
             break
 
     # Add first monomer to the output system
     if s_ is None:
-        s = system.replicate(m, 1, density=density/nmon)
+        s = system.replicate(m, 1, density=density / nmon)
     else:
         s = system.replicate(m, 1, s_=s_, density=None)
     print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), 1, nmon))
@@ -691,8 +738,8 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
                 mirror_atom = p
         backbone_vector = np.array(find_last_backbone_vector(s, m))
         tail_vector = np.array(find_last_tail_vector(s.particles[-n.particles.count:]))
-                
-        for p, p_ in zip(s.particles[-1*n.particles.count:], n.particles):  # translate monomer
+
+        for p, p_ in zip(s.particles[-1 * n.particles.count:], n.particles):  # translate monomer
             a = 1.0  # coefficient of displacement of a new monomer along the head--tail direction
             b = 1.4  # coefficient of displacement of a new monomer along the head--headcap direction
             p_.x = p.x + a * backbone_vector[0] + b * tail_vector[0]
@@ -702,8 +749,8 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
             print("syndiotactic insertion...")
             mirrorPlane = define_plane(head, tail, mirror_atom)
             for p in n.particles:
-                p.x,p.y,p.z = reflect_coords_thru_plane([p.x, p.y, p.z], mirrorPlane)
-            
+                p.x, p.y, p.z = reflect_coords_thru_plane([p.x, p.y, p.z], mirrorPlane)
+
         else:  # else isotatic insertion, rotate monomer if necessary
             print("isotatic insertion...")
             if rotation != 0:  # rotate monomer, if necessary
@@ -738,21 +785,21 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
             for p in s.particles[-n.particles.count:]:
                 if p.linker == 'tail':
                     tail = p
-        
+
         for p in s.particles:
             if not p.bonded_to:
                 print(p.tag)
         if head and tail:
             s.make_new_bonds(head, tail, f)
-            print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
+            print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion + 2, nmon))
         elif extra_bonds and len(heads) == len(tails):
             for h, t in zip(heads, tails):
                 s.make_new_bonds(h, t, f)
-            print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion+2, nmon))
+            print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion + 2, nmon))
         else:
             print('cannot find head and tail')
         if sim is None:
-            sim = lmps.Simulation(s, name='relax_%03d' % (insertion+2), log='relax.log', **settings)
+            sim = lmps.Simulation(s, name='relax_%03d' % (insertion + 2), log='relax.log', **settings)
             if (insertion + 2) % md_spacing == 0:
                 sim.add_md(ensemble='nve', limit=limit, **settings)
             sim.add_min(**settings)
@@ -760,26 +807,26 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
         if isinstance(sim, lmps.Simulation):
             s_ = s.copy()
             sim.system = s
-            sim.name = 'relax_%03d' % (insertion+2)
+            sim.name = 'relax_%03d' % (insertion + 2)
             sim.run(np=settings.get('np'))
             energy = lmps.energy(s)
             print("LAMMPS Energy = " + str(energy))
-            print("LAMMPS Energy/#ofAtoms = " + str(energy/s.particles.count))
+            print("LAMMPS Energy/#ofAtoms = " + str(energy / s.particles.count))
             if error_check == True:  # check for hardcore overlap
                 print("checking for hardcore overlap")
                 if s.quality(tolerance=0.3) > 0:
                     print("Found bad quality monomer insertion. Redoing last insertion...")
                     s.unwrap()
-                    s.write_xyz('bad_insertion_' + str(insertion+2) + '.xyz')
+                    s.write_xyz('bad_insertion_' + str(insertion + 2) + '.xyz')
                     s.wrap()
-                    redo_monomer_insertion(s_,n,insertion+2)
+                    redo_monomer_insertion(s_, n, insertion + 2)
                     s = s_.copy()
         s.unwrap()
         if traj:
             s.write_xyz('random_walk.xyz', append=True)
         if unwrap:
             s.wrap()
-        
+
     for p in s.particles:
         if p not in s.molecules[p.molecule.tag].particles:
             s.molecules[p.molecule.tag].particles.add(p)
@@ -790,7 +837,6 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
 
 
 def __check_tags__(m, **kwargs):
-
     tags = [p.linker for p in m] + [p.rnd_wlk_tag for p in m]
     req_tags = kwargs.get('req_tags', ['head', 'tail', 'mirror', 'head_cap', 'tail_cap'])
     tmp = True
