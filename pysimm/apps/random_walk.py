@@ -442,18 +442,18 @@ def random_walk(m, nmon, s_=None, **kwargs):
         if unwrap:
             s.wrap()
 
-        for p in s.particles:
-            if p not in s.molecules[p.molecule.tag].particles:
-                s.molecules[p.molecule.tag].particles.add(p)
+    for p in s.particles:
+        if p not in s.molecules[p.molecule.tag].particles:
+            s.molecules[p.molecule.tag].particles.add(p)
 
-        if debug:
-            s.write_lammps('polymer.lmps')
-        s.unwrap()
+    if debug:
+        s.write_lammps('polymer.lmps')
+    s.unwrap()
 
-        if debug:
-            s.write_xyz('polymer.xyz')
+    if debug:
+        s.write_xyz('polymer.xyz')
 
-        return s
+    return s
 
 
 def find_last_tail_vector(s):
