@@ -2166,6 +2166,9 @@ class System(object):
                 p.molecule = self.molecules[p.molecule]
             if not self.molecules[p.molecule.tag].particles[p.tag]:
                 self.molecules[p.molecule.tag].particles.add(p)
+            if p != self.molecules[p.molecule.tag].particles[p.tag]:
+                self.molecules[p.molecule.tag].particles.remove(p.tag, update=False)
+                self.molecules[p.molecule.tag].particles.add(p)
             p.bonds = ItemContainer()
             p.angles = ItemContainer()
             p.dihedrals = ItemContainer()
