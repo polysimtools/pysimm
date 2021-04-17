@@ -4746,11 +4746,8 @@ def read_mol2(mol2_file, type_with=None):
     if os.path.isfile(mol2_file):
         debug_print('reading file')
         f = open(mol2_file)
-    elif isinstance(mol2_file, str):
-        debug_print('reading string')
-        f = StringIO(mol2_file)
     else:
-        raise PysimmError('pysimm.system.read_mol2 requires either file or string as argument')
+        raise PysimmError('pysimm.system.read_mol2 requires a path to .mol2 file')
 
     s = System(name='read using pysimm.system.read_mol2')
     ref_tag = '@<TRIPOS>'
