@@ -304,7 +304,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
         traj: True to build xyz trajectory of polymer growth (True)
         limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)
         sim: :class:`~pysimm.lmps.Simulation` object for relaxation between polymer growth
-        debug: Boolean; print debug extra data
+        debug: Boolean; print extra-output
     Returns:
         new polymer :class:`~pysimm.system.System`
     """
@@ -648,6 +648,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
         density: density at which to build polymer (0.3)
         forcefield: :class:`~pysimm.forcefield.Forcefield` object to acquire new force field parameters
         unwrap: True to unwrap final system
+        debug: Boolean; print extra-output (False)
         traj: True to build xyz trajectory of polymer growth (True)
         limit: during MD, limit atomic displacement by this max value (LAMMPS ONLY)
         sim: :class:`~pysimm.lmps.Simulation` object for relaxation between polymer growth
@@ -669,6 +670,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
 
     unwrap = kwargs.get('unwrap')
     traj = kwargs.get('traj', True)
+    debug = kwargs.get('debug', False)
     limit = kwargs.get('limit', 0.1)
     sim = kwargs.get('sim')
     tacticity = kwargs.get('tacticity', 0.5)
@@ -789,9 +791,11 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
                 if p.linker == 'tail':
                     tail = p
 
-        for p in s.particles:
-            if not p.bonded_to:
-                print(p.tag)
+        if debug:
+            for p in s.particles:
+                if not p.bonded_to:
+                    print(p.tag)
+
         if head and tail:
             s.make_new_bonds(head, tail, f)
             print('%s: %s/%s monomers added' % (strftime('%H:%M:%S'), insertion + 2, nmon))
@@ -833,9 +837,11 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
     for p in s.particles:
         if p not in s.molecules[p.molecule.tag].particles:
             s.molecules[p.molecule.tag].particles.add(p)
-    s.write_lammps('polymer.lmps')
-    s.unwrap()
-    s.write_xyz('polymer.xyz')
+    if debug:
+        s.write_lammps('polymer.lmps')
+        s.unwrap()
+        s.write_xyz('polymer.xyz')
+
     return s
 
 
