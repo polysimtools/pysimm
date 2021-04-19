@@ -2169,10 +2169,11 @@ class System(object):
             if p != self.molecules[p.molecule.tag].particles[p.tag]:
                 self.molecules[p.molecule.tag].particles.remove(p.tag, update=False)
                 self.molecules[p.molecule.tag].particles.add(p)
-            p.bonds = ItemContainer()
-            p.angles = ItemContainer()
-            p.dihedrals = ItemContainer()
-            p.impropers = ItemContainer()
+
+            for prop in ['bonds', 'angles' 'dihedrals', 'impropers']:
+                if not getattr(p, prop):
+                    setattr(p, prop, ItemContainer())
+
         for b in self.bonds:
             if type(b.a) == int:
                 b.a = self.particles[b.a]
