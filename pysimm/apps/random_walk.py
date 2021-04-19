@@ -28,6 +28,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+import random
 import sys
 from time import strftime
 from itertools import permutations
@@ -433,10 +434,8 @@ def random_walk(m, nmon, s_=None, **kwargs):
             sim.name = 'relax_%03d' % (insertion + 2)
             sim.run(np=settings.get('np'))
 
-        s.unwrap()
-        s.write_lammps('curr_progress.lmps')
-
         if traj:
+            s.unwrap()
             s.write_xyz('random_walk.xyz', append=True)
 
         if unwrap:
@@ -448,11 +447,9 @@ def random_walk(m, nmon, s_=None, **kwargs):
 
     if debug:
         s.write_lammps('polymer.lmps')
-    s.unwrap()
-
-    if debug:
         s.write_xyz('polymer.xyz')
 
+    s.unwrap()
     return s
 
 
@@ -683,6 +680,8 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
     elif not (0 <= tacticity <= 1):
         sys.exit("tacticity must be a number between 0 and 1, or 'atactic' (0.5), "
                  "'isotactic' (1), or 'syndiotactic' (0)")
+    tact_seq = [False] * round((nmon - 1) * tacticity) + [True] * ((nmon - 1) - round((nmon - 1) * tacticity))
+    random.shuffle(tact_seq)
 
     rotation = kwargs.get('rotation', 0)
     md_spacing = kwargs.get('md_spacing', 1)
@@ -750,7 +749,8 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
             p_.x = p.x + a * backbone_vector[0] + b * tail_vector[0]
             p_.y = p.y + a * backbone_vector[1] + b * tail_vector[1]
             p_.z = p.z + a * backbone_vector[2] + b * tail_vector[2]
-        if np.random.rand() > tacticity:  # if syndiotactic insertion, reflect monomer
+
+        if tact_seq[insertion]:  # if syndiotactic insertion, reflect monomer
             print("syndiotactic insertion...")
             mirrorPlane = define_plane(head, tail, mirror_atom)
             for p in n.particles:
@@ -828,20 +828,24 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
                     s.wrap()
                     redo_monomer_insertion(s_, n, insertion + 2)
                     s = s_.copy()
-        s.unwrap()
         if traj:
+            s.unwrap()
             s.write_xyz('random_walk.xyz', append=True)
-        if unwrap:
-            s.wrap()
 
-    for p in s.particles:
-        if p not in s.molecules[p.molecule.tag].particles:
-            s.molecules[p.molecule.tag].particles.add(p)
+    # Removing the very last 'head_cap' at the end of the chain
+    for p_ in s.particles[-n.particles.count:]:
+        if p_.rnd_wlk_tag == 'head_cap':
+            head.charge += p_.charge  # unite charge of head_cap into tail atom
+            s.particles.remove(p_.tag)  # Removing head_cap atom from growing chain
+            s.remove_spare_bonding()
+    # Syncronizing molecule representation with set of particles representation for the chain
+    s.objectify()
+
     if debug:
         s.write_lammps('polymer.lmps')
-        s.unwrap()
         s.write_xyz('polymer.xyz')
 
+    s.unwrap()
     return s
 
 
@@ -915,7 +919,7 @@ def check_tacticity(s, char_idxs, mon_len):
         cos_theta = np.dot(side_X_methyl, HT)
         angles.append(np.arccos(cos_theta) / np.pi * 180)
 
-    tmp = np.array([2 * int(a >= 90) - 1 for a in angles])
+        tmp = np.array([2 * int(a >= 90) - 1 for a in angles])
 
     return angles, [t > 0 for t in tmp[:-1] * tmp[1:]]
 
