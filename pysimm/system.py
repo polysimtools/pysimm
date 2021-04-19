@@ -4931,11 +4931,47 @@ def read_pdb(pdb_file):
             p = Particle(tag=tag, name=name, resname=resname, chainid=chainid, resid=resid, x=x, y=y, z=z, elem=elem)
             if not s.particles[tag]:
                 s.particles.add(p)
-
-
     f.close()
-
     return s
+
+
+def read_str(file, sstm):
+    """pysimm.system.read_str
+
+    Reads charges from the CHARMM topolgy (.str) file and applies them to the particles of the system.
+    Will work only if number of ATOM records in .str coincide with number of particles in the system.
+
+    Args:
+        pdb_file: (str) full path to .str file
+        sstm (:class:`~pysimm.system.System` object) to apply charges to
+
+    Returns:
+        success: (bool)
+
+    """
+
+    if os.path.isfile(file):
+        debug_print('reading file: \'{}\''.format(file))
+        f = open(file)
+    else:
+        raise PysimmError('pysimm.system.read_str requires a text file')
+
+    stream = f.read()
+    records = re.findall('(?<=ATOM ).*', stream)
+
+    if len(sstm.particles) == len(records):
+        for p, r in zip(sstm.particles, records):
+            tmp = re.split('\s+', r)
+            try:
+                p.charge = float(tmp[2])
+            except ValueError:
+                debug_print('Cannot read charge value from a line of .str file, continue with the next one...')
+                continue
+    else:
+        error_print('Found {} ATOM records in .str file. This does not match number of particles in the system'.format(len(records)))
+        return False
+
+    return True
 
 
 def compare(s1, s2):
