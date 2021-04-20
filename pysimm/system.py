@@ -4894,13 +4894,17 @@ def read_ac(ac_file):
     return s
 
 
-def read_pdb(pdb_file):
+def read_pdb(pdb_file, str_file=None):
     """pysimm.system.read_pdb
 
     Interprets pdb file and creates :class:`~pysimm.system.System` object
 
     Args:
         pdb_file: pdb file name
+
+    Keyword Args:
+        str_file: (str) optional CHARMM topology (stream) file which can be used as source of charges and description
+        of bonded topology
 
     Returns:
         :class:`~pysimm.system.System` object
@@ -4928,50 +4932,38 @@ def read_pdb(pdb_file):
             y = float(line[38:46].strip())
             z = float(line[46:54].strip())
             elem = line[76:78].strip()
-            p = Particle(tag=tag, name=name, resname=resname, chainid=chainid, resid=resid, x=x, y=y, z=z, elem=elem)
+            p = Particle(tag=tag, name=name, resname=resname, chainid=chainid,
+                         resid=resid, x=x, y=y, z=z, elem=elem, molecule=1)
             if not s.particles[tag]:
                 s.particles.add(p)
     f.close()
+
+    if str_file:
+        if os.path.isfile(str_file):
+            debug_print('read_pdb: reading file \'{}\''.format(str_file))
+            f = open(str_file)
+            stream = f.read()
+
+            for p in s.particles:
+                partcl_line = re.findall('(?<=ATOM {}).*'.format(p.name), stream)
+                if len(partcl_line) > 0:
+                    tmp = partcl_line[0].split()
+                    p.type_name = tmp[0]
+                    p.charge = float(tmp[1])
+
+            pt_names = {p.name: p.tag for p in s.particles}
+            bond_records = re.findall('(?<=BOND ).*', stream)
+            for bnd_id,bndr in enumerate(bond_records):
+                tmp = bndr.split()
+                s.bonds.add(Bond(tag=bnd_id, a=pt_names[tmp[0]], b=pt_names[tmp[1]]))
+
+            f.close()
+        else:
+            debug_print('read_pdb: got paramters file argument, but file does not exist')
+
+    s.objectify()
+    s.set_box(padding=0.5)
     return s
-
-
-def read_str(file, sstm):
-    """pysimm.system.read_str
-
-    Reads charges from the CHARMM topolgy (.str) file and applies them to the particles of the system.
-    Will work only if number of ATOM records in .str coincide with number of particles in the system.
-
-    Args:
-        pdb_file: (str) full path to .str file
-        sstm (:class:`~pysimm.system.System` object) to apply charges to
-
-    Returns:
-        success: (bool)
-
-    """
-
-    if os.path.isfile(file):
-        debug_print('reading file: \'{}\''.format(file))
-        f = open(file)
-    else:
-        raise PysimmError('pysimm.system.read_str requires a text file')
-
-    stream = f.read()
-    records = re.findall('(?<=ATOM ).*', stream)
-
-    if len(sstm.particles) == len(records):
-        for p, r in zip(sstm.particles, records):
-            tmp = re.split('\s+', r)
-            try:
-                p.charge = float(tmp[2])
-            except ValueError:
-                debug_print('Cannot read charge value from a line of .str file, continue with the next one...')
-                continue
-    else:
-        error_print('Found {} ATOM records in .str file. This does not match number of particles in the system'.format(len(records)))
-        return False
-
-    return True
 
 
 def compare(s1, s2):
