@@ -4894,7 +4894,7 @@ def read_ac(ac_file):
     return s
 
 
-def read_pdb(pdb_file, str_file=None):
+def read_pdb(pdb_file, str_file=None, **kwargs):
     """pysimm.system.read_pdb
 
     Interprets pdb file and creates :class:`~pysimm.system.System` object
@@ -4905,7 +4905,7 @@ def read_pdb(pdb_file, str_file=None):
     Keyword Args:
         str_file: (str) optional CHARMM topology (stream) file which can be used as source of charges and description
         of bonded topology
-
+        use_ptypes: (bool) flag to either use the forcefield atom type names from the .str file or not
     Returns:
         :class:`~pysimm.system.System` object
     """
@@ -4921,6 +4921,7 @@ def read_pdb(pdb_file, str_file=None):
 
     s = System(name='read using pysimm.system.read_pdb')
 
+    read_types = kwargs.get('use_ptypes', False)
     for line in f:
         if line.startswith('ATOM'):
             tag = int(line[6:11].strip())
@@ -4948,8 +4949,9 @@ def read_pdb(pdb_file, str_file=None):
                 partcl_line = re.findall('(?<=ATOM {}).*'.format(p.name), stream)
                 if len(partcl_line) > 0:
                     tmp = partcl_line[0].split()
-                    p.type_name = tmp[0]
                     p.charge = float(tmp[1])
+                    if read_types:
+                        p.type_name = tmp[0]
 
             pt_names = {p.name: p.tag for p in s.particles}
             bond_records = re.findall('(?<=BOND ).*', stream)
@@ -4959,7 +4961,7 @@ def read_pdb(pdb_file, str_file=None):
 
             f.close()
         else:
-            debug_print('read_pdb: got paramters file argument, but file does not exist')
+            debug_print('read_pdb: got parameters file argument, but file does not exist')
 
     s.objectify()
     s.set_box(padding=0.5)
