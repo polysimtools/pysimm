@@ -297,6 +297,7 @@ def random_walk(m, nmon, s_=None, **kwargs):
         nmon: total number of monomers to add to chain
         s_: :class:`~pysimm.system.System` in which to build polymer chain (None)
         extra_bonds: EXPERMINTAL, True if making ladder backbone polymer
+        geometry_rule: a pointer to a method that orients series of atoms of the next repetitive unit in random run
         settings: dictionary of simulation settings
         density: density at which to build polymer (0.3)
         forcefield: :class:`~pysimm.forcefield.Forcefield` object to acquire new force field parameters
@@ -744,8 +745,8 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
         tail_vector = np.array(find_last_tail_vector(s.particles[-n.particles.count:]))
 
         for p, p_ in zip(s.particles[-1 * n.particles.count:], n.particles):  # translate monomer
-            a = 1.0  # coefficient of displacement of a new monomer along the head--tail direction
-            b = 1.4  # coefficient of displacement of a new monomer along the head--headcap direction
+            a = 1.1  # coefficient of displacement of a new monomer along the head--tail direction
+            b = 2.4  # coefficient of displacement of a new monomer along the head--headcap direction
             p_.x = p.x + a * backbone_vector[0] + b * tail_vector[0]
             p_.y = p.y + a * backbone_vector[1] + b * tail_vector[1]
             p_.z = p.z + a * backbone_vector[2] + b * tail_vector[2]
@@ -809,7 +810,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
             sim = lmps.Simulation(s, name='relax_%03d' % (insertion + 2), log='relax.log', **settings)
             if (insertion + 2) % md_spacing == 0:
                 sim.add_md(ensemble='nve', limit=limit, **settings)
-            sim.add_min(**settings)
+            # sim.add_min(**settings)
 
         if isinstance(sim, lmps.Simulation):
             s_ = s.copy()
@@ -838,7 +839,7 @@ def random_walk_tacticity(m, nmon, s_=None, **kwargs):
             head.charge += p_.charge  # unite charge of head_cap into tail atom
             s.particles.remove(p_.tag)  # Removing head_cap atom from growing chain
             s.remove_spare_bonding()
-    # Syncronizing molecule representation with set of particles representation for the chain
+    # Syncronizing molecule representation with particles ItemContainer representation for the chain
     s.objectify()
 
     if debug:
