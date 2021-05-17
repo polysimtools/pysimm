@@ -291,19 +291,18 @@ class ParticleType(Item):
         Returns:
             LAMMPS formatted string with pair coefficients
         """
-        if style.startswith('lj'):
+
+        if style.startswith('lj/charmm'):
+            eps14 = self.epsilon_14 if 'epsilon_14' in self.__dict__.keys() else ''
+            sgm14 = self.sigma_14 if 'sigma_14' in self.__dict__.keys() else ''
+
+            return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.epsilon, self.sigma, eps14, sgm14, self.name
+            )
+        elif style.startswith('lj'):
             return '{:4}\t{}\t{}\t# {}\n'.format(
                 self.tag, self.epsilon, self.sigma, self.name
             )
-        elif style.startswith('charmm'):
-            if self.epsilon_14 and self.sigma_14:
-                return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
-                    self.tag, self.epsilon, self.sigma, self.epsilon_14, self.sigma_14, self.name
-                )
-            else:
-                return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
-                    self.tag, self.epsilon, self.sigma, self.epsilon, self.sigma, self.name
-                )
         elif style.startswith('class2'):
             return '{:4}\t{}\t{}\t# {}\n'.format(
                 self.tag, self.epsilon, self.sigma, self.name
