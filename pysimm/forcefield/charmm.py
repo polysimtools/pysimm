@@ -50,11 +50,11 @@ class Charmm(Forcefield):
 
     Attributes:
         ff_name: charmm
-        pair_style: lj
+        pair_style: lj/charmm
         ff_class: 1
     """
 
-    def __init__(self, db_file=None, add_file=None):
+    def __init__(self, db_file=None):
         if not db_file and db_file is not False:
             db_file = os.path.join(
                 os.path.dirname(
@@ -66,12 +66,9 @@ class Charmm(Forcefield):
 
         with open(db_file) as f:
             j = json.loads(f.read())
-        self.nondiag_lj_types = ItemContainer()
-        for elem in j.get('nondiagonal_lj'):
-            self.nondiag_lj_types.add(ParticleType(**elem))
-
-        if add_file:
-            self.__parse_add_file__(add_file)
+        self.nbfix_types = ItemContainer()
+        for elem in j.get('nbfix_types'):
+            self.nbfix_types.add(ParticleType(**elem))
 
         self.name = 'charmm'
         self.pair_style = 'lj/charmm'
@@ -256,25 +253,24 @@ class Charmm(Forcefield):
             None
 
         """
-        #
         loc_lj_types = set()
         for p in s.particle_types:
             for p_ in s.particle_types:
                 if p != p_:
                     atm_type = tuple(sorted([p.tag, p_.tag]))
                     if not(atm_type in [at.atm_types for at in loc_lj_types]):
-                        tmp = self.nondiag_lj_types.get(','.join([p.name, p_.name]))
+                        tmp = self.nbfix_types.get(','.join([p.name, p_.name]))
                         if len(tmp) > 0:
                             to_add = tmp[0].copy()
                             to_add.atm_types = atm_type
                             loc_lj_types.add(to_add)
 
-        if not s.nondiag_lj_types:
-            s.nondiag_lj_types = ItemContainer()
+        if not s.nbfix_types:
+            s.nbfix_types = ItemContainer()
 
         for ljt in loc_lj_types:
-            if not s.nondiag_lj_types.get(ljt.name):
-                s.nondiag_lj_types.add(ljt)
+            if not s.nbfix_types.get(ljt.name):
+                s.nbfix_types.add(ljt)
 
     def assign_btypes(self, s):
         """pysimm.forcefield.Charmm.assign_btypes
@@ -489,56 +485,124 @@ class Charmm(Forcefield):
 
 
     def __parse_add_file__(self, file):
-        headers = ['ATOMS', 'BONDS', 'ANGLES', 'DIHEDRALS', 'IMPROPERS', 'NONBONDED']
+        """
+
+        Private method to read/convert CHARMM specific FF parameters from the native format (.prm) to add on top of
+        currentely existing library of FF parameters. Will update this ForceField object with data from the file and will
+        write the output  'charmm_mod.json' DB file
+
+        Args:
+            file: (string) full (absolute or relative) path to an .prm file
+
+        Returns:
+            none
+        """
+
+        headers = ['ATOMS', 'BONDS', 'ANGLES', 'DIHEDRALS', 'IMPROPERS', 'NONBONDED', 'NBFIX']
+        sigma_conv_mult = 2 / (2 ** (1.0 / 6.0))
 
         with open(file, 'r') as pntr:
             stream = pntr.read()
-            tmp_h = re.findall('|'.join(headers), stream)
-            tmp_b = re.split('|'.join(headers), stream)
-            for h,b in zip(tmp_h, tmp_b):
+            tmp_h = re.findall('|'.join(['\n' + h for h in headers]), stream)
+            tmp_b = re.split('|'.join(['\n' + h for h in headers]), stream)
+            nbfixes = []
+            for h,b in zip(tmp_h, tmp_b[1:]):
                 if h.lower == 'atoms':
                     pass
-                if h.lower == 'bonds':
+                if h.strip().lower() == 'bonds':
+                    pass
+                if h.strip().lower() == 'angles':
+                    pass
+                if h.strip().lower() == 'dihedrals':
+                    pass
+                if h.strip().lower() == 'impropers':
+                    pass
+                if h.strip().lower() == 'nbfix':
                     lines = b.split('\n')
                     for l in lines:
-                        tmp = l.split()
-                        db_record = self.bond_types.get('{},{}}'.format(tmp[0], tmp[1]))
-                        try:
-                            if db_record:
-                                verbose_print('The bond {}-{} is in the DB and will be overriden'.format(tmp[0], tmp[1]))
-                                db_record.setattr('k', float(tmp[3]))
-                                db_record.setattr('b', float(tmp[4]))
-                            else:
-                                self.bond_types.add(BondType(name='{},{}'.format(tmp[0], tmp[1]),
-                                              rname='{},{}'.format(tmp[1], tmp[0]),
-                                              k=float(tmp[3]),
-                                              b=float(tmp[4])
-                                              ))
-                        except ValueError:
-                            verbose_print('Seems data line is corrupted continue with the next one...')
-                            continue
+                        if not l.startswith('!'):
+                            l = l.split('!')[0]
+                            tmp = l.split()
+                            if len(tmp) > 3:
+                                if not('nbfix_types' in self.__dict__.keys()):
+                                    nbfixes.append({'name': ','.join((tmp[0], tmp[1])),
+                                                    'rname': ','.join((tmp[1], tmp[0])),
+                                                    'epsilon': abs(float(tmp[2])),
+                                                    'sigma': sigma_conv_mult * float(tmp[3]) })
+                                else:
+                                    self.nbfix_types.add(ParticleType(name=','.join((tmp[0], tmp[1])),
+                                                                      rname=','.join((tmp[1], tmp[0])),
+                                                                      epsilon=abs(float(tmp[2])),
+                                                                      sigma=sigma_conv_mult * float(tmp[3]) ))
+                if h.strip().lower() == 'nonbonded':
+                    lines = b.split('\n')
+                    for l in lines[2:]:
+                        if not l.startswith('!'):
+                            l = l.split('!')[0]
+                            tmp = l.split()
+                            if len(tmp) > 3:
+                                db_record = self.particle_types.get(tmp[0].strip())
+                                try:
+                                    if len(db_record) > 0:
+                                        verbose_print('The atomtype {} is in the DB and will be overriden'.format(tmp[0]))
+                                        setattr(db_record[0], 'epsilon', abs(float(tmp[2])))
+                                        setattr(db_record[0], 'sigma', sigma_conv_mult * float(tmp[3]))
+                                        if len(tmp) > 5:
+                                            setattr(db_record[0], 'epsilon_14', abs(float(tmp[5])))
+                                            setattr(db_record[0], 'sigma_14', sigma_conv_mult * float(tmp[6]))
+                                    else:
+                                        if len(tmp) > 5:
+                                            self.particle_types.add(ParticleType(name=tmp[0].strip(),
+                                                                                 epsilon=abs(float(tmp[2])),
+                                                                                 sigma=sigma_conv_mult * float(tmp[3]),
+                                                                                 epsilon_14=abs(float(tmp[5])),
+                                                                                 sigma_14=sigma_conv_mult * float(tmp[6])))
+                                        else:
+                                            self.particle_types.add(ParticleType(name=tmp[0].strip(),
+                                                                                 epsilon=abs(float(tmp[2])),
+                                                                                 sigma=sigma_conv_mult * float(tmp[3])))
+                                except ValueError:
+                                    verbose_print('Seems data line is corrupted continue with the next one...')
+                                    continue
 
-                    pass
-                if h.lower == 'angles':
-                    pass
-                if h.lower == 'dihedrals':
-                    pass
-                if h.lower == 'impropers':
-                    pass
-                if h.lower == 'nonbonded':
-                    pass
+
+        outp_obj = {'angle_types': [], 'improper_types': [], 'bond_types': [], 'particle_types': [], 'dihedral_types': [],
+                    'pair_style': '', 'bond_style': '', 'angle_style': '', 'dihedral_style': '', 'improper_style': ''}
+        for prp in outp_obj.keys():
+            if type(outp_obj[prp]) == list:
+                tmp = getattr(self, prp)._dict
+                for t in tmp.keys():
+                    outp_obj[prp].append(tmp[t].__dict__)
+            elif type(outp_obj[prp]) == str:
+                outp_obj[prp] = getattr(self, prp)
+
+        if not ('nbfix_types' in self.__dict__.keys()):
+            outp_obj['nbfix_types'] = nbfixes
+        else:
+            tmp = getattr(self, 'nbfix_types')._dict
+            for t in tmp.keys():
+                outp_obj['nbfix_types'].append(tmp[t].__dict__)
+
+        DATA_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'data', 'forcefields', 'charmm')
+        out_file = os.path.join(DATA_PATH, os.path.pardir, 'charmm_mod.json')
+        with open(out_file, 'w') as pntr:
+            pntr.write(json.dumps(outp_obj, indent=2))
+
+        return True
 
 
 def __parse_charmm__():
     """
-    Private method to read/convert CHARMM specific FF parameters definition files to .json file which PySIMM works with
+    Private method to read/convert CHARMM specific FF parameters from the form of GROMACS input format (.atp, .itp)
+    to the PySIMM  input format (.json).
+
+    Note: Because of the format specification, there are no \sigma_{14} or \epsilon_{14} parameters in the file as well
+    as explicit non-diagonal LJ parameters (NBFIXes). They are read from a different file types (see charmm.__parse_add_file__())
 
     Returns:
         None
 
     """
-
-    import json
 
     kj2kcal = 4.184
     rounding = 8
@@ -662,6 +726,7 @@ def __parse_charmm__():
                                elemname, line[0], float(line[2]), descr]
                         obj['particle_types'].append(dict(zip(fields, tmp)))
 
+            '''
             # Parsing **non-diagonal** non-bonded parameters of the FF
             nb_file.seek(0)
             obj['nondiagonal_lj'] = []
@@ -677,6 +742,7 @@ def __parse_charmm__():
                                                       'epsilon': round(float(line[3]) / kj2kcal, rounding),
                                                       'sigma': round(10 * float(line[4]), rounding)
                                                       })
+            '''
     except OSError:
         print('Required library file with CHARMM non-bonded parametrs \"{:}\" '
               'cannot be opened or read. \nExiting...'.format(nonbnded_lib))
