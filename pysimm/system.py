@@ -2781,7 +2781,8 @@ class System(object):
     def apply_charges(self, f, charges='default'):
         """pysimm.system.System.apply_charges
 
-        Applies charges derived using method provided by user. Defaults to 'default'. Calls :func:`~pysimm.forcefield.Forcefield.assign_charges` method of forcefield object provided.
+        Applies charges derived using method provided by user. Defaults to 'default'.
+        Calls :func:`~pysimm.forcefield.Forcefield.assign_charges` method of forcefield object provided.
 
         Args:
             f: :class:`~pysimm.forcefield.Forcefield` object
