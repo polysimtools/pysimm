@@ -1039,8 +1039,8 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
         else:
             stdo, stde = p.communicate(simulation.input.encode('utf-8'))
             if simulation.print_to_screen:
-                print(stdo)
-                print(stde)
+                print(stdo.decode('utf-8'))
+                print(stde.decode('utf-8'))
                     
     simulation.system.read_lammps_dump('pysimm.dump.tmp')
 
