@@ -126,7 +126,7 @@ class Charmm(Forcefield):
                             elif rng_count > 0 : # tetrahydrofuran (THF) or tetrahydropyran (THP)
                                 p.type_name = 'CG3C52'.format(rng_count)
 
-                    if 'A' in p.bond_orders:
+                    if ('A' in p.bond_orders) or (4 in p.bond_orders):
                         p.type_name = 'CG2R61'
 
                     if (p.nbonds == 3):  # carbonyl C condition
@@ -143,7 +143,7 @@ class Charmm(Forcefield):
                         if set(p.bond_elements) == {'O', 'C', 'H'}:  # carbonyl C in aldehyde
                             p.type_name = 'CG2O4'
                         if (p.bond_elements.count('O') == 1) and (p.bond_elements.count('C') == 2):  # in ketones
-                            p.type_name = 'CC2O5'
+                            p.type_name = 'CG2O5'
 
                 elif p.elem == 'O':
                     if (p.nbonds == 2) and (all(p.bond_orders) == 1):  # ethers, esters
@@ -210,8 +210,11 @@ class Charmm(Forcefield):
                         if len(nitrogen) > 0 and (nitrogen[0].nbonds == 4):
                             p.type_name = 'HGP5'
                         else:
-                            hcount = [pt for pt in p.bonded_to][0].bond_elements.count('H')
-                            p.type_name = 'HGA{}'.format(hcount)
+                            if ('A' in host.bond_orders) or (4 in host.bond_orders):
+                                p.type_name = 'HGR61'
+                            else:
+                                hcount = [pt for pt in p.bonded_to][0].bond_elements.count('H')
+                                p.type_name = 'HGA{}'.format(hcount)
 
                 elif p.elem == 'S':
                     if p.nbonds == 4:
@@ -482,7 +485,12 @@ class Charmm(Forcefield):
         if charges == 'gasteiger':
             verbose_print('adding gasteiger charges')
             gasteiger.set_charges(s)
-
+        else:
+            # initialize charges of all particles with zeros
+            for p in s.particles:
+                if not p.charge:
+                    p.charge = 0
+            s.set_charge()
 
     def __parse_add_file__(self, file):
         """
