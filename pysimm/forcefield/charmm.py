@@ -230,7 +230,7 @@ class Charmm(Forcefield):
             if len(tmp) > 0:
                 all_types.add(tmp[0])
             else:
-                debug_print('Current version of CHARMM-FF database file doe not contain \'{}\' particle type'.format(p.type_name))
+                debug_print('Current version of CHARMM-FF database file does not contain \'{}\' particle type'.format(p.type_name))
 
         for pt in all_types:
             s.particle_types.add(pt.copy())

@@ -29,6 +29,7 @@
 
 import os
 from itertools import permutations, combinations
+from .. import error_print, verbose_print, debug_print
 
 from . import gasteiger
 from ..system import Angle, Dihedral, Improper

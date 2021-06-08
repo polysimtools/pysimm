@@ -4818,7 +4818,7 @@ def read_prepc(prec_file):
         debug_print('reading string')
         f = StringIO(prec_file)
     else:
-        raise PysimmError('pysimm.system.read_pdb requires either '
+        raise PysimmError('pysimm.system.read_prepc requires either '
                           'file or string as argument')
 
     s = System(name='read using pysimm.system.read_prepc')
@@ -4863,7 +4863,7 @@ def read_ac(ac_file):
         debug_print('reading string')
         f = StringIO(ac_file)
     else:
-        raise PysimmError('pysimm.system.read_pdb requires either '
+        raise PysimmError('pysimm.system.read_ac requires either '
                           'file or string as argument')
 
     s = System(name='read using pysimm.system.read_ac')
@@ -4923,7 +4923,7 @@ def read_pdb(pdb_file, str_file=None, **kwargs):
 
     read_types = kwargs.get('use_ptypes', False)
     for line in f:
-        if line.startswith('ATOM'):
+        if line.startswith('ATOM') or line.startswith('HETATM'):
             tag = int(line[6:11].strip())
             name = line[12:16].strip()
             resname = line[17:20].strip()
@@ -4937,6 +4937,20 @@ def read_pdb(pdb_file, str_file=None, **kwargs):
                          resid=resid, x=x, y=y, z=z, elem=elem, molecule=1)
             if not s.particles[tag]:
                 s.particles.add(p)
+
+    f.seek(0)
+    bnd_id = 1
+    duplets = set()
+    for line in f:
+        if line.startswith('CONECT'):
+            curr_tag = int(line[6:11].strip())
+            other_tags = list(map(int, line[11:].split()))
+            for ot in other_tags:
+                rec = tuple(sorted([curr_tag, ot]))
+                if rec not in duplets:
+                    s.bonds.add(Bond(tag=bnd_id, a=curr_tag, b=ot))
+                    bnd_id += 1
+                    duplets.add(rec)
     f.close()
 
     if str_file:
