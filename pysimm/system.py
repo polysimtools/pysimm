@@ -4932,7 +4932,12 @@ def read_pdb(pdb_file, str_file=None, **kwargs):
             x = float(line[30:38].strip())
             y = float(line[38:46].strip())
             z = float(line[46:54].strip())
+
             elem = line[76:78].strip()
+            if len(elem) < 1:
+                if len(name) > 0:
+                    elem = re.split('\d+?', name)[0]
+
             p = Particle(tag=tag, name=name, resname=resname, chainid=chainid,
                          resid=resid, x=x, y=y, z=z, elem=elem, molecule=1)
             if not s.particles[tag]:
