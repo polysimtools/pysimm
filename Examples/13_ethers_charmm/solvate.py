@@ -50,8 +50,9 @@ sst.write_lammps('to_sim.lmps')
 # Create simulation and directly add all nondiagonal LJ parameters to the run file
 # (that is how LAMMPS operates)
 sim = lmps.Simulation(sst, log='simulation.log', cutoff={'inner_lj': 10.0, 'lj': 12.0})
-for nd_lj in sst.nondiag_lj_types:
-    sim.add_custom('pair_coeff {} {} {}'.format(' '.join(map(str, nd_lj.atm_types)), nd_lj.epsilon, nd_lj.sigma))
+if sst.nondiag_lj_types:
+    for nd_lj in sst.nondiag_lj_types:
+        sim.add_custom('pair_coeff {} {} {}'.format(' '.join(map(str, nd_lj.atm_types)), nd_lj.epsilon, nd_lj.sigma))
 
 # define velocities and output settings
 sim.add(lmps.Velocity(temperature=300.0, style='create'))
