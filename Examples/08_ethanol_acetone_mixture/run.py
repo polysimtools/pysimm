@@ -12,7 +12,7 @@ def run(test=False):
     except:
         import os
         acetone = system.read_mol(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'CC(=O)C.mol'))
-    
+
     f = forcefield.Gaff2()
     
     ethanol.apply_forcefield(f, charges='gasteiger')
@@ -24,19 +24,20 @@ def run(test=False):
     lmps.quick_min(ethanol, min_style='fire')
     lmps.quick_min(acetone, min_style='fire')
     
-    molecule_list=[ethanol,acetone]
+    molecule_list=[ethanol, acetone]
     
     if test:
-        n_molecules=[30,20]
+        n_molecules=[20, 20]
     else:
-        n_molecules=[300,200]
+        n_molecules=[200, 200]
     
-    s=system.replicate(molecule_list, n_molecules , density=0.3)
+    s = system.replicate(molecule_list, n_molecules , density=0.3)
     
     min_settings = {
         'name': 'fire_min',
         'min_style': 'fire',
-        'print_to_screen': True
+        'maxiter': int(1e+5), 
+        'maxeval': int(1e+6), 
     }
     
     nvt_settings = {
@@ -62,22 +63,39 @@ def run(test=False):
             'stop': 1
         },
         'length': 100000,
-        'thermo_style': 'custom step temp press density'
+    }
+    
+    npt_settings_add = {
+        'name': 'npt_md',
+        'print_to_screen': True,
+        'ensemble': 'npt',
+        'temperature': 300,
+        'new_v': True,
+        'pressure': {
+            'start': 1,
+            'stop': 1
+        },
+        'length': 100000,
     }
     
     if test:
         nvt_settings['length'] = 2000
         npt_settings['length'] = 2000
         
+    sim = lmps.Simulation(s)
+    sim.add_min(**min_settings)
     
-    lmps.quick_min(s, **min_settings)
-    lmps.quick_md(s, **nvt_settings)
-    lmps.quick_md(s, **npt_settings)
-    
-    s.write_xyz('mixture.xyz')
+    sim.add(lmps.OutputSettings(thermo={'freq': 500, 
+                                        'style': 'custom', 
+                                        'args': ['step', 'temp', 'etotal', 'press', 'density']}))
+
+    sim.add_md(**nvt_settings)
+    sim.add_md(**npt_settings)
+    sim.add_md(**npt_settings_add)
+    sim.run()
+
     s.write_yaml('mixture.yaml')
     s.write_lammps('mixture.lmps')
-    s.write_chemdoodle_json('mixture.json')
     
 if __name__ == '__main__':
     run()
