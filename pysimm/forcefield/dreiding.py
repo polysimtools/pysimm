@@ -29,6 +29,7 @@
 
 import os
 from itertools import permutations, combinations
+from .. import error_print, verbose_print, debug_print
 
 from . import gasteiger
 from ..system import Angle, Dihedral, Improper
@@ -139,6 +140,10 @@ class Dreiding(Forcefield):
                 p.type_name = 'S_3'
             elif p.elem == 'Cl':
                 p.type_name = 'Cl'
+            elif p.elem == 'Br':
+                p.type_name = 'Br'
+            elif p.elem == 'Si':
+                p.type_name = 'Si3'
             else:
                 print('cant type particle %s' % p.tag)
                 return p

@@ -115,7 +115,7 @@ FF_SETTINGS = {
             'pair_style':       'lj/charmm',
             'bond_style':       'harmonic',
             'angle_style':      'charmm',
-            'dihedral_style':   'charmm',
+            'dihedral_style':   'fourier',
             'improper_style':   'harmonic',
             'pair_modify':      {
                 'mix': 'arithmetic'
@@ -268,7 +268,7 @@ class Init(object):
             raise PysimmError('A pair_style must be defined during initialization')
 
         if self.cutoff:
-            if self.forcefield == ['charmm'] and self.cutoff.get('inner_lj'):
+            if (self.forcefield == 'charmm') and self.cutoff.get('inner_lj'):
                 lammps_input += ' {} '.format(self.cutoff['inner_lj'])
             lammps_input += ' {} '.format(self.cutoff['lj'])
             if self.charge and self.cutoff.get('coul'):
@@ -538,8 +538,7 @@ class Qeq(object):
             input string
         """
         if self.qfile is None:
-            param_file = os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                                      os.pardir, 'dat', 'qeq', 'hcno.json')
+            param_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data', 'qeq', 'hcno.json')
             with open(param_file) as f:
                 qeq_params = json.loads(f.read())
             with open('pysimm.qeq.tmp', 'w') as f:
@@ -1022,26 +1021,26 @@ def call_lammps(simulation, np, nanohub, prefix='mpiexec'):
             print(simulation.input)
             warning_print('debug setting involves streaming output from LAMMPS process and can degrade performance')
             warning_print('only use debug for debugging purposes, use print_to_screen to collect stdout after process finishes')
-            p.stdin.write(simulation.input)
+            p.stdin.write(simulation.input.encode('utf-8'))
             q = Queue()
             t = Thread(target=enqueue_output, args=(p.stdout, q))
             t.daemon = True
             t.start()
     
-            while t.isAlive() or not q.empty():
+            while t.is_alive() or not q.empty():
                 try:
                     line = q.get_nowait()
                 except Empty:
                     pass
                 else:
                     if simulation.debug:
-                        sys.stdout.write(line)
+                        sys.stdout.write(line.decode('utf-8'))
                         sys.stdout.flush()
         else:
             stdo, stde = p.communicate(simulation.input.encode('utf-8'))
             if simulation.print_to_screen:
-                print(stdo)
-                print(stde)
+                print(stdo.decode('utf-8'))
+                print(stde.decode('utf-8'))
                     
     simulation.system.read_lammps_dump('pysimm.dump.tmp')
 

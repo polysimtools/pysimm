@@ -291,19 +291,18 @@ class ParticleType(Item):
         Returns:
             LAMMPS formatted string with pair coefficients
         """
-        if style.startswith('lj'):
+
+        if style.startswith('lj/charmm'):
+            eps14 = self.epsilon_14 if 'epsilon_14' in self.__dict__.keys() else ''
+            sgm14 = self.sigma_14 if 'sigma_14' in self.__dict__.keys() else ''
+
+            return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
+                self.tag, self.epsilon, self.sigma, eps14, sgm14, self.name
+            )
+        elif style.startswith('lj'):
             return '{:4}\t{}\t{}\t# {}\n'.format(
                 self.tag, self.epsilon, self.sigma, self.name
             )
-        elif style.startswith('charmm'):
-            if self.epsilon_14 and self.sigma_14:
-                return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
-                    self.tag, self.epsilon, self.sigma, self.epsilon_14, self.sigma_14, self.name
-                )
-            else:
-                return '{:4}\t{}\t{}\t{}\t{}\t# {}\n'.format(
-                    self.tag, self.epsilon, self.sigma, self.epsilon, self.sigma, self.name
-                )
         elif style.startswith('class2'):
             return '{:4}\t{}\t{}\t# {}\n'.format(
                 self.tag, self.epsilon, self.sigma, self.name
@@ -1530,6 +1529,7 @@ class System(object):
                 bad_bonds += 1
         verbose_print('%s of %s bonds found to be outside of tolerance' % (bad_bonds, self.bonds.count))
         self.wrap()
+        return bad_bonds
 
     def shift_to_origin(self):
         """pysimm.system.System.shift_to_origin
@@ -2163,11 +2163,16 @@ class System(object):
                     m.tag = p.molecule
                     self.molecules.add(m)
                 p.molecule = self.molecules[p.molecule]
+            if not self.molecules[p.molecule.tag].particles[p.tag]:
                 self.molecules[p.molecule.tag].particles.add(p)
-            p.bonds = ItemContainer()
-            p.angles = ItemContainer()
-            p.dihedrals = ItemContainer()
-            p.impropers = ItemContainer()
+            if p != self.molecules[p.molecule.tag].particles[p.tag]:
+                self.molecules[p.molecule.tag].particles.remove(p.tag, update=False)
+                self.molecules[p.molecule.tag].particles.add(p)
+
+            for prop in ['bonds', 'angles' 'dihedrals', 'impropers']:
+                if not getattr(p, prop):
+                    setattr(p, prop, ItemContainer())
+
         for b in self.bonds:
             if type(b.a) == int:
                 b.a = self.particles[b.a]
@@ -2409,9 +2414,9 @@ class System(object):
         """
         if not np:
             raise PysimmError('pysimm.system.System.rotate function requires numpy')
-        theta_x = random() * 2 * pi if theta_x is 'random' else theta_x
-        theta_y = random() * 2 * pi if theta_y is 'random' else theta_y
-        theta_z = random() * 2 * pi if theta_z is 'random' else theta_z
+        theta_x = random() * 2 * pi if theta_x == 'random' else theta_x
+        theta_y = random() * 2 * pi if theta_y == 'random' else theta_y
+        theta_z = random() * 2 * pi if theta_z == 'random' else theta_z
         if around is None:
             around = []
             self.set_cog()
@@ -2776,7 +2781,8 @@ class System(object):
     def apply_charges(self, f, charges='default'):
         """pysimm.system.System.apply_charges
 
-        Applies charges derived using method provided by user. Defaults to 'default'. Calls :func:`~pysimm.forcefield.Forcefield.assign_charges` method of forcefield object provided.
+        Applies charges derived using method provided by user. Defaults to 'default'.
+        Calls :func:`~pysimm.forcefield.Forcefield.assign_charges` method of forcefield object provided.
 
         Args:
             f: :class:`~pysimm.forcefield.Forcefield` object
@@ -3365,16 +3371,17 @@ class System(object):
                 z = p.z
 
             bonds = ''
-            n_bonds = 0
-            for b in p.bonds:
-                if p is b.a:
-                    bonds += ' {:4d}'.format(b.b.tag)
-                else:
-                    bonds += ' {:4d}'.format(b.a.tag)
-                n_bonds += 1
- 
-            for i in range(n_bonds+1, 9):
-                bonds = bonds + ' {:4d}'.format(0)
+            if p.bonds:
+                n_bonds = 0
+                for b in p.bonds:
+                    if p is b.a:
+                        bonds += ' {:4d}'.format(b.b.tag)
+                    else:
+                        bonds += ' {:4d}'.format(b.a.tag)
+                    n_bonds += 1
+
+                for i in range(n_bonds+1, 9):
+                    bonds = bonds + ' {:4d}'.format(0)
  
             out.write('%4d %4s  %9.5f %9.5f %9.5f %s %7.3f\n' 
                      % (p.tag, name, x, y, z, bonds, p.charge))
@@ -4723,7 +4730,76 @@ def read_mol(mol_file, type_with=None, version='V2000'):
 
     return s
     
-    
+
+def read_mol2(mol2_file, type_with=None):
+    """pysimm.system.read_mol2
+
+    Interprets .mol2 file and creates :class:`~pysimm.system.System` object
+
+    Args:
+        mol_file2: a full name (including path) of a Tripos Mol2 text file
+        type_with (optional): :class:`~pysimm.forcefield.Forcefield` object to use for attempt to assighn
+        forcefield parameters to the system
+
+    Returns:
+        :class:`~pysimm.system.System` object
+    """
+    if os.path.isfile(mol2_file):
+        debug_print('reading file')
+        f = open(mol2_file)
+    else:
+        raise PysimmError('pysimm.system.read_mol2 requires a path to .mol2 file')
+
+    s = System(name='read using pysimm.system.read_mol2')
+    ref_tag = '@<TRIPOS>'
+    stream = f.read()
+    tags = list(map(lambda x: x.lower(), re.findall('(?<=' + ref_tag + ').*', stream)))
+    data = re.split(ref_tag, stream)
+
+    # reading molecule related info
+    segm = data[tags.index('molecule') + 1]
+    lines = segm.split('\n')
+    tmp = lines[2].split()
+    nparticles = int(tmp[0])
+    if len(tmp) > 1:
+        nbonds = int(tmp[1])
+
+    # reading atom related info
+    segm = data[tags.index('atom') + 1]
+    lines = segm.split('\n')
+    for l in lines:
+        tmp = l.split()
+        if len(tmp) > 8:
+            s.particles.add(Particle(tag=int(tmp[0]), elem=tmp[1][0], charge=float(tmp[8]), molecule=1,
+                                     x=float(tmp[2]), y=float(tmp[3]), z=float(tmp[4])))
+
+    segm = data[tags.index('bond') + 1]
+    lines = segm.split('\n')
+    for l in lines:
+        tmp = l.split()
+        if len(tmp) > 3:
+            tmp = l.split()
+            val = re.findall('[123]', tmp[3])
+            if len(val) > 0:
+                ordnung = int(val[0])
+            elif tmp[3].lower() in ['am', 'du']:
+                ordnung = 1
+            elif tmp[3].lower() == 'ar':
+                ordnung = 'A'
+            else:
+                ordnung = None
+            s.bonds.add(Bond(tag=int(tmp[0]), a=int(tmp[1]), b=int(tmp[2]), order=ordnung))
+
+    s.objectify()
+
+    if type_with:
+        try:
+            s.apply_forcefield(type_with)
+        except Exception:
+            print('forcefield typing with forcefield {} unsuccessful'.format(type_with.name))
+    return s
+
+
 def read_prepc(prec_file):
     """pysimm.system.read_prepc
 
@@ -4742,7 +4818,7 @@ def read_prepc(prec_file):
         debug_print('reading string')
         f = StringIO(prec_file)
     else:
-        raise PysimmError('pysimm.system.read_pdb requires either '
+        raise PysimmError('pysimm.system.read_prepc requires either '
                           'file or string as argument')
 
     s = System(name='read using pysimm.system.read_prepc')
@@ -4787,7 +4863,7 @@ def read_ac(ac_file):
         debug_print('reading string')
         f = StringIO(ac_file)
     else:
-        raise PysimmError('pysimm.system.read_pdb requires either '
+        raise PysimmError('pysimm.system.read_ac requires either '
                           'file or string as argument')
 
     s = System(name='read using pysimm.system.read_ac')
@@ -4818,7 +4894,7 @@ def read_ac(ac_file):
     return s
 
 
-def read_pdb(pdb_file):
+def read_pdb(pdb_file, str_file=None, **kwargs):
     """pysimm.system.read_pdb
 
     Interprets pdb file and creates :class:`~pysimm.system.System` object
@@ -4826,6 +4902,10 @@ def read_pdb(pdb_file):
     Args:
         pdb_file: pdb file name
 
+    Keyword Args:
+        str_file: (str) optional CHARMM topology (stream) file which can be used as source of charges and description
+        of bonded topology
+        use_ptypes: (bool) flag to either use the forcefield atom type names from the .str file or not
     Returns:
         :class:`~pysimm.system.System` object
     """
@@ -4841,8 +4921,9 @@ def read_pdb(pdb_file):
 
     s = System(name='read using pysimm.system.read_pdb')
 
+    read_types = kwargs.get('use_ptypes', False)
     for line in f:
-        if line.startswith('ATOM'):
+        if line.startswith('ATOM') or line.startswith('HETATM'):
             tag = int(line[6:11].strip())
             name = line[12:16].strip()
             resname = line[17:20].strip()
@@ -4851,14 +4932,60 @@ def read_pdb(pdb_file):
             x = float(line[30:38].strip())
             y = float(line[38:46].strip())
             z = float(line[46:54].strip())
+
             elem = line[76:78].strip()
-            p = Particle(tag=tag, name=name, resname=resname, chainid=chainid, resid=resid, x=x, y=y, z=z, elem=elem)
+            if len(elem) < 1:
+                if len(name) > 0:
+                    elem = re.split('\d+?', name)[0]
+
+            p = Particle(tag=tag, name=name, resname=resname, chainid=chainid,
+                         resid=resid, x=x, y=y, z=z, elem=elem, molecule=1)
             if not s.particles[tag]:
                 s.particles.add(p)
 
-
+    f.seek(0)
+    bnd_id = 1
+    duplets = set()
+    for line in f:
+        if line.startswith('CONECT'):
+            curr_tag = int(line[6:11].strip())
+            other_tags = list(map(int, line[11:].split()))
+            for ot in other_tags:
+                rec = tuple(sorted([curr_tag, ot]))
+                if rec not in duplets:
+                    s.bonds.add(Bond(tag=bnd_id, a=curr_tag, b=ot))
+                    bnd_id += 1
+                    duplets.add(rec)
     f.close()
 
+    if str_file:
+        if os.path.isfile(str_file):
+            debug_print('read_pdb: reading file \'{}\''.format(str_file))
+            f = open(str_file)
+            stream = f.read()
+
+            for p in s.particles:
+                partcl_line = re.findall('(?<=ATOM {}).*'.format(p.name), stream)
+                if len(partcl_line) > 0:
+                    tmp = partcl_line[0].split()
+                    p.charge = float(tmp[1])
+                    if read_types:
+                        p.type_name = tmp[0]
+
+            pt_names = {p.name: p.tag for p in s.particles}
+            bond_records = re.findall('(?<=BOND ).*', stream)
+
+            if bnd_id == 1:
+                for bnd_id,bndr in enumerate(bond_records):
+                    tmp = bndr.split()
+                    s.bonds.add(Bond(tag=bnd_id, a=pt_names[tmp[0]], b=pt_names[tmp[1]]))
+
+            f.close()
+        else:
+            debug_print('read_pdb: got parameters file argument, but file does not exist')
+
+    s.objectify()
+    s.set_box(padding=0.5)
     return s
 
 
