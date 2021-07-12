@@ -4974,9 +4974,11 @@ def read_pdb(pdb_file, str_file=None, **kwargs):
 
             pt_names = {p.name: p.tag for p in s.particles}
             bond_records = re.findall('(?<=BOND ).*', stream)
-            for bnd_id,bndr in enumerate(bond_records):
-                tmp = bndr.split()
-                s.bonds.add(Bond(tag=bnd_id, a=pt_names[tmp[0]], b=pt_names[tmp[1]]))
+
+            if bnd_id == 1:
+                for bnd_id,bndr in enumerate(bond_records):
+                    tmp = bndr.split()
+                    s.bonds.add(Bond(tag=bnd_id, a=pt_names[tmp[0]], b=pt_names[tmp[1]]))
 
             f.close()
         else:
