@@ -78,8 +78,8 @@ chain_len = 10
 
 # model of repititive unit for the polymer to built -- code assumes that the monomer is uncapped -- two atoms in
 # the molecule which are called linkers are undercoordinated
-# monomer = system.read_mol2('../data/cbma_monomer.mol2')
-monomer = system.read_pdb('../data/sma_repu.pdb', str_file='../data/sma_repu.str')
+data_path = '../../../../pysimm/models/monomers/topologies/'
+monomer = system.read_pdb(data_path + 'cbma.pdb', str_file=data_path + 'cbma.str')
 
 # mapping defines 'geometrically important' atoms in a monomer you use: 'head' and 'tail' are connection points for
 # polymer chain growth; 'mirror' together with head and tail define plane which will mirrors the monomer for
