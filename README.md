@@ -1,4 +1,4 @@
-﻿pysimm
+pysimm
 ======
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
@@ -68,7 +68,7 @@ The cassandra module of the pysimm will check whether the CASSANDRA_EXEC is set 
 from pysimm import cassandra
 cassandra.check_cs_exec()
 ```
-<i>NOTE: The parallel Cassandra version uses OpenMP, so the number of parallel tasks (number of threads) is normally controlled through OMP_NUM_THREADS environment variable. Set it to required value if you want to use specific number of parallel threads.</i>
+<i>NOTE: The parallel Cassandra version uses OpenMP, so the number of parallel tasks (number of threads) is normally controlled through OMP_NUM_THREADS environment variable. Set it to required value if you want to use the specific number of parallel threads.</i>
 
 
 Complete Installation (pysimm and LAMMPS)
@@ -104,7 +104,7 @@ To compile the Docker image from the file run the following from the root pysimm
  docker build -t pysimm:my_tag -f Dockerfile .
 ```
 
-Please refer the [Docker documntation](https://docs.docker.com/engine/reference/commandline/build/) 
+Please refer the [Docker documentation](https://docs.docker.com/engine/reference/commandline/build/) 
 for the detailed description of the `build` function.  
 
 If the build is successful the list of your Docker images will contain freshly built 
@@ -137,6 +137,8 @@ and the `ContainerName` one can use either the name or ID of a running container
 which can be listed by calling `docker ps`.
  
 
-Acknowledgements
+Acknowledgments
 ================
-This material is based upon work supported by the National Science Foundation under Grant No. (ACI-1613155).
+This material is based upon work supported by: 
+ * National Science Foundation under Grant No. (ACI-1613155)
+ * U.S. Departement of Energy under Grant No. (DE-FG02-17ER16362) 
