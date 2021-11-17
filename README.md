@@ -12,7 +12,8 @@ Documentation for the python package can be found at http://pysimm.org/documenta
 2. [Integration with LAMMPS](#integration-with-lammps) 
 3. [Integration with Cassandra](#integration-with-cassandra)
 4. [Complete Installation](#complete-installation-pysimm-and-lammps)
-5. [Using Docker image ](#using-docker-image)
+5. [Using Docker image](#using-docker-image)
+6. [Acknowledgements](#acknowledgements)
 
 Getting Started
 ===============
@@ -89,8 +90,8 @@ Afterwords be sure to source your ~/.bashrc file:
 ```source ~/.bashrc```
 
 
-Using Docker image 
-=========================
+Using Docker image
+==================
 
 The root folder now contains a 'Dockerfile' that will help you to create a Docker 
 image of Debian 10 with pysimm and pre-installed LAMMPS, 
@@ -106,7 +107,7 @@ To compile the Docker image from the file run the following from the root pysimm
 Please refer the [Docker documntation](https://docs.docker.com/engine/reference/commandline/build/) 
 for the detailed description of the `build` function.  
 
-If the build is succsessful the list of your Docker images will contain freshly built 
+If the build is successful the list of your Docker images will contain freshly built 
 pysimm image. The full list can be shown by:
 ```commandline
  docker images
@@ -137,5 +138,5 @@ which can be listed by calling `docker ps`.
  
 
 Acknowledgements
-==================
+================
 This material is based upon work supported by the National Science Foundation under Grant No. (ACI-1613155).
