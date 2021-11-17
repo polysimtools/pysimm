@@ -1,4 +1,4 @@
-﻿pysimm
+pysimm
 ======
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](http://opensource.org/licenses/MIT)
@@ -6,6 +6,14 @@
 pysimm stands for <b>Py</b>thon <b>S</b>imulation <b>I</b>nterface for <b>M</b>olecular <b>M</b>odeling. It is an open-source python package designed to assist in the setup and executation of molecular simulations through high level APIs and abstraction from underlying third party simulation software.
 
 Documentation for the python package can be found at http://pysimm.org/documentation
+
+### Sections
+1. [Getting Started](#getting-started)
+2. [Integration with LAMMPS](#integration-with-lammps) 
+3. [Integration with Cassandra](#integration-with-cassandra)
+4. [Complete Installation](#complete-installation-pysimm-and-lammps)
+5. [Using Docker image](#using-docker-image)
+6. [Acknowledgments](#acknowledgments)
 
 Getting Started
 ===============
@@ -47,9 +55,9 @@ lmps.check_lmps_exec()
 If the LAMMPS_EXEC environment variable is not set, you will see a warning. Once configured, try the examples in the repository which highlight some of the features of pysimm.
 
 
-Integration with Cassandra
+Integration with Cassandra 
 ==========================
-
+<a name="CSintegration"></a>
 Cassandra is a versatile software for the Monte-Carlo simulations suitable for the variety of the molecular systems. For more details please refer the [web-page](https://cassandra.nd.edu/) of the Cassandra project. This explains how to integrate already installed Cassandra software to the pysimm. The integration is done through the environment variable CASSANDRA_EXEC. It defines the path to the Cassandra executable (it might be either serial or the parallel Cassandra compilation). If, for example, the Cassandra executable named *cs_omp_gfort.exe* was installed to */usr/lib/cassandra/*, the following should be set:
 
 ```export CASSANDRA_EXEC=/usr/lib/cassandra/Src/cs_omp_gfort.exe```
@@ -60,7 +68,7 @@ The cassandra module of the pysimm will check whether the CASSANDRA_EXEC is set 
 from pysimm import cassandra
 cassandra.check_cs_exec()
 ```
-<i>NOTE: The parallel Cassandra version uses OpenMP, so the number of parallel tasks (number of threads) is normally controlled through OMP_NUM_THREADS environment variable. Set it to required value if you want to use specific number of parallel threads.</i>
+<i>NOTE: The parallel Cassandra version uses OpenMP, so the number of parallel tasks (number of threads) is normally controlled through OMP_NUM_THREADS environment variable. Set it to required value if you want to use the specific number of parallel threads.</i>
 
 
 Complete Installation (pysimm and LAMMPS)
@@ -81,4 +89,56 @@ Afterwords be sure to source your ~/.bashrc file:
 
 ```source ~/.bashrc```
 
-This material is based upon work supported by the National Science Foundation under Grant No. (ACI-1613155).
+
+Using Docker image
+==================
+
+The root folder now contains a 'Dockerfile' that will help you to create a Docker 
+image of Debian 10 with pysimm and pre-installed LAMMPS, 
+CASSANDRA, Zeo++ v0.3, and PoreBlazer v4.0.  
+
+To compile the Docker image from the file run the following from the root pysimm directory 
+(optionally changing 'my_tag' to any text tag you like):
+
+```commandline
+ docker build -t pysimm:my_tag -f Dockerfile .
+```
+
+Please refer the [Docker documentation](https://docs.docker.com/engine/reference/commandline/build/) 
+for the detailed description of the `build` function.  
+
+If the build is successful the list of your Docker images will contain freshly built 
+pysimm image. The full list can be shown by:
+```commandline
+ docker images
+```
+
+Finally, to run the corresponding pysimm image call:  
+```commandline
+ docker run -it pysimm:my_tag bash
+```
+Please see [Docker reference page](https://docs.docker.com/engine/reference/run/) for the 
+detailed description of `docker run` command.
+
+The pysimm source files are kept in `/usr/local/pysimm` folder. Thus you can quickly test the 
+LAMMPS or CASSANDRA modules by running one of the examples.
+  
+```commandline
+ cd /usr/local/pysimm/Examples/08_ethanol_acetone_mixture
+ python run.py
+```
+
+To transfer output files from the docker image back to host one can use `docker cp` command. 
+```commandline
+ docker cp ContainerName:/container/path/to/file /host/path/to/file
+```
+
+and the `ContainerName` one can use either the name or ID of a running container 
+which can be listed by calling `docker ps`.
+ 
+
+Acknowledgments
+================
+This material is based upon work supported by: 
+ * National Science Foundation under Grant No. (ACI-1613155)
+ * U.S. Departement of Energy under Grant No. (DE-FG02-17ER16362) 
