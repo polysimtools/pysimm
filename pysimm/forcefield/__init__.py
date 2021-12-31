@@ -30,6 +30,7 @@
 
 from .forcefield import Forcefield
 from .dreiding import Dreiding
+from .charmm import Charmm, __parse_charmm__
 from .gaff import Gaff
 from .gaff2 import Gaff2
 from .pcff import Pcff

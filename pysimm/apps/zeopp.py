@@ -148,8 +148,7 @@ def network(s, **kwargs):
 
     arg_list = shlex.split(args)
 
-    print('%s: starting simulation using zeo++'
-          % strftime('%H:%M:%S'))
+    print('%s: starting simulation using zeo++' % strftime('%H:%M:%S'))
 
     if nanohub:
         print('%s: sending zeo++ simulation to computer cluster' % strftime('%H:%M:%S'))

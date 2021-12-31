@@ -83,7 +83,6 @@ class Forcefield(object):
                 self.from_json(file_)
             elif format == 'xml' or file_.split('.')[-1] == 'xml':
                 self.from_xml(file_)
-            
     
     def from_xml(self, file_):
         tree = Et.parse(file_)

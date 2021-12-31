@@ -118,10 +118,10 @@ def run(test=False):
     # Output: Graphing of constructed isotherms
     def _plot_isotherms(ax, loc_gp, loc_isoth, loc_mix_load, loc_mix_isoth):
         rng = numpy.linspace(min(loc_gp), max(loc_gp), 100)
-        ax.plot(loc_gp, loadings[gas_names[0]], 'og', lw=2.5, label='{:} loadings'.format(gas_names[0].capitalize()))
-        ax.plot(rng, [loc_isoth[0].loading(t) for t in rng], '--g', lw=2, label='BET fit of {:} loadings'.format(gas_names[0].capitalize()))
-        ax.plot(loc_gp, loadings[gas_names[1]], 'or', lw=2.5, label='{:} loadings'.format(gas_names[1].capitalize()))
-        ax.plot(rng,  [loc_isoth[1].loading(t) for t in rng], '--r', lw=2, label='BET fit of {:} loadings'.format(gas_names[1].capitalize()))
+        ax.plot(loc_gp, loadings[gas_names[0]], 'og', lw=2.5, label='{:} loadings'.format(gas_names[0].upper()))
+        ax.plot(rng, [loc_isoth[0].loading(t) for t in rng], '--g', lw=2, label='BET fit of {:} loadings'.format(gas_names[0].upper()))
+        ax.plot(loc_gp, loadings[gas_names[1]], 'or', lw=2.5, label='{:} loadings'.format(gas_names[1].upper()))
+        ax.plot(rng,  [loc_isoth[1].loading(t) for t in rng], '--r', lw=2, label='BET fit of {:} loadings'.format(gas_names[1].upper()))
         ax.plot(loc_gp, loc_mix_load, 'ob', lw=2.5, label='1-to-1 mixture loadings')
         ax.plot(rng, [loc_mix_isoth.loading(t) for t in rng], '--b', lw=2,  label='BET fit of 1-to-1 mixture loadings')
         ax.set_xlabel('Gas pressure [bar]', fontsize=20)

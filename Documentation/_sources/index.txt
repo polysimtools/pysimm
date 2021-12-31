@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-pysimm v0.2 Reference Document
+pysimm v0.1 Reference Document
 ==================================
 
 pysimm is a python package designed to facilitate structure generation, simulation, and modification of molecular systems by providing a collection of simulation tools and smooth integration with highly optimized third party software. Abstraction layers enable a standardized methodology to assign various force field models to molecular systems and perform simple simulations.
