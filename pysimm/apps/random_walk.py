@@ -490,8 +490,8 @@ def rot_mat_about_axis(v, theta):
     theta = theta * 2 * math.pi / 180
     r = R.from_rotvec(theta * v)
     print("Rotating vector: " + str(r.as_rotvec()))
-    return r.as_dcm()
-
+    #as_dcm() depreciated in scipy 1.6+ #return r.as_dcm()
+    return r.as_matrix()
 
 def define_plane(a1, a2, a3):
     """pysimm.apps.random_walk.define_plane
