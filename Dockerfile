@@ -1,20 +1,16 @@
 FROM debian:buster as build
 
-ARG PACKAGES="molecule extra-molecule kspace misc qeq class2 manybody"
+ARG PACKAGES="class2 extra-molecule kspace manybody misc molecule qeq rigid"
 ARG BIN_DIR="/usr/local/bin"
 
 RUN apt-get update && \
     apt-get install -y make git g++ libopenmpi-dev openmpi-bin curl
 
-
-RUN curl --silent "https://api.github.com/repos/lammps/lammps/releases/latest"| grep '"tag_name":'|sed -E 's/.*"([^"]+)".*/\1/' > /root/lmp_version && \
-    git clone -b $(cat /root/lmp_version) https://github.com/lammps/lammps.git && \
+RUN git clone -b stable https://github.com/lammps/lammps.git && \
     cd lammps/src && \
     for PACKAGE in $PACKAGES; do make yes-$PACKAGE; done && \
     make -j2 mpi && \
-    cp lmp_mpi $BIN_DIR && \
-    cd ../../ && \
-    rm -rf lammps /root/lmp_version
+    cp lmp_mpi $BIN_DIR
 
 
 RUN cd /usr/local/lib && \
@@ -44,18 +40,29 @@ RUN TB_NAME=zeopp.v0p3.tar.gz && DIR_NAME=zeopp.v0p3 && \
     cp network $BIN_DIR && \
     rm -rf $DIR_NAME
 
+FROM python:3.8-slim
 
-FROM python:3.8-buster
-
-COPY --from=build $BIN_DIR/* /usr/local/bin/
+COPY --from=build /usr/local/bin/* /usr/local/bin/
 
 RUN apt-get update && \
     apt-get install -y libopenmpi-dev openmpi-bin vim mc
 
 COPY . /usr/local/pysimm
-RUN pip install -r /usr/local/pysimm/requirements.txt && \
-    pip install -e /usr/local/pysimm
+
+RUN python -m pip install --upgrade pip && \
+    pip install -r /usr/local/pysimm/requirements.txt && \
+    pip install -e /usr/local/pysimm && \
+    pip install jupyterlab matplotlib nglview
 
 ENV LAMMPS_EXEC="lmp_mpi"
 ENV CASSANDRA_EXEC="cs_gfort_omp.exe"
 ENV ZEOpp_EXEC="network"
+
+# Add Tini. Tini operates as a process subreaper for jupyter. This prevents kernel crashes.
+ENV TINI_VERSION v0.6.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +x /usr/bin/tini
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+CMD ["jupyter-lab", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--allow-root"]
+
