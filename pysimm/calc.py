@@ -39,8 +39,6 @@ from pysimm import warning_print
 from pysimm import verbose_print
 from pysimm import debug_print
 from pysimm import PysimmError
-from pysimm.utils import Item
-from pysimm.utils import ItemContainer
 
 
 def intersection(line1, line2):
@@ -88,12 +86,11 @@ def find_rotation(a, b):
 
     a_x_b = np.cross(a, b)
     axis = a_x_b / np.linalg.norm(a_x_b)
-
     theta = acos(np.dot(a, b) / np.linalg.norm(a) / np.linalg.norm(b))
 
-    skew = np.array([[0, -axis[2], axis[1]],
-                     [axis[2], 0, -axis[0]],
-                     [-axis[1], axis[0], 0]])
+    skew = np.matrix([[0, -axis[2], axis[1]],
+                      [axis[2], 0, -axis[0]],
+                      [-axis[1], axis[0], 0]])
 
     rot_matrix = np.identity(3) + sin(theta) * skew + (1 - cos(theta)) * skew * skew
     return rot_matrix
@@ -120,11 +117,10 @@ def rotate_vector(x, y, z, theta_x=None, theta_y=None, theta_z=None):
     yt = random() * 2 * pi if theta_y is None else theta_y
     zt = random() * 2 * pi if theta_z is None else theta_z
 
-    c = np.array([[x], [y], [z]])
-
+    c = np.array((x, y, z))
     rot_mat_x = np.array([[1, 0, 0],
-                         [0, cos(xt), -sin(xt)],
-                         [0, sin(xt), cos(xt)]])
+                          [0, cos(xt), -sin(xt)],
+                          [0, sin(xt), cos(xt)]])
     rot_mat_y = np.array([[cos(yt), 0, sin(yt)],
                           [0, 1, 0],
                           [-sin(yt), 0, cos(yt)]])
@@ -132,11 +128,7 @@ def rotate_vector(x, y, z, theta_x=None, theta_y=None, theta_z=None):
                           [sin(zt), cos(zt), 0],
                           [0, 0, 1]])
 
-    c = rot_mat_x * c
-    c = rot_mat_y * c
-    c = rot_mat_z * c
-
-    return [x[0] for x in c.tolist()]
+    return list(np.dot(rot_mat_z, np.dot(rot_mat_y, np.dot(rot_mat_x, c))))
 
 
 def distance(p1, p2):
@@ -175,37 +167,37 @@ def angle(p1, p2, p3, radians=False):
     if not radians:
         theta = theta * 180 / pi
     return theta
-    
-    
+
+
 def dihedral(p1, p2, p3, p4, radians=False):
     b1 = np.array([
-        p2.x-p1.x,
-        p2.y-p1.y,
-        p2.z-p1.z
+        p2.x - p1.x,
+        p2.y - p1.y,
+        p2.z - p1.z
     ])
     b2 = np.array([
-        p3.x-p2.x,
-        p3.y-p2.y,
-        p3.z-p2.z
+        p3.x - p2.x,
+        p3.y - p2.y,
+        p3.z - p2.z
     ])
     b3 = np.array([
-        p4.x-p3.x,
-        p4.y-p3.y,
-        p4.z-p3.z
+        p4.x - p3.x,
+        p4.y - p3.y,
+        p4.z - p3.z
     ])
-    
+
     n1 = np.cross(b1, b2)
     n1 /= np.linalg.norm(n1)
     n2 = np.cross(b2, b3)
     n2 /= np.linalg.norm(n2)
-    
-    m1 = np.cross(n1, b2/np.linalg.norm(b2))
-    
+
+    m1 = np.cross(n1, b2 / np.linalg.norm(b2))
+
     x = np.dot(n1, n2)
     y = np.dot(m1, n2)
-    
+
     theta = np.arctan2(y, x)
-    
+
     if not radians:
         theta = theta * 180 / pi
     return theta
@@ -372,55 +364,67 @@ def pbc_distance(s, p1, p2):
 
     return np.linalg.norm([dx, dy, dz])
 
+
 def LJ_12_6(pt, d):
-    return 4*pt.epsilon*(pow(pt.sigma/d,12)-pow(pt.sigma/d, 6))
-    
+    return 4 * pt.epsilon * (pow(pt.sigma / d, 12) - pow(pt.sigma / d, 6))
+
+
 def LJ_9_6(pt, d):
-    return pt.epsilon*(2*pow(pt.sigma/d,12)-3*pow(pt.sigma/d, 6))
-    
+    return pt.epsilon * (2 * pow(pt.sigma / d, 12) - 3 * pow(pt.sigma / d, 6))
+
+
 def buckingham(pt, d):
-    return pt.a*np.exp(-d/pt.rho)-(pt.c/pow(d, 6))
-    
+    return pt.a * np.exp(-d / pt.rho) - (pt.c / pow(d, 6))
+
+
 def harmonic_bond(bt, d):
-    return bt.k*pow(d-bt.r0, 2)
-    
+    return bt.k * pow(d - bt.r0, 2)
+
+
 def class2_bond(bt, d):
-    return bt.k2*pow(d-bt.r0, 2) + bt.k3*pow(d-bt.r0, 3) + bt.k4*pow(d-bt.r0, 4)
-    
+    return bt.k2 * pow(d - bt.r0, 2) + bt.k3 * pow(d - bt.r0, 3) + bt.k4 * pow(d - bt.r0, 4)
+
+
 def harmonic_angle(at, d):
-    return at.k*pow(d-at.theta0, 2)
-    
+    return at.k * pow(d - at.theta0, 2)
+
+
 def class2_angle(at, d):
-    return at.k2*pow(d-at.theta0, 2) + at.k3*pow(d-at.theta0, 3) + at.k4*pow(d-at.theta0, 4)
-    
+    return at.k2 * pow(d - at.theta0, 2) + at.k3 * pow(d - at.theta0, 3) + at.k4 * pow(d - at.theta0, 4)
+
+
 def harmonic_dihedral(dt, d):
-    return dt.k*(1+dt.d*np.cos(dt.n*np.radians(d)))
-    
+    return dt.k * (1 + dt.d * np.cos(dt.n * np.radians(d)))
+
+
 def class2_dihedral(dt, d):
     return (
-        dt.k1*(1-np.cos(np.radians(d)-np.radians(dt.phi1))) +
-        dt.k2*(1-np.cos(np.radians(d)-np.radians(dt.phi2))) +
-        dt.k3*(1-np.cos(np.radians(d)-np.radians(dt.phi3)))
+            dt.k1 * (1 - np.cos(np.radians(d) - np.radians(dt.phi1))) +
+            dt.k2 * (1 - np.cos(np.radians(d) - np.radians(dt.phi2))) +
+            dt.k3 * (1 - np.cos(np.radians(d) - np.radians(dt.phi3)))
     )
-    
+
+
 def opls_dihedral(dt, d):
     return (
-        0.5*dt.k1*(1+np.cos(np.radians(d))) +
-        0.5*dt.k2*(1-np.cos(2*np.radians(d))) +
-        0.5*dt.k3*(1+np.cos(3*np.radians(d))) +
-        0.5*dt.k4*(1-np.cos(4*np.radians(d)))
+            0.5 * dt.k1 * (1 + np.cos(np.radians(d))) +
+            0.5 * dt.k2 * (1 - np.cos(2 * np.radians(d))) +
+            0.5 * dt.k3 * (1 + np.cos(3 * np.radians(d))) +
+            0.5 * dt.k4 * (1 - np.cos(4 * np.radians(d)))
     )
-    
+
+
 def fourier_dihedral(dt, d):
-    return np.sum(
-        [k*(1 + np.cos(n*np.radians(d)-d_)) for k, n, d_ in zip(dt.k, dt.n, dt.d)]
-    )
-    
+    return np.sum([k * (1 + np.cos(n * np.radians(d) - d_)) for k, n, d_ in zip(dt.k, dt.n, dt.d)])
+
+
 def harmonic_improper(it, d):
-    return it.k*pow(d-it.x0, 2)
-    
+    return it.k * pow(d - it.x0, 2)
+
+
 def cvff_improper(it, d):
-    return it.k*(1+it.d*np.cos(it.n*np.radians(d)))
+    return it.k * (1 + it.d * np.cos(it.n * np.radians(d)))
+
 
 def umbrella_improper(it, d):
-    return it.k*(1-np.cos(np.radians(d)))
+    return it.k * (1 - np.cos(np.radians(d)))
