@@ -1,9 +1,8 @@
 from pysimm import lmps, system, forcefield
 from pysimm.apps.random_walk import random_walk, random_walk_tacticity, check_tacticity
 
-import matplotlib.pyplot as mplp
-import numpy 
-import os
+import numpy
+
 
 # ----------> Here starts the main body of polymerisation code <------------
 def cap_with_methyls(input_sst, ff):
@@ -28,36 +27,36 @@ def cap_with_methyls(input_sst, ff):
 
                 # assuming that the linker atom is sp3 hybridised C let's define the last non-occupied direction
                 # of the tetrahedron
-                dir = numpy.zeros(3)
+                dirctn = numpy.zeros(3)
                 for p_ in p.bonded_to:
-                    dir += numpy.array([p.x, p.y, p.z]) - numpy.array([p_.x, p_.y, p_.z])
+                    dirctn += numpy.array([p.x, p.y, p.z]) - numpy.array([p_.x, p_.y, p_.z])
 
-                dir = dir / numpy.linalg.norm(dir)
-                cap_c = system.Particle(x=p.x + 1.53 * dir[0], y=p.y + 1.53 * dir[1], z=p.z + 1.53 * dir[2],
+                dirctn = dirctn / numpy.linalg.norm(dirctn)
+                cap_c = system.Particle(x=p.x + 1.53 * dirctn[0], y=p.y + 1.53 * dirctn[1], z=p.z + 1.53 * dirctn[2],
                                         type=captypes[0])
                 input_sst.add_particle_bonded_to(cap_c, p, f=ff)
 
                 dir_h = numpy.array([1.0, 1.0, 1.0])
-                dir_h[0] = -(dir_h[1] * dir[1] + dir_h[2] * dir[2]) / dir[0]
+                dir_h[0] = -(dir_h[1] * dirctn[1] + dir_h[2] * dirctn[2]) / dirctn[0]
                 dir_h = dir_h / numpy.linalg.norm(dir_h)
 
                 dir_h2 = numpy.array([1.0, 1.0, -1.0])
-                dir_h2[1] = (dir[2] / dir[0] - dir_h[2] / dir_h[0]) / (dir[1] / dir[0] - dir_h[1] / dir_h[0])
-                dir_h2[0] = dir[2] / dir[0] - dir[1] * dir_h2[1] / dir[0]
+                dir_h2[1] = (dirctn[2] / dirctn[0] - dir_h[2] / dir_h[0]) / (dirctn[1] / dirctn[0] - dir_h[1] / dir_h[0])
+                dir_h2[0] = dirctn[2] / dirctn[0] - dirctn[1] * dir_h2[1] / dirctn[0]
                 dir_h2 = dir_h2 / numpy.linalg.norm(dir_h2)
 
                 stretch = 0.78
-                input_sst.add_particle_bonded_to(system.Particle(x=cap_c.x + stretch * dir[0] + stretch * dir_h[0],
-                                                                 y=cap_c.y + stretch * dir[1] + stretch * dir_h[1],
-                                                                 z=cap_c.z + stretch * dir[2] + stretch * dir_h[2],
+                input_sst.add_particle_bonded_to(system.Particle(x=cap_c.x + stretch * dirctn[0] + stretch * dir_h[0],
+                                                                 y=cap_c.y + stretch * dirctn[1] + stretch * dir_h[1],
+                                                                 z=cap_c.z + stretch * dirctn[2] + stretch * dir_h[2],
                                                                  type=captypes[1]), cap_c, f=ff)
-                input_sst.add_particle_bonded_to(system.Particle(x=cap_c.x + stretch * dir[0] + stretch * dir_h2[0],
-                                                                 y=cap_c.y + stretch * dir[1] + stretch * dir_h2[1],
-                                                                 z=cap_c.z + stretch * dir[2] + stretch * dir_h2[2],
+                input_sst.add_particle_bonded_to(system.Particle(x=cap_c.x + stretch * dirctn[0] + stretch * dir_h2[0],
+                                                                 y=cap_c.y + stretch * dirctn[1] + stretch * dir_h2[1],
+                                                                 z=cap_c.z + stretch * dirctn[2] + stretch * dir_h2[2],
                                                                  type=captypes[1]), cap_c, f=ff)
-                input_sst.add_particle_bonded_to(system.Particle(x=cap_c.x + stretch * dir[0] - stretch * dir_h2[0],
-                                                                 y=cap_c.y + stretch * dir[1] - stretch * dir_h2[1],
-                                                                 z=cap_c.z + stretch * dir[2] - stretch * dir_h2[2],
+                input_sst.add_particle_bonded_to(system.Particle(x=cap_c.x + stretch * dirctn[0] - stretch * dir_h2[0],
+                                                                 y=cap_c.y + stretch * dirctn[1] - stretch * dir_h2[1],
+                                                                 z=cap_c.z + stretch * dirctn[2] - stretch * dir_h2[2],
                                                                  type=captypes[1]), cap_c, f=ff)
     input_sst.objectify()
     input_sst.center(what='particles', at=[0.0, 0.0, 0.0], move_both=False)
