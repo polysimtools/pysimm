@@ -1,12 +1,12 @@
 FROM debian:buster as build
 
-ARG PACKAGES="class2 extra-molecule kspace manybody misc molecule qeq rigid"
+ARG PACKAGES="class2 extra-molecule kspace manybody misc molecule qeq rigid user-misc"
 ARG BIN_DIR="/usr/local/bin"
 
 RUN apt-get update && \
     apt-get install -y make git g++ libopenmpi-dev openmpi-bin curl
 
-RUN git clone -b stable https://github.com/lammps/lammps.git && \
+RUN git clone -b stable_3Mar2020 --single-branch https://github.com/lammps/lammps.git && \
     cd lammps/src && \
     for PACKAGE in $PACKAGES; do make yes-$PACKAGE; done && \
     make -j2 mpi && \
