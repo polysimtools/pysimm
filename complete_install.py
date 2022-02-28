@@ -1,8 +1,7 @@
 import os
-import sys
 import errno
 import argparse
-from subprocess import call, PIPE, Popen
+from subprocess import call
 
 HOME_DIR = os.environ.get('HOME')
 
@@ -16,12 +15,33 @@ def install_pysimm(prefix):
     if not os.path.isfile('pysimm/complete_install.py'):
         print('assumption about pysimm repository existing was wrong; exiting...')
         exit()
+
+    # Syncronising envirnomental variables
+    if os.environ['PATH'].find('/pysimm/') > 0:
+        args = os.environ['PATH'].split(':')
+        args_list = [t.find('pysimm') > 0 for t in args]
+        if True in args_list:
+            old_path = args[args_list.index(True)][:-4]
+            
+            print('Found earlier pysimm installation in {:}\n Will now remove this istance from '
+                  'the $PATH and write new configuration'.format(old_path))
+            with open(os.path.join(HOME_DIR, '.bashrc'), 'r') as pntr:
+                stream = pntr.read()
+                lines = stream.split('\n')
+                tmp = []
+                for l in lines:
+                    if not l.find(old_path) > 0:
+                        tmp.append(l + '\n')
+                tmp.append('\n')
+
+            with open(os.path.join(HOME_DIR, '.bashrc'), 'w') as pntr:
+                for l in tmp:
+                    pntr.write(l)
     call("echo export PYTHONPATH='$PYTHONPATH':{} >> {}".format(os.path.join(prefix, 'pysimm'),
-                                                                os.path.join(HOME_DIR, '.bashrc')),
-         shell=True)
+                                                                os.path.join(HOME_DIR, '.bashrc')), shell=True)
     call("echo export PATH='$PATH':{} >> {}".format(os.path.join(prefix, 'pysimm', 'bin'),
-                                                    os.path.join(HOME_DIR, '.bashrc')),
-         shell=True)
+                                                    os.path.join(HOME_DIR, '.bashrc')), shell=True)
+    print('done installing pysimm')
 
 
 def apt_update():
@@ -29,8 +49,7 @@ def apt_update():
 
 
 def apt_install(*packages):
-    call('apt-get -y install {}'.format(' '.join(packages)),
-         shell=True)
+    call('apt-get -y install {}'.format(' '.join(packages)), shell=True)
 
 
 def install_lammps(prefix, *packages):
@@ -46,7 +65,8 @@ def install_lammps(prefix, *packages):
     call("echo export LAMMPS_EXEC={} >> {}".format(os.path.join(prefix, 'lammps', 'src', 'lmp_mpi'),
                                                    os.path.join(HOME_DIR,'.bashrc')),
          shell=True)
-         
+
+
 def install_ambertools(dir_):
     os.chdir(dir_)
     call("echo export AMBERHOME={} >> {}".format(dir_, os.path.join(HOME_DIR,'.bashrc')),
@@ -57,9 +77,6 @@ def install_ambertools(dir_):
     call("echo export ANTECHAMBER_EXEC={} >> {}".format(os.path.join(dir_, 'bin', 'antechamber'),
                                                    os.path.join(HOME_DIR,'.bashrc')),
          shell=True)
-         
-def install_openbabel():
-    apt_install('libopenbabel4', 'libopenbabel-dev', 'openbabel', 'python-openbabel')
 
 
 def parse_args():
@@ -69,9 +86,8 @@ def parse_args():
     parser.add_argument('--pysimm', dest='pysimm_prefix', default=HOME_DIR)
     parser.add_argument('--lammps', dest='lammps_prefix', default=None)
     parser.add_argument('--lammps-packages', dest='lammps_packages', nargs='*',
-                        default=['molecule', 'class2', 'kspace', 'user-misc', 'misc', 'qeq', 'manybody'])
+                        default=['class2', 'extra-molecule', 'kspace', 'manybody', 'misc', 'molecule', 'qeq'])
     parser.add_argument('--amber-tools', dest='ambertools_dir', default=None)
-    parser.add_argument('--openbabel', dest='openbabel', action='store_true', default=False)
     return parser.parse_args()
 
 
@@ -108,9 +124,6 @@ if __name__ == '__main__':
         if args.apt_install:
             apt_install('make', 'csh', 'gfortran', 'libopenmpi-dev', 'openmpi-bin', 'xorg-dev', 'xserver-xorg')
         install_ambertools(args.ambertools_dir)
-        
-    if args.openbabel:
-        install_openbabel()
-        
+
     os.chdir(HOME_DIR)
 

@@ -13,6 +13,7 @@ except ImportError:
           'Python setup. \nThis example will not work properly. \nExiting...')
     exit(1)
 
+
 def run(test=False):
     # Set to False if you **do not** want to recalculate pure gas adsorption isotherms
     is_simulate_loadings = False
@@ -52,7 +53,6 @@ def run(test=False):
     css = cassandra.Cassandra(frame)
     sim_settings = css.read_input('run_props.inp')
 
-
     # This function in given context will calculate the loading from short GCMC simulations
     def calculate_isotherm_point(gas_name, press):
         run_fldr = osp.join(gas_name, str(press))
@@ -64,7 +64,6 @@ def run(test=False):
         full_prp = css.run_queue[0].get_prp()
         return molec2mmols_g * numpy.average(full_prp[3][int(len(2 * full_prp[3]) / 3):])
 
-
     # This function in given context will load the pre-calculated loading value from previously done GCMC simulations
     def load_isotherm_point(gas_name, press):
         with open(loadings_file, 'r') as pntr:
@@ -73,7 +72,6 @@ def run(test=False):
             idx = re.search('[a-zA-Z]|\Z', tmp)
             value = re.findall('\n{:}\s+\d+\.\d+'.format(press), tmp[:idx.start()])[0]
             return float(re.split('\s+', value)[-1])
-
 
     # Calculation of adsorption isotherms for pure CH4 and CO2 gases for further usage in IAST simulations.
     # This is the **MOST TIME CONSUMING STEP** in this example, if you want to skip it switch the key is_simulated to False
