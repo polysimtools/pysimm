@@ -15,6 +15,7 @@ Documentation for the python package can be found at http://pysimm.org/documenta
 5. [Using Docker image](#using-docker-image)
 6. [Acknowledgments](#acknowledgments)
 
+
 Getting Started
 ===============
 

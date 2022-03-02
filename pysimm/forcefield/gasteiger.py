@@ -111,8 +111,6 @@ gasteiger_parameters.add(Item(tag='s', name='s', a=10.14, b=9.13, c=1.38))
 gasteiger_parameters.add(Item(tag='si', name='si', a=7.3, b=6.5675, c=0.6575))
 
 
-
-
 def set_charges(s, maxiter=100, tol=1e-6):
     global gasteiger_parameters
 
@@ -173,9 +171,9 @@ def set_charges(s, maxiter=100, tol=1e-6):
                     if p.nbonds >= 3:
                         gast_type = gasteiger_parameters.get('n_sp3')[0]
                     elif p.nbonds == 2:
-                        gast_type = gasteiger_parameters.get('c_sp2')[0]
+                        gast_type = gasteiger_parameters.get('n_sp2')[0]
                     elif p.nbonds == 1:
-                        gast_type = gasteiger_parameters.get('c_sp1')[0]
+                        gast_type = gasteiger_parameters.get('n_sp1')[0]
                 elif p.type.elem == 'O':
                     if p.nbonds == 2:
                         gast_type = gasteiger_parameters.get('o_sp3')[0]
@@ -207,15 +205,17 @@ def set_charges(s, maxiter=100, tol=1e-6):
     for n in range(1, maxiter+1):
         for b in s.bonds:
             if b.b.chi > b.a.chi:
-                b.b.qn += ((b.a.chi - b.b.chi) /
-                           (b.a.gast_a + b.a.gast_b + b.a.gast_c))
-                b.a.qn += ((b.b.chi - b.a.chi) /
-                           (b.a.gast_a + b.a.gast_b + b.a.gast_c))
+                gast_d = (b.a.gast_a + b.a.gast_b + b.a.gast_c)
+                if 'H' in [b.a.get_chem_element(), b.b.get_chem_element()]:
+                    gast_d = 20.02
+                b.b.qn += ((b.a.chi - b.b.chi) / gast_d)
+                b.a.qn += ((b.b.chi - b.a.chi) / gast_d)
             else:
-                b.b.qn += ((b.a.chi - b.b.chi) /
-                           (b.b.gast_a + b.b.gast_b + b.b.gast_c))
-                b.a.qn += ((b.b.chi - b.a.chi) /
-                           (b.b.gast_a + b.b.gast_b + b.b.gast_c))
+                gast_d = (b.b.gast_a + b.b.gast_b + b.b.gast_c)
+                if 'H' in [b.a.get_chem_element(), b.b.get_chem_element()]:
+                    gast_d = 20.02
+                b.b.qn += ((b.a.chi - b.b.chi) / gast_d)
+                b.a.qn += ((b.b.chi - b.a.chi) / gast_d)
 
         convergence = True
         for p in s.particles:
