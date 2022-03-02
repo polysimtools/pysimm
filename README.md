@@ -13,7 +13,8 @@ Documentation for the python package can be found at http://pysimm.org/documenta
 3. [Integration with Cassandra](#integration-with-cassandra)
 4. [Complete Installation](#complete-installation-pysimm-and-lammps)
 5. [Using Docker image](#using-docker-image)
-6. [Acknowledgements](#acknowledgements)
+6. [Acknowledgments](#acknowledgments)
+
 
 Getting Started
 ===============
