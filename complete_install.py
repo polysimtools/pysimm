@@ -54,7 +54,9 @@ def apt_install(*packages):
 
 def install_lammps(prefix, *packages):
     os.chdir(prefix)
-    call('git clone -b unstable https://github.com/lammps/lammps.git lammps', shell=True)
+    call('git clone -b release https://github.com/lammps/lammps.git lammps', shell=True)
+    os.chdir(os.path.join(prefix,'lammps'))
+    call('git checkout -b branch_738f155 738f155', shell=True)
     os.chdir(os.path.join(prefix,'lammps','src'))
     for package in packages:
         call('make yes-{}'.format(package), shell=True)
