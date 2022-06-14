@@ -1,5 +1,5 @@
 from pysimm import system, lmps, forcefield
-# from pysimm import amber
+
 
 def run(test=False):
     try:
@@ -24,20 +24,20 @@ def run(test=False):
     lmps.quick_min(ethanol, min_style='fire')
     lmps.quick_min(acetone, min_style='fire')
     
-    molecule_list=[ethanol, acetone]
+    molecule_list = [ethanol, acetone]
     
     if test:
-        n_molecules=[20, 20]
+        n_molecules = [20, 20]
     else:
-        n_molecules=[200, 200]
+        n_molecules = [200, 200]
     
-    s = system.replicate(molecule_list, n_molecules , density=0.3)
+    s = system.replicate(molecule_list, n_molecules, density=0.3)
     
     min_settings = {
-        'name': 'fire_min',
-        'min_style': 'fire',
-        'maxiter': int(1e+5), 
-        'maxeval': int(1e+6), 
+        'name': 'cg_min',
+        'min_style': 'cg',
+        'maxiter': int(5e+5),
+        'maxeval': int(5e+6),
     }
     
     nvt_settings = {
@@ -49,7 +49,7 @@ def run(test=False):
             'stop': 300
         },
         'new_v': True,
-        'length': 10000
+        'length': 2500
     }
     
     npt_settings = {
@@ -62,7 +62,7 @@ def run(test=False):
             'start': 1000,
             'stop': 1
         },
-        'length': 100000,
+        'length': 5000,
     }
     
     npt_settings_add = {
@@ -75,7 +75,7 @@ def run(test=False):
             'start': 1,
             'stop': 1
         },
-        'length': 100000,
+        'length': 5000,
     }
     
     if test:
@@ -96,6 +96,7 @@ def run(test=False):
 
     s.write_yaml('mixture.yaml')
     s.write_lammps('mixture.lmps')
-    
+
+
 if __name__ == '__main__':
     run()

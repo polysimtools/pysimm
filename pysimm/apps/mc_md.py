@@ -2,11 +2,11 @@ from pysimm import system, lmps, cassandra
 from collections import OrderedDict
 import os
 import re
-import random
+import glob
 import types
 
 
-def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=None, md_props=None, **kwargs):
+def mc_md(gas_sst, fixed_sst=None, mc_props=None, md_props=None, **kwargs):
     """pysimm.apps.mc_md
 
     Performs the iterative hybrid Monte-Carlo/Molecular Dynamics (MC/MD) simulations using :class:`~pysimm.lmps` for
@@ -33,11 +33,22 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
 
     nonrig_group_name = 'nonrigid_b'
     rig_group_name = 'rigid_b'
-    n_iter = mcmd_niter or 10
-    sim_folder = sim_folder or 'results'
+    n_iter = kwargs.get('mcmd_niter', 10)
+    sim_folder = kwargs.get('sim_folder', 'results')
     xyz_fname = os.path.join(sim_folder, '{:}.md_out.xyz')
-    l = 1
+    lmps_fname = os.path.join(sim_folder, '{:}.before_md.lmps')
 
+    # Define whether the simulations should be continued or start from the scratch
+    l = 1
+    is_restart = kwargs.get('restart')
+    if is_restart:
+        for f in glob.glob(lmps_fname.format('*')):
+            l = max(l, int(re.match('\A\d+', os.path.split(f)[1]).group()))
+
+        to_purge = glob.glob(os.path.join(sim_folder, '{:}.*'.format(l + 1))) + \
+                   glob.glob(os.path.join(sim_folder, '{:}.md*'.format(l)))
+        for f in to_purge:
+            os.remove(f)
     # Creating fixed polymer system
     fs = None
     if fixed_sst:
@@ -82,7 +93,7 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         print('Missing the MD Simulation settings\nExiting...')
         exit(1)
 
-    # De-syncronizing type names of the framework and the gases to avoid consolidation of types that PySIMM system does
+    # De-synchronizing type names of the framework and the gases to avoid consolidation of types that PySIMM system does
     for gi, g in enumerate(gases):
         for pt in g.particle_types:
             pt.name += '_g' + str(gi + 1)
@@ -94,12 +105,32 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         css.add_gcmc(species=gases, is_new=True, chem_pot=CHEM_POT,
                      is_rigid=mcp.get('rigid_type') or [False] * len(gases),
                      out_folder=sim_folder, props_file=str(l) + '.gcmc_props.inp', **mcp)
-        css.run()
+
+        if is_restart:
+            # Set gas particles positions from the .chk file, and update some properties
+            css.run_queue[-1].upd_simulation()
+            css.system = css.run_queue[-1].tot_sst.copy()
+            # Set frame particles position and box size dimension from the .lmps file
+            tmp_sst = system.read_lammps(lmps_fname.format(l))
+            for p in css.system.particles:
+                p.x = tmp_sst.particles[p.tag].x
+                p.y = tmp_sst.particles[p.tag].y
+                p.z = tmp_sst.particles[p.tag].z
+            css.system.dim = tmp_sst.dim
+            is_restart = False
+        else:
+            css.run()
+            css.system.write_lammps(lmps_fname.format(l))
+
+        nm_treads = '1'
+        if 'OMP_NUM_THREADS' in os.environ.keys():
+            nm_treads = os.environ['OMP_NUM_THREADS']
+        os.environ['OMP_NUM_THREADS'] = '1'
 
         # >>> MD (LAMMPS) step:
         sim_sst = css.system.copy()
         sim_sst.write_lammps(os.path.join(sim_folder, str(l) + '.before_md.lmps'))
-        sim = lmps.Simulation(sim_sst, print_to_screen=mcp.get('print_to_screen', False),
+        sim = lmps.Simulation(sim_sst, print_to_screen=mdp.get('print_to_screen', False),
                               log=os.path.join(sim_folder, str(l) + '.md.log'))
 
         sim.add(lmps.Init(cutoff=mdp.get('cutoff'),
@@ -116,42 +147,79 @@ def mc_md(gas_sst, fixed_sst=None, mcmd_niter=None, sim_folder=None, mc_props=No
         if rigid_mols:
             sim.add(lmps.Group(rig_group_name, 'id', rigid_mols))
 
-        # adding "run 0" line before velocities rescale for correct temperature init of the system with rigid molecules
-        sim.add(lmps.Velocity(style='create'))
-        if rigid_mols:
-            sim.add_custom('run 0')
-            sim.add(lmps.Velocity(style='scale'))
-
         # create the description of the molecular dynamics simulation
-        sim.add_md(lmps.MolecularDynamics(name='main_fix',
-                                          group=nonrig_group_name if rigid_mols else 'all',
-                                          ensemble='npt',
-                                          timestep=mdp.get('timestep'),
-                                          temperature=mdp.get('temp'),
-                                          pressure=mdp.get('pressure'),
-                                          run=False,
-                                          extra_keywords={'dilate': 'all'} if rigid_mols else {}))
+        if type(mdp.get('timestep')) == list:
 
-        # create the second NVT fix for rigid molecules that cannot be put in NPT fix
-        if rigid_mols:
-            sim.add(lmps.MolecularDynamics(name='rig_fix',
-                                           ensemble='rigid/nvt/small molecule',
-                                           timestep=mdp.get('timestep'),
-                                           length=mdp.get('length'),
-                                           group=rig_group_name,
-                                           temperature=mdp.get('temp'),
-                                           pressure=mdp.get('pressure'),
-                                           run=False))
+            sim.add(lmps.OutputSettings(thermo=mdp.get('thermo'),
+                                        dump={'filename': os.path.join(sim_folder, str(l) + '.md.dump'),
+                                              'freq': int(mdp.get('dump'))}))
 
-        # add the "spring tether" fix to the geometrical center of the system to avoid system creep
-        sim.add_custom('fix tether_fix matrix spring tether 30.0 0.0 0.0 0.0 0.0')
-        sim.add(lmps.OutputSettings(thermo=mdp.get('thermo'),
-                                    dump={'filename': os.path.join(sim_folder, str(l) + '.md.dump'),
-                                          'freq': int(mdp.get('dump'))}))
-        sim.add_custom('run {:}\n'.format(mdp.get('length')))
+            for it, (t, lng) in enumerate(zip(mdp.get('timestep'), mdp.get('length'))):
+
+                sim.add(lmps.Velocity(style='create'))
+                # adding "run 0" line before velocities rescale for correct temperature init of the
+                # system with rigid molecules
+                if rigid_mols:
+                    sim.add_custom('run 0')
+                    sim.add(lmps.Velocity(style='scale'))
+
+                sim.add_md(lmps.MolecularDynamics(name='main_fix_{}'.format(it),
+                                                  group=nonrig_group_name if rigid_mols else 'all',
+                                                  ensemble='npt',
+                                                  timestep=t,
+                                                  temperature=mdp.get('temp'),
+                                                  pressure=mdp.get('pressure'),
+                                                  run=False,
+                                                  extra_keywords={'dilate': 'all'} if rigid_mols else {}))
+
+                # create the second NVT fix for rigid molecules that cannot be put in NPT fix
+                if rigid_mols:
+                    sim.add(lmps.MolecularDynamics(name='rig_fix_{}'.format(it),
+                                                   ensemble='rigid/nvt/small molecule',
+                                                   timestep=t,
+                                                   length=mdp.get('length'),
+                                                   group=rig_group_name,
+                                                   temperature=mdp.get('temp'),
+                                                   pressure=mdp.get('pressure'),
+                                                   run=False))
+                sim.add_custom('fix        tether_fix_{} matrix spring tether 30.0 0.0 0.0 0.0 0.0'.format(it))
+
+                sim.add_custom('run {:}\n'.format(lng))
+                sim.add_custom('unfix main_fix_{:}'.format(it))
+                sim.add_custom('unfix rig_fix_{:}'.format(it))
+                sim.add_custom('unfix tether_fix_{:}'.format(it))
+
+        else:
+            sim.add_md(lmps.MolecularDynamics(name='main_fix',
+                                              group=nonrig_group_name if rigid_mols else 'all',
+                                              ensemble='npt',
+                                              timestep=mdp.get('timestep'),
+                                              temperature=mdp.get('temp'),
+                                              pressure=mdp.get('pressure'),
+                                              run=False,
+                                              extra_keywords={'dilate': 'all'} if rigid_mols else {}))
+
+            # create the second NVT fix for rigid molecules that cannot be put in NPT fix
+            if rigid_mols:
+                sim.add(lmps.MolecularDynamics(name='rig_fix',
+                                               ensemble='rigid/nvt/small molecule',
+                                               timestep=mdp.get('timestep'),
+                                               length=mdp.get('length'),
+                                               group=rig_group_name,
+                                               temperature=mdp.get('temp'),
+                                               pressure=mdp.get('pressure'),
+                                               run=False))
+
+            # add the "spring tether" fix to the geometrical center of the system to avoid system creep
+            sim.add_custom('fix tether_fix matrix spring tether 30.0 0.0 0.0 0.0 0.0')
+            sim.add(lmps.OutputSettings(thermo=mdp.get('thermo'),
+                                        dump={'filename': os.path.join(sim_folder, str(l) + '.md.dump'),
+                                              'freq': int(mdp.get('dump'))}))
+            sim.add_custom('run {:}\n'.format(mdp.get('length')))
 
         # The input for correct simulations is set, starting LAMMPS:
-        sim.run(np=mdp.get('np', 1))
+        sim.run(prefix=[''])
+        os.environ['OMP_NUM_THREADS'] = nm_treads
 
         # Updating the size of the fixed system from the MD simulations and saving the coordinates for the next MC
         # css.system.dim = sim.system.dim

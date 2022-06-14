@@ -30,6 +30,7 @@
 from __future__ import print_function
 
 import os
+from os import path as osp
 import re
 import sys
 import json
@@ -62,6 +63,11 @@ from pysimm import debug_print
 from pysimm import PysimmError
 from pysimm.calc import rotate_vector
 from pysimm.utils import PysimmError, Item, ItemContainer
+
+
+ELEMS_DICT = dict()
+with open(osp.join(osp.dirname(osp.realpath(__file__)), 'data', 'elements_by_mass.json'), 'r') as pntr:
+    ELEMS_DICT = json.load(pntr)
 
 
 class Particle(Item):
@@ -166,6 +172,22 @@ class Particle(Item):
         self.x += dx
         self.y += dy
         self.z += dz
+
+    def get_chem_element(self):
+        """pysimm.system.get_chem_element()
+        Method tries to guess chemical element of a particle basing on the rest possibly defined information about
+        the particle
+        """
+        global ELEMS_DICT
+        result = None
+        if self.type:
+            if self.type.elem:
+                result = self.type.elem
+            elif self.type.mass:
+                result = ELEMS_DICT[str(int(self.type.mass))]['symbol']
+        elif self.elem:
+            result = self.elem
+        return result
 
     def __sub__(self, other):
         """pysimm.system.Particle.__sub__

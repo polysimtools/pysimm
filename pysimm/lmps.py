@@ -742,7 +742,7 @@ class Minimization(object):
     """
     def __init__(self, **kwargs):
 
-        self.min_style = kwargs.get('min_style', 'fire')
+        self.min_style = kwargs.get('min_style', 'cg')
         self.dmax = kwargs.get('dmax')
         self.etol = kwargs.get('etol', 1.0e-3)
         self.ftol = kwargs.get('ftol', 1.0e-3)

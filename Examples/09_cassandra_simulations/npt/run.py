@@ -22,11 +22,11 @@ def run(test=False):
                                   'prop3': 'mass_density'}
 
     cs.add_simulation('NPT', species=molec, is_rigid=True, out_folder='results', **npt_props)
-
     cs.run()
 
     lmps.check_lmps_attr(cs.system)
     cs.system.write_lammps('final_conf.lmps')
+
 
 if __name__ == '__main__':
     run(False)
