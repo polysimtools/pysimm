@@ -10,13 +10,13 @@ def monomer(**kwargs):
         import os
         if isomer == 'endo':
             s = system.read_mol(
-                os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'topologies/NbTMS_H2_endo.mol'))
+                os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'topologies', 'NbTMS_H2_endo.mol'))
         elif isomer == 'exo_endo':
             s = system.read_mol(
-                os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'topologies/NbTMS_H2_exo_endo.mol'))
+                os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'topologies', 'NbTMS_H2_exo_endo.mol'))
         else:
             s = system.read_mol(
-                os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'topologies/NbTMS_H2_exo_exo.mol'))
+                os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir, 'topologies', 'NbTMS_H2_exo_exo.mol'))
     except:
         print("!!!could not read mol!!!")
         raise
