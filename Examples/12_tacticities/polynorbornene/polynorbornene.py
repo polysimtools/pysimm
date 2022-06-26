@@ -55,18 +55,18 @@ def pack_and_equil(A, n, x, f, prefix):
     write_file_formats(polymer, prefix + "_1", unwrap=True)
 
     # quick opt of polymer
-    lmps.quick_min(polymer, min_style='fire', etol=1.0e-4, maxiter=100000)
+    lmps.quick_min(polymer, min_style='cg', etol=1.0e-4, maxiter=100000)
 
     # write a few different file formats
     polymer.unwrap()
-    write_file_formats(polymer, prefix + "_1_fire")
+    write_file_formats(polymer, prefix + "_1_cg")
 
     # pack x copies of polymer
     polymers = system.replicate(polymer, x, density=0.005)
     # polymers = polymer
     write_file_formats(polymers, prefix + "_" + str(x))
-    lmps.quick_min(polymers, min_style='fire', etol=1.0e-4, maxiter=100000)
-    write_file_formats(polymers, prefix + "_" + str(x) + "_fire")
+    lmps.quick_min(polymers, min_style='cg', etol=1.0e-4, maxiter=100000)
+    write_file_formats(polymers, prefix + "_" + str(x) + "_cg")
 
     # quickmd
     nvt_settings = {
