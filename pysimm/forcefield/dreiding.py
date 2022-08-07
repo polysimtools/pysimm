@@ -91,7 +91,11 @@ class Dreiding(Forcefield):
                 p.nbonds += 1
         for p in s.particles:
             if p.elem == 'H':
-                p.type_name = 'H_'
+                for pb in p.bonded_to:
+                    if pb.elem == 'O' or pb.elem == 'N':
+                        p.type_name = 'H___A'
+                if not p.type_name:
+                    p.type_name = 'H_'
             elif p.elem == 'C':
                 if p.bond_orders and (4 in p.bond_orders or 'A' in p.bond_orders):
                     p.type_name = 'C_R'
